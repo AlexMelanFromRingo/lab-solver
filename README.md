@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Вариант.
 
-## Getting Started
+Решатель детерминированных частей университетских лабораторных: криптография, теория
+информации, помехоустойчивое кодирование, теория чисел, архитектура ЭВМ, компьютерные сети.
 
-First, run the development server:
+**[Открыть сайт →](https://alexmelanfromringo.github.io/lab-solver/)**
+
+## Идея
+
+Лабораторная обычно состоит из двух частей: **вариант**, который назначают по номеру в
+списке группы, и **алгоритм**, который из этого варианта детерминированно выводит ответ.
+Вариант выбирать не нужно — его выдают. А вот применение алгоритма к своим числам — чистая
+математика, которую можно проверить программой.
+
+Здесь собраны только такие модули: там, где нашлась таблица вариантов из методички —
+она перенесена как есть, без додумывания. Там, где методичка допускает разночтения — это
+явно помечено и вынесено в редактируемое поле, а не зашито тихо «как получится». Часть
+модулей — точные переносы реальных студенческих решателей (C++/Python/Rust с занятий),
+сверенные побайтово с их выводом на компилируемых бинарниках, а не переписанные заново по
+учебнику.
+
+Все вычисления — на клиенте, в браузере. Ничего никуда не отправляется.
+
+## Модули (24)
+
+**Криптография** — сеть Фейстеля по варианту (24 варианта), RSA, классические шифры
+(Цезарь/Виженер/гамма/OTP), S-DES, BBS/LFSR, ГОСТ 28147-89, RC4.
+
+**Теория чисел** — тесты на простоту (пробное деление, Ферма, Миллер-Рабин,
+Соловей-Штрассен), система сравнений (Китайская теорема об остатках), алгоритм Евклида и
+линейное сравнение, алгоритм Луна.
+
+**Теория информации** — энтропия / Шеннон-Фано / Хаффман, код чётности и пропускная
+способность канала, циклический код (CRC), непрерывный канал с шумом (Шеннон-Хартли),
+линейное кодирование сигналов (NRZ/RZ/Манчестер/NRZI/MLT-3/2B1Q/PAM5).
+
+**Помехоустойчивое кодирование** — код Хэмминга, код Рида-Соломона, полярные коды,
+LDPC-коды.
+
+**Архитектура ЭВМ** — симулятор языка микропрограмм JOLS-M (интерпретатор с пошаговым
+выполнением).
+
+**Компьютерные сети** — калькулятор подсети IPv4.
+
+## Как устроено
+
+- **Next.js 16** (App Router, статический экспорт) + **React 19** + **TypeScript**
+- **Tailwind CSS v4** — тёмная тема, категории модулей закодированы цветом
+- **Framer Motion** — анимации
+- Вся логика — чистые TypeScript-функции в `src/lib/algorithms/*`, независимые от UI;
+  страницы в `src/app/modules/*` — тонкая обвязка вокруг них
+
+## Разработка
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # статический экспорт в ./out
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Источники
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Каждый модуль указывает источник на своей странице — реальный код лабораторной, отчёт с
+методички или сторонний открытый инструмент (`error-codes-explorer`, `primary_tests`,
+`card-check-algo`, `jolsm-toolkit`, `rust-rsa-from-scratch`). Там, где формула
+реконструирована по числам из реального отчёта (а не взята из учебника), это отдельно
+отмечено в описании модуля.
