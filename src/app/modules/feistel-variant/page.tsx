@@ -7,7 +7,9 @@ import { NumberField, TextField } from "@/components/ui/field";
 import { InfoNote } from "@/components/ui/info-note";
 import { OutputBlock } from "@/components/ui/output-block";
 import { VariantDial } from "@/components/ui/variant-dial";
+import { CodeBlock } from "@/components/ui/code-block";
 import { categories, modules } from "@/lib/modules";
+import { generateFeistelCpp } from "@/lib/codegen/feistel-cpp";
 import {
   F1_NAMES,
   F23_NAMES,
@@ -77,6 +79,11 @@ export default function FeistelVariantPage() {
       return "";
     }
   }, [textEnc, spec, key, rounds]);
+
+  const cppCode = useMemo(
+    () => generateFeistelCpp(spec, key.toString(2).padStart(spec.k, "0")),
+    [spec, key]
+  );
 
   return (
     <div>
@@ -173,6 +180,19 @@ export default function FeistelVariantPage() {
             <TextField label="Текст" value={text} onChange={(e) => setText(e.target.value)} />
             <OutputBlock label="Шифротекст (hex)" value={textEnc.hex} />
             <OutputBlock label="Проверка расшифрования" value={textDec} />
+          </CardBody>
+        </Card>
+
+        <Card>
+          <CardBody className="pt-6 space-y-4">
+            <h2 className="font-display text-lg font-semibold text-ink">Готовая программа (C++)</h2>
+            <p className="text-xs text-ink-faint">
+              Не просто ответ, а компилируемая программа под этот вариант: шифрует/дешифрует
+              блок и целый файл (положите <code>input.txt</code> рядом с бинарником). Использует
+              текущий ключ сверху. Сгенерированный код скомпилирован и сверен с расчётами этой
+              страницы на нескольких вариантах — совпадает побитово.
+            </p>
+            <CodeBlock code={cppCode} filename={`feistel_variant_${variantNum}.cpp`} />
           </CardBody>
         </Card>
 

@@ -3,9 +3,10 @@
 import { useMemo, useState } from "react";
 import { ModuleHeader } from "@/components/module-header";
 import { Card, CardBody } from "@/components/ui/card";
-import { NumberField, TextField } from "@/components/ui/field";
+import { NumberField, SelectField, TextField } from "@/components/ui/field";
 import { InfoNote } from "@/components/ui/info-note";
 import { OutputBlock } from "@/components/ui/output-block";
+import { CodeBlock } from "@/components/ui/code-block";
 import { modules } from "@/lib/modules";
 import {
   type RsaKeys,
@@ -16,6 +17,7 @@ import {
   signNumber,
   verifySignature,
 } from "@/lib/algorithms/rsa";
+import { generateRsaCpp, type PrimalityTestType, type PrngType, type RsaMode } from "@/lib/codegen/rsa-cpp";
 import { useMounted } from "@/lib/use-mounted";
 
 const mod = modules.find((m) => m.slug === "rsa")!;
@@ -74,6 +76,14 @@ export default function RsaPage() {
   }, [keys, signMsg]);
 
   const safe = mounted || mode === "manual";
+
+  const [genPrng, setGenPrng] = useState<PrngType>("middle-square");
+  const [genTest, setGenTest] = useState<PrimalityTestType>("miller-rabin");
+  const [genMode, setGenMode] = useState<RsaMode>("file");
+  const cppCode = useMemo(
+    () => generateRsaCpp({ prng: genPrng, primalityTest: genTest, mode: genMode }),
+    [genPrng, genTest, genMode]
+  );
 
   return (
     <div>
@@ -182,6 +192,36 @@ export default function RsaPage() {
             </CardBody>
           </Card>
         )}
+
+        <Card>
+          <CardBody className="pt-6 space-y-5">
+            <h2 className="font-display text-lg font-semibold text-ink">Конструктор: своя RSA-программа (C++)</h2>
+            <p className="text-xs text-ink-faint">
+              Курсовая требовала собрать RSA из своих частей — выберите, из каких: ГПСЧ для
+              поиска простых, тест простоты, и режим (числа для проверки принципа или полное
+              шифрование файла по схеме из реального инструмента). Каждая из 24 комбинаций
+              скомпилирована и прогнана — шифрование/расшифрование сходится.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <SelectField label="ГПСЧ" value={genPrng} onChange={(e) => setGenPrng(e.target.value as PrngType)}>
+                <option value="middle-square">Метод середины квадратов</option>
+                <option value="lcg">Линейный конгруэнтный (LCG)</option>
+                <option value="rand">Стандартный rand()</option>
+              </SelectField>
+              <SelectField label="Тест простоты" value={genTest} onChange={(e) => setGenTest(e.target.value as PrimalityTestType)}>
+                <option value="trial">Пробное деление</option>
+                <option value="fermat">Тест Ферма</option>
+                <option value="miller-rabin">Миллер–Рабин</option>
+                <option value="solovay-strassen">Соловей–Штрассен</option>
+              </SelectField>
+              <SelectField label="Режим" value={genMode} onChange={(e) => setGenMode(e.target.value as RsaMode)}>
+                <option value="numbers">Числа (демонстрация принципа)</option>
+                <option value="file">Файл/текст (20-битные блоки + Base64)</option>
+              </SelectField>
+            </div>
+            <CodeBlock code={cppCode} filename={`rsa_${genPrng}_${genTest}_${genMode}.cpp`} />
+          </CardBody>
+        </Card>
       </div>
     </div>
   );
