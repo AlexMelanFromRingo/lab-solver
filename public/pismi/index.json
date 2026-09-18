@@ -22,7 +22,7 @@
    {
     "path": "www/index.php",
     "note": "індивідуальне завдання: ПІБ, група та паспорт оточення",
-    "size": 6327
+    "size": 6307
    },
    {
     "path": "www/phpinfo.php",
@@ -638,7 +638,7 @@
     {
      "path": "www/lib/ZodiacTask.php",
      "note": "програма № 2: клас завдання",
-     "size": 3458
+     "size": 3428
     },
     {
      "path": "www/lib/Task.php",
@@ -760,12 +760,12 @@
    {
     "path": "src/index.php",
     "note": "сторінка довідника з операціями CRUD",
-    "size": 10447
+    "size": 10449
    },
    {
     "path": "src/lib/schedule.php",
     "note": "схема довідника: поля та початкове наповнення",
-    "size": 5362
+    "size": 5378
    },
    {
     "path": "src/lib/db.php",
@@ -827,7 +827,7 @@
    {
     "path": "src/resources/views/welcome.blade.php",
     "note": "спільна дошка повідомлень",
-    "size": 4921
+    "size": 4923
    },
    {
     "path": "src/resources/views/dashboard.blade.php",
@@ -869,7 +869,7 @@
    {
     "path": "src/config/site.php",
     "note": "опис сайтів: зміст окремо від коду",
-    "size": 18894
+    "size": 18880
    },
    {
     "path": "src/app/Support/Theme.php",

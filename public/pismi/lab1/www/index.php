@@ -12,13 +12,13 @@ declare(strict_types=1);
  *
  * Дані студента беруться з рядка браузера, тому одним контейнером може
  * скористатися будь-хто:
- *     index.php?name=Сливець+Олександр+Дмитрович&group=953М
+ *     index.php?name=Іваненко+Іван+Іванович&group=101М
  */
 
 require __DIR__ . '/_shared/chrome.php';
 
-const DEFAULT_NAME = 'Сливець Олександр Дмитрович';
-const DEFAULT_GROUP = '953М';
+const DEFAULT_NAME = 'Іваненко Іван Іванович';
+const DEFAULT_GROUP = '101М';
 
 /**
  * Читає текстовий параметр рядка браузера, обрізаючи зайве.

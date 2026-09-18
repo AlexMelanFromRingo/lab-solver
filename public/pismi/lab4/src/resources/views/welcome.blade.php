@@ -31,7 +31,7 @@
             <dt class="text-faint">Авторів</dt>
             <dd class="mb-3.5 text-dim">{{ $notes->pluck('user_id')->unique()->count() }}</dd>
             <dt class="text-faint">Студент</dt>
-            <dd class="text-dim">Сливець О. Д., 953М</dd>
+            <dd class="text-dim">Іваненко І. І., 101М</dd>
         </dl>
     </aside>
 

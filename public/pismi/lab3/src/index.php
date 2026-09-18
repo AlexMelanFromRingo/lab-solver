@@ -124,7 +124,7 @@ $days = group_by_day($rows, $weekdayField['options'] ?? []);
     <header class="topbar">
         <span>Український державний університет науки і технологій · кафедра ЕОМ</span>
         <span>Лабораторна робота № 3 · MySQL як база даних web-додатку</span>
-        <span>Сливець О. Д. · 953М</span>
+        <span>Іваненко І. І. · 101М</span>
     </header>
 
     <div class="headline">
