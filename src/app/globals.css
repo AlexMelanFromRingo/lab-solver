@@ -25,6 +25,8 @@
   --cat-networks-soft: #34d3991a;
   --cat-pismi: #e879f9;
   --cat-pismi-soft: #e879f91a;
+  --cat-ai: #f97316;
+  --cat-ai-soft: #f973161a;
 }
 
 @theme inline {
@@ -51,6 +53,8 @@
   --color-networks-soft: var(--cat-networks-soft);
   --color-pismi: var(--cat-pismi);
   --color-pismi-soft: var(--cat-pismi-soft);
+  --color-ai: var(--cat-ai);
+  --color-ai-soft: var(--cat-ai-soft);
 
   --font-display: var(--font-space-grotesk);
   --font-sans: var(--font-inter);
