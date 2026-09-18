@@ -25,7 +25,7 @@ final class ZodiacTask extends Task
     public function params(): array
     {
         return [
-            'name' => ['label' => 'Ім’я', 'default' => 'Олександр'],
+            'name' => ['label' => 'Ім’я', 'default' => 'Іван'],
             'month' => ['label' => 'Місяць народження', 'default' => '4'],
             'day' => ['label' => 'День народження', 'default' => '15'],
             'year' => ['label' => 'Рік народження', 'default' => '2002'],
@@ -34,7 +34,7 @@ final class ZodiacTask extends Task
 
     public function render(array $p): string
     {
-        $name = trim((string) ($p['name'] ?? 'Олександр')) ?: 'Олександр';
+        $name = trim((string) ($p['name'] ?? 'Іван')) ?: 'Іван';
         $month = $this->int($p, 'month', 4, 1, 12);
         $day = $this->int($p, 'day', 15, 1, 31);
         $year = $this->int($p, 'year', 2002, 1900, 2100);
