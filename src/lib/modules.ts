@@ -1,4 +1,12 @@
-export type Category = "crypto" | "number" | "theory" | "codes" | "arch" | "networks" | "pismi";
+export type Category =
+  | "crypto"
+  | "number"
+  | "theory"
+  | "codes"
+  | "arch"
+  | "networks"
+  | "pismi"
+  | "ai";
 
 export const categories: Record<
   Category,
@@ -46,6 +54,12 @@ export const categories: Record<
     accent: "var(--cat-pismi)",
     accentSoft: "var(--cat-pismi-soft)",
   },
+  ai: {
+    title: "Искусственный интеллект",
+    short: "Нечёткий вывод, среда FLS",
+    accent: "var(--cat-ai)",
+    accentSoft: "var(--cat-ai-soft)",
+  },
 };
 
 export interface LabModule {
@@ -61,6 +75,34 @@ export interface LabModule {
 }
 
 export const modules: LabModule[] = [
+  {
+    slug: "ai-lab1",
+    title: "Лаба 1 · нечёткий вывод в среде FLS",
+    category: "ai",
+    tagline: "Разбор примера · запуск программы",
+    description:
+      "Как поднять FLS на Windows, Linux и в контейнере, строение файла .fls и разбор " +
+      "примера из методички по этапам: фазификация, агрегирование, активизация, " +
+      "аккумуляция, дефазификация. Плюс особенности программы, из-за которых вывод " +
+      "молча даёт −1.",
+    hasVariants: false,
+    source: "Штучний інтелект в комп'ютерних системах та мережах, ЛР1, п. 4.2",
+    size: "md",
+  },
+  {
+    slug: "ai-lab2",
+    title: "Лаба 2 · логико-лингвистическая система",
+    category: "ai",
+    tagline: "10 заданий · вывод по Мамдани · файл .fls",
+    description:
+      "Все десять систем из п. 4.3: термы, база правил, контрольные наборы. Вывод " +
+      "считается по шагам при любом сочетании методов конъюнкции, дизъюнкции, " +
+      "импликации, аккумуляции и дефазификации, а готовая система выгружается файлом .fls.",
+    hasVariants: true,
+    variantCount: 10,
+    source: "Штучний інтелект в комп'ютерних системах та мережах, ЛР2, п. 4.3",
+    size: "lg",
+  },
   {
     slug: "pismi-lab1",
     title: "Лаба 1 · платформа для веб-приложения",
