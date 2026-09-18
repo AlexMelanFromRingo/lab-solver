@@ -1,0 +1,245 @@
+/* Лабораторна робота № 3.
+ *
+ * Сторінка влаштована як розклад на дошці оголошень, а не як таблиця з
+ * базою: дні йдуть смугами, пари всередині дня – рядками з часом ліворуч.
+ * Дані тут і є сторінка, тому вони займають усю ширину, а керування
+ * записами відсунуте вниз і навмисно виглядає службовим.
+ */
+
+.board {
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: 0 1.5rem 5rem;
+}
+
+/* --- Шапка дошки -------------------------------------------------------- */
+
+.topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    font-family: var(--font-data);
+}
+
+.headline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem 1.5rem;
+    margin: 2.5rem 0 0.5rem;
+}
+
+.headline h1 {
+    font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.6rem);
+}
+
+.headline__count {
+    font-family: var(--font-data);
+    font-size: 1rem;
+    color: var(--accent);
+}
+
+.lede {
+    color: var(--text-dim);
+    max-width: 60ch;
+    margin-bottom: 2.5rem;
+}
+
+.notice {
+    display: inline-block;
+    border-left: 2px solid var(--ok);
+    color: var(--ok);
+    padding: 0.4rem 0 0.4rem 0.9rem;
+    margin-bottom: 1.75rem;
+    font-size: 0.9375rem;
+}
+
+/* --- День ---------------------------------------------------------------- */
+
+.day {
+    margin-bottom: 2.75rem;
+}
+
+.day__name {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    font-size: 1.0625rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--accent);
+}
+
+.day__count {
+    font-family: var(--font-data);
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    font-weight: 400;
+}
+
+/* --- Пара ---------------------------------------------------------------- */
+
+.slot {
+    display: grid;
+    grid-template-columns: 5rem 7rem minmax(0, 1fr) 11rem 9rem;
+    gap: 1.25rem;
+    align-items: baseline;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.slot__time {
+    font-family: var(--font-data);
+    font-size: 1.0625rem;
+    color: var(--accent);
+}
+
+/* Чисельник і знаменник видно з першого погляду, а не з дрібного підпису */
+.slot__week {
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    padding: 0.1rem 0.5rem;
+    justify-self: start;
+}
+
+.slot__week--num {
+    color: #7fb7e0;
+    border-color: rgba(127, 183, 224, 0.45);
+}
+
+.slot__week--den {
+    color: #e0b070;
+    border-color: rgba(224, 176, 112, 0.45);
+}
+
+.slot__subject {
+    font-size: 1rem;
+}
+
+.slot__teacher,
+.slot__room {
+    color: var(--text-dim);
+    font-size: 0.9375rem;
+}
+
+.slot__room {
+    font-family: var(--font-data);
+}
+
+.slot__actions {
+    display: flex;
+    gap: 0.9rem;
+    align-items: baseline;
+    justify-self: end;
+    white-space: nowrap;
+}
+
+.slot__actions a,
+.slot__actions button {
+    font-size: 0.8125rem;
+}
+
+.slot__actions button {
+    border: none;
+    padding: 0;
+    color: var(--text-faint);
+    font-weight: 400;
+}
+
+.slot__actions button:hover {
+    background: none;
+    color: var(--err);
+}
+
+/* --- Службова частина: пошук, форма, схема ------------------------------ */
+
+.tools {
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line-strong);
+}
+
+.tools h2 {
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    margin-bottom: 1.25rem;
+}
+
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    align-items: flex-end;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.field label {
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+}
+
+.field--wide input {
+    min-width: 22rem;
+}
+
+.errors {
+    border-left: 2px solid var(--err);
+    color: var(--err);
+    padding: 0.5rem 0 0.5rem 0.9rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.9375rem;
+}
+
+.schema {
+    font-family: var(--font-data);
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    color: var(--text-dim);
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid var(--line);
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    white-space: pre;
+    margin-top: 1rem;
+}
+
+.empty {
+    color: var(--text-faint);
+    padding: 2rem 0;
+}
+
+@media (max-width: 62rem) {
+    .slot {
+        grid-template-columns: 4.5rem minmax(0, 1fr);
+        row-gap: 0.35rem;
+    }
+
+    .slot__week,
+    .slot__teacher,
+    .slot__room,
+    .slot__actions {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+    .board {
+        padding: 0 1rem 3.5rem;
+    }
+
+    .field--wide input {
+        min-width: 0;
+        width: 100%;
+    }
+}

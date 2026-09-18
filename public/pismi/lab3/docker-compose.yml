@@ -1,0 +1,50 @@
+# Лабораторна робота № 3. Оточення з PHP, MySQL та phpMyAdmin.
+#
+# Три контейнери: додаток, база даних і веб-інтерфейс до неї. Додаток
+# збирається з власного Dockerfile, бо йому потрібні розширення PHP для MySQL.
+#
+# Порти зсунуто відносно методичних вказівок: 8080 на робочій машині зайнятий
+# Apache Tomcat, 8090 і 8091 – роботами № 1 і № 2. Усередині контейнерів
+# служби слухають звичайні порти.
+
+services:
+  php:
+    build: .
+    container_name: php_lab3
+    ports:
+      - "8092:80"
+    volumes:
+      - ./src:/var/www/html
+      - ../solver/assets:/var/www/html/_shared:ro
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.3
+    container_name: mysql_lab3
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin_lab3
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8093:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+
+volumes:
+  db_data:

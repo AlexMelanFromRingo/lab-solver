@@ -1,0 +1,341 @@
+/* Лабораторна робота № 2.
+ *
+ * Сторінка влаштована як розрахунковий лист: угорі шапка бланка, далі
+ * умова, обчислення двома колонками й відомість проміжних величин із
+ * відбивкою крапками. Це не панелі й не картки – це аркуш, на якому
+ * рахують.
+ */
+
+.sheet {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0 1.5rem 5rem;
+}
+
+/* --- Шапка бланка -------------------------------------------------------- */
+
+.masthead {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    font-family: var(--font-data);
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    padding: 1.5rem 0;
+    border-bottom: 2px solid var(--accent);
+}
+
+.masthead b {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.title {
+    font-size: clamp(1.6rem, 1.1rem + 2vw, 2.4rem);
+    margin: 2.5rem 0 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-dim);
+    max-width: 62ch;
+    margin-bottom: 2.5rem;
+}
+
+/* --- Умова: формули як головний предмет сторінки ------------------------ */
+
+.given {
+    border-left: 2px solid var(--accent);
+    background: rgba(0, 0, 0, 0.25);
+    padding: 1.5rem 1.75rem;
+    font-family: var(--font-data);
+    font-size: 1.0625rem;
+    line-height: 2;
+    overflow-x: auto;
+}
+
+.given__arg {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--text-faint);
+}
+
+/* --- Дві колонки: ліворуч виклад, праворуч числа ------------------------ */
+
+.split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 3rem;
+    margin-top: 3rem;
+}
+
+.head {
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line-strong);
+    margin-bottom: 1.25rem;
+}
+
+.prose p {
+    margin-bottom: 1rem;
+    color: var(--text-dim);
+}
+
+.identity {
+    font-family: var(--font-data);
+    font-size: 0.9375rem;
+    line-height: 1.95;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+}
+
+/* --- Результат ---------------------------------------------------------- */
+
+.result {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.value__label {
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    margin-bottom: 0.25rem;
+}
+
+.value__num {
+    font-family: var(--font-data);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+}
+
+.verdict {
+    border-top: 1px solid var(--line-strong);
+    padding-top: 1rem;
+    font-size: 0.9375rem;
+}
+
+/* --- Відомість проміжних величин ---------------------------------------- */
+
+.ledger {
+    margin-top: 3rem;
+}
+
+.ledger__row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.55rem 0;
+}
+
+.ledger__name {
+    color: var(--text-dim);
+    font-size: 0.9375rem;
+}
+
+/* Відбивка крапками – як у друкованому бланку розрахунку */
+.ledger__dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--line-strong);
+    transform: translateY(-0.25rem);
+    min-width: 2rem;
+}
+
+.ledger__value {
+    font-family: var(--font-data);
+    font-size: 0.9375rem;
+    white-space: nowrap;
+}
+
+/* --- Таблиця-полотно другої програми ------------------------------------ */
+
+.canvas {
+    border-collapse: collapse;
+    font-family: var(--font-data);
+    font-size: 0.8125rem;
+    margin: 1.5rem 0;
+}
+
+.canvas td {
+    width: 2.5rem;
+    height: 2.5rem;
+    text-align: center;
+    border: 1px solid var(--line);
+    color: var(--text-dim);
+}
+
+.canvas td.axis {
+    border: none;
+    color: var(--text-faint);
+    width: 2rem;
+}
+
+.canvas td.marked {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* --- Форма й підвал ------------------------------------------------------ */
+
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    align-items: flex-end;
+    margin-top: 1.5rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.field label {
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+}
+
+.field input {
+    width: 7rem;
+}
+
+.foot {
+    margin-top: 3.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+}
+
+/* --- Перелік програм на вхідній сторінці -------------------------------- */
+
+.programs {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2.5rem;
+}
+
+.program {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.program__num {
+    font-family: var(--font-data);
+    font-size: 2rem;
+    color: var(--accent);
+    line-height: 1;
+}
+
+.program h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.program p {
+    color: var(--text-dim);
+    margin-bottom: 0.9rem;
+    max-width: 60ch;
+}
+
+@media (max-width: 52rem) {
+    .split {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2.25rem;
+    }
+
+    .sheet {
+        padding: 0 1rem 3.5rem;
+    }
+
+    .program {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+}
+
+/* --- Вивід завдань другої програми --------------------------------------
+ * Ті самі волосяні лінії, що й у відомості: таблиця даних, перелік
+ * «назва – значення» та рядки тексту. Ніяких карток.
+ */
+
+.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    margin: 1.5rem 0;
+}
+
+.data th,
+.data td {
+    text-align: left;
+    padding: 0.55rem 1.25rem 0.55rem 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+}
+
+.data th {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-faint);
+    border-bottom-color: var(--line-strong);
+}
+
+.data td.num,
+.data th.num {
+    font-family: var(--font-data);
+    text-align: right;
+    padding-right: 0;
+}
+
+.data tr:last-child td {
+    border-bottom: none;
+}
+
+.facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1.25rem 2.5rem;
+    margin: 1.5rem 0;
+}
+
+.facts__label {
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    margin-bottom: 0.2rem;
+}
+
+.facts__value {
+    font-family: var(--font-data);
+    font-size: 1.125rem;
+    color: var(--accent);
+    overflow-wrap: anywhere;
+}
+
+.lines p {
+    max-width: 62ch;
+    margin-bottom: 0.9rem;
+    color: var(--text-dim);
+}
+
+.bricks {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 1.5rem 0;
+}
+
+.bricks__row {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}

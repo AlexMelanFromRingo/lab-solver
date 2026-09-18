@@ -1,94 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ModuleHeader } from "@/components/module-header";
-import { Card, CardBody } from "@/components/ui/card";
-import { InfoNote } from "@/components/ui/info-note";
-import { TextField } from "@/components/ui/field";
-import { VariantDial } from "@/components/ui/variant-dial";
-import { categories, modules } from "@/lib/modules";
-import {
-  defaultValues,
-  taskByVariant,
-  type TaskOutput,
-} from "@/lib/algorithms/pismi-lab2-objects";
+import type { TaskOutput } from "@/lib/algorithms/pismi-lab2-objects";
 
-const mod = modules.find((m) => m.slug === "pismi-lab2-objects")!;
-const accent = categories.pismi.accent;
-
-export default function ObjectsPage() {
-  const [variantNum, setVariantNum] = useState(1);
-  const task = taskByVariant(variantNum);
-
-  // Правки параметров хранятся по номеру варианта, поэтому переключение
-  // возвращает значения по умолчанию само собой.
-  const [edits, setEdits] = useState<Record<number, Record<string, string>>>({});
-  const values = edits[variantNum] ?? defaultValues(task);
-
-  const output = useMemo(() => task.build(values), [task, values]);
-
-  const setParam = (name: string, value: string) =>
-    setEdits((prev) => ({ ...prev, [variantNum]: { ...values, [name]: value } }));
-
-  return (
-    <div>
-      <ModuleHeader module={mod} />
-      <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
-        <InfoNote>
-          Тринадцать заданий второй программы, по одному на вариант. Методичка требует, чтобы
-          задание выполнял созданный объект, поэтому вариант сам объявляет, какие параметры он
-          читает и что из них строит, — форма ниже собрана из этого объявления и одинаково
-          работает для любого варианта.
-        </InfoNote>
-
-        <VariantDial value={variantNum} min={1} max={13} onChange={setVariantNum} accent={accent} />
-
-        <Card>
-          <CardBody className="pt-6 space-y-5">
-            <div>
-              <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                {task.title}
-              </h2>
-              <p className="mt-2 text-sm leading-relaxed text-ink-dim">{task.statement}</p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {task.params.map((param) => (
-                <TextField
-                  key={param.name}
-                  label={param.label}
-                  hint={param.default}
-                  value={values[param.name] ?? ""}
-                  onChange={(e) => setParam(param.name, e.target.value)}
-                />
-              ))}
-            </div>
-
-            <Output output={output} accent={accent} />
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardBody className="pt-6 space-y-4">
-            <h3 className="text-sm font-medium text-ink-dim">Что показывает это задание</h3>
-            <p className="text-sm leading-relaxed text-ink-dim">{task.conclusion}</p>
-            {task.note && (
-              <p
-                className="rounded-xl border px-4 py-3 text-sm leading-relaxed"
-                style={{ color: accent, borderColor: `${accent}55`, background: `${accent}0f` }}
-              >
-                {task.note}
-              </p>
-            )}
-          </CardBody>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-/** Результат задания: у каждого вида свой способ показа. */
-function Output({ output, accent }: { output: TaskOutput; accent: string }) {
+/**
+ * Результат задания второй программы.
+ *
+ * У заданий разная природа — поразрядный разбор адреса, календарь, шахматная
+ * доска, текст, пирамида, — поэтому задание возвращает не готовую разметку, а
+ * описание того, что показать. Разметку подбирает эта функция, и задания о ней
+ * ничего не знают.
+ */
+export function TaskOutputView({ output, accent }: { output: TaskOutput; accent: string }) {
   if (output.kind === "binary") {
     return (
       <div className="overflow-x-auto rounded-xl border border-border">
@@ -124,8 +46,8 @@ function Output({ output, accent }: { output: TaskOutput; accent: string }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-xs uppercase text-ink-faint">
-              {output.head.map((h) => (
-                <th key={h} className="px-3 py-2 text-left">{h}</th>
+              {output.head.map((head) => (
+                <th key={head} className="px-3 py-2 text-left">{head}</th>
               ))}
             </tr>
           </thead>
@@ -166,8 +88,11 @@ function Output({ output, accent }: { output: TaskOutput; accent: string }) {
     return (
       <div className="space-y-3 rounded-xl border border-border bg-black/30 px-5 py-4">
         {output.lines.map((line) => (
-          <p key={line} className="max-w-[70ch] text-sm leading-relaxed text-ink-dim"
-             style={{ textAlign: output.align }}>
+          <p
+            key={line}
+            className="max-w-[70ch] text-sm leading-relaxed text-ink-dim"
+            style={{ textAlign: output.align }}
+          >
             {line}
           </p>
         ))}
@@ -183,7 +108,7 @@ function Output({ output, accent }: { output: TaskOutput; accent: string }) {
             {Array.from({ length: count }, (_, i) => (
               <span
                 key={i}
-                className="rounded border px-2 py-1 font-mono text-xs whitespace-nowrap"
+                className="whitespace-nowrap rounded border px-2 py-1 font-mono text-xs"
                 style={{ color: accent, borderColor: `${accent}55`, background: `${accent}0f` }}
               >
                 {output.cell}
@@ -203,8 +128,8 @@ function Output({ output, accent }: { output: TaskOutput; accent: string }) {
           <thead>
             <tr>
               {output.rowHeaders && <th className="w-8" />}
-              {output.colHeaders.map((h) => (
-                <th key={h} className="px-2 py-1 font-normal text-ink-faint">{h}</th>
+              {output.colHeaders.map((head) => (
+                <th key={head} className="px-2 py-1 font-normal text-ink-faint">{head}</th>
               ))}
             </tr>
           </thead>

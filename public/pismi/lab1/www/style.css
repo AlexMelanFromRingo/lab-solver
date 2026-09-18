@@ -1,0 +1,213 @@
+/* Лабораторна робота № 1.
+ *
+ * Сторінка влаштована як паспортна табличка обладнання: по центру, однією
+ * колонкою, з рядками «назва – значення» під волосяними лініями. Метафора
+ * не випадкова – робота саме про це: зафіксувати, на чому виконано програму.
+ */
+
+.sheet {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+}
+
+.origin {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--text-faint);
+    text-align: center;
+    padding-bottom: 2.5rem;
+}
+
+/* --- Табличка ----------------------------------------------------------- */
+
+.plate {
+    position: relative;
+    border: 1px solid var(--line-strong);
+    border-top: 3px solid var(--accent);
+    background: linear-gradient(180deg, var(--field-2), var(--field));
+    padding: 3rem 2.5rem 2.5rem;
+    text-align: center;
+}
+
+/* Заклепки по кутах – єдина декоративна деталь на сторінці */
+.plate::before,
+.plate::after {
+    content: "";
+    position: absolute;
+    top: 0.75rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--line-strong);
+}
+
+.plate::before {
+    left: 0.75rem;
+}
+
+.plate::after {
+    right: 0.75rem;
+}
+
+.plate__role {
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    margin-bottom: 1rem;
+}
+
+.plate__name {
+    font-size: clamp(1.75rem, 1.1rem + 2.6vw, 2.75rem);
+    margin-bottom: 1.75rem;
+}
+
+.plate__group {
+    display: inline-block;
+    font-family: var(--font-data);
+    font-size: 1.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 0.35rem 1.25rem;
+}
+
+.plate__group-label {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    letter-spacing: 0;
+    color: var(--text-faint);
+    margin-bottom: 0.5rem;
+}
+
+/* --- Рядки паспорта ----------------------------------------------------- */
+
+.section {
+    margin-top: 3.5rem;
+}
+
+.section__title {
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line-strong);
+}
+
+.rows {
+    margin: 0;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 14rem minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.row dt {
+    color: var(--text-dim);
+    font-size: 0.9375rem;
+}
+
+.row dd {
+    margin: 0;
+    font-family: var(--font-data);
+    font-size: 0.9375rem;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+.row dd.accent {
+    color: var(--accent);
+}
+
+/* --- Розширення: рядок стану, а не таблиця ------------------------------ */
+
+.ext {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.ext__item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+}
+
+.ext__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ok);
+}
+
+.ext__dot--off {
+    background: var(--err);
+}
+
+.ext__name {
+    font-family: var(--font-data);
+}
+
+.ext__note {
+    color: var(--text-faint);
+    font-size: 0.8125rem;
+}
+
+/* --- Форма підстановки -------------------------------------------------- */
+
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    align-items: flex-end;
+    margin-top: 1.5rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.field label {
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+}
+
+.field--wide input {
+    min-width: 20rem;
+}
+
+.foot {
+    margin-top: 2.5rem;
+    text-align: center;
+}
+
+@media (max-width: 40rem) {
+    .sheet {
+        padding: 2.5rem 1rem 4rem;
+    }
+
+    .plate {
+        padding: 2.25rem 1.25rem 1.75rem;
+    }
+
+    .row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.2rem;
+    }
+
+    .field--wide input {
+        min-width: 0;
+        width: 100%;
+    }
+}
