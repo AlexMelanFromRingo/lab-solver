@@ -96,6 +96,28 @@ export const modules: LabModule[] = [
     size: "md",
   },
   {
+    slug: "pismi-lab4",
+    title: "Лаба 4 · веб-приложение на Laravel",
+    category: "pismi",
+    tagline: "MVC · Breeze · связь один-ко-многим",
+    description:
+      "Доска сообщений на Laravel: порядок запуска от пустого каталога до работающего сайта, две ошибки методического архива с исправлениями и готовые файлы — миграция, модель, контроллер, маршруты и представления.",
+    hasVariants: false,
+    source: "Laravel_inst.zip + Laravel_NotesList_tutorial.pdf",
+    size: "md",
+  },
+  {
+    slug: "pismi-lab5",
+    title: "Лаба 5 · индивидуальное задание",
+    category: "pismi",
+    tagline: "сайт на MVC · своё оформление",
+    description:
+      "Сайт-визитка на Laravel с формой обратной связи и закрытой частью. Содержимое описано отдельно от кода, поэтому одно приложение показывает четыре разных сайта; чтобы сделать свой, достаточно дописать тему.",
+    hasVariants: false,
+    source: "Індивідуальне_завдання_ПІСМІ_2021.pdf",
+    size: "md",
+  },
+  {
     slug: "feistel-variant",
     title: "Сеть Фейстеля по варианту",
     category: "crypto",

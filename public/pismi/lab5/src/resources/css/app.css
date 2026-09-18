@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        color-scheme: dark;
+        --accent: #c9a227;
+    }
+
+    body {
+        @apply bg-steel-900 text-ink;
+        background-image:
+            linear-gradient(rgba(200, 222, 236, 0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(200, 222, 236, 0.045) 1px, transparent 1px),
+            radial-gradient(ellipse 70% 50% at 18% -8%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%);
+        background-size: 72px 72px, 72px 72px, 100% 100%;
+        background-attachment: fixed;
+    }
+
+    ::selection {
+        background: color-mix(in srgb, var(--accent) 35%, transparent);
+    }
+}
+
+@layer components {
+    .panel {
+        @apply rounded-panel border border-white/10 bg-white/[0.055] backdrop-blur-lg;
+    }
+
+    .hairline { @apply border-white/10; }
+
+    .field-input {
+        @apply w-full rounded-panel border border-white/20 bg-black/25 px-3.5 py-2.5 text-[0.9375rem]
+               text-ink placeholder:text-faint focus:border-accent focus:ring-1 focus:ring-accent;
+    }
+
+    .btn {
+        @apply inline-flex items-center rounded-panel border border-white/20 px-5 py-2.5 text-[0.9375rem]
+               font-semibold text-ink transition-colors hover:border-accent hover:bg-accent
+               hover:text-steel-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent;
+    }
+
+    .btn-quiet {
+        @apply border-transparent px-3 py-1.5 text-[0.8125rem] text-dim hover:bg-transparent
+               hover:text-accent;
+    }
+
+    /* Перелік записів набирається як реєстр: волосяні лінії, ніяких карток */
+    .ledger-row {
+        @apply grid items-baseline gap-x-6 gap-y-1 border-b hairline py-5
+               md:grid-cols-[3rem_minmax(0,1fr)_10rem_5rem];
+    }
+
+    .ledger-row:last-child { @apply border-b-0; }
+}

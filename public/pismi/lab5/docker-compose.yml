@@ -1,0 +1,51 @@
+# Індивідуальне завдання. Оточення для сайту на Laravel.
+#
+# Склад той самий, що в роботі № 4; змінено імена, порти та назву бази.
+# Порти 8096 і 8097 вільні: 8080 зайнятий Tomcat, 8090–8095 – роботами № 1–4.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: site_app
+    ports:
+      - "8096:80"
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      APACHE_DOCUMENT_ROOT: /var/www/html/public
+    depends_on:
+      - db
+    working_dir: /var/www/html
+    command: apache2-foreground
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_lab5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: site
+      MYSQL_USER: site
+      MYSQL_PASSWORD: site
+    ports:
+      - "3309:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_lab5
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8097:80"
+
+volumes:
+  db_data:

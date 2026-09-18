@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        color-scheme: dark;
+    }
+
+    body {
+        @apply bg-steel-900 text-ink;
+        /* Поле креслярського аркуша – та сама фактура, що й в інших роботах */
+        background-image:
+            linear-gradient(rgba(200, 222, 236, 0.055) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(200, 222, 236, 0.055) 1px, transparent 1px),
+            radial-gradient(ellipse 80% 55% at 22% -10%, rgba(201, 162, 39, 0.16), transparent 70%);
+        background-size: 64px 64px, 64px 64px, 100% 100%;
+        background-attachment: fixed;
+    }
+}
+
+@layer components {
+    /* Скляна панель поверх поля */
+    .panel {
+        @apply rounded-panel border border-white/10 bg-white/[0.055] backdrop-blur-lg;
+    }
+
+    .panel-lead {
+        @apply rounded-panel border border-white/10 border-t-2 border-t-brass bg-white/[0.085] backdrop-blur-lg;
+    }
+
+    .hairline {
+        @apply border-white/10;
+    }
+
+    .field-input {
+        @apply rounded-panel border border-white/20 bg-black/25 px-3 py-2 font-mono text-[0.9375rem] text-ink
+               placeholder:text-faint focus:border-azure focus:ring-azure;
+    }
+
+    /* Кнопка: контур, що заливається акцентом під вказівником */
+    .btn {
+        @apply inline-flex items-center rounded-panel border border-white/20 px-5 py-2 text-[0.9375rem]
+               font-semibold text-ink transition-colors hover:border-brass hover:bg-brass hover:text-steel-900
+               focus:outline-none focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-2
+               focus-visible:ring-offset-steel-900;
+    }
+
+    .btn-danger {
+        @apply hover:border-[#d9634e] hover:bg-[#d9634e] hover:text-ink;
+    }
+
+    .data-table {
+        @apply w-full border-collapse text-[0.9375rem];
+    }
+
+    .data-table th {
+        @apply border-b border-white/25 py-2 pr-4 text-left text-[0.8125rem] font-semibold text-faint;
+    }
+
+    .data-table td {
+        @apply border-b border-white/10 py-3 pr-4 align-top;
+    }
+
+    .data-table tr:last-child td {
+        @apply border-b-0;
+    }
+}

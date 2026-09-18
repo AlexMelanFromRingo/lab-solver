@@ -785,5 +785,149 @@
   ],
   "port": 8092,
   "admin": 8093
+ },
+ "lab4": {
+  "name": "Лабораторна робота № 4",
+  "files": [
+   {
+    "path": "docker-compose.yml",
+    "note": "оточення: застосунок, MySQL, phpMyAdmin",
+    "size": 1327
+   },
+   {
+    "path": "Dockerfile",
+    "note": "образ із PHP, Composer та Node",
+    "size": 1627
+   },
+   {
+    "path": "apache/apache.conf",
+    "note": "корінь сайту – каталог public",
+    "size": 594
+   },
+   {
+    "path": "src/database/migrations/2026_09_18_152942_create_notes_table.php",
+    "note": "таблиця нотаток і зв'язок із користувачами",
+    "size": 1236
+   },
+   {
+    "path": "src/app/Models/Note.php",
+    "note": "модель нотатки: поля та автор",
+    "size": 1339
+   },
+   {
+    "path": "src/app/Http/Controllers/NoteController.php",
+    "note": "контролер: показ, додавання, видалення",
+    "size": 3298
+   },
+   {
+    "path": "src/routes/web.php",
+    "note": "маршрути й посередники",
+    "size": 1309
+   },
+   {
+    "path": "src/resources/views/welcome.blade.php",
+    "note": "спільна дошка повідомлень",
+    "size": 4921
+   },
+   {
+    "path": "src/resources/views/dashboard.blade.php",
+    "note": "особиста сторінка з формою",
+    "size": 5267
+   },
+   {
+    "path": "src/tailwind.config.js",
+    "note": "палітра й гарнітури",
+    "size": 1396
+   },
+   {
+    "path": "src/resources/css/app.css",
+    "note": "оформлення",
+    "size": 2395
+   }
+  ],
+  "port": 8094,
+  "admin": 8095
+ },
+ "lab5": {
+  "name": "Індивідуальне завдання",
+  "files": [
+   {
+    "path": "docker-compose.yml",
+    "note": "оточення сайту",
+    "size": 1209
+   },
+   {
+    "path": "Dockerfile",
+    "note": "образ із PHP, Composer та Node",
+    "size": 1667
+   },
+   {
+    "path": "apache/apache.conf",
+    "note": "корінь сайту – каталог public",
+    "size": 594
+   },
+   {
+    "path": "src/config/site.php",
+    "note": "опис сайтів: зміст окремо від коду",
+    "size": 18894
+   },
+   {
+    "path": "src/app/Support/Theme.php",
+    "note": "вибір поточної теми сайту",
+    "size": 1792
+   },
+   {
+    "path": "src/app/Models/Item.php",
+    "note": "модель запису переліку",
+    "size": 1023
+   },
+   {
+    "path": "src/app/Http/Controllers/SiteController.php",
+    "note": "публічна частина",
+    "size": 1344
+   },
+   {
+    "path": "src/app/Http/Controllers/MessageController.php",
+    "note": "форма зворотного зв'язку та скринька",
+    "size": 2470
+   },
+   {
+    "path": "src/app/Http/Controllers/ItemController.php",
+    "note": "закрита частина: CRUD записів",
+    "size": 3587
+   },
+   {
+    "path": "src/routes/web.php",
+    "note": "маршрути",
+    "size": 1639
+   },
+   {
+    "path": "src/database/migrations/2026_09_18_160000_create_items_table.php",
+    "note": "таблиця записів",
+    "size": 1235
+   },
+   {
+    "path": "src/resources/views/layouts/site.blade.php",
+    "note": "спільний макет",
+    "size": 3072
+   },
+   {
+    "path": "src/resources/views/site/index.blade.php",
+    "note": "головна сторінка",
+    "size": 6097
+   },
+   {
+    "path": "src/tailwind.config.js",
+    "note": "палітра й гарнітури",
+    "size": 1195
+   },
+   {
+    "path": "src/resources/css/app.css",
+    "note": "оформлення",
+    "size": 2062
+   }
+  ],
+  "port": 8096,
+  "admin": 8097
  }
 }

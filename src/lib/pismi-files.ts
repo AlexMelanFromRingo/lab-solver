@@ -24,6 +24,8 @@ export interface PismiIndex {
   lab1: LabBundle;
   lab2: LabBundle[];
   lab3: LabBundle;
+  lab4: LabBundle;
+  lab5: LabBundle;
 }
 
 /**
