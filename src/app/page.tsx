@@ -5,7 +5,7 @@ import { HeroTeaser } from "@/components/hero-teaser";
 import { ModuleCard } from "@/components/module-card";
 import { categories, modules, type Category } from "@/lib/modules";
 
-const CATEGORY_ORDER: Category[] = ["crypto", "number", "theory", "codes", "arch", "networks"];
+const CATEGORY_ORDER: Category[] = ["crypto", "number", "math", "theory", "codes", "arch", "networks"];
 
 export default function Home() {
   return (
