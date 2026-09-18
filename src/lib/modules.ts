@@ -1,4 +1,4 @@
-export type Category = "crypto" | "number" | "theory" | "codes" | "arch" | "networks" | "math";
+export type Category = "crypto" | "number" | "theory" | "codes" | "arch" | "networks" | "pismi";
 
 export const categories: Record<
   Category,
@@ -40,11 +40,11 @@ export const categories: Record<
     accent: "var(--cat-networks)",
     accentSoft: "var(--cat-networks-soft)",
   },
-  math: {
-    title: "Математика",
-    short: "Тождества и преобразования",
-    accent: "var(--cat-math)",
-    accentSoft: "var(--cat-math-soft)",
+  pismi: {
+    title: "Проектирование ИС в сетях Интернет",
+    short: "Формулы и объекты по вариантам",
+    accent: "var(--cat-pismi)",
+    accentSoft: "var(--cat-pismi-soft)",
   },
 };
 
@@ -62,15 +62,27 @@ export interface LabModule {
 
 export const modules: LabModule[] = [
   {
-    slug: "trig-identities",
-    title: "Проверка тождеств",
-    category: "math",
-    tagline: "Лаба 2 · 15 вариантов",
+    slug: "pismi-lab2-formulas",
+    title: "Лаба 2 · программа 1: вычисление функций",
+    category: "pismi",
+    tagline: "15 вариантов · проверка тождества y₁ = y₂",
     description:
       "Считает оба выражения варианта прямо по условию, без упрощений, и показывает журнал промежуточных величин — из него видно, каким преобразованием одно выражение переходит в другое.",
     hasVariants: true,
     variantCount: 15,
     source: "Проектування інформаційних систем в мережах Інтернет, ЛР2, с. 12–14",
+    size: "md",
+  },
+  {
+    slug: "pismi-lab2-objects",
+    title: "Лаба 2 · программа 2: задание объектом",
+    category: "pismi",
+    tagline: "13 вариантов · таблицы, адреса, календарь",
+    description:
+      "Тринадцать заданий второй программы: адреса сети и узла в двоичном виде, системы счисления, календарь, координаты ячейки, шахматная доска, пирамиды, зодиак и остальные — каждое по своим параметрам.",
+    hasVariants: true,
+    variantCount: 13,
+    source: "Проектування інформаційних систем в мережах Інтернет, ЛР2, с. 14–15",
     size: "md",
   },
   {

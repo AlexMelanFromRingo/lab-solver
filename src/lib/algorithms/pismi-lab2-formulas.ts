@@ -26,7 +26,7 @@ export interface TraceStep {
   value: number;
 }
 
-export interface TrigVariant {
+export interface FormulaVariant {
   variant: number;
   /** Какое преобразование стоит за этим вариантом. */
   title: string;
@@ -48,7 +48,7 @@ export interface TrigVariant {
 
 const { PI, sin, cos, tan, asin, sqrt, log, log2, log10, E, abs } = Math;
 
-export const TRIG_VARIANTS: TrigVariant[] = [
+export const FORMULA_VARIANTS: FormulaVariant[] = [
   {
     variant: 1,
     title: "Понижение степени через косинус двойного угла",
@@ -484,7 +484,7 @@ export const TRIG_VARIANTS: TrigVariant[] = [
   },
 ];
 
-export interface TrigResult {
+export interface FormulaResult {
   y1: number;
   y2: number;
   difference: number;
@@ -500,9 +500,9 @@ export interface TrigResult {
  * числах, либо ложно срабатывал на малых.
  */
 export function evaluateVariant(
-  variant: TrigVariant,
+  variant: FormulaVariant,
   given: Record<string, number> = variant.given
-): TrigResult {
+): FormulaResult {
   const y1 = variant.y1(given);
   const y2 = variant.y2(given);
   const difference = abs(y1 - y2);

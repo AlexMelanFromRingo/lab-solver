@@ -23,8 +23,8 @@
   --cat-arch-soft: #38bdf81a;
   --cat-networks: #34d399;
   --cat-networks-soft: #34d3991a;
-  --cat-math: #e879f9;
-  --cat-math-soft: #e879f91a;
+  --cat-pismi: #e879f9;
+  --cat-pismi-soft: #e879f91a;
 }
 
 @theme inline {
@@ -49,8 +49,8 @@
   --color-arch-soft: var(--cat-arch-soft);
   --color-networks: var(--cat-networks);
   --color-networks-soft: var(--cat-networks-soft);
-  --color-math: var(--cat-math);
-  --color-math-soft: var(--cat-math-soft);
+  --color-pismi: var(--cat-pismi);
+  --color-pismi-soft: var(--cat-pismi-soft);
 
   --font-display: var(--font-space-grotesk);
   --font-sans: var(--font-inter);

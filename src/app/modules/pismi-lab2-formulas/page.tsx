@@ -9,13 +9,13 @@ import { OutputBlock } from "@/components/ui/output-block";
 import { VariantDial } from "@/components/ui/variant-dial";
 import { categories, modules } from "@/lib/modules";
 import {
-  TRIG_VARIANTS,
+  FORMULA_VARIANTS,
   evaluateVariant,
   formatValue,
-} from "@/lib/algorithms/trig-identities";
+} from "@/lib/algorithms/pismi-lab2-formulas";
 
-const mod = modules.find((m) => m.slug === "trig-identities")!;
-const accent = categories.math.accent;
+const mod = modules.find((m) => m.slug === "pismi-lab2-formulas")!;
+const accent = categories.pismi.accent;
 
 /** Подписи аргументов: в методичке они греческие, в коде — латиницей. */
 const SYMBOLS: Record<string, string> = {
@@ -27,9 +27,9 @@ const SYMBOLS: Record<string, string> = {
   t: "t",
 };
 
-export default function TrigIdentitiesPage() {
+export default function FormulasPage() {
   const [variantNum, setVariantNum] = useState(1);
-  const variant = TRIG_VARIANTS.find((v) => v.variant === variantNum)!;
+  const variant = FORMULA_VARIANTS.find((v) => v.variant === variantNum)!;
 
   // Значения условия можно менять: тождество выполняется не только в точке
   // из таблицы, и это видно, если подставить своё число. Правки хранятся по
