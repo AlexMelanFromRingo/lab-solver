@@ -1,4 +1,4 @@
-export type Category = "crypto" | "number" | "theory" | "codes" | "arch" | "networks";
+export type Category = "crypto" | "number" | "theory" | "codes" | "arch" | "networks" | "math";
 
 export const categories: Record<
   Category,
@@ -40,6 +40,12 @@ export const categories: Record<
     accent: "var(--cat-networks)",
     accentSoft: "var(--cat-networks-soft)",
   },
+  math: {
+    title: "Математика",
+    short: "Тождества и преобразования",
+    accent: "var(--cat-math)",
+    accentSoft: "var(--cat-math-soft)",
+  },
 };
 
 export interface LabModule {
@@ -55,6 +61,18 @@ export interface LabModule {
 }
 
 export const modules: LabModule[] = [
+  {
+    slug: "trig-identities",
+    title: "Проверка тождеств",
+    category: "math",
+    tagline: "Лаба 2 · 15 вариантов",
+    description:
+      "Считает оба выражения варианта прямо по условию, без упрощений, и показывает журнал промежуточных величин — из него видно, каким преобразованием одно выражение переходит в другое.",
+    hasVariants: true,
+    variantCount: 15,
+    source: "Проектування інформаційних систем в мережах Інтернет, ЛР2, с. 12–14",
+    size: "md",
+  },
   {
     slug: "feistel-variant",
     title: "Сеть Фейстеля по варианту",
