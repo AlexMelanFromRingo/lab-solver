@@ -35,10 +35,10 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
 
           {guide.task && (
             <div
-              className="rounded-xl border px-5 py-4"
+              className="rounded-[4px] border px-5 py-4"
               style={{ borderColor: `${accent}44`, background: `${accent}0d` }}
             >
-              <div className="text-xs uppercase tracking-wide text-ink-faint">
+              <div className="text-xs text-ink-faint">
                 Индивидуальное задание
               </div>
               <p className="mt-1.5 text-sm leading-relaxed text-ink">{guide.task}</p>
@@ -72,9 +72,9 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
             {guide.screenshots.map((shot, i) => (
               <div
                 key={shot.what}
-                className="grid gap-3 rounded-xl border border-border bg-black/20 px-4 py-3.5 sm:grid-cols-[4.5rem_minmax(0,1fr)]"
+                className="grid gap-3 rounded-[4px] border border-border bg-black/20 px-4 py-3.5 sm:grid-cols-[4.5rem_minmax(0,1fr)]"
               >
-                <div className="text-xs font-medium uppercase tracking-wide" style={{ color: accent }}>
+                <div className="text-xs font-medium" style={{ color: accent }}>
                   Кадр {i + 1}
                 </div>
                 <div className="min-w-0">
@@ -103,7 +103,7 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
         </CardBody>
       </Card>
 
-      <details className="rounded-2xl border border-border bg-surface/60 backdrop-blur-xl">
+      <details className="rounded-[4px] border border-border bg-surface/60 backdrop-blur-xl">
         <summary className="cursor-pointer px-6 py-4 text-sm text-ink-dim">
           Контрольные вопросы — {guide.questions.length}
         </summary>

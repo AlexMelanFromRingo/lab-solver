@@ -142,7 +142,7 @@ function OtpBlock() {
           />
           <button
             onClick={() => setKeyHex(otpGenerateKeyHex(new TextEncoder().encode(text).length))}
-            className="mb-0.5 rounded-lg border border-border px-3 py-2.5 text-xs font-medium text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
+            className="mb-0.5 rounded-[3px] border border-border px-3 py-2.5 text-xs font-medium text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
           >
             Сгенерировать
           </button>

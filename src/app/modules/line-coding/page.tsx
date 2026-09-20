@@ -82,7 +82,7 @@ export default function LineCodingPage() {
                       {verified ? "стандартная схема" : "не сверено с отчётом"}
                     </span>
                   </div>
-                  <div className="overflow-x-auto rounded-xl border border-border bg-black/30 p-3 text-arch">
+                  <div className="overflow-x-auto rounded-[4px] border border-border bg-black/30 p-3 text-arch">
                     <Waveform samples={samples} color="currentColor" />
                   </div>
                 </div>

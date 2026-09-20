@@ -15,9 +15,9 @@ export function OutputBlock({
   className?: string;
 }) {
   return (
-    <div className={cn("rounded-xl border border-border bg-black/30", className)}>
+    <div className={cn("rounded-[4px] border border-border bg-black/30", className)}>
       <div className="flex items-center justify-between border-b border-border px-4 py-2">
-        <span className="text-xs font-medium uppercase tracking-wide text-ink-faint">{label}</span>
+        <span className="text-xs font-medium text-ink-faint">{label}</span>
         <CopyButton value={value} />
       </div>
       <div

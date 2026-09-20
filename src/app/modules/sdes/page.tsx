@@ -97,7 +97,7 @@ export default function SdesPage() {
             </div>
 
             {enc.ok ? (
-              <div className="rounded-xl border border-border bg-black/30 overflow-hidden">
+              <div className="rounded-[4px] border border-border bg-black/30 overflow-hidden">
                 {fullTrace.map((l) => (
                   <Line key={l.label} label={l.label} value={l.value} />
                 ))}

@@ -13,10 +13,10 @@ import type { TaskOutput } from "@/lib/algorithms/pismi-lab2-objects";
 export function TaskOutputView({ output, accent }: { output: TaskOutput; accent: string }) {
   if (output.kind === "binary") {
     return (
-      <div className="overflow-x-auto rounded-xl border border-border">
+      <div className="overflow-x-auto rounded-[4px] border border-border">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border text-xs uppercase text-ink-faint">
+            <tr className="border-b border-border text-xs text-ink-faint">
               <th className="px-3 py-2 text-left">Величина</th>
               <th className="px-3 py-2 text-left">Десятичная</th>
               <th className="px-3 py-2 text-left">Двоичная</th>
@@ -42,10 +42,10 @@ export function TaskOutputView({ output, accent }: { output: TaskOutput; accent:
 
   if (output.kind === "table") {
     return (
-      <div className="overflow-x-auto rounded-xl border border-border">
+      <div className="overflow-x-auto rounded-[4px] border border-border">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border text-xs uppercase text-ink-faint">
+            <tr className="border-b border-border text-xs text-ink-faint">
               {output.head.map((head) => (
                 <th key={head} className="px-3 py-2 text-left">{head}</th>
               ))}
@@ -75,8 +75,8 @@ export function TaskOutputView({ output, accent }: { output: TaskOutput; accent:
     return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {output.items.map((item) => (
-          <div key={item.label} className="rounded-xl border border-border bg-black/30 px-4 py-3">
-            <div className="text-xs uppercase tracking-wide text-ink-faint">{item.label}</div>
+          <div key={item.label} className="rounded-[4px] border border-border bg-black/30 px-4 py-3">
+            <div className="text-xs text-ink-faint">{item.label}</div>
             <div className="mt-1 font-mono text-lg" style={{ color: accent }}>{item.value}</div>
           </div>
         ))}
@@ -86,7 +86,7 @@ export function TaskOutputView({ output, accent }: { output: TaskOutput; accent:
 
   if (output.kind === "lines") {
     return (
-      <div className="space-y-3 rounded-xl border border-border bg-black/30 px-5 py-4">
+      <div className="space-y-3 rounded-[4px] border border-border bg-black/30 px-5 py-4">
         {output.lines.map((line) => (
           <p
             key={line}
@@ -102,7 +102,7 @@ export function TaskOutputView({ output, accent }: { output: TaskOutput; accent:
 
   if (output.kind === "pyramid") {
     return (
-      <div className="space-y-1.5 overflow-x-auto rounded-xl border border-border bg-black/30 px-4 py-4">
+      <div className="space-y-1.5 overflow-x-auto rounded-[4px] border border-border bg-black/30 px-4 py-4">
         {output.rows.map((count) => (
           <div key={count} className="flex justify-center gap-1.5">
             {Array.from({ length: count }, (_, i) => (
@@ -122,7 +122,7 @@ export function TaskOutputView({ output, accent }: { output: TaskOutput; accent:
 
   // Сетка: календарь, координаты ячейки, шахматы, таблица по цифрам.
   return (
-    <div className="overflow-x-auto rounded-xl border border-border bg-black/20 p-4">
+    <div className="overflow-x-auto rounded-[4px] border border-border bg-black/20 p-4">
       <table className="border-collapse font-mono text-xs">
         {output.colHeaders && (
           <thead>

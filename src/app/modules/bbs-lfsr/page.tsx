@@ -64,10 +64,10 @@ export default function BbsLfsrPage() {
             {bbs.ok ? (
               <>
                 <OutputBlock label="n = p·q" value={bbs.data.n.toString()} />
-                <div className="overflow-x-auto rounded-xl border border-border">
+                <div className="overflow-x-auto rounded-[4px] border border-border">
                   <table className="w-full text-sm font-mono">
                     <thead>
-                      <tr className="border-b border-border text-ink-faint text-xs uppercase">
+                      <tr className="border-b border-border text-ink-faint text-xs">
                         <th className="text-left px-3 py-2">i</th>
                         <th className="text-left px-3 py-2">Xᵢ</th>
                         <th className="text-left px-3 py-2">Bᵢ</th>

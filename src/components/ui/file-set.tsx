@@ -90,14 +90,14 @@ export function FileSet({
   return (
     <div className="space-y-4">
       {archive && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-black/20 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-[4px] border border-border bg-black/20 px-4 py-3">
           <p className="text-sm text-ink-dim">
             Весь каталог работы одним архивом: распаковать и запустить, ничего не доустанавливая.
           </p>
           <a
             href={`${base}/${archive.path}`}
             download
-            className="shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+            className="shrink-0 rounded-[3px] px-4 py-2 text-sm font-medium transition-colors"
             style={{ color: accent, background: `${accent}14`, border: `1px solid ${accent}44` }}
           >
             Скачать архивом · {kb(archive.size)}
@@ -124,7 +124,7 @@ export function FileSet({
               type="button"
               onClick={() => setActive(file.path)}
               className={cn(
-                "min-w-0 rounded-lg px-3 py-2 text-left transition-colors",
+                "min-w-0 rounded-[3px] px-3 py-2 text-left transition-colors",
                 selected ? "bg-white/[0.06]" : "hover:bg-white/[0.03]"
               )}
             >
@@ -163,7 +163,7 @@ export function FileSet({
       </nav>
 
       {state === "failed" ? (
-        <p className="rounded-xl border border-border bg-black/30 px-4 py-3 text-sm text-ink-dim">
+        <p className="rounded-[4px] border border-border bg-black/30 px-4 py-3 text-sm text-ink-dim">
           Не вдалося завантажити {current}.
         </p>
       ) : (

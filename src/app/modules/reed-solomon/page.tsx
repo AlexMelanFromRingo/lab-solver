@@ -88,7 +88,7 @@ export default function ReedSolomonPage() {
                   key={i}
                   onClick={() => toggleError(i)}
                   className={cn(
-                    "flex flex-col items-center rounded-lg border px-2.5 py-1.5 min-w-[3.2rem] font-mono text-xs transition-colors",
+                    "flex flex-col items-center rounded-[3px] border px-2.5 py-1.5 min-w-[3.2rem] font-mono text-xs transition-colors",
                     errorPositions.has(i) ? "border-codes bg-codes-soft text-codes" : "border-border bg-surface-2 text-ink hover:border-border-strong",
                     i >= messageBytes.length && "opacity-70"
                   )}
@@ -103,7 +103,7 @@ export default function ReedSolomonPage() {
               <>
                 <div
                   className={cn(
-                    "rounded-xl border px-5 py-3 text-sm font-medium",
+                    "rounded-[4px] border px-5 py-3 text-sm font-medium",
                     result.success ? "border-theory/30 bg-theory-soft text-theory" : "border-codes/30 bg-codes-soft text-codes"
                   )}
                 >

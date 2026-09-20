@@ -55,7 +55,7 @@ export default function LuhnPage() {
                   {result.data.steps.map((s, i) => (
                     <div
                       key={i}
-                      className="flex flex-col items-center rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 min-w-[3rem]"
+                      className="flex flex-col items-center rounded-[3px] border border-border bg-surface-2 px-2.5 py-1.5 min-w-[3rem]"
                     >
                       <span className="text-[10px] text-ink-faint">{s.original}{s.doubled ? "×2" : ""}</span>
                       <span className="font-mono text-sm text-ink">{s.afterCorrection}</span>
@@ -66,7 +66,7 @@ export default function LuhnPage() {
                   <OutputBlock label="Сумма" value={String(result.data.total)} className="flex-1 min-w-[10rem]" />
                   <div
                     className={
-                      "rounded-xl border px-5 py-3 text-sm font-medium " +
+                      "rounded-[4px] border px-5 py-3 text-sm font-medium " +
                       (result.data.isValid
                         ? "border-theory/30 bg-theory-soft text-theory"
                         : "border-codes/30 bg-codes-soft text-codes")

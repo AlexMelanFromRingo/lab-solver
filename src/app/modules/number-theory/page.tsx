@@ -53,10 +53,10 @@ export default function NumberTheoryPage() {
               <OutputBlock label="НСД(a, b)" value={String(g)} />
               <OutputBlock label="НСК(a, b) = |a·b| / НСД" value={String(l)} />
             </div>
-            <div className="overflow-x-auto rounded-xl border border-border">
+            <div className="overflow-x-auto rounded-[4px] border border-border">
               <table className="w-full text-sm font-mono">
                 <thead>
-                  <tr className="border-b border-border text-ink-faint text-xs uppercase">
+                  <tr className="border-b border-border text-ink-faint text-xs">
                     <th className="text-left px-3 py-2">Залишки</th>
                     <th className="text-left px-3 py-2">Часткові</th>
                     <th className="text-left px-3 py-2">x</th>
@@ -89,7 +89,7 @@ export default function NumberTheoryPage() {
 
             {congruence.ok && congruence.data.solvable ? (
               <>
-                <div className="rounded-xl border border-border bg-black/30 max-h-48 overflow-y-auto divide-y divide-border/50">
+                <div className="rounded-[4px] border border-border bg-black/30 max-h-48 overflow-y-auto divide-y divide-border/50">
                   {congruence.data.searchSteps.map((s) => (
                     <div key={s.i} className="flex justify-between px-4 py-1.5 font-mono text-sm">
                       <span className="text-ink-faint">Итерация {s.i}</span>

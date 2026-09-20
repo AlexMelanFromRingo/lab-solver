@@ -99,10 +99,10 @@ export default function PolarPage() {
               />
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-border">
+            <div className="overflow-x-auto rounded-[4px] border border-border">
               <table className="w-full text-sm font-mono">
                 <thead>
-                  <tr className="border-b border-border text-ink-faint text-xs uppercase">
+                  <tr className="border-b border-border text-ink-faint text-xs">
                     <th className="text-left px-3 py-2">Канал</th>
                     <th className="text-left px-3 py-2">Z (Батачария)</th>
                     <th className="text-left px-3 py-2">Тип</th>
@@ -128,7 +128,7 @@ export default function PolarPage() {
                 <button
                   key={i}
                   onClick={() => toggleInfoBit(i)}
-                  className="w-10 h-10 rounded-lg border border-border bg-surface-2 text-ink font-mono hover:border-border-strong transition-colors"
+                  className="w-10 h-10 rounded-[3px] border border-border bg-surface-2 text-ink font-mono hover:border-border-strong transition-colors"
                 >
                   {b}
                 </button>
@@ -144,7 +144,7 @@ export default function PolarPage() {
                   key={i}
                   onClick={() => toggleError(i)}
                   className={cn(
-                    "w-10 h-10 rounded-lg border font-mono transition-colors",
+                    "w-10 h-10 rounded-[3px] border font-mono transition-colors",
                     errorPositions.has(i) ? "border-codes bg-codes-soft text-codes" : "border-border bg-surface-2 text-ink"
                   )}
                 >
@@ -154,12 +154,12 @@ export default function PolarPage() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className={cn("rounded-xl border px-4 py-3", scOk ? "border-theory/30 bg-theory-soft" : "border-codes/30 bg-codes-soft")}>
-                <div className="text-xs uppercase text-ink-faint mb-1">SC-декодер</div>
+              <div className={cn("rounded-[4px] border px-4 py-3", scOk ? "border-theory/30 bg-theory-soft" : "border-codes/30 bg-codes-soft")}>
+                <div className="text-xs text-ink-faint mb-1">SC-декодер</div>
                 <div className={cn("font-mono text-sm", scOk ? "text-theory" : "text-codes")}>{scInfo.join("")} {scOk ? "✓" : "✗"}</div>
               </div>
-              <div className={cn("rounded-xl border px-4 py-3", mlOk ? "border-theory/30 bg-theory-soft" : "border-codes/30 bg-codes-soft")}>
-                <div className="text-xs uppercase text-ink-faint mb-1">ML-декодер</div>
+              <div className={cn("rounded-[4px] border px-4 py-3", mlOk ? "border-theory/30 bg-theory-soft" : "border-codes/30 bg-codes-soft")}>
+                <div className="text-xs text-ink-faint mb-1">ML-декодер</div>
                 <div className={cn("font-mono text-sm", mlOk ? "text-theory" : "text-codes")}>{mlInfo.join("")} {mlOk ? "✓" : "✗"}</div>
               </div>
             </div>

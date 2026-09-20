@@ -170,7 +170,7 @@ export default function ItLab2Page() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <p className="text-xs uppercase tracking-wide text-ink-faint">Задание 1</p>
+              <p className="text-xs text-ink-faint">Задание 1</p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
                 График аналитически заданной функции
               </h2>
@@ -208,7 +208,7 @@ export default function ItLab2Page() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <p className="text-xs uppercase tracking-wide text-ink-faint">Задание 2</p>
+              <p className="text-xs text-ink-faint">Задание 2</p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
                 График функции, заданной массивом данных
               </h2>
@@ -237,7 +237,7 @@ export default function ItLab2Page() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <p className="text-xs uppercase tracking-wide text-ink-faint">
+              <p className="text-xs text-ink-faint">
                 Задание 3 · по желанию
               </p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
@@ -264,10 +264,10 @@ export default function ItLab2Page() {
               />
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-border">
+            <div className="overflow-x-auto rounded-[4px] border border-border">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border text-xs uppercase text-ink-faint">
+                  <tr className="border-b border-border text-xs text-ink-faint">
                     <th className="px-3 py-2 text-left font-medium">Аргумент</th>
                     <th className="px-3 py-2 text-left font-medium">Что задаёт</th>
                   </tr>
@@ -329,10 +329,10 @@ export default function ItLab2Page() {
               </p>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-border">
+            <div className="overflow-x-auto rounded-[4px] border border-border">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border text-xs uppercase text-ink-faint">
+                  <tr className="border-b border-border text-xs text-ink-faint">
                     <th className="px-3 py-2 text-left font-medium">Действие</th>
                     <th className="px-3 py-2 text-left font-medium">SMath / Mathcad</th>
                     <th className="px-3 py-2 text-left font-medium">Python</th>

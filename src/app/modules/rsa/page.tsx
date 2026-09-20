@@ -105,13 +105,13 @@ export default function RsaPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => setMode("auto")}
-                className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${mode === "auto" ? "bg-crypto text-black" : "border border-border text-ink-dim hover:text-ink"}`}
+                className={`rounded-[3px] px-4 py-2 text-sm font-medium transition-colors ${mode === "auto" ? "bg-crypto text-black" : "border border-border text-ink-dim hover:text-ink"}`}
               >
                 Автогенерация p, q
               </button>
               <button
                 onClick={() => setMode("manual")}
-                className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${mode === "manual" ? "bg-crypto text-black" : "border border-border text-ink-dim hover:text-ink"}`}
+                className={`rounded-[3px] px-4 py-2 text-sm font-medium transition-colors ${mode === "manual" ? "bg-crypto text-black" : "border border-border text-ink-dim hover:text-ink"}`}
               >
                 Свои p, q, e
               </button>
@@ -132,7 +132,7 @@ export default function RsaPage() {
             )}
 
             {!safe ? (
-              <div className="h-24 rounded-xl border border-border bg-black/20 animate-pulse" />
+              <div className="h-24 rounded-[4px] border border-border bg-black/20 animate-pulse" />
             ) : keys.ok ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <OutputBlock label="p" value={keys.data.p.toString()} />

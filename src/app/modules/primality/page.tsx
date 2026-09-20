@@ -62,19 +62,19 @@ export default function PrimalityPage() {
             </div>
 
             {!mounted ? (
-              <div className="h-24 rounded-xl border border-border bg-black/20 animate-pulse" />
+              <div className="h-24 rounded-[4px] border border-border bg-black/20 animate-pulse" />
             ) : result.ok ? (
               <>
                 <div
                   className={cn(
-                    "rounded-xl border px-5 py-3 text-sm font-medium",
+                    "rounded-[4px] border px-5 py-3 text-sm font-medium",
                     result.data.isPrime ? "border-theory/30 bg-theory-soft text-theory" : "border-codes/30 bg-codes-soft text-codes"
                   )}
                 >
                   {result.data.isPrime ? "Вероятно простое" : "Составное"}
                   {result.data.isPrime && !result.data.certain && " (вероятностный тест)"}
                 </div>
-                <div className="rounded-xl border border-border bg-black/30 divide-y divide-border">
+                <div className="rounded-[4px] border border-border bg-black/30 divide-y divide-border">
                   {result.data.steps.map((s, i) => (
                     <div key={i} className="px-4 py-2.5 flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
                       <span className="text-xs font-medium text-ink-dim min-w-[10rem]">{s.label}</span>

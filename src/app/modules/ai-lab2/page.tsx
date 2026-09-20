@@ -43,7 +43,7 @@ const METHOD_FIELDS: { key: keyof Methods; label: string; options: readonly stri
 
 function VariableCard({ variable, output }: { variable: Variable; output?: boolean }) {
   return (
-    <div className="rounded-xl border border-border bg-black/20 px-4 py-4">
+    <div className="rounded-[4px] border border-border bg-black/20 px-4 py-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <span className="text-sm text-ink">
           {output && <span className="text-ink-faint">выход · </span>}
@@ -121,7 +121,7 @@ export default function AiLab2Page() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <p className="text-xs uppercase tracking-wide text-ink-faint">
+              <p className="text-xs text-ink-faint">
                 Задание {task.variant}
               </p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
@@ -180,7 +180,7 @@ export default function AiLab2Page() {
                   key={c.label}
                   type="button"
                   onClick={() => setEdits((prev) => ({ ...prev, [variantNum]: c.values }))}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-ink-dim transition-colors hover:border-border-strong hover:text-ink"
+                  className="rounded-[3px] border border-border px-3 py-1.5 text-xs text-ink-dim transition-colors hover:border-border-strong hover:text-ink"
                 >
                   {c.label}
                 </button>

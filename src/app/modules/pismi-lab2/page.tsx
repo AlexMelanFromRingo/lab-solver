@@ -68,13 +68,13 @@ export default function PismiLab2Page() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <p className="text-xs uppercase tracking-wide text-ink-faint">Программа № 1</p>
+              <p className="text-xs text-ink-faint">Программа № 1</p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
                 {variant.title}
               </h2>
             </div>
 
-            <div className="rounded-xl border border-border bg-black/30 px-4 py-3 font-mono text-sm leading-relaxed text-ink">
+            <div className="rounded-[4px] border border-border bg-black/30 px-4 py-3 font-mono text-sm leading-relaxed text-ink">
               <div>{variant.f1}</div>
               <div>{variant.f2}</div>
             </div>
@@ -102,7 +102,7 @@ export default function PismiLab2Page() {
             </div>
 
             <div
-              className="rounded-xl border px-4 py-3 text-sm"
+              className="rounded-[4px] border px-4 py-3 text-sm"
               style={{
                 color: result.matched ? "#34d399" : "#fb7185",
                 borderColor: result.matched ? "#34d39955" : "#fb718555",
@@ -114,7 +114,7 @@ export default function PismiLab2Page() {
                 : `Значения разошлись на ${result.difference.toExponential(2)}.`}
             </div>
 
-            <details className="rounded-xl border border-border bg-black/20">
+            <details className="rounded-[4px] border border-border bg-black/20">
               <summary className="cursor-pointer px-4 py-2.5 text-sm text-ink-dim">
                 Журнал вычисления и разбор тождества
               </summary>
@@ -131,7 +131,7 @@ export default function PismiLab2Page() {
                     ))}
                   </tbody>
                 </table>
-                <div className="rounded-lg border border-border bg-black/30 px-3 py-2 font-mono text-xs leading-relaxed text-ink">
+                <div className="rounded-[3px] border border-border bg-black/30 px-3 py-2 font-mono text-xs leading-relaxed text-ink">
                   {variant.identity.map((line) => (
                     <div key={line}>{line}</div>
                   ))}
@@ -139,7 +139,7 @@ export default function PismiLab2Page() {
                 <p className="text-sm leading-relaxed text-ink-dim">{variant.conclusion}</p>
                 {variant.note && (
                   <p
-                    className="rounded-lg border px-3 py-2 text-sm leading-relaxed"
+                    className="rounded-[3px] border px-3 py-2 text-sm leading-relaxed"
                     style={{ color: accent, borderColor: `${accent}55`, background: `${accent}0f` }}
                   >
                     {variant.note}
@@ -154,7 +154,7 @@ export default function PismiLab2Page() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <p className="text-xs uppercase tracking-wide text-ink-faint">
+              <p className="text-xs text-ink-faint">
                 Программа № 2 · задание {taskNum}
               </p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
@@ -184,7 +184,7 @@ export default function PismiLab2Page() {
 
             {task.note && (
               <p
-                className="rounded-xl border px-4 py-3 text-sm leading-relaxed"
+                className="rounded-[4px] border px-4 py-3 text-sm leading-relaxed"
                 style={{ color: accent, borderColor: `${accent}55`, background: `${accent}0f` }}
               >
                 {task.note}

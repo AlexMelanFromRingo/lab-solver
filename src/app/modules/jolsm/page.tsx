@@ -46,10 +46,10 @@ end "сумма посчитана"`,
 function VarTable({ vars }: { vars: VarSnapshot[] }) {
   if (vars.length === 0) return <p className="text-sm text-ink-faint">Переменные ещё не объявлены.</p>;
   return (
-    <div className="overflow-x-auto rounded-xl border border-border">
+    <div className="overflow-x-auto rounded-[4px] border border-border">
       <table className="w-full text-sm font-mono">
         <thead>
-          <tr className="border-b border-border text-ink-faint text-xs uppercase">
+          <tr className="border-b border-border text-ink-faint text-xs">
             <th className="text-left px-3 py-2">Имя</th>
             <th className="text-left px-3 py-2">Разряд.</th>
             <th className="text-left px-3 py-2">Значение</th>
@@ -108,7 +108,7 @@ export default function JolsmPage() {
             <button
               key={name}
               onClick={() => setCode(EXAMPLES[name])}
-              className="rounded-lg border border-border px-3 py-1.5 text-xs text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
+              className="rounded-[3px] border border-border px-3 py-1.5 text-xs text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
             >
               {name}
             </button>
@@ -123,7 +123,7 @@ export default function JolsmPage() {
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 spellCheck={false}
-                className="w-full h-80 rounded-lg border border-border bg-black/30 px-4 py-3 font-mono text-sm text-ink resize-y focus:outline-none focus:border-border-strong"
+                className="w-full h-80 rounded-[3px] border border-border bg-black/30 px-4 py-3 font-mono text-sm text-ink resize-y focus:outline-none focus:border-border-strong"
               />
               <TextField
                 label="Значения для read/ввести (по порядку, через запятую)"
@@ -137,19 +137,19 @@ export default function JolsmPage() {
             <CardBody className="pt-6 space-y-4">
               <h2 className="font-display text-lg font-semibold text-ink">Результат</h2>
               {!result.ok && (
-                <div className="rounded-lg border border-codes/30 bg-codes-soft px-4 py-3 text-sm text-codes space-y-1">
+                <div className="rounded-[3px] border border-codes/30 bg-codes-soft px-4 py-3 text-sm text-codes space-y-1">
                   {result.errors.map((e, i) => (
                     <p key={i}>{e}</p>
                   ))}
                 </div>
               )}
               {result.ended && (
-                <div className="rounded-lg border border-theory/30 bg-theory-soft px-4 py-3 text-sm text-theory">
+                <div className="rounded-[3px] border border-theory/30 bg-theory-soft px-4 py-3 text-sm text-theory">
                   END: {result.ended || "(без сообщения)"}
                 </div>
               )}
               {result.output.length > 0 && (
-                <div className="rounded-lg border border-border bg-black/30 px-4 py-3 space-y-1">
+                <div className="rounded-[3px] border border-border bg-black/30 px-4 py-3 space-y-1">
                   {result.output.map((o, i) => (
                     <p key={i} className="font-mono text-xs text-ink break-all">
                       {o}
@@ -174,7 +174,7 @@ export default function JolsmPage() {
                     onChange={(e) => setStepIdx(Number(e.target.value))}
                     className="w-full accent-arch"
                   />
-                  <div className={cn("font-mono text-xs px-3 py-2 rounded-lg border border-border bg-black/20 text-ink-dim break-all")}>
+                  <div className={cn("font-mono text-xs px-3 py-2 rounded-[3px] border border-border bg-black/20 text-ink-dim break-all")}>
                     {result.trace[stepIdx]?.text}
                   </div>
                 </div>

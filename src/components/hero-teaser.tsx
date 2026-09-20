@@ -7,6 +7,23 @@ import { F1_NAMES, F23_NAMES, bitsToHex, encryptBlock, getVariant } from "@/lib/
 const SAMPLE_KEY = 0b1010110011000101n;
 const SAMPLE_BLOCK = 0b1100110011001100n;
 
+/**
+ * Первый экран: не картинка продукта, а работающий прибор.
+ *
+ * Показания стоят столбцами с подписями снизу, как на приборной панели, и
+ * меняются от номера варианта. Смысл именно в том, чтобы это увидели: номер
+ * меняет не ключ, а саму конструкцию раунда.
+ */
+
+function Line({ name, value }: { name: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 border-b border-border py-2 last:border-b-0">
+      <span className="text-[0.8125rem] text-ink-faint">{name}</span>
+      <span className="font-mono text-[0.8125rem] text-ink-dim">{value}</span>
+    </div>
+  );
+}
+
 export function HeroTeaser() {
   const [variantNum, setVariantNum] = useState(1);
   const spec = getVariant(variantNum);
@@ -17,31 +34,41 @@ export function HeroTeaser() {
     return encryptBlock(block, spec, key, Math.max(4, Math.ceil(spec.k / (spec.n / 2))));
   }, [spec]);
 
+  const block = bitsToHex(SAMPLE_BLOCK & ((1n << BigInt(spec.n)) - 1n), spec.n);
+  const cipher = bitsToHex(enc.output, spec.n);
+
   return (
-    <div className="rounded-2xl border border-border-strong bg-surface/70 backdrop-blur-xl p-6 space-y-5">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-ink-faint mb-1">Живой пример — сеть Фейстеля</p>
-          <p className="text-sm text-ink-dim">
-            n={spec.n}, K={spec.k} · F1: {F1_NAMES[spec.f1]}
-          </p>
-        </div>
+    <div className="border border-border bg-surface/70 p-5" style={{ borderRadius: 4 }}>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <p className="max-w-[26ch] text-sm leading-snug text-ink-dim">
+          Номер варианта меняет не ключ, а саму конструкцию раунда.
+        </p>
         <VariantDial value={variantNum} min={1} max={24} onChange={setVariantNum} accent="var(--cat-crypto)" />
       </div>
-      <div className="grid grid-cols-2 gap-3 font-mono text-sm">
-        <div className="rounded-lg border border-border bg-black/30 px-3 py-2.5">
-          <div className="text-[10px] text-ink-faint uppercase mb-1">Блок (hex)</div>
-          <div className="text-ink">{bitsToHex(SAMPLE_BLOCK & ((1n << BigInt(spec.n)) - 1n), spec.n)}</div>
+
+      <div
+        className="mt-5 flex items-end gap-6 border-t pt-5"
+        style={{ borderColor: "var(--border)" }}
+      >
+        <div className="min-w-0">
+          <div className="font-mono text-2xl leading-none text-ink">{block}</div>
+          <div className="mt-1.5 text-[0.6875rem] text-ink-faint">блок, hex</div>
         </div>
-        <div className="rounded-lg border border-crypto/30 bg-crypto-soft px-3 py-2.5">
-          <div className="text-[10px] text-crypto uppercase mb-1">Шифротекст (hex)</div>
-          <div className="text-crypto">{bitsToHex(enc.output, spec.n)}</div>
+        <div className="pb-1 text-ink-faint">→</div>
+        <div className="min-w-0">
+          <div className="font-mono text-2xl leading-none text-crypto">{cipher}</div>
+          <div className="mt-1.5 text-[0.6875rem] text-ink-faint">шифротекст, hex</div>
         </div>
       </div>
-      <p className="text-xs text-ink-faint">
-        F2: {F23_NAMES[spec.f2.id]}({spec.f2.param}) → F3: {F23_NAMES[spec.f3.id]}({spec.f3.param}) — меняя номер варианта,
-        вы меняете саму конструкцию раунда, не только ключ.
-      </p>
+
+      <div className="mt-5">
+        <Line name="размер блока и ключа" value={`n = ${spec.n}, K = ${spec.k}`} />
+        <Line name="функция F1" value={F1_NAMES[spec.f1]} />
+        <Line
+          name="функции F2 и F3"
+          value={`${F23_NAMES[spec.f2.id]}(${spec.f2.param}) · ${F23_NAMES[spec.f3.id]}(${spec.f3.param})`}
+        />
+      </div>
     </div>
   );
 }

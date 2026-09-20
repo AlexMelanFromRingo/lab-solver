@@ -68,7 +68,7 @@ export default function LdpcPage() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <h2 className="font-display text-lg font-semibold text-ink">Проверочная матрица H ({m}×{n})</h2>
-            <div className="inline-block rounded-xl border border-border overflow-hidden font-mono text-sm">
+            <div className="inline-block rounded-[4px] border border-border overflow-hidden font-mono text-sm">
               {h.map((row, i) => (
                 <div key={i} className="flex">
                   {row.map((v, j) => (
@@ -83,7 +83,7 @@ export default function LdpcPage() {
             <p className="text-xs text-ink-faint">Информационные биты ({k}), кликните, чтобы переключить:</p>
             <div className="flex gap-1.5">
               {dataBits.map((b, i) => (
-                <button key={i} onClick={() => toggleData(i)} className="w-10 h-10 rounded-lg border border-border bg-surface-2 text-ink font-mono hover:border-border-strong transition-colors">
+                <button key={i} onClick={() => toggleData(i)} className="w-10 h-10 rounded-[3px] border border-border bg-surface-2 text-ink font-mono hover:border-border-strong transition-colors">
                   {b}
                 </button>
               ))}
@@ -103,7 +103,7 @@ export default function LdpcPage() {
                   key={i}
                   onClick={() => toggleError(i)}
                   className={cn(
-                    "w-10 h-10 rounded-lg border font-mono transition-colors",
+                    "w-10 h-10 rounded-[3px] border font-mono transition-colors",
                     errorPositions.has(i) ? "border-codes bg-codes-soft text-codes" : "border-border bg-surface-2 text-ink"
                   )}
                 >
@@ -114,7 +114,7 @@ export default function LdpcPage() {
 
             <div
               className={cn(
-                "rounded-xl border px-5 py-3 text-sm font-medium",
+                "rounded-[4px] border px-5 py-3 text-sm font-medium",
                 converged && correct ? "border-theory/30 bg-theory-soft text-theory" : "border-codes/30 bg-codes-soft text-codes"
               )}
             >

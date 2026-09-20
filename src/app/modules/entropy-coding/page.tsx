@@ -18,10 +18,10 @@ function CodeTableView({ title, codes, items }: { title: string; codes: Record<s
   return (
     <div>
       <h3 className="text-sm font-medium text-ink-dim mb-2">{title}</h3>
-      <div className="overflow-x-auto rounded-xl border border-border">
+      <div className="overflow-x-auto rounded-[4px] border border-border">
         <table className="w-full text-sm font-mono">
           <thead>
-            <tr className="border-b border-border text-ink-faint text-xs uppercase">
+            <tr className="border-b border-border text-ink-faint text-xs">
               <th className="text-left px-3 py-2">Символ</th>
               <th className="text-left px-3 py-2">p</th>
               <th className="text-left px-3 py-2">Код</th>

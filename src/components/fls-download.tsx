@@ -42,7 +42,7 @@ export function FlsDownload({
         <button
           type="button"
           onClick={download}
-          className="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+          className="rounded-[3px] px-4 py-2 text-sm font-medium transition-colors"
           style={{ color: accent, background: `${accent}14`, border: `1px solid ${accent}44` }}
         >
           Скачать {filename}
@@ -52,7 +52,7 @@ export function FlsDownload({
         </span>
       </div>
 
-      <details className="rounded-xl border border-border bg-black/20">
+      <details className="rounded-[4px] border border-border bg-black/20">
         <summary className="cursor-pointer px-4 py-2.5 text-sm text-ink-dim">
           Посмотреть содержимое файла
         </summary>

@@ -61,7 +61,7 @@ export default function ParityChannelPage() {
               <option value="2">Сообщение 2: {variant.message2}</option>
             </SelectField>
 
-            <div className="inline-block rounded-xl border border-border overflow-hidden">
+            <div className="inline-block rounded-[4px] border border-border overflow-hidden">
               {baseMatrix.bits.map((row, r) => (
                 <div key={r} className="flex">
                   {row.map((_, c) => (
@@ -98,7 +98,7 @@ export default function ParityChannelPage() {
 
             <div
               className={cn(
-                "rounded-xl border px-5 py-3 text-sm font-medium",
+                "rounded-[4px] border px-5 py-3 text-sm font-medium",
                 check.errorCount === "0"
                   ? "border-theory/30 bg-theory-soft text-theory"
                   : check.errorCount === "1"
@@ -121,10 +121,10 @@ export default function ParityChannelPage() {
               Длина сообщения {variant.lengthMB} МБ, техническая скорость {variant.speedSymPerSec} симв/с.
               p1/p2/p3 — три отдельных сценария (не усредняются), сравниваются с безошибочным каналом (p=0).
             </p>
-            <div className="overflow-x-auto rounded-xl border border-border">
+            <div className="overflow-x-auto rounded-[4px] border border-border">
               <table className="w-full text-sm font-mono">
                 <thead>
-                  <tr className="border-b border-border text-ink-faint text-xs uppercase">
+                  <tr className="border-b border-border text-ink-faint text-xs">
                     <th className="text-left px-3 py-2">Сценарий</th>
                     <th className="text-left px-3 py-2">p</th>
                     <th className="text-left px-3 py-2">H(p)</th>

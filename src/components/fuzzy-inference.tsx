@@ -40,7 +40,7 @@ function Stage({
   return (
     <section className="grid gap-4 sm:grid-cols-[2.5rem_minmax(0,1fr)]">
       <div
-        className="hidden h-8 w-8 items-center justify-center rounded-lg font-mono text-sm sm:flex"
+        className="hidden h-8 w-8 items-center justify-center rounded-[3px] font-mono text-sm sm:flex"
         style={{ color: accent, background: `${accent}14`, border: `1px solid ${accent}33` }}
       >
         {number}
@@ -111,10 +111,10 @@ export function FuzzyInference({
         note={`Сила правила — свёртка степеней его посылок. Связка конъюнктивная, способ построения — ${METHOD_LABELS[methods.conj]}.`}
         accent={accent}
       >
-        <div className="overflow-x-auto rounded-xl border border-border">
+        <div className="overflow-x-auto rounded-[4px] border border-border">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-xs uppercase text-ink-faint">
+              <tr className="border-b border-border text-xs text-ink-faint">
                 <th className="px-3 py-2 text-left font-medium">Правило</th>
                 <th className="px-3 py-2 text-left font-medium">Посылки</th>
                 <th className="px-3 py-2 text-right font-medium">Сила</th>
@@ -192,10 +192,10 @@ export function FuzzyInference({
         accent={accent}
       >
         <div
-          className="rounded-xl border px-5 py-4"
+          className="rounded-[4px] border px-5 py-4"
           style={{ borderColor: `${accent}44`, background: `${accent}0d` }}
         >
-          <div className="text-xs uppercase tracking-wide text-ink-faint">
+          <div className="text-xs text-ink-faint">
             {system.output.label}
           </div>
           <div className="mt-1 font-mono text-2xl" style={{ color: accent }}>

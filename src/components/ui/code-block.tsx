@@ -56,7 +56,7 @@ export function CodeBlock({ code, filename, className }: { code: string; filenam
   }
 
   return (
-    <div className={cn("rounded-xl border border-border bg-black/40 overflow-hidden", className)}>
+    <div className={cn("rounded-[4px] border border-border bg-black/40 overflow-hidden", className)}>
       <div className="flex items-center justify-between border-b border-border px-4 py-2">
         <span className="text-xs font-mono text-ink-faint">{filename}</span>
         <div className="flex gap-2">
@@ -66,14 +66,14 @@ export function CodeBlock({ code, filename, className }: { code: string; filenam
               setCopied(true);
               setTimeout(() => setCopied(false), 1400);
             }}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-[3px] border border-border px-2.5 py-1.5 text-xs font-medium text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
           >
             {copied ? <Check size={13} /> : <Copy size={13} />}
             {copied ? "Скопировано" : "Копировать"}
           </button>
           <button
             onClick={download}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-[3px] border border-border px-2.5 py-1.5 text-xs font-medium text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
           >
             <Download size={13} />
             Скачать

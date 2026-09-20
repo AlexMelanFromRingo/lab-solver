@@ -73,7 +73,7 @@ export default function PismiLab3Page() {
                     <h3 className="font-medium text-ink">{step.title}</h3>
                     <p className="text-sm leading-relaxed text-ink-dim">{step.body}</p>
                     {step.commands && (
-                      <pre className="overflow-x-auto rounded-xl border border-border bg-black/40 px-4 py-3 font-mono text-xs leading-relaxed text-ink">
+                      <pre className="overflow-x-auto rounded-[4px] border border-border bg-black/40 px-4 py-3 font-mono text-xs leading-relaxed text-ink">
                         {step.commands.join("\n")}
                       </pre>
                     )}

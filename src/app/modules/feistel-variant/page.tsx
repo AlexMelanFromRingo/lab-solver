@@ -114,7 +114,7 @@ export default function FeistelVariantPage() {
           </div>
         </div>
         {spec.note && (
-          <p className="text-xs text-number bg-number-soft border border-number/20 rounded-lg px-4 py-2">{spec.note}</p>
+          <p className="text-xs text-number bg-number-soft border border-number/20 rounded-[3px] px-4 py-2">{spec.note}</p>
         )}
 
         <Card>
@@ -139,10 +139,10 @@ export default function FeistelVariantPage() {
               />
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-border">
+            <div className="overflow-x-auto rounded-[4px] border border-border">
               <table className="w-full text-sm font-mono">
                 <thead>
-                  <tr className="border-b border-border text-ink-faint text-xs uppercase">
+                  <tr className="border-b border-border text-ink-faint text-xs">
                     <th className="text-left px-3 py-2">Раунд</th>
                     <th className="text-left px-3 py-2">Ключ</th>
                     <th className="text-left px-3 py-2">L</th>
@@ -198,10 +198,10 @@ export default function FeistelVariantPage() {
 
         <details className="text-sm text-ink-faint">
           <summary className="cursor-pointer text-ink-dim hover:text-ink">Все 24 варианта таблицы</summary>
-          <div className="mt-3 overflow-x-auto rounded-xl border border-border">
+          <div className="mt-3 overflow-x-auto rounded-[4px] border border-border">
             <table className="w-full text-xs font-mono">
               <thead>
-                <tr className="border-b border-border text-ink-faint uppercase">
+                <tr className="border-b border-border text-ink-faint">
                   <th className="text-left px-3 py-2">№</th>
                   <th className="text-left px-3 py-2">n</th>
                   <th className="text-left px-3 py-2">K</th>

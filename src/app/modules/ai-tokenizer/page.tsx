@@ -121,7 +121,7 @@ export default function AiTokenizerPage() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <p className="text-xs uppercase tracking-wide text-ink-faint">
+              <p className="text-xs text-ink-faint">
                 Вариант {normalised}
               </p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
@@ -161,10 +161,10 @@ export default function AiTokenizerPage() {
               </p>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-border">
+            <div className="overflow-x-auto rounded-[4px] border border-border">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border text-xs uppercase text-ink-faint">
+                  <tr className="border-b border-border text-xs text-ink-faint">
                     <th className="px-3 py-2 text-left font-medium">Строка</th>
                     <th className="px-3 py-2 text-right font-medium">GPT-2</th>
                     <th className="px-3 py-2 text-right font-medium">вариант</th>
@@ -206,8 +206,8 @@ export default function AiTokenizerPage() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-border bg-black/20 px-4 py-3">
-                <div className="text-xs uppercase tracking-wide text-ink-faint">
+              <div className="rounded-[4px] border border-border bg-black/20 px-4 py-3">
+                <div className="text-xs text-ink-faint">
                   Регистр: токен · Токен · ТОКЕН
                 </div>
                 <div className="mt-1 font-mono text-sm text-ink">
@@ -217,8 +217,8 @@ export default function AiTokenizerPage() {
                   </span>
                 </div>
               </div>
-              <div className="rounded-xl border border-border bg-black/20 px-4 py-3">
-                <div className="text-xs uppercase tracking-wide text-ink-faint">
+              <div className="rounded-[4px] border border-border bg-black/20 px-4 py-3">
+                <div className="text-xs text-ink-faint">
                   Пробелы: world · ␣world · ␣␣world
                 </div>
                 <div className="mt-1 font-mono text-sm text-ink">
@@ -268,10 +268,10 @@ export default function AiTokenizerPage() {
               </p>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-border">
+            <div className="overflow-x-auto rounded-[4px] border border-border">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border text-xs uppercase text-ink-faint">
+                  <tr className="border-b border-border text-xs text-ink-faint">
                     <th className="px-3 py-2 text-left font-medium">№</th>
                     <th className="px-3 py-2 text-left font-medium">Токенизатор</th>
                     <th className="px-3 py-2 text-right font-medium">Словарь</th>

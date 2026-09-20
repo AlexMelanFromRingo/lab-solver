@@ -181,13 +181,18 @@ export function PieChart({ table, total }: { table: Table; total: number }) {
   const R = 92;
   const cx = 110;
   const cy = 110;
-  let angle = -Math.PI / 2;
+
+  // Углы накапливаются в самом обходе, а не в переменной снаружи: изменять
+  // её во время отрисовки нельзя, результат зависел бы от числа проходов.
+  const bounds = rows.reduce<number[]>(
+    (acc, r) => [...acc, acc[acc.length - 1] + (r[2] / total) * 2 * Math.PI],
+    [-Math.PI / 2]
+  );
 
   const slices = rows.map((r, i) => {
     const share = r[2] / total;
-    const start = angle;
-    const end = angle + share * 2 * Math.PI;
-    angle = end;
+    const start = bounds[i];
+    const end = bounds[i + 1];
 
     const large = end - start > Math.PI ? 1 : 0;
     const d = [

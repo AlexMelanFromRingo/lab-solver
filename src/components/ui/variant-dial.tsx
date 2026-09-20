@@ -23,7 +23,7 @@ export function VariantDial({
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
 
   return (
-    <div className="inline-flex items-stretch rounded-2xl border border-border-strong bg-surface-2 overflow-hidden shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
+    <div className="inline-flex items-stretch overflow-hidden border border-border-strong bg-surface-2" style={{ borderRadius: 4 }}>
       <button
         type="button"
         aria-label="Предыдущий вариант"
@@ -35,8 +35,8 @@ export function VariantDial({
       </button>
 
       <div className="flex flex-col items-center justify-center px-5 py-2 min-w-[7.5rem] border-x border-border">
-        <label htmlFor={id} className="text-[10px] uppercase tracking-wider text-ink-faint font-medium">
-          {label}
+        <label htmlFor={id} className="text-[0.6875rem] text-ink-faint">
+          {label.toLowerCase()}
         </label>
         <div className="relative h-9 w-full flex items-center justify-center overflow-hidden">
           <AnimatePresence mode="popLayout" initial={false}>
@@ -46,7 +46,7 @@ export function VariantDial({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -16, opacity: 0 }}
               transition={{ type: "spring", stiffness: 400, damping: 28 }}
-              className="absolute font-display text-2xl font-semibold tabular-nums"
+              className="absolute font-mono text-2xl font-medium tabular-nums"
               style={{ color: accent }}
             >
               №&nbsp;{value}

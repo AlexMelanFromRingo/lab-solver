@@ -27,7 +27,7 @@ function BitCell({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center gap-1 rounded-lg border px-2.5 py-2 min-w-[3rem] transition-colors",
+        "flex flex-col items-center gap-1 rounded-[3px] border px-2.5 py-2 min-w-[3rem] transition-colors",
         error ? "border-codes bg-codes-soft" : active ? "border-codes/60 bg-codes-soft/50" : "border-border bg-surface-2",
         onClick && "cursor-pointer hover:border-border-strong"
       )}
@@ -120,22 +120,22 @@ export default function HammingPage() {
               ))}
             </div>
             <div className="grid gap-4 sm:grid-cols-3 pt-2">
-              <div className="rounded-lg border border-border bg-black/30 px-4 py-3">
+              <div className="rounded-[3px] border border-border bg-black/30 px-4 py-3">
                 <div className="text-xs text-ink-faint mb-1">s1</div>
                 <div className="font-mono text-ink">{syndrome.s1}</div>
               </div>
-              <div className="rounded-lg border border-border bg-black/30 px-4 py-3">
+              <div className="rounded-[3px] border border-border bg-black/30 px-4 py-3">
                 <div className="text-xs text-ink-faint mb-1">s2</div>
                 <div className="font-mono text-ink">{syndrome.s2}</div>
               </div>
-              <div className="rounded-lg border border-border bg-black/30 px-4 py-3">
+              <div className="rounded-[3px] border border-border bg-black/30 px-4 py-3">
                 <div className="text-xs text-ink-faint mb-1">s4</div>
                 <div className="font-mono text-ink">{syndrome.s4}</div>
               </div>
             </div>
             <div
               className={cn(
-                "rounded-xl border px-5 py-3 text-sm font-medium",
+                "rounded-[4px] border px-5 py-3 text-sm font-medium",
                 result.errorAt === -1
                   ? "border-theory/30 bg-theory-soft text-theory"
                   : "border-codes/30 bg-codes-soft text-codes"

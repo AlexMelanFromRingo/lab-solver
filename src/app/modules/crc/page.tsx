@@ -68,7 +68,7 @@ export default function CrcPage() {
                   key={i}
                   onClick={() => toggleBit(i)}
                   className={cn(
-                    "w-10 h-10 flex items-center justify-center rounded-lg border font-mono text-sm transition-colors",
+                    "w-10 h-10 flex items-center justify-center rounded-[3px] border font-mono text-sm transition-colors",
                     errPos.includes(i) ? "border-codes bg-codes-soft text-codes" : "border-border bg-surface-2 text-ink hover:border-border-strong",
                     i >= data.length && "opacity-70"
                   )}
@@ -81,7 +81,7 @@ export default function CrcPage() {
 
             <div
               className={cn(
-                "rounded-xl border px-5 py-3 text-sm font-medium",
+                "rounded-[4px] border px-5 py-3 text-sm font-medium",
                 check.status === "ok"
                   ? "border-theory/30 bg-theory-soft text-theory"
                   : check.status === "corrected"

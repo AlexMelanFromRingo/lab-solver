@@ -1,14 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0c;
-  --surface: #100f13;
-  --surface-2: #17161b;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --ink: #f4f3f6;
-  --ink-dim: #9b98a6;
-  --ink-faint: #656274;
+  /* Поле приладу: холодний чорний із синьо-зеленим відтінком. Лінії теж
+     холодні, а не білі – біла лінія на чорному завжди виглядає наліпкою. */
+  --background: #08090b;
+  --surface: #0d0f12;
+  --surface-2: #13161a;
+  --border: rgba(148, 178, 198, 0.11);
+  --border-strong: rgba(148, 178, 198, 0.22);
+  --ink: #eef1f4;
+  --ink-dim: #93a0ad;
+  --ink-faint: #5c6874;
 
   /* category accents */
   --cat-crypto: #8b7cf6;
@@ -60,9 +62,9 @@
   --color-it: var(--cat-it);
   --color-it-soft: var(--cat-it-soft);
 
-  --font-display: var(--font-space-grotesk);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
+  --font-display: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--ff-mono), ui-monospace, monospace;
 }
 
 * {
@@ -76,17 +78,43 @@ html {
 body {
   background: var(--background);
   color: var(--ink);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans);
+  /* Замість кольорових плям – розмічальна сітка, ледь помітна. Сторінка має
+     читатися як аркуш із розрахунком, а не як обкладинка. */
   background-image:
-    radial-gradient(ellipse 80% 50% at 15% -10%, rgba(139, 124, 246, 0.16), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(45, 212, 191, 0.10), transparent);
-  background-repeat: no-repeat;
+    linear-gradient(to right, rgba(148, 178, 198, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 178, 198, 0.035) 1px, transparent 1px);
+  background-size: 96px 96px;
   background-attachment: fixed;
 }
 
+/* Цифри всюди табличні: у стовпці вони мають стояти одна під одною. */
+.font-mono,
+code,
+kbd,
+samp,
+pre {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Насічка розділу: тонка лінія з кольоровим початком. */
+.rule {
+  border-top: 1px solid var(--border);
+  position: relative;
+}
+.rule::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--tick, var(--ink-faint));
+}
+
 ::selection {
-  background: var(--cat-crypto);
-  color: #0a0a0c;
+  background: var(--ink);
+  color: var(--background);
 }
 
 /* subtle scrollbar to match the dark surface */

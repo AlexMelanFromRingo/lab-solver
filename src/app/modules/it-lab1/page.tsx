@@ -78,7 +78,7 @@ export default function ItLab1Page() {
             />
 
             {table.problems.length > 0 && (
-              <ul className="space-y-1 rounded-xl border border-border bg-black/30 px-4 py-3 text-sm text-ink-dim">
+              <ul className="space-y-1 rounded-[4px] border border-border bg-black/30 px-4 py-3 text-sm text-ink-dim">
                 {table.problems.map((p) => (
                   <li key={p} className="flex gap-2">
                     <span style={{ color: accent }}>·</span>
@@ -89,10 +89,10 @@ export default function ItLab1Page() {
             )}
 
             {table.rows.length > 0 && (
-              <div className="overflow-x-auto rounded-xl border border-border">
+              <div className="overflow-x-auto rounded-[4px] border border-border">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border text-xs uppercase text-ink-faint">
+                    <tr className="border-b border-border text-xs text-ink-faint">
                       {table.headers.map((h) => (
                         <th key={h} className="px-3 py-2 text-left font-medium">
                           {h}
@@ -191,7 +191,7 @@ export default function ItLab1Page() {
               ))}
             </ol>
 
-            <div className="rounded-xl border border-border bg-black/30 px-4 py-3">
+            <div className="rounded-[4px] border border-border bg-black/30 px-4 py-3">
               <p className="text-sm leading-relaxed text-ink-dim">
                 В самом задании есть расхождение: строить требуется точечный график,
                 вертикальную и круговую диаграммы, а в составе отчёта названы снимки

@@ -13,7 +13,7 @@ function Label({ children, hint }: { children: React.ReactNode; hint?: string })
 }
 
 const controlClass =
-  "w-full rounded-lg border border-border bg-surface-2 px-3.5 py-2.5 text-ink placeholder:text-ink-faint transition-colors focus:border-border-strong focus:outline-none font-mono text-sm";
+  "w-full rounded-[3px] border border-border bg-surface-2 px-3.5 py-2.5 text-ink placeholder:text-ink-faint transition-colors focus:border-border-strong focus:outline-none font-mono text-sm";
 
 export function NumberField({
   label,

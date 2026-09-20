@@ -60,10 +60,10 @@ export default function ShannonHartleyPage() {
             ].map(({ label, r }) => (
               <div key={label} className="space-y-3">
                 <h3 className="text-sm font-medium text-ink-dim">{label}</h3>
-                <div className="overflow-x-auto rounded-xl border border-border">
+                <div className="overflow-x-auto rounded-[4px] border border-border">
                   <table className="w-full text-sm font-mono">
                     <thead>
-                      <tr className="border-b border-border text-ink-faint text-xs uppercase">
+                      <tr className="border-b border-border text-ink-faint text-xs">
                         <th className="text-left px-3 py-2">pe</th>
                         <th className="text-left px-3 py-2">X = 1+S/N</th>
                         <th className="text-left px-3 py-2">Iс, бит/сигн</th>

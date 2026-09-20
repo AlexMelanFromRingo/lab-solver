@@ -27,14 +27,14 @@ export function Steps({ steps, accent }: { steps: LabStep[]; accent: string }) {
             {step.body && <p className="text-sm leading-relaxed text-ink-dim">{step.body}</p>}
             {step.tree && (
               <pre
-                className="overflow-x-auto rounded-xl border px-4 py-3 font-mono text-xs leading-relaxed text-ink-dim"
+                className="overflow-x-auto rounded-[4px] border px-4 py-3 font-mono text-xs leading-relaxed text-ink-dim"
                 style={{ borderColor: `${accent}33`, background: `${accent}0a` }}
               >
                 {step.tree.join("\n")}
               </pre>
             )}
             {step.commands && (
-              <pre className="overflow-x-auto rounded-xl border border-border bg-black/40 px-4 py-3 font-mono text-xs leading-relaxed text-ink">
+              <pre className="overflow-x-auto rounded-[4px] border border-border bg-black/40 px-4 py-3 font-mono text-xs leading-relaxed text-ink">
                 {step.commands.join("\n")}
               </pre>
             )}

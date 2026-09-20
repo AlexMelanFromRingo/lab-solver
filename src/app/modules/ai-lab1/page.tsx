@@ -93,7 +93,7 @@ export default function AiLab1Page() {
               </p>
             </div>
 
-            <pre className="overflow-x-auto rounded-xl border border-border bg-black/40 px-4 py-3 font-mono text-xs leading-relaxed text-ink">
+            <pre className="overflow-x-auto rounded-[4px] border border-border bg-black/40 px-4 py-3 font-mono text-xs leading-relaxed text-ink">
               {FLS_FORMAT}
             </pre>
 
@@ -110,10 +110,10 @@ export default function AiLab1Page() {
               </p>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-border">
+            <div className="overflow-x-auto rounded-[4px] border border-border">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border text-xs uppercase text-ink-faint">
+                  <tr className="border-b border-border text-xs text-ink-faint">
                     <th className="px-3 py-2 text-left font-medium">Позиция</th>
                     <th className="px-3 py-2 text-left font-medium">Что задаёт</th>
                     <th className="px-3 py-2 text-left font-medium">Значения</th>
@@ -145,7 +145,7 @@ export default function AiLab1Page() {
 
             <div className="space-y-4">
               {[...task.system.inputs, task.system.output].map((variable) => (
-                <div key={variable.name} className="rounded-xl border border-border bg-black/20 px-4 py-3">
+                <div key={variable.name} className="rounded-[4px] border border-border bg-black/20 px-4 py-3">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
                     <span className="text-sm text-ink">{variable.label}</span>
                     <span className="font-mono text-xs text-ink-faint">
@@ -185,7 +185,7 @@ export default function AiLab1Page() {
                   key={c.label}
                   type="button"
                   onClick={() => setValues(c.values)}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-ink-dim transition-colors hover:border-border-strong hover:text-ink"
+                  className="rounded-[3px] border border-border px-3 py-1.5 text-xs text-ink-dim transition-colors hover:border-border-strong hover:text-ink"
                 >
                   {c.label}
                 </button>
