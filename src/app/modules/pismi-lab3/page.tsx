@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
+
 import { ModuleHeader } from "@/components/module-header";
 import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
-import { FileSet } from "@/components/ui/file-set";
+import { FlavourSwitch } from "@/components/flavour-switch";
 import { categories, modules } from "@/lib/modules";
 import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { usePismiIndex } from "@/lib/pismi-files";
@@ -43,6 +45,7 @@ const STEPS: { title: string; body: string; commands?: string[] }[] = [
 ];
 
 export default function PismiLab3Page() {
+  const [flavour, setFlavour] = useState<"basic" | "extended">("basic");
   const index = usePismiIndex();
 
   return (
@@ -93,14 +96,14 @@ export default function PismiLab3Page() {
                 </li>
                 <li className="flex gap-2 leading-relaxed">
                   <span style={{ color: accent }}>·</span>
-                  Имя узла базы — это имя службы из файла окружения (<code>db</code>), а не
-                  localhost: контейнеры обращаются друг к другу по именам служб.
+                  <span>Имя узла базы — это имя службы из файла окружения (<code>db</code>), а не
+                  localhost: контейнеры обращаются друг к другу по именам служб.</span>
                 </li>
                 <li className="flex gap-2 leading-relaxed">
                   <span style={{ color: accent }}>·</span>
-                  Клиент mysql в консоли без <code>--default-character-set=utf8mb4</code>{" "}
+                  <span>Клиент mysql в консоли без <code>--default-character-set=utf8mb4</code>{" "}
                   показывает кириллицу вопросиками и не находит записи по кириллическому
-                  WHERE. В базе при этом всё в порядке.
+                  WHERE. В базе при этом всё в порядке.</span>
                 </li>
               </ul>
             </div>
@@ -118,11 +121,15 @@ export default function PismiLab3Page() {
               </p>
             </div>
             {index ? (
-              <FileSet
+              <FlavourSwitch
                 base="../../pismi/lab3"
-                files={index.lab3.files}
-                archive={index.lab3.archive}
+                basic={index.lab3.basic}
+                extended={index.lab3.extended}
+                value={flavour}
+                onChange={setFlavour}
                 accent={accent}
+                basicNote="Окружение, образ приложения и справочник: таблица записей, поиск и форма. Доступ к базе вынесен отдельно не ради вида — в странице остаётся только показ, а подготовленные запросы и проверка значений собраны в одном месте."
+                extendedNote="То же самое, но с общим началом документа и отдельным файлом оформления: записи сгруппированы по дням недели, а не выведены одной таблицей."
               />
             ) : (
               <p className="text-sm text-ink-faint">Загрузка…</p>

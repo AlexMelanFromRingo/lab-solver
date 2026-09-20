@@ -46,6 +46,7 @@ export interface VariantBundle {
 export interface TwoWayBundle {
   name: string;
   port: number;
+  admin?: number;
   basic: LabBundle;
   extended: LabBundle;
 }
@@ -53,7 +54,7 @@ export interface TwoWayBundle {
 export interface PismiIndex {
   lab1: TwoWayBundle;
   lab2: VariantBundle[];
-  lab3: LabBundle;
+  lab3: TwoWayBundle;
   lab4: LabBundle;
   lab5: LabBundle;
 }

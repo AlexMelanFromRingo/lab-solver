@@ -47,7 +47,8 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінки",
-     "size": 4216
+     "size": 4216,
+     "supporting": true
     },
     {
      "path": "www/_shared/chrome.php",
@@ -128,7 +129,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 4658
+      "size": 4658,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -219,7 +221,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 5040
+      "size": 5040,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -310,7 +313,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 4715
+      "size": 4715,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -401,7 +405,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 5197
+      "size": 5197,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -492,7 +497,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 5073
+      "size": 5073,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -583,7 +589,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 4672
+      "size": 4672,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -674,7 +681,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 5036
+      "size": 5036,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -765,7 +773,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 4683
+      "size": 4683,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -856,7 +865,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 5207
+      "size": 5207,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -947,7 +957,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 4996
+      "size": 4996,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -1038,7 +1049,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 4687
+      "size": 4687,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -1129,7 +1141,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 5000
+      "size": 5000,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -1220,7 +1233,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 4794
+      "size": 4794,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -1311,7 +1325,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 5215
+      "size": 5215,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -1402,7 +1417,8 @@
      {
       "path": "www/style.css",
       "note": "оформлення сторінок",
-      "size": 5004
+      "size": 5004,
+      "supporting": true
      },
      {
       "path": "www/_shared/chrome.php",
@@ -1437,60 +1453,103 @@
  ],
  "lab3": {
   "name": "Лабораторна робота № 3",
-  "files": [
-   {
-    "path": "docker-compose.yml",
-    "note": "оточення: додаток, MySQL, phpMyAdmin",
-    "size": 1358
-   },
-   {
-    "path": "Dockerfile",
-    "note": "образ додатка з розширеннями для MySQL",
-    "size": 918
-   },
-   {
-    "path": "src/index.php",
-    "note": "сторінка довідника з операціями CRUD",
-    "size": 10427
-   },
-   {
-    "path": "src/lib/schedule.php",
-    "note": "схема довідника: поля та початкове наповнення",
-    "size": 5380
-   },
-   {
-    "path": "src/lib/db.php",
-    "note": "підключення, створення таблиці та операції над записами",
-    "size": 11181
-   },
-   {
-    "path": "src/schema-timetable.sql",
-    "note": "запит створення таблиці",
-    "size": 879
-   },
-   {
-    "path": "src/style.css",
-    "note": "оформлення сторінки",
-    "size": 5006
-   },
-   {
-    "path": "src/_shared/chrome.php",
-    "note": "початок документа та екранування виводу",
-    "size": 1783,
-    "supporting": true
-   },
-   {
-    "path": "src/_shared/tokens.css",
-    "note": "основи оформлення: кольори й гарнітури",
-    "size": 3343,
-    "supporting": true
-   }
-  ],
   "port": 8092,
   "admin": 8093,
-  "archive": {
-   "path": "work.zip",
-   "size": 16063
+  "basic": {
+   "name": "Лабораторна робота № 3",
+   "files": [
+    {
+     "path": "docker-compose.yml",
+     "note": "оточення: застосунок, MySQL, phpMyAdmin",
+     "size": 1358
+    },
+    {
+     "path": "Dockerfile",
+     "note": "образ застосунку з розширенням mysqli",
+     "size": 918
+    },
+    {
+     "path": "src/index.php",
+     "note": "сторінка довідника: таблиця, пошук, форма",
+     "size": 7880
+    },
+    {
+     "path": "src/lib/schedule.php",
+     "note": "схема довідника: поля та початкове наповнення",
+     "size": 5380
+    },
+    {
+     "path": "src/lib/db.php",
+     "note": "підключення та операції над записами",
+     "size": 11181
+    },
+    {
+     "path": "src/schema-timetable.sql",
+     "note": "запит створення таблиці",
+     "size": 879
+    }
+   ],
+   "archive": {
+    "path": "work.zip",
+    "size": 11336
+   }
+  },
+  "extended": {
+   "name": "Лабораторна робота № 3",
+   "files": [
+    {
+     "path": "docker-compose.yml",
+     "note": "оточення: додаток, MySQL, phpMyAdmin",
+     "size": 1358
+    },
+    {
+     "path": "Dockerfile",
+     "note": "образ додатка з розширеннями для MySQL",
+     "size": 918
+    },
+    {
+     "path": "src/index.php",
+     "note": "сторінка довідника з операціями CRUD",
+     "size": 10427
+    },
+    {
+     "path": "src/lib/schedule.php",
+     "note": "схема довідника: поля та початкове наповнення",
+     "size": 5380
+    },
+    {
+     "path": "src/lib/db.php",
+     "note": "підключення, створення таблиці та операції над записами",
+     "size": 11181
+    },
+    {
+     "path": "src/schema-timetable.sql",
+     "note": "запит створення таблиці",
+     "size": 879
+    },
+    {
+     "path": "src/style.css",
+     "note": "оформлення сторінки",
+     "size": 5006,
+     "supporting": true
+    },
+    {
+     "path": "src/_shared/chrome.php",
+     "note": "початок документа та екранування виводу",
+     "size": 1783,
+     "supporting": true
+    },
+    {
+     "path": "src/_shared/tokens.css",
+     "note": "основи оформлення: кольори й гарнітури",
+     "size": 3343,
+     "supporting": true
+    }
+   ],
+   "archive": {
+    "path": "work.zip",
+    "size": 16063
+   }
   }
  },
  "lab4": {
@@ -1509,7 +1568,8 @@
    {
     "path": "apache/apache.conf",
     "note": "корінь сайту – каталог public",
-    "size": 594
+    "size": 594,
+    "supporting": true
    },
    {
     "path": "src/database/migrations/2026_09_18_152942_create_notes_table.php",
@@ -1544,12 +1604,14 @@
    {
     "path": "src/tailwind.config.js",
     "note": "палітра й гарнітури",
-    "size": 1396
+    "size": 1396,
+    "supporting": true
    },
    {
     "path": "src/resources/css/app.css",
     "note": "оформлення",
-    "size": 2395
+    "size": 2395,
+    "supporting": true
    }
   ],
   "port": 8094,
@@ -1575,7 +1637,8 @@
    {
     "path": "apache/apache.conf",
     "note": "корінь сайту – каталог public",
-    "size": 594
+    "size": 594,
+    "supporting": true
    },
    {
     "path": "src/config/site.php",
@@ -1630,12 +1693,14 @@
    {
     "path": "src/tailwind.config.js",
     "note": "палітра й гарнітури",
-    "size": 1195
+    "size": 1195,
+    "supporting": true
    },
    {
     "path": "src/resources/css/app.css",
     "note": "оформлення",
-    "size": 2062
+    "size": 2062,
+    "supporting": true
    }
   ],
   "port": 8096,
