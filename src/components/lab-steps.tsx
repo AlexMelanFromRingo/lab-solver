@@ -10,6 +10,8 @@ export interface LabStep {
   title: string;
   body?: string;
   commands?: string[];
+  /** Дерево каталогов: там, где шаг о структуре проекта, его и надо видеть. */
+  tree?: string[];
 }
 
 export function Steps({ steps, accent }: { steps: LabStep[]; accent: string }) {
@@ -23,6 +25,14 @@ export function Steps({ steps, accent }: { steps: LabStep[]; accent: string }) {
           <div className="space-y-2">
             <h3 className="font-medium text-ink">{step.title}</h3>
             {step.body && <p className="text-sm leading-relaxed text-ink-dim">{step.body}</p>}
+            {step.tree && (
+              <pre
+                className="overflow-x-auto rounded-xl border px-4 py-3 font-mono text-xs leading-relaxed text-ink-dim"
+                style={{ borderColor: `${accent}33`, background: `${accent}0a` }}
+              >
+                {step.tree.join("\n")}
+              </pre>
+            )}
             {step.commands && (
               <pre className="overflow-x-auto rounded-xl border border-border bg-black/40 px-4 py-3 font-mono text-xs leading-relaxed text-ink">
                 {step.commands.join("\n")}

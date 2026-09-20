@@ -60,7 +60,7 @@
     font-size: 0.875rem;
     color: var(--accent);
     border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-    border-radius: 0;
+    border-radius: var(--radius);
     padding: 0.2rem 0.6rem;
     justify-self: start;
     height: fit-content;

@@ -59,7 +59,7 @@
 
 .given {
     border-left: 2px solid var(--accent);
-    background: rgba(0, 0, 0, 0.25);
+    background: color-mix(in srgb, var(--text) 5%, transparent);
 }
 .head { border-bottom: 1px solid var(--line-strong); }
 

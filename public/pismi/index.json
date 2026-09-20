@@ -25,12 +25,14 @@
    {
     "path": "www/_shared/chrome.php",
     "note": "початок документа та екранування виводу",
-    "size": 1783
+    "size": 1783,
+    "supporting": true
    },
    {
     "path": "www/_shared/tokens.css",
     "note": "основи оформлення: кольори й гарнітури",
-    "size": 3343
+    "size": 3343,
+    "supporting": true
    }
   ],
   "port": 8090,
@@ -71,17 +73,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 4630
+     "size": 4658
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1888,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2531,
+     "supporting": true
     },
     {
      "path": "www/lib/NodeAddressTask.php",
@@ -91,14 +95,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 2777
+     "size": 2777,
+     "supporting": true
     }
    ],
    "variant": 1,
    "port": 8101,
    "archive": {
     "path": "work.zip",
-    "size": 18162
+    "size": 17862
    }
   },
   {
@@ -132,17 +137,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 5061
+     "size": 5040
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1890
+     "size": 1890,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2500,
+     "supporting": true
     },
     {
      "path": "www/lib/NetworkAddressTask.php",
@@ -152,14 +159,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 2436
+     "size": 2436,
+     "supporting": true
     }
    ],
    "variant": 2,
    "port": 8102,
    "archive": {
     "path": "work.zip",
-    "size": 17805
+    "size": 17502
    }
   },
   {
@@ -198,12 +206,14 @@
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1879
+     "size": 1879,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2485,
+     "supporting": true
     },
     {
      "path": "www/lib/NumberBaseTask.php",
@@ -213,14 +223,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 3,
    "port": 8103,
    "archive": {
     "path": "work.zip",
-    "size": 17686
+    "size": 17383
    }
   },
   {
@@ -254,17 +265,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 5161
+     "size": 5197
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1881
+     "size": 1881,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2485,
+     "supporting": true
     },
     {
      "path": "www/lib/CalendarTask.php",
@@ -274,14 +287,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 4,
    "port": 8104,
    "archive": {
     "path": "work.zip",
-    "size": 17535
+    "size": 17237
    }
   },
   {
@@ -315,17 +329,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 4978
+     "size": 5073
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1889
+     "size": 1889,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2497,
+     "supporting": true
     },
     {
      "path": "www/lib/DigitTableTask.php",
@@ -335,14 +351,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 5,
    "port": 8105,
    "archive": {
     "path": "work.zip",
-    "size": 17500
+    "size": 17190
    }
   },
   {
@@ -376,17 +393,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 4644
+     "size": 4672
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1890
+     "size": 1890,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2534,
+     "supporting": true
     },
     {
      "path": "www/lib/SpelledNumberTask.php",
@@ -396,14 +415,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 6,
    "port": 8106,
    "archive": {
     "path": "work.zip",
-    "size": 17451
+    "size": 17148
    }
   },
   {
@@ -437,17 +457,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 5019
+     "size": 5036
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1888,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2493,
+     "supporting": true
     },
     {
      "path": "www/lib/CellCoordinatesTask.php",
@@ -457,14 +479,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 7,
    "port": 8107,
    "archive": {
     "path": "work.zip",
-    "size": 17825
+    "size": 17521
    }
   },
   {
@@ -498,17 +521,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 4655
+     "size": 4683
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1881
+     "size": 1881,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2491,
+     "supporting": true
     },
     {
      "path": "www/lib/PictureAreaTask.php",
@@ -518,14 +543,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 8,
    "port": 8108,
    "archive": {
     "path": "work.zip",
-    "size": 17551
+    "size": 17243
    }
   },
   {
@@ -559,17 +585,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 5195
+     "size": 5207
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1889
+     "size": 1889,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2501,
+     "supporting": true
     },
     {
      "path": "www/lib/TextPyramidTask.php",
@@ -579,14 +607,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 9,
    "port": 8109,
    "archive": {
     "path": "work.zip",
-    "size": 17471
+    "size": 17183
    }
   },
   {
@@ -620,17 +649,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 4940
+     "size": 4996
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1879
+     "size": 1879,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2478,
+     "supporting": true
     },
     {
      "path": "www/lib/PicturePyramidTask.php",
@@ -640,14 +671,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 10,
    "port": 8110,
    "archive": {
     "path": "work.zip",
-    "size": 17512
+    "size": 17206
    }
   },
   {
@@ -686,12 +718,14 @@
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1881
+     "size": 1881,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2525,
+     "supporting": true
     },
     {
      "path": "www/lib/ChessboardTask.php",
@@ -701,14 +735,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 11,
    "port": 8111,
    "archive": {
     "path": "work.zip",
-    "size": 17518
+    "size": 17205
    }
   },
   {
@@ -742,17 +777,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 4990
+     "size": 5000
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1879
+     "size": 1879,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2481,
+     "supporting": true
     },
     {
      "path": "www/lib/JackHouseTask.php",
@@ -762,14 +799,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 12,
    "port": 8112,
    "archive": {
     "path": "work.zip",
-    "size": 18058
+    "size": 17752
    }
   },
   {
@@ -803,17 +841,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 4765
+     "size": 4794
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1889
+     "size": 1889,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2502,
+     "supporting": true
     },
     {
      "path": "www/lib/ZodiacTask.php",
@@ -823,14 +863,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 1535
+     "size": 1535,
+     "supporting": true
     }
    ],
    "variant": 13,
    "port": 8113,
    "archive": {
     "path": "work.zip",
-    "size": 17875
+    "size": 17576
    }
   },
   {
@@ -864,17 +905,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 5209
+     "size": 5215
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1890
+     "size": 1890,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2533,
+     "supporting": true
     },
     {
      "path": "www/lib/NodeAddressTask.php",
@@ -884,14 +927,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 2777
+     "size": 2777,
+     "supporting": true
     }
    ],
    "variant": 14,
    "port": 8114,
    "archive": {
     "path": "work.zip",
-    "size": 18108
+    "size": 17814
    }
   },
   {
@@ -925,17 +969,19 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 4921
+     "size": 5004
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1888,
+     "supporting": true
     },
     {
      "path": "www/_shared/tokens.css",
      "note": "основи оформлення: кольори й гарнітури",
-     "size": 3343
+     "size": 2493,
+     "supporting": true
     },
     {
      "path": "www/lib/NetworkAddressTask.php",
@@ -945,14 +991,15 @@
     {
      "path": "www/lib/Task.php",
      "note": "спільна основа завдання",
-     "size": 2436
+     "size": 2436,
+     "supporting": true
     }
    ],
    "variant": 15,
    "port": 8115,
    "archive": {
     "path": "work.zip",
-    "size": 17732
+    "size": 17427
    }
   }
  ],
@@ -997,12 +1044,14 @@
    {
     "path": "src/_shared/chrome.php",
     "note": "початок документа та екранування виводу",
-    "size": 1783
+    "size": 1783,
+    "supporting": true
    },
    {
     "path": "src/_shared/tokens.css",
     "note": "основи оформлення: кольори й гарнітури",
-    "size": 3343
+    "size": 3343,
+    "supporting": true
    }
   ],
   "port": 8092,

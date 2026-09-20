@@ -29,8 +29,8 @@
     padding: 1.1rem 1.4rem;
     margin-top: 1.5rem;
     border: 1px solid var(--line);
-    border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius);
+    background: var(--raise);
 }
 
 .title { font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.2rem); margin: 2rem 0 0.5rem; }
@@ -39,8 +39,8 @@
 .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.25rem; margin-top: 2rem; }
 .prose, .result, .ledger {
     border: 1px solid var(--line);
-    border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius);
+    background: var(--raise);
     padding: 1.4rem 1.6rem;
 }
 .ledger { margin-top: 1.25rem; }
@@ -55,8 +55,8 @@
     gap: 1.25rem;
     padding: 1.4rem 1.6rem;
     border: 1px solid var(--line);
-    border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius);
+    background: var(--raise);
 }
 .program__num { font-family: var(--font-data); font-size: 1.75rem; color: var(--accent); line-height: 1; }
 

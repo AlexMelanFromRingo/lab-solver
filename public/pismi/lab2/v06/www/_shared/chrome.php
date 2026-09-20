@@ -13,7 +13,7 @@ declare(strict_types=1);
  */
 
 /** Акцентний колір роботи. */
-const ACCENT = '#52b07a';
+const ACCENT = '#146c66';
 
 /**
  * Екранування для виводу в HTML.

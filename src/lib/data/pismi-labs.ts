@@ -65,8 +65,15 @@ export const LAB_GUIDES: Record<string, LabGuide> = {
       {
         title: "Создать структуру проекта",
         body:
-          "Каталог project, внутри него docker-compose.yml, и подкаталог www с index.php. " +
-          "Оба файла — ниже, в готовых файлах работы.",
+          "Файл окружения лежит в корне проекта, а каталог www монтируется в корень " +
+          "веб-сервера — всё, что в нём, сразу доступно по адресу контейнера. Оба файла " +
+          "готовыми лежат ниже на этой странице.",
+        tree: [
+          "project/",
+          "├── docker-compose.yml",
+          "└── www/",
+          "    └── index.php",
+        ],
         commands: ["mkdir -p project/www", "cd project"],
       },
       {
@@ -146,8 +153,19 @@ export const LAB_GUIDES: Record<string, LabGuide> = {
       {
         title: "Подготовить окружение",
         body:
-          "Отдельный каталог по образцу первой работы, свой docker-compose.yml. " +
-          "Контейнер с PHP запустить и проверить из браузера.",
+          "Отдельный каталог по образцу первой работы, свой docker-compose.yml. Программы " +
+          "две, поэтому и страниц две, а общие вычисления выносятся в отдельный файл.",
+        tree: [
+          "project/",
+          "├── docker-compose.yml",
+          "└── www/",
+          "    ├── index.php      перечень программ",
+          "    ├── prog1.php      программа № 1",
+          "    ├── prog2.php      программа № 2",
+          "    └── lib/",
+          "        ├── formulas.php   вычисления первой программы",
+          "        └── Task.php       класс задания второй",
+        ],
         commands: ["docker compose up -d", "docker ps"],
       },
       {
@@ -222,8 +240,14 @@ export const LAB_GUIDES: Record<string, LabGuide> = {
         title: "Собрать структуру проекта",
         body:
           "Здесь появляется собственный Dockerfile: в образ php:8.2-apache нужно доставить " +
-          "расширение mysqli, иначе подключения к базе не будет.",
-        commands: ["project/", "├── docker-compose.yml", "├── Dockerfile", "└── src/", "    └── index.php"],
+          "расширение mysqli, иначе подключения к базе не будет. Дерево — как в методичке.",
+        tree: [
+          "project/",
+          "├── docker-compose.yml",
+          "├── Dockerfile",
+          "└── src/",
+          "    └── index.php",
+        ],
       },
       {
         title: "Описать три службы",
@@ -306,7 +330,19 @@ export const LAB_GUIDES: Record<string, LabGuide> = {
     steps: [
       {
         title: "Создать проект",
-        body: "Composer разворачивает каркас со всей структурой каталогов.",
+        body:
+          "Composer разворачивает каркас со всей структурой каталогов. Свой код добавляется " +
+          "в четыре из них, остальное трогать не нужно.",
+        tree: [
+          "list-of-notes/",
+          "├── app/",
+          "│   ├── Models/            модели",
+          "│   └── Http/Controllers/  контроллеры",
+          "├── database/migrations/   описание таблиц",
+          "├── resources/views/       виды на Blade",
+          "├── routes/web.php         маршруты",
+          "└── .env                   подключение к базе",
+        ],
         commands: ["composer create-project laravel/laravel list-of-notes"],
       },
       {

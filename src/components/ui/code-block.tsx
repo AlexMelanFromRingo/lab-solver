@@ -1,11 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, Copy, Download } from "lucide-react";
 import { cn } from "@/lib/cn";
 
+/** З якого боку текст продовжується за межі видимої області. */
+interface Edges {
+  top: boolean;
+  bottom: boolean;
+  left: boolean;
+  right: boolean;
+}
+
+const NONE: Edges = { top: false, bottom: false, left: false, right: false };
+
 export function CodeBlock({ code, filename, className }: { code: string; filename: string; className?: string }) {
   const [copied, setCopied] = useState(false);
+
+  // Текст у блоці прокручується в обидва боки, і без позначки край виглядає
+  // так, ніби рядок просто обрізано. Тому з того боку, де текст триває,
+  // з'являється згасання.
+  const pre = useRef<HTMLPreElement>(null);
+  const [edges, setEdges] = useState<Edges>(NONE);
+
+  const measure = useCallback(() => {
+    const el = pre.current;
+    if (!el) return;
+    const slack = 2; // округлення розмірів при масштабуванні сторінки
+    setEdges({
+      top: el.scrollTop > slack,
+      bottom: el.scrollTop + el.clientHeight < el.scrollHeight - slack,
+      left: el.scrollLeft > slack,
+      right: el.scrollLeft + el.clientWidth < el.scrollWidth - slack,
+    });
+  }, []);
+
+  useEffect(() => {
+    const el = pre.current;
+    if (!el) return;
+    // Перший вимір робиться у зворотному виклику спостерігача, а не одразу:
+    // на момент запуску ефекту розміри ще не остаточні.
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [measure, code]);
 
   function download() {
     const blob = new Blob([code], { type: "text/plain;charset=utf-8" });
@@ -42,9 +80,28 @@ export function CodeBlock({ code, filename, className }: { code: string; filenam
           </button>
         </div>
       </div>
-      <pre className="px-4 py-3 text-xs font-mono text-ink leading-relaxed overflow-x-auto max-h-[32rem] overflow-y-auto">
-        {code}
-      </pre>
+      <div className="relative">
+        <pre
+          ref={pre}
+          onScroll={measure}
+          className="max-h-[32rem] overflow-auto px-4 py-3 font-mono text-xs leading-relaxed text-ink"
+        >
+          {code}
+        </pre>
+
+        {edges.top && (
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-black/60 to-transparent" />
+        )}
+        {edges.bottom && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/75 to-transparent" />
+        )}
+        {edges.left && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/60 to-transparent" />
+        )}
+        {edges.right && (
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-black/70 to-transparent" />
+        )}
+      </div>
     </div>
   );
 }

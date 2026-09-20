@@ -14,6 +14,7 @@ const CATEGORY_ORDER: Category[] = [
   "networks",
   "pismi",
   "ai",
+  "it",
 ];
 
 export default function Home() {

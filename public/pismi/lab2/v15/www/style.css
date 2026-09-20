@@ -29,7 +29,7 @@
     padding: 1.4rem 1.6rem;
     margin: 1.25rem 0 0;
     background: color-mix(in srgb, var(--accent) 14%, transparent);
-    border-radius: 0.25rem;
+    border-radius: var(--radius);
 }
 
 .title {
@@ -48,7 +48,7 @@
     gap: 1rem;
     padding: 0.55rem 0.75rem;
 }
-.ledger__row:nth-child(odd) { background: rgba(255, 255, 255, 0.025); }
+.ledger__row:nth-child(odd) { background: color-mix(in srgb, var(--text) 4%, transparent); }
 .ledger__dots { display: none; }
 
 .programs { display: grid; gap: 1rem; margin-top: 2.25rem; }
@@ -57,8 +57,8 @@
     grid-template-columns: 2.75rem minmax(0, 1fr);
     gap: 1.25rem;
     padding: 1.25rem 1.4rem;
-    background: rgba(255, 255, 255, 0.025);
-    border-radius: 0.25rem;
+    background: color-mix(in srgb, var(--text) 4%, transparent);
+    border-radius: var(--radius);
 }
 .program__num {
     font-family: var(--font-data);
@@ -69,7 +69,7 @@
 
 /* --- Умова й заголовки розділів ----------------------------------------- */
 
-.given { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--line); }
+.given { background: color-mix(in srgb, var(--text) 6%, transparent); border: 1px solid var(--line); }
 .head {
     border-bottom: none;
     padding-left: 0.7rem;

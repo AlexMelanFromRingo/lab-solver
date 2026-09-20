@@ -59,7 +59,7 @@
 
 /* --- Умова й заголовки розділів ----------------------------------------- */
 
-.given { background: rgba(0, 0, 0, 0.28); border: 1px solid var(--line); }
+.given { background: color-mix(in srgb, var(--text) 5%, transparent); border: 1px solid var(--line); }
 .head {
     border-bottom: 2px solid var(--accent);
     color: var(--text-dim);

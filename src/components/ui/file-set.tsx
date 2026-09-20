@@ -8,6 +8,12 @@ export interface LabFile {
   path: string;
   note: string;
   size: number;
+  /**
+   * Файл не належить до самого завдання: основа класу, спільна для всіх
+   * завдань, або початок документа з оформленням. Потрібен, щоб робота
+   * запускалася, але в переліку стоїть осторонь.
+   */
+  supporting?: boolean;
 }
 
 /**
@@ -38,10 +44,15 @@ export function FileSet({
   archive?: { path: string; size: number };
 }) {
   const [active, setActive] = useState(files[0]?.path ?? "");
+  const [withSupporting, setWithSupporting] = useState(false);
 
-  // Перелік може змінитися разом із варіантом — тоді показуємо перший файл.
-  const known = files.some((f) => f.path === active);
-  const current = known ? active : (files[0]?.path ?? "");
+  const supportingCount = files.filter((f) => f.supporting).length;
+  const shown = withSupporting ? files : files.filter((f) => !f.supporting);
+
+  // Перелік може змінитися разом із варіантом або з перемикачем — тоді
+  // показуємо перший файл із наявних.
+  const known = shown.some((f) => f.path === active);
+  const current = known ? active : (shown[0]?.path ?? "");
   const url = `${base}/${current}`;
 
   // Завантажене зберігається разом з адресою, з якої прийшло. Якщо адреса
@@ -99,7 +110,7 @@ export function FileSet({
           довгі – на них це видно одразу. */}
       <div className="grid gap-5 lg:grid-cols-[17rem_minmax(0,1fr)]">
       <nav className="flex min-w-0 flex-col gap-0.5">
-        {files.map((file) => {
+        {shown.map((file) => {
           const selected = file.path === current;
           // Ім'я файла важливіше за шлях до нього, тому каталог показується
           // окремим рядком і приглушено: інакше довгий шлях з'їдає все місце.
@@ -134,6 +145,21 @@ export function FileSet({
             </button>
           );
         })}
+        {supportingCount > 0 && (
+          <label className="mt-2 flex cursor-pointer items-start gap-2 px-3 py-2 text-xs leading-snug text-ink-faint">
+            <input
+              type="checkbox"
+              checked={withSupporting}
+              onChange={(e) => setWithSupporting(e.target.checked)}
+              className="mt-0.5 shrink-0 accent-current"
+              style={{ accentColor: accent }}
+            />
+            <span>
+              Показать вспомогательные файлы — {supportingCount}. Это оформление и общая
+              основа: к заданию они не относятся, но без них работа не запустится.
+            </span>
+          </label>
+        )}
       </nav>
 
       {state === "failed" ? (

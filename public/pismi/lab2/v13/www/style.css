@@ -58,7 +58,7 @@
 /* --- Умова й заголовки розділів ----------------------------------------- */
 
 .given {
-    background: rgba(0, 0, 0, 0.3);
+    background: color-mix(in srgb, var(--text) 6%, transparent);
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
 }
