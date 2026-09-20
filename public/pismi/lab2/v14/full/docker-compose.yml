@@ -1,0 +1,26 @@
+# Лабораторна робота № 2, варіант 14.
+#
+# Один контейнер з PHP та Apache; каталог www примонтований у корінь
+# веб-сервера. Розширення PHP ставляться командою під час запуску, власний
+# Dockerfile у цій роботі не потрібен.
+
+services:
+  web:
+    image: php:8.2-apache
+    container_name: php_lab2_v14
+    ports:
+      - "8114:80"
+    volumes:
+      - ./www:/var/www/html
+    working_dir: /var/www/html
+    restart: unless-stopped
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get install -y libzip-dev zip unzip git nano &&
+        docker-php-ext-install mysqli pdo pdo_mysql zip &&
+        a2enmod rewrite &&
+        apache2-foreground
+      "

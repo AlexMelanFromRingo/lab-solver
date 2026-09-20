@@ -1,1005 +1,1437 @@
 {
  "lab1": {
   "name": "Лабораторна робота № 1",
-  "files": [
-   {
-    "path": "docker-compose.yml",
-    "note": "опис оточення: образ, порт, монтування каталогу",
-    "size": 1294
-   },
-   {
-    "path": "www/index.php",
-    "note": "індивідуальне завдання: ПІБ, група та паспорт оточення",
-    "size": 6223
-   },
-   {
-    "path": "www/phpinfo.php",
-    "note": "перевірочна сторінка з методичних вказівок",
-    "size": 355
-   },
-   {
-    "path": "www/style.css",
-    "note": "оформлення сторінки",
-    "size": 4216
-   },
-   {
-    "path": "www/_shared/chrome.php",
-    "note": "початок документа та екранування виводу",
-    "size": 1783,
-    "supporting": true
-   },
-   {
-    "path": "www/_shared/tokens.css",
-    "note": "основи оформлення: кольори й гарнітури",
-    "size": 3343,
-    "supporting": true
-   }
-  ],
   "port": 8090,
-  "archive": {
-   "path": "work.zip",
-   "size": 8371
+  "basic": {
+   "name": "Лабораторна робота № 1",
+   "files": [
+    {
+     "path": "docker-compose.yml",
+     "note": "опис оточення",
+     "size": 1294
+    },
+    {
+     "path": "www/index.php",
+     "note": "індивідуальне завдання: ПІБ, група та середовище",
+     "size": 3598
+    },
+    {
+     "path": "www/phpinfo.php",
+     "note": "перевірочна сторінка з методичних вказівок",
+     "size": 355
+    }
+   ],
+   "archive": {
+    "path": "work.zip",
+    "size": 3757
+   }
+  },
+  "extended": {
+   "name": "Лабораторна робота № 1",
+   "files": [
+    {
+     "path": "docker-compose.yml",
+     "note": "опис оточення: образ, порт, монтування каталогу",
+     "size": 1294
+    },
+    {
+     "path": "www/index.php",
+     "note": "індивідуальне завдання: ПІБ, група та паспорт оточення",
+     "size": 6223
+    },
+    {
+     "path": "www/phpinfo.php",
+     "note": "перевірочна сторінка з методичних вказівок",
+     "size": 355
+    },
+    {
+     "path": "www/style.css",
+     "note": "оформлення сторінки",
+     "size": 4216
+    },
+    {
+     "path": "www/_shared/chrome.php",
+     "note": "початок документа та екранування виводу",
+     "size": 1783,
+     "supporting": true
+    },
+    {
+     "path": "www/_shared/tokens.css",
+     "note": "основи оформлення: кольори й гарнітури",
+     "size": 3343,
+     "supporting": true
+    }
+   ],
+   "archive": {
+    "path": "work.zip",
+    "size": 8371
+   }
   }
  },
  "lab2": [
   {
-   "name": "Варіант 1",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 872
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2349
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4879
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3252
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2558
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 4658
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1888,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2531,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/NodeAddressTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2188
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 2777,
-     "supporting": true
-    }
-   ],
    "variant": 1,
    "port": 8101,
-   "archive": {
-    "path": "work.zip",
-    "size": 17861
+   "name": "Варіант 1",
+   "basic": {
+    "name": "Варіант 1",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 5965
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5334
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6265
+    }
+   },
+   "extended": {
+    "name": "Варіант 1",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2349
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4879
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3252
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2558
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 4658
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1888,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2531,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/NodeAddressTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2188
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 2777,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17861
+    }
    }
   },
   {
-   "name": "Варіант 2",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 872
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2323
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4407
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3159
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2564
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 5040
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1890,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2500,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/NetworkAddressTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2147
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 2436,
-     "supporting": true
-    }
-   ],
    "variant": 2,
    "port": 8102,
-   "archive": {
-    "path": "work.zip",
-    "size": 17501
+   "name": "Варіант 2",
+   "basic": {
+    "name": "Варіант 2",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6365
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5299
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6265
+    }
+   },
+   "extended": {
+    "name": "Варіант 2",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2323
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4407
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3159
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2564
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 5040
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1890,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2500,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/NetworkAddressTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2147
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 2436,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17501
+    }
    }
   },
   {
-   "name": "Варіант 3",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 872
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2357
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4523
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3271
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2556
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 4715
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1879,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2485,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/NumberBaseTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2364
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 3,
    "port": 8103,
-   "archive": {
-    "path": "work.zip",
-    "size": 17381
+   "name": "Варіант 3",
+   "basic": {
+    "name": "Варіант 3",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6553
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5508
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6521
+    }
+   },
+   "extended": {
+    "name": "Варіант 3",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2357
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4523
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3271
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2556
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 4715
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1879,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2485,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/NumberBaseTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2364
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17381
+    }
    }
   },
   {
-   "name": "Варіант 4",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 872
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2320
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4436
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3012
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2552
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 5197
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1881,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2485,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/CalendarTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2230
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 4,
    "port": 8104,
-   "archive": {
-    "path": "work.zip",
-    "size": 17237
+   "name": "Варіант 4",
+   "basic": {
+    "name": "Варіант 4",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6240
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5370
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6414
+    }
+   },
+   "extended": {
+    "name": "Варіант 4",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2320
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4436
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3012
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2552
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 5197
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1881,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2485,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/CalendarTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2230
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17237
+    }
    }
   },
   {
-   "name": "Варіант 5",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 872
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2357
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4278
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 2981
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2556
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 5073
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1889,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2497,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/DigitTableTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2307
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 5,
    "port": 8105,
-   "archive": {
-    "path": "work.zip",
-    "size": 17190
+   "name": "Варіант 5",
+   "basic": {
+    "name": "Варіант 5",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6018
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5451
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6366
+    }
+   },
+   "extended": {
+    "name": "Варіант 5",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2357
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4278
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 2981
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2556
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 5073
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1889,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2497,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/DigitTableTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2307
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17190
+    }
    }
   },
   {
-   "name": "Варіант 6",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 872
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2346
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4339
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 2990
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2562
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 4672
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1890,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2534,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/SpelledNumberTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2257
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 6,
    "port": 8106,
-   "archive": {
-    "path": "work.zip",
-    "size": 17147
+   "name": "Варіант 6",
+   "basic": {
+    "name": "Варіант 6",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6128
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5407
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6325
+    }
+   },
+   "extended": {
+    "name": "Варіант 6",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2346
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4339
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 2990
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2562
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 4672
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1890,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2534,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/SpelledNumberTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2257
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17147
+    }
    }
   },
   {
-   "name": "Варіант 7",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 872
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2338
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4603
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3337
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2566
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 5036
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1888,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2493,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/CellCoordinatesTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2896
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 7,
    "port": 8107,
-   "archive": {
-    "path": "work.zip",
-    "size": 17520
+   "name": "Варіант 7",
+   "basic": {
+    "name": "Варіант 7",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6625
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 6050
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6612
+    }
+   },
+   "extended": {
+    "name": "Варіант 7",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2338
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4603
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3337
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2566
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 5036
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1888,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2493,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/CellCoordinatesTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2896
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17520
+    }
    }
   },
   {
-   "name": "Варіант 8",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 872
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2367
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4359
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3161
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2558
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 4683
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1881,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2491,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/PictureAreaTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2811
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 8,
    "port": 8108,
-   "archive": {
-    "path": "work.zip",
-    "size": 17242
+   "name": "Варіант 8",
+   "basic": {
+    "name": "Варіант 8",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6258
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5957
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6442
+    }
+   },
+   "extended": {
+    "name": "Варіант 8",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2367
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4359
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3161
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2558
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 4683
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1881,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2491,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/PictureAreaTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2811
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17242
+    }
    }
   },
   {
-   "name": "Варіант 9",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 872
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2331
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4273
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3119
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2558
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 5207
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1889,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2501,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/TextPyramidTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2149
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 9,
    "port": 8109,
-   "archive": {
-    "path": "work.zip",
-    "size": 17183
+   "name": "Варіант 9",
+   "basic": {
+    "name": "Варіант 9",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6145
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5295
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6330
+    }
+   },
+   "extended": {
+    "name": "Варіант 9",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 872
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2331
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4273
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3119
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2558
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 5207
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1889,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2501,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/TextPyramidTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2149
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17183
+    }
    }
   },
   {
-   "name": "Варіант 10",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 874
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2324
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4385
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3066
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2566
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 4996
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1879,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2478,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/PicturePyramidTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2236
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 10,
    "port": 8110,
-   "archive": {
-    "path": "work.zip",
-    "size": 17205
+   "name": "Варіант 10",
+   "basic": {
+    "name": "Варіант 10",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6204
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5390
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6397
+    }
+   },
+   "extended": {
+    "name": "Варіант 10",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2324
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4385
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3066
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2566
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 4996
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1879,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2478,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/PicturePyramidTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2236
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17205
+    }
    }
   },
   {
-   "name": "Варіант 11",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 874
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2297
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4319
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3011
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2558
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 4687
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1881,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2525,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/ChessboardTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2479
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 11,
    "port": 8111,
-   "archive": {
-    "path": "work.zip",
-    "size": 17205
+   "name": "Варіант 11",
+   "basic": {
+    "name": "Варіант 11",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6114
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5625
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6459
+    }
+   },
+   "extended": {
+    "name": "Варіант 11",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2297
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4319
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3011
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2558
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 4687
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1881,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2525,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/ChessboardTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2479
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17205
+    }
    }
   },
   {
-   "name": "Варіант 12",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 874
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2353
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4917
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3433
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2556
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 5000
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1879,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2481,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/JackHouseTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2939
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 12,
    "port": 8112,
-   "archive": {
-    "path": "work.zip",
-    "size": 17751
+   "name": "Варіант 12",
+   "basic": {
+    "name": "Варіант 12",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6392
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 6083
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6642
+    }
+   },
+   "extended": {
+    "name": "Варіант 12",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2353
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4917
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3433
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2556
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 5000
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1879,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2481,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/JackHouseTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2939
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17751
+    }
    }
   },
   {
-   "name": "Варіант 13",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 874
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2319
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4366
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3288
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2550
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 4794
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1889,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2502,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/ZodiacTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 3428
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 1535,
-     "supporting": true
-    }
-   ],
    "variant": 13,
    "port": 8113,
-   "archive": {
-    "path": "work.zip",
-    "size": 17575
+   "name": "Варіант 13",
+   "basic": {
+    "name": "Варіант 13",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6459
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 6566
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6796
+    }
+   },
+   "extended": {
+    "name": "Варіант 13",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2319
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4366
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3288
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2550
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 4794
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1889,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2502,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/ZodiacTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 3428
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 1535,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17575
+    }
    }
   },
   {
-   "name": "Варіант 14",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 874
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2341
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4387
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3070
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2560
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 5215
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1890,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2533,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/NodeAddressTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2188
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 2777,
-     "supporting": true
-    }
-   ],
    "variant": 14,
    "port": 8114,
-   "archive": {
-    "path": "work.zip",
-    "size": 17815
+   "name": "Варіант 14",
+   "basic": {
+    "name": "Варіант 14",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6256
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5336
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6384
+    }
+   },
+   "extended": {
+    "name": "Варіант 14",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2341
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4387
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3070
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2560
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 5215
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1890,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2533,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/NodeAddressTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2188
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 2777,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17815
+    }
    }
   },
   {
-   "name": "Варіант 15",
-   "files": [
-    {
-     "path": "docker-compose.yml",
-     "note": "опис оточення",
-     "size": 874
-    },
-    {
-     "path": "www/index.php",
-     "note": "вхідна сторінка з переліком програм",
-     "size": 2300
-    },
-    {
-     "path": "www/prog1.php",
-     "note": "програма № 1: обчислення та відомість",
-     "size": 4393
-    },
-    {
-     "path": "www/lib/formulas.php",
-     "note": "обчислення першої програми",
-     "size": 3056
-    },
-    {
-     "path": "www/prog2.php",
-     "note": "програма № 2: сторінка завдання",
-     "size": 2566
-    },
-    {
-     "path": "www/style.css",
-     "note": "оформлення сторінок",
-     "size": 5004
-    },
-    {
-     "path": "www/_shared/chrome.php",
-     "note": "початок документа та екранування виводу",
-     "size": 1888,
-     "supporting": true
-    },
-    {
-     "path": "www/_shared/tokens.css",
-     "note": "основи оформлення: кольори й гарнітури",
-     "size": 2493,
-     "supporting": true
-    },
-    {
-     "path": "www/lib/NetworkAddressTask.php",
-     "note": "програма № 2: клас завдання",
-     "size": 2147
-    },
-    {
-     "path": "www/lib/Task.php",
-     "note": "спільна основа завдання",
-     "size": 2436,
-     "supporting": true
-    }
-   ],
    "variant": 15,
    "port": 8115,
-   "archive": {
-    "path": "work.zip",
-    "size": 17426
+   "name": "Варіант 15",
+   "basic": {
+    "name": "Варіант 15",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та перевірка рівності",
+      "size": 6219
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: клас завдання й показ результату",
+      "size": 5301
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 6219
+    }
+   },
+   "extended": {
+    "name": "Варіант 15",
+    "files": [
+     {
+      "path": "docker-compose.yml",
+      "note": "опис оточення",
+      "size": 874
+     },
+     {
+      "path": "www/index.php",
+      "note": "вхідна сторінка з переліком програм",
+      "size": 2300
+     },
+     {
+      "path": "www/prog1.php",
+      "note": "програма № 1: обчислення та відомість",
+      "size": 4393
+     },
+     {
+      "path": "www/lib/formulas.php",
+      "note": "обчислення першої програми",
+      "size": 3056
+     },
+     {
+      "path": "www/prog2.php",
+      "note": "програма № 2: сторінка завдання",
+      "size": 2566
+     },
+     {
+      "path": "www/style.css",
+      "note": "оформлення сторінок",
+      "size": 5004
+     },
+     {
+      "path": "www/_shared/chrome.php",
+      "note": "початок документа та екранування виводу",
+      "size": 1888,
+      "supporting": true
+     },
+     {
+      "path": "www/_shared/tokens.css",
+      "note": "основи оформлення: кольори й гарнітури",
+      "size": 2493,
+      "supporting": true
+     },
+     {
+      "path": "www/lib/NetworkAddressTask.php",
+      "note": "програма № 2: клас завдання",
+      "size": 2147
+     },
+     {
+      "path": "www/lib/Task.php",
+      "note": "спільна основа завдання",
+      "size": 2436,
+      "supporting": true
+     }
+    ],
+    "archive": {
+     "path": "work.zip",
+     "size": 17426
+    }
    }
   }
  ],

@@ -6,7 +6,7 @@ import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
 import { SelectField } from "@/components/ui/field";
-import { FileSet } from "@/components/ui/file-set";
+import { FlavourSwitch } from "@/components/flavour-switch";
 import { categories, modules } from "@/lib/modules";
 import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { INSTALL_GUIDES } from "@/lib/data/pismi-install";
@@ -18,6 +18,7 @@ const procedure = LAB_GUIDES["pismi-lab1"];
 
 export default function PismiLab1Page() {
   const [guideId, setGuideId] = useState(INSTALL_GUIDES[0].id);
+  const [flavour, setFlavour] = useState<"basic" | "extended">("basic");
   const guide = INSTALL_GUIDES.find((g) => g.id === guideId)!;
   const index = usePismiIndex();
 
@@ -111,11 +112,15 @@ export default function PismiLab1Page() {
               </p>
             </div>
             {index ? (
-              <FileSet
+              <FlavourSwitch
                 base="../../pismi/lab1"
-                files={index.lab1.files}
-                archive={index.lab1.archive}
+                basic={index.lab1.basic}
+                extended={index.lab1.extended}
+                value={flavour}
+                onChange={setFlavour}
                 accent={accent}
+                basicNote="Окружение и страница, которая выводит ФИО и группу, — ровно то, что требует задание. Файл самодостаточен, стили в нём же, несколько строк."
+                extendedNote="То же самое, но с общим началом документа и отдельным файлом оформления. Выглядит опрятнее, однако добавляет файлы, которых задание не требует."
               />
             ) : (
               <p className="text-sm text-ink-faint">Загрузка…</p>

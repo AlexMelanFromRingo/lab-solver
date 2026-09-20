@@ -26,9 +26,33 @@ export interface LabBundle {
   variant?: number;
 }
 
+/**
+ * Вариант второй работы в двух сборках.
+ *
+ * «По методичке» — ровно то, что требует задание: окружение и две программы,
+ * каждая самодостаточна. «С оформлением» — то же самое, но с общим началом
+ * документа, отдельным файлом стилей и основой для класса задания. Вторая
+ * удобнее, но добавляет файлы, которых задание не требует.
+ */
+export interface VariantBundle {
+  variant: number;
+  port: number;
+  name: string;
+  basic: LabBundle;
+  extended: LabBundle;
+}
+
+/** Работа без вариантов, тоже в двух сборках. */
+export interface TwoWayBundle {
+  name: string;
+  port: number;
+  basic: LabBundle;
+  extended: LabBundle;
+}
+
 export interface PismiIndex {
-  lab1: LabBundle;
-  lab2: LabBundle[];
+  lab1: TwoWayBundle;
+  lab2: VariantBundle[];
   lab3: LabBundle;
   lab4: LabBundle;
   lab5: LabBundle;

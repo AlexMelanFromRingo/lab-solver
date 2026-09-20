@@ -8,7 +8,7 @@ import { InfoNote } from "@/components/ui/info-note";
 import { TextField } from "@/components/ui/field";
 import { OutputBlock } from "@/components/ui/output-block";
 import { VariantDial } from "@/components/ui/variant-dial";
-import { FileSet } from "@/components/ui/file-set";
+import { FlavourSwitch } from "@/components/flavour-switch";
 import { categories, modules } from "@/lib/modules";
 import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { usePismiIndex } from "@/lib/pismi-files";
@@ -48,6 +48,7 @@ export default function PismiLab2Page() {
 
   const index = usePismiIndex();
   const bundle = index?.lab2.find((b) => b.variant === variantNum);
+  const [flavour, setFlavour] = useState<"basic" | "extended">("basic");
 
   return (
     <div>
@@ -202,16 +203,20 @@ export default function PismiLab2Page() {
               </h2>
               <p className="mt-1.5 text-sm text-ink-dim">
                 Положить рядом, выполнить <code>docker compose up -d</code> и открыть
-                localhost:{bundle?.port ?? 8100 + variantNum}. Общие файлы из{" "}
-                <code>_shared</code> лежат в модуле лабы 1.
+                localhost:{bundle?.port ?? 8100 + variantNum}.
               </p>
             </div>
+
             {bundle ? (
-              <FileSet
+              <FlavourSwitch
                 base={`../../pismi/lab2/v${String(variantNum).padStart(2, "0")}`}
-                files={bundle.files}
-                archive={bundle.archive}
+                basic={bundle.basic}
+                extended={bundle.extended}
+                value={flavour}
+                onChange={setFlavour}
                 accent={accent}
+                basicNote="Окружение и две программы — ровно то, что требует задание. Каждый файл самодостаточен: вычисления, класс задания и разметка лежат в нём самом."
+                extendedNote="То же самое, но с общим началом документа, отдельным файлом стилей и основой для класса. Удобнее в работе, однако добавляет файлы, которых задание не требует."
               />
             ) : (
               <p className="text-sm text-ink-faint">Загрузка…</p>
