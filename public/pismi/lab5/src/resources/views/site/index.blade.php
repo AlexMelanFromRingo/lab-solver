@@ -1,6 +1,6 @@
 <x-site-layout :theme="$theme" :options="$options">
 
-    {{-- Перший екран: ім'я власника, коротке пояснення і три показники --}}
+    {{-- Перший екран: ім’я власника, коротке пояснення і три показники --}}
     <section class="mx-auto max-w-sheet px-6 pb-16 pt-20">
         <p class="mb-5 text-sm text-faint">{{ $theme['hero']['eyebrow'] }}</p>
         <h1 class="max-w-[16ch] text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
@@ -75,7 +75,7 @@
         </div>
     </section>
 
-    {{-- Форма зворотного зв'язку --}}
+    {{-- Форма зворотного зв’язку --}}
     <section id="contact" class="mx-auto max-w-sheet px-6 py-16">
         <div class="panel px-9 py-9">
             <h2 class="mb-2 text-3xl font-semibold tracking-tight">{{ $theme['contact']['title'] }}</h2>

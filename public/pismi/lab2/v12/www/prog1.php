@@ -39,7 +39,7 @@ ust_head('ЛР2 · програма № 1 · варіант 12');
     <div class="given">
         y₁ = √((1 − cos α)/(1 + cos α)) − √((1 + cos α)/(1 − cos α))<br>
         y₂ = 2 / tg α
-        <span class="given__arg">де alpha = <?= h(fmt($alpha)) ?> — значення з умови варіанта</span>
+        <span class="given__arg">де alpha = <?= h(fmt($alpha)) ?> – значення з умови варіанта</span>
     </div>
 
     <div class="split">
@@ -82,7 +82,7 @@ ust_head('ЛР2 · програма № 1 · варіант 12');
                     Значення збіглися. Розбіжність <?= h(sprintf('%.2e', $difference)) ?>
                     не перевищує похибки подвійної точності.
                 <?php else : ?>
-                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> —
+                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> –
                     це більше за допустиму похибку обчислень.
                 <?php endif; ?>
             </p>

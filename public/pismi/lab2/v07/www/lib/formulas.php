@@ -54,7 +54,7 @@ function trace_values(float $a): array
     return [
         ['label' => 'cos(π/6 − α/2)', 'value' => fmt(cos(M_PI / 6 - $a / 2))],
         ['label' => 'sin(π/3 − α/2)', 'value' => fmt(sin(M_PI / 3 - $a / 2))],
-        ['label' => 'cos(π/6 + α/2) — той самий кут, записаний косинусом', 'value' => fmt(cos(M_PI / 6 + $a / 2))],
+        ['label' => 'cos(π/6 + α/2) – той самий кут, записаний косинусом', 'value' => fmt(cos(M_PI / 6 + $a / 2))],
         ['label' => 'добуток косинусів різниці та суми', 'value' => fmt(cos(M_PI / 6 - $a / 2) * cos(M_PI / 6 + $a / 2))],
         ['label' => '3/4 − sin²(α/2)', 'value' => fmt(0.75 - sin($a / 2) ** 2)],
         ['label' => 'sin(3a/2) / sin(a/2)', 'value' => fmt(sin(1.5 * $a) / sin($a / 2))],

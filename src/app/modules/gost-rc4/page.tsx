@@ -6,10 +6,13 @@ import { Card, CardBody } from "@/components/ui/card";
 import { TextField } from "@/components/ui/field";
 import { InfoNote } from "@/components/ui/info-note";
 import { OutputBlock } from "@/components/ui/output-block";
-import { modules } from "@/lib/modules";
+import { FileSet } from "@/components/ui/file-set";
+import { useVhdlIndex } from "@/lib/vhdl-files";
+import { categories, modules } from "@/lib/modules";
 import { GOST_ROUND_KEYS, gostDecryptBlock, gostEncryptBlock, rc4Encrypt } from "@/lib/algorithms/gost-rc4";
 
 const mod = modules.find((m) => m.slug === "gost-rc4")!;
+const accent = categories.crypto.accent;
 
 function textToBytes(s: string): number[] {
   return Array.from(new TextEncoder().encode(s));
@@ -19,6 +22,7 @@ function bytesToHex(bytes: number[]): string {
 }
 
 export default function GostRc4Page() {
+  const vhdl = useVhdlIndex();
   const [blockHex, setBlockHex] = useState("0123456789abcdef");
 
   const block = useMemo(() => {
@@ -82,6 +86,45 @@ export default function GostRc4Page() {
             </div>
             <OutputBlock label="Шифротекст (hex)" value={bytesToHex(rc4Cipher)} />
             <OutputBlock label="Проверка расшифрования" value={rc4Back} />
+          </CardBody>
+        </Card>
+
+        <Card>
+          <CardBody className="pt-6 space-y-5">
+            <div>
+              <h2 className="font-display text-lg font-semibold text-ink">Схема на VHDL</h2>
+              <p className="mt-1.5 text-sm leading-relaxed text-ink-dim">
+                Сами схемы, а не пересказ: оба шифра с самопроверяющимися испытательными
+                стендами по опубликованным контрольным векторам. Собираются и проверяются
+                через GHDL одной командой{" "}
+                <code className="text-ink">./sim/run_all.sh</code>. Общий пакет{" "}
+                <code className="text-ink">crypto_util</code> нужен обоим — без него не
+                соберётся.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-ink-dim">
+                Здесь только те два шифра, о которых этот модуль. В{" "}
+                <a
+                  href="https://github.com/AlexMelanFromRingo/vhdl-rc4"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  полном хранилище
+                </a>{" "}
+                их пять, включая Калину и Струмок по ДСТУ, с прогоном через синтез до
+                количества вентилей.
+              </p>
+            </div>
+
+            {vhdl ? (
+              <FileSet
+                base="../../vhdl"
+                files={vhdl.files}
+                archive={vhdl.archive}
+                accent={accent}
+              />
+            ) : (
+              <p className="text-sm text-ink-faint">Загрузка…</p>
+            )}
           </CardBody>
         </Card>
       </div>

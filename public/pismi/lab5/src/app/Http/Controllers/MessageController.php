@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
- * Форма зворотного зв'язку та перегляд надісланого.
+ * Форма зворотного зв’язку та перегляд надісланого.
  */
 class MessageController extends Controller
 {
@@ -29,7 +29,7 @@ class MessageController extends Controller
         ], [
             'name.required' => 'Вкажіть, як до вас звертатися.',
             'email.required' => 'Без адреси не буде куди відповісти.',
-            'email.email' => 'Адреса схожа на помилкову — перевірте її.',
+            'email.email' => 'Адреса схожа на помилкову – перевірте її.',
             'body.required' => 'Напишіть повідомлення.',
             'body.min' => 'Повідомлення надто коротке: щонайменше 10 символів.',
         ]);

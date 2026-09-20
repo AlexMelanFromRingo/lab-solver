@@ -40,7 +40,7 @@ ust_head('ЛР2 · програма № 1 · варіант 3');
     <div class="given">
         y₁ = (1 − tg α · tg β) / (m − n)<br>
         y₂ = (1 + tg β / tg α) / (m + n),   m = 5·sin(2α + β),   n = 5·sin β
-        <span class="given__arg">де alpha = <?= h(fmt($alpha)) ?> · beta = <?= h(fmt($beta)) ?> — значення з умови варіанта</span>
+        <span class="given__arg">де alpha = <?= h(fmt($alpha)) ?> · beta = <?= h(fmt($beta)) ?> – значення з умови варіанта</span>
     </div>
 
     <div class="split">
@@ -77,7 +77,7 @@ ust_head('ЛР2 · програма № 1 · варіант 3');
                     Значення збіглися. Розбіжність <?= h(sprintf('%.2e', $difference)) ?>
                     не перевищує похибки подвійної точності.
                 <?php else : ?>
-                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> —
+                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> –
                     це більше за допустиму похибку обчислень.
                 <?php endif; ?>
             </p>

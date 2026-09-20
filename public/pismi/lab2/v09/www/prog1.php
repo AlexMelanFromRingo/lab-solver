@@ -39,7 +39,7 @@ ust_head('ЛР2 · програма № 1 · варіант 9');
     <div class="given">
         y₁ = ln x·lg x + lg x·log₂x + log₂x·ln x<br>
         y₂ = (ln x · lg x · log₂x) / log₂₀ₑ x
-        <span class="given__arg">де x = <?= h(fmt($x)) ?> — значення з умови варіанта</span>
+        <span class="given__arg">де x = <?= h(fmt($x)) ?> – значення з умови варіанта</span>
     </div>
 
     <div class="split">
@@ -76,7 +76,7 @@ ust_head('ЛР2 · програма № 1 · варіант 9');
                     Значення збіглися. Розбіжність <?= h(sprintf('%.2e', $difference)) ?>
                     не перевищує похибки подвійної точності.
                 <?php else : ?>
-                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> —
+                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> –
                     це більше за допустиму похибку обчислень.
                 <?php endif; ?>
             </p>

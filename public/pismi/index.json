@@ -38,7 +38,7 @@
   "port": 8090,
   "archive": {
    "path": "work.zip",
-   "size": 8370
+   "size": 8371
   }
  },
  "lab2": [
@@ -103,7 +103,7 @@
    "port": 8101,
    "archive": {
     "path": "work.zip",
-    "size": 17862
+    "size": 17861
    }
   },
   {
@@ -167,7 +167,7 @@
    "port": 8102,
    "archive": {
     "path": "work.zip",
-    "size": 17502
+    "size": 17501
    }
   },
   {
@@ -231,7 +231,7 @@
    "port": 8103,
    "archive": {
     "path": "work.zip",
-    "size": 17383
+    "size": 17381
    }
   },
   {
@@ -423,7 +423,7 @@
    "port": 8106,
    "archive": {
     "path": "work.zip",
-    "size": 17148
+    "size": 17147
    }
   },
   {
@@ -487,7 +487,7 @@
    "port": 8107,
    "archive": {
     "path": "work.zip",
-    "size": 17521
+    "size": 17520
    }
   },
   {
@@ -551,7 +551,7 @@
    "port": 8108,
    "archive": {
     "path": "work.zip",
-    "size": 17243
+    "size": 17242
    }
   },
   {
@@ -679,7 +679,7 @@
    "port": 8110,
    "archive": {
     "path": "work.zip",
-    "size": 17206
+    "size": 17205
    }
   },
   {
@@ -807,7 +807,7 @@
    "port": 8112,
    "archive": {
     "path": "work.zip",
-    "size": 17752
+    "size": 17751
    }
   },
   {
@@ -871,7 +871,7 @@
    "port": 8113,
    "archive": {
     "path": "work.zip",
-    "size": 17576
+    "size": 17575
    }
   },
   {
@@ -935,7 +935,7 @@
    "port": 8114,
    "archive": {
     "path": "work.zip",
-    "size": 17814
+    "size": 17815
    }
   },
   {
@@ -999,7 +999,7 @@
    "port": 8115,
    "archive": {
     "path": "work.zip",
-    "size": 17427
+    "size": 17426
    }
   }
  ],
@@ -1024,12 +1024,12 @@
    {
     "path": "src/lib/schedule.php",
     "note": "схема довідника: поля та початкове наповнення",
-    "size": 5378
+    "size": 5380
    },
    {
     "path": "src/lib/db.php",
     "note": "підключення, створення таблиці та операції над записами",
-    "size": 11179
+    "size": 11181
    },
    {
     "path": "src/schema-timetable.sql",
@@ -1058,7 +1058,7 @@
   "admin": 8093,
   "archive": {
    "path": "work.zip",
-   "size": 16064
+   "size": 16063
   }
  },
  "lab4": {
@@ -1082,17 +1082,17 @@
    {
     "path": "src/database/migrations/2026_09_18_152942_create_notes_table.php",
     "note": "таблиця нотаток і зв'язок із користувачами",
-    "size": 1236
+    "size": 1238
    },
    {
     "path": "src/app/Models/Note.php",
     "note": "модель нотатки: поля та автор",
-    "size": 1339
+    "size": 1341
    },
    {
     "path": "src/app/Http/Controllers/NoteController.php",
     "note": "контролер: показ, додавання, видалення",
-    "size": 3298
+    "size": 3300
    },
    {
     "path": "src/routes/web.php",
@@ -1124,7 +1124,7 @@
   "admin": 8095,
   "archive": {
    "path": "work.zip",
-   "size": 200137
+   "size": 200146
   }
  },
  "lab5": {
@@ -1148,12 +1148,12 @@
    {
     "path": "src/config/site.php",
     "note": "опис сайтів: зміст окремо від коду",
-    "size": 18880
+    "size": 18882
    },
    {
     "path": "src/app/Support/Theme.php",
     "note": "вибір поточної теми сайту",
-    "size": 1792
+    "size": 1794
    },
    {
     "path": "src/app/Models/Item.php",
@@ -1168,7 +1168,7 @@
    {
     "path": "src/app/Http/Controllers/MessageController.php",
     "note": "форма зворотного зв'язку та скринька",
-    "size": 2470
+    "size": 2472
    },
    {
     "path": "src/app/Http/Controllers/ItemController.php",
@@ -1193,7 +1193,7 @@
    {
     "path": "src/resources/views/site/index.blade.php",
     "note": "головна сторінка",
-    "size": 6097
+    "size": 6101
    },
    {
     "path": "src/tailwind.config.js",
@@ -1210,7 +1210,7 @@
   "admin": 8097,
   "archive": {
    "path": "work.zip",
-   "size": 213820
+   "size": 213843
   }
  }
 }

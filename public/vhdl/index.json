@@ -1,0 +1,48 @@
+{
+ "files": [
+  {
+   "path": "common/crypto_util.vhd",
+   "note": "спільні операції в полі GF(2⁸)",
+   "size": 2774
+  },
+  {
+   "path": "GOST_28147_89/gost_package.vhd",
+   "note": "ГОСТ: таблиці замін і розгортання ключа",
+   "size": 5797
+  },
+  {
+   "path": "GOST_28147_89/gost_cipher.vhd",
+   "note": "ГОСТ: мережа Фейстеля, 32 раунди",
+   "size": 3931
+  },
+  {
+   "path": "GOST_28147_89/gost_tb.vhd",
+   "note": "ГОСТ: перевірка за контрольними векторами",
+   "size": 6827
+  },
+  {
+   "path": "RC4_Inside_Project_Directory/rc4_package.vhd",
+   "note": "RC4: типи й константи",
+   "size": 1216
+  },
+  {
+   "path": "RC4_Inside_Project_Directory/rc4_cipher.vhd",
+   "note": "RC4: KSA та PRGA",
+   "size": 6002
+  },
+  {
+   "path": "RC4_Inside_Project_Directory/rc4_tb.vhd",
+   "note": "RC4: перевірка за контрольними векторами",
+   "size": 9812
+  },
+  {
+   "path": "sim/run_all.sh",
+   "note": "запуск усіх перевірок через GHDL",
+   "size": 1669
+  }
+ ],
+ "archive": {
+  "path": "work.zip",
+  "size": 13204
+ }
+}

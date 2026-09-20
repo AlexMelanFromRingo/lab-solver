@@ -40,7 +40,7 @@ ust_head('ЛР2 · програма № 1 · варіант 4');
     <div class="given">
         y₁ = (sin α + sin β)² + (cos α + cos β)²<br>
         y₂ = 4·cos²((α − β) / 2)
-        <span class="given__arg">де alpha = <?= h(fmt($alpha)) ?> · beta = <?= h(fmt($beta)) ?> — значення з умови варіанта</span>
+        <span class="given__arg">де alpha = <?= h(fmt($alpha)) ?> · beta = <?= h(fmt($beta)) ?> – значення з умови варіанта</span>
     </div>
 
     <div class="split">
@@ -76,7 +76,7 @@ ust_head('ЛР2 · програма № 1 · варіант 4');
                     Значення збіглися. Розбіжність <?= h(sprintf('%.2e', $difference)) ?>
                     не перевищує похибки подвійної точності.
                 <?php else : ?>
-                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> —
+                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> –
                     це більше за допустиму похибку обчислень.
                 <?php endif; ?>
             </p>

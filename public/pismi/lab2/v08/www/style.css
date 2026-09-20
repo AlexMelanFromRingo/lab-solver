@@ -53,7 +53,7 @@
     color: var(--accent);
     margin-bottom: 0.5rem;
 }
-.program__num::after { content: ' —'; }
+.program__num::after { content: ' –'; }
 
 /* --- Умова й заголовки розділів ----------------------------------------- */
 

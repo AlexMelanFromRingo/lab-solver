@@ -39,7 +39,7 @@ ust_head('ЛР2 · програма № 1 · варіант 15');
     <div class="given">
         y₁ = (1 − sin²(3π/2 + x)) / (1 − sin²(π + x))<br>
         y₂ = tg²x
-        <span class="given__arg">де x = <?= h(fmt($x)) ?> — значення з умови варіанта</span>
+        <span class="given__arg">де x = <?= h(fmt($x)) ?> – значення з умови варіанта</span>
     </div>
 
     <div class="split">
@@ -77,7 +77,7 @@ ust_head('ЛР2 · програма № 1 · варіант 15');
                     Значення збіглися. Розбіжність <?= h(sprintf('%.2e', $difference)) ?>
                     не перевищує похибки подвійної точності.
                 <?php else : ?>
-                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> —
+                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> –
                     це більше за допустиму похибку обчислень.
                 <?php endif; ?>
             </p>

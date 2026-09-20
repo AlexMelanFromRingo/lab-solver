@@ -39,7 +39,7 @@ ust_head('ЛР2 · програма № 1 · варіант 5');
     <div class="given">
         y₁ = (sin 3a · cos³a + cos 3a · sin³a) / 3<br>
         y₂ = sin 4a / 4
-        <span class="given__arg">де a = <?= h(fmt($a)) ?> — значення з умови варіанта</span>
+        <span class="given__arg">де a = <?= h(fmt($a)) ?> – значення з умови варіанта</span>
     </div>
 
     <div class="split">
@@ -76,7 +76,7 @@ ust_head('ЛР2 · програма № 1 · варіант 5');
                     Значення збіглися. Розбіжність <?= h(sprintf('%.2e', $difference)) ?>
                     не перевищує похибки подвійної точності.
                 <?php else : ?>
-                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> —
+                    Значення розійшлися на <?= h(sprintf('%.2e', $difference)) ?> –
                     це більше за допустиму похибку обчислень.
                 <?php endif; ?>
             </p>

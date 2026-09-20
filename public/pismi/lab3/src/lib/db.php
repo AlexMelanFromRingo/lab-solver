@@ -49,7 +49,7 @@ function db_connect(int $attempts = 10): mysqli
 }
 
 /**
- * Перевіряє, що ім'я придатне для підстановки в запит як ідентифікатор.
+ * Перевіряє, що ім’я придатне для підстановки в запит як ідентифікатор.
  */
 function safe_identifier(string $name): string
 {
