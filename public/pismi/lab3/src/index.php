@@ -87,7 +87,7 @@ function redirect_back(string $message): never
     exit;
 }
 
-ust_head('ЛР3 · ' . $directory['title'], ust_accent(7)['hex']);
+ust_head('ЛР3 · ' . $directory['title']);
 
 /**
  * Пари, згруповані за днем тижня у порядку самого розкладу.

@@ -50,8 +50,6 @@ function required_extensions(): array
 
 $student = text_param('name', DEFAULT_NAME);
 $group = text_param('group', DEFAULT_GROUP);
-$seat = ust_int_param('n', 7, 1, 30);
-$accent = ust_accent($seat);
 
 $environment = [
     'Версія PHP' => PHP_VERSION,
@@ -64,7 +62,7 @@ $environment = [
     'Час формування' => date('d.m.Y, H:i:s'),
 ];
 
-ust_head('ЛР1 · ' . $student, $accent['hex']);
+ust_head('ЛР1 · ' . $student);
 ?>
 <body>
 <div class="sheet">
@@ -137,7 +135,7 @@ ust_head('ЛР1 · ' . $student, $accent['hex']);
         </form>
         <p class="hint" style="padding-top: 1rem;">
             Прізвище в коді не вшите: ПІБ, група та номер приходять рядком браузера.
-            Номер задає акцентний колір — зараз це <?= h($accent['name']) ?>.
+            Номер задає акцентний колір — зараз це <?= h('латунь') ?>.
         </p>
     </section>
 

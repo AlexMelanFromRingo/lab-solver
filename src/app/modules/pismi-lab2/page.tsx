@@ -205,6 +205,7 @@ export default function PismiLab2Page() {
               <FileSet
                 base={`../../pismi/lab2/v${String(variantNum).padStart(2, "0")}`}
                 files={bundle.files}
+                archive={bundle.archive}
                 accent={accent}
               />
             ) : (

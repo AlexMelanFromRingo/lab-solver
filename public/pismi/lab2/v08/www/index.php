@@ -9,7 +9,7 @@ declare(strict_types=1);
 require __DIR__ . '/_shared/chrome.php';
 require __DIR__ . '/lib/formulas.php';
 
-ust_head('ЛР2 · варіант 8', ust_accent(8)['hex']);
+ust_head('ЛР2 · варіант 8');
 ?>
 <body>
 <div class="sheet">

@@ -6,21 +6,27 @@ import type { LabFile } from "@/components/ui/file-set";
 /**
  * Опис готових файлів робіт, викладених у public/pismi.
  *
- * Файли туди кладе скрипт solver/export_to_site.py з робочого сховища курсу:
- * сайт роздає рівно ті файли, які там зібрані генератором і перевірені
- * запуском, а не складає їх заново за іншим кодом.
+ * Сайт нічого не складає заново: він роздає рівно ті файли, які перевірені
+ * запуском. Кожна робота самодостатня – поруч із файлами лежить і архів з
+ * усім каталогом.
  */
+
+export interface LabArchive {
+  /** Шлях до архіву відносно каталогу роботи. */
+  path: string;
+  size: number;
+}
 
 export interface LabBundle {
   name: string;
   files: LabFile[];
+  archive?: LabArchive;
   port?: number;
   admin?: number;
   variant?: number;
 }
 
 export interface PismiIndex {
-  shared: LabFile[];
   lab1: LabBundle;
   lab2: LabBundle[];
   lab3: LabBundle;

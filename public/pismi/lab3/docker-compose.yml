@@ -15,7 +15,6 @@ services:
       - "8092:80"
     volumes:
       - ./src:/var/www/html
-      - ../solver/assets:/var/www/html/_shared:ro
     depends_on:
       - db
 

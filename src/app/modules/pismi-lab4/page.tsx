@@ -106,7 +106,12 @@ export default function PismiLab4Page() {
               </p>
             </div>
             {index ? (
-              <FileSet base="../../pismi/lab4" files={index.lab4.files} accent={accent} />
+              <FileSet
+                base="../../pismi/lab4"
+                files={index.lab4.files}
+                archive={index.lab4.archive}
+                accent={accent}
+              />
             ) : (
               <p className="text-sm text-ink-faint">Загрузка…</p>
             )}

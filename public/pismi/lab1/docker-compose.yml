@@ -4,9 +4,6 @@
 # Apache, каталог www примонтований у корінь веб-сервера. Розширення PHP
 # ставляться командою під час запуску контейнера, а не в окремому образі –
 # у цій роботі Dockerfile ще не використовується.
-#
-# Каталог _shared підключений лише для читання: у ньому спільне оформлення
-# всіх робіт, і жодна з них не повинна його змінювати.
 
 services:
   web:
@@ -18,7 +15,6 @@ services:
       - "8090:80"
     volumes:
       - ./www:/var/www/html
-      - ../solver/assets:/var/www/html/_shared:ro
     working_dir: /var/www/html
     restart: unless-stopped
     environment:

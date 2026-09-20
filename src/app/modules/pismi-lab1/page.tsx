@@ -106,27 +106,17 @@ export default function PismiLab1Page() {
               </p>
             </div>
             {index ? (
-              <FileSet base="../../pismi/lab1" files={index.lab1.files} accent={accent} />
+              <FileSet
+                base="../../pismi/lab1"
+                files={index.lab1.files}
+                archive={index.lab1.archive}
+                accent={accent}
+              />
             ) : (
               <p className="text-sm text-ink-faint">Загрузка…</p>
             )}
           </CardBody>
         </Card>
-
-        {index && (
-          <Card>
-            <CardBody className="pt-6 space-y-5">
-              <div>
-                <h2 className="font-display text-lg font-semibold text-ink">Общие файлы</h2>
-                <p className="mt-1.5 text-sm text-ink-dim">
-                  Кладутся в подкаталог <code>_shared</code> рядом со страницей: цвета,
-                  шрифты и мелкие помощники, одинаковые для всех работ курса.
-                </p>
-              </div>
-              <FileSet base="../../pismi/shared" files={index.shared.map((f) => ({ ...f, path: f.path.replace("_shared/", "") }))} accent={accent} />
-            </CardBody>
-          </Card>
-        )}
       </div>
     </div>
   );

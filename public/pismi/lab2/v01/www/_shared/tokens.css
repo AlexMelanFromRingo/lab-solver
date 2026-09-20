@@ -1,0 +1,158 @@
+/* ===========================================================================
+   Спільні основи оформлення робіт курсу.
+
+   Тут лежить тільки те, що справді спільне: кольори, гарнітури, базові
+   налаштування тексту й кілька дрібних службових класів. Розкладка сторінки
+   в кожній роботі своя – вона випливає зі змісту, а не з єдиного шаблону,
+   тому жодних універсальних «панелей» і «рейок» тут немає.
+
+   Акцент задається змінною --accent на рівні сторінки.
+   =========================================================================== */
+
+:root {
+    color-scheme: dark;
+
+    --field: #0f1a22;
+    --field-2: #16242f;
+    --raise: #1c2c39;
+
+    --line: rgba(200, 222, 236, 0.13);
+    --line-strong: rgba(200, 222, 236, 0.26);
+
+    --text: #e6eef4;
+    --text-dim: #93a8b6;
+    --text-faint: #64798a;
+
+    --accent: #c9a227;
+    --ok: #57b894;
+    --err: #d9634e;
+
+    --font-ui: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --font-data: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--field);
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+}
+
+a {
+    color: var(--accent);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+}
+
+a:hover {
+    color: var(--text);
+}
+
+code,
+.mono {
+    font-family: var(--font-data);
+    font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* --- Службові дрібниці, однакові скрізь --------------------------------- */
+
+.hint {
+    color: var(--text-faint);
+    font-size: 0.875rem;
+    line-height: 1.55;
+}
+
+.ok {
+    color: var(--ok);
+}
+
+.err {
+    color: var(--err);
+}
+
+input,
+select,
+button {
+    font: inherit;
+    color: inherit;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="time"],
+input[type="date"],
+select {
+    font-family: var(--font-data);
+    font-size: 0.9375rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    padding: 0.5rem 0.7rem;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+button {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    background: none;
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    padding: 0.5rem 1.1rem;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+button:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--field);
+}
+
+button.danger:hover {
+    background: var(--err);
+    border-color: var(--err);
+    color: var(--text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

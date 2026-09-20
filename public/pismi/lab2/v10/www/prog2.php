@@ -21,7 +21,7 @@ foreach ($task->params() as $name => $meta) {
     $values[$name] = is_string($given) && $given !== '' ? $given : $meta['default'];
 }
 
-ust_head('ЛР2 · програма № 2 · варіант 10', ust_accent(10)['hex']);
+ust_head('ЛР2 · програма № 2 · варіант 10');
 ?>
 <body>
 <div class="sheet">

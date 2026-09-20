@@ -20,7 +20,7 @@ $second = y2($a);
 $matched = values_match($first, $second);
 $difference = abs($first - $second);
 
-ust_head('ЛР2 · програма № 1 · варіант 13', ust_accent(13)['hex']);
+ust_head('ЛР2 · програма № 1 · варіант 13');
 ?>
 <body>
 <div class="sheet">
