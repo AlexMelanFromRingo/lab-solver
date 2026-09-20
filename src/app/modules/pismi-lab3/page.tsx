@@ -1,14 +1,17 @@
 "use client";
 
 import { ModuleHeader } from "@/components/module-header";
+import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
 import { FileSet } from "@/components/ui/file-set";
 import { categories, modules } from "@/lib/modules";
+import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { usePismiIndex } from "@/lib/pismi-files";
 
 const mod = modules.find((m) => m.slug === "pismi-lab3")!;
 const accent = categories.pismi.accent;
+const procedure = LAB_GUIDES["pismi-lab3"];
 
 /** Последовательность запуска: ровно та, что выполнялась при проверке. */
 const STEPS: { title: string; body: string; commands?: string[] }[] = [
@@ -54,6 +57,8 @@ export default function PismiLab3Page() {
           <code> lib/schedule.php</code> — запрос создания таблицы, форма ввода и проверки
           значений строятся из неё.
         </InfoNote>
+
+        <LabProcedure guide={procedure} accent={accent} />
 
         <Card>
           <CardBody className="pt-6 space-y-6">

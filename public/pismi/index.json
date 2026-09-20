@@ -71,7 +71,7 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 4630
     },
     {
      "path": "www/_shared/chrome.php",
@@ -98,7 +98,7 @@
    "port": 8101,
    "archive": {
     "path": "work.zip",
-    "size": 18624
+    "size": 18162
    }
   },
   {
@@ -132,12 +132,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 5061
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1890
     },
     {
      "path": "www/_shared/tokens.css",
@@ -159,7 +159,7 @@
    "port": 8102,
    "archive": {
     "path": "work.zip",
-    "size": 18233
+    "size": 17805
    }
   },
   {
@@ -193,12 +193,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 4715
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1879
     },
     {
      "path": "www/_shared/tokens.css",
@@ -220,7 +220,7 @@
    "port": 8103,
    "archive": {
     "path": "work.zip",
-    "size": 18149
+    "size": 17686
    }
   },
   {
@@ -254,12 +254,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 5161
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1881
     },
     {
      "path": "www/_shared/tokens.css",
@@ -281,7 +281,7 @@
    "port": 8104,
    "archive": {
     "path": "work.zip",
-    "size": 17919
+    "size": 17535
    }
   },
   {
@@ -315,12 +315,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 4978
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1889
     },
     {
      "path": "www/_shared/tokens.css",
@@ -342,7 +342,7 @@
    "port": 8105,
    "archive": {
     "path": "work.zip",
-    "size": 17907
+    "size": 17500
    }
   },
   {
@@ -376,12 +376,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 4644
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1890
     },
     {
      "path": "www/_shared/tokens.css",
@@ -403,7 +403,7 @@
    "port": 8106,
    "archive": {
     "path": "work.zip",
-    "size": 17908
+    "size": 17451
    }
   },
   {
@@ -437,7 +437,7 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 5019
     },
     {
      "path": "www/_shared/chrome.php",
@@ -464,7 +464,7 @@
    "port": 8107,
    "archive": {
     "path": "work.zip",
-    "size": 18237
+    "size": 17825
    }
   },
   {
@@ -498,12 +498,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 4655
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1881
     },
     {
      "path": "www/_shared/tokens.css",
@@ -525,7 +525,7 @@
    "port": 8108,
    "archive": {
     "path": "work.zip",
-    "size": 18029
+    "size": 17551
    }
   },
   {
@@ -559,12 +559,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 5195
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1889
     },
     {
      "path": "www/_shared/tokens.css",
@@ -586,7 +586,7 @@
    "port": 8109,
    "archive": {
     "path": "work.zip",
-    "size": 17878
+    "size": 17471
    }
   },
   {
@@ -620,12 +620,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 4940
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1879
     },
     {
      "path": "www/_shared/tokens.css",
@@ -647,7 +647,7 @@
    "port": 8110,
    "archive": {
     "path": "work.zip",
-    "size": 17925
+    "size": 17512
    }
   },
   {
@@ -681,12 +681,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 4687
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1881
     },
     {
      "path": "www/_shared/tokens.css",
@@ -708,7 +708,7 @@
    "port": 8111,
    "archive": {
     "path": "work.zip",
-    "size": 17981
+    "size": 17518
    }
   },
   {
@@ -742,12 +742,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 4990
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1879
     },
     {
      "path": "www/_shared/tokens.css",
@@ -769,7 +769,7 @@
    "port": 8112,
    "archive": {
     "path": "work.zip",
-    "size": 18486
+    "size": 18058
    }
   },
   {
@@ -803,12 +803,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 4765
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1889
     },
     {
      "path": "www/_shared/tokens.css",
@@ -830,7 +830,7 @@
    "port": 8113,
    "archive": {
     "path": "work.zip",
-    "size": 18328
+    "size": 17875
    }
   },
   {
@@ -864,12 +864,12 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 5209
     },
     {
      "path": "www/_shared/chrome.php",
      "note": "початок документа та екранування виводу",
-     "size": 1888
+     "size": 1890
     },
     {
      "path": "www/_shared/tokens.css",
@@ -891,7 +891,7 @@
    "port": 8114,
    "archive": {
     "path": "work.zip",
-    "size": 18488
+    "size": 18108
    }
   },
   {
@@ -925,7 +925,7 @@
     {
      "path": "www/style.css",
      "note": "оформлення сторінок",
-     "size": 7000
+     "size": 4921
     },
     {
      "path": "www/_shared/chrome.php",
@@ -952,7 +952,7 @@
    "port": 8115,
    "archive": {
     "path": "work.zip",
-    "size": 18141
+    "size": 17732
    }
   }
  ],

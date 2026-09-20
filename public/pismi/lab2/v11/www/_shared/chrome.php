@@ -39,7 +39,7 @@ function ust_head(string $title, string $stylesheet = 'style.css', string $accen
 <link rel="icon" href="_shared/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="_shared/tokens.css">
 <link rel="stylesheet" href="<?= h($stylesheet) ?>">
 <style>:root { --accent: <?= h($accent) ?>; }</style>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ModuleHeader } from "@/components/module-header";
+import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
 import { NumberField, SelectField } from "@/components/ui/field";
@@ -9,12 +10,14 @@ import { Steps, Pitfalls } from "@/components/lab-steps";
 import { FuzzyInference } from "@/components/fuzzy-inference";
 import { FlsDownload } from "@/components/fls-download";
 import { categories, modules } from "@/lib/modules";
+import { AI_GUIDES } from "@/lib/data/ai-labs";
 import { EXAMPLE_TASK } from "@/lib/data/ai-fuzzy-systems";
 import { FLS_FORMAT, FLS_METHOD_LINE, FLS_PITFALLS, RUN_GUIDES } from "@/lib/data/ai-fls";
 import { INITIAL_METHODS, formatTerm } from "@/lib/algorithms/fuzzy-mamdani";
 
 const mod = modules.find((m) => m.slug === "ai-lab1")!;
 const accent = categories.ai.accent;
+const procedure = AI_GUIDES["ai-lab1"];
 
 const task = EXAMPLE_TASK;
 
@@ -35,6 +38,8 @@ export default function AiLab1Page() {
           −1. Ниже — как её запустить, из чего состоит её файл и что происходит на каждом
           этапе.
         </InfoNote>
+
+        <LabProcedure guide={procedure} accent={accent} />
 
         {/* --- Запуск ------------------------------------------------------ */}
         <Card>

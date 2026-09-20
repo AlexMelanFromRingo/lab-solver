@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ModuleHeader } from "@/components/module-header";
+import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
 import { NumberField, SelectField } from "@/components/ui/field";
@@ -10,6 +11,7 @@ import { FuzzyInference } from "@/components/fuzzy-inference";
 import { FlsDownload } from "@/components/fls-download";
 import { TermChart } from "@/components/fuzzy-chart";
 import { categories, modules } from "@/lib/modules";
+import { AI_GUIDES } from "@/lib/data/ai-labs";
 import { FUZZY_VARIANTS } from "@/lib/data/ai-fuzzy-systems";
 import {
   INITIAL_METHODS,
@@ -25,6 +27,7 @@ import {
 
 const mod = modules.find((m) => m.slug === "ai-lab2")!;
 const accent = categories.ai.accent;
+const procedure = AI_GUIDES["ai-lab2"];
 
 const NORMS: Norm[] = ["minimum", "maximum"];
 const DEFUZZ: Defuzz[] = ["cog", "fimax", "mom"];
@@ -109,6 +112,8 @@ export default function AiLab2Page() {
           методичка предлагает посчитать. Вывод разложен по этапам, методы переключаются, а
           готовая система выгружается файлом для самой программы.
         </InfoNote>
+
+        <LabProcedure guide={procedure} accent={accent} />
 
         <VariantDial value={variantNum} min={1} max={10} onChange={setVariantNum} accent={accent} />
 

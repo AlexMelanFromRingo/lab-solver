@@ -1,15 +1,18 @@
 "use client";
 
 import { ModuleHeader } from "@/components/module-header";
+import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
 import { FileSet } from "@/components/ui/file-set";
 import { Pitfalls, Steps, type LabStep } from "@/components/lab-steps";
 import { categories, modules } from "@/lib/modules";
+import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { usePismiIndex } from "@/lib/pismi-files";
 
 const mod = modules.find((m) => m.slug === "pismi-lab5")!;
 const accent = categories.pismi.accent;
+const procedure = LAB_GUIDES["pismi-lab5"];
 
 const STEPS: LabStep[] = [
   {
@@ -65,6 +68,8 @@ export default function PismiLab5Page() {
           разных сайта — визитку, трекер учёбы, справочник Формулы-1 и каталог музыки.
           Чтобы сделать свой, достаточно дописать тему в <code>config/site.php</code>.
         </InfoNote>
+
+        <LabProcedure guide={procedure} accent={accent} />
 
         <Card>
           <CardBody className="pt-6 space-y-6">

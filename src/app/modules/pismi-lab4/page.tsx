@@ -1,15 +1,18 @@
 "use client";
 
 import { ModuleHeader } from "@/components/module-header";
+import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
 import { FileSet } from "@/components/ui/file-set";
 import { Pitfalls, Steps, type LabStep } from "@/components/lab-steps";
 import { categories, modules } from "@/lib/modules";
+import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { usePismiIndex } from "@/lib/pismi-files";
 
 const mod = modules.find((m) => m.slug === "pismi-lab4")!;
 const accent = categories.pismi.accent;
+const procedure = LAB_GUIDES["pismi-lab4"];
 
 /** Последовательность ровно та, что выполнялась при сборке работы. */
 const STEPS: LabStep[] = [
@@ -87,6 +90,8 @@ export default function PismiLab4Page() {
           «один ко многим», авторизацию даёт Laravel Breeze. Вариантов у работы нет,
           поэтому ниже порядок запуска и готовые файлы.
         </InfoNote>
+
+        <LabProcedure guide={procedure} accent={accent} />
 
         <Card>
           <CardBody className="pt-6 space-y-6">

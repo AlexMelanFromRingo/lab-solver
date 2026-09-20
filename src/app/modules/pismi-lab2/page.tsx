@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ModuleHeader } from "@/components/module-header";
+import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
 import { TextField } from "@/components/ui/field";
@@ -9,6 +10,7 @@ import { OutputBlock } from "@/components/ui/output-block";
 import { VariantDial } from "@/components/ui/variant-dial";
 import { FileSet } from "@/components/ui/file-set";
 import { categories, modules } from "@/lib/modules";
+import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { usePismiIndex } from "@/lib/pismi-files";
 import {
   FORMULA_VARIANTS,
@@ -20,6 +22,7 @@ import { defaultValues, taskByVariant } from "@/lib/algorithms/pismi-lab2-object
 
 const mod = modules.find((m) => m.slug === "pismi-lab2")!;
 const accent = categories.pismi.accent;
+const procedure = LAB_GUIDES["pismi-lab2"];
 
 /** Подписи аргументов: в методичке греческие, в коде латиницей. */
 const SYMBOLS: Record<string, string> = {
@@ -56,6 +59,8 @@ export default function PismiLab2Page() {
           варианту и готовые файлы работы: описание окружения и исходники, которые
           достаточно положить в каталог и поднять одной командой.
         </InfoNote>
+
+        <LabProcedure guide={procedure} accent={accent} />
 
         <VariantDial value={variantNum} min={1} max={15} onChange={setVariantNum} accent={accent} />
 

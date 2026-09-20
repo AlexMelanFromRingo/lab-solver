@@ -2,16 +2,19 @@
 
 import { useState } from "react";
 import { ModuleHeader } from "@/components/module-header";
+import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
 import { SelectField } from "@/components/ui/field";
 import { FileSet } from "@/components/ui/file-set";
 import { categories, modules } from "@/lib/modules";
+import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { INSTALL_GUIDES } from "@/lib/data/pismi-install";
 import { usePismiIndex } from "@/lib/pismi-files";
 
 const mod = modules.find((m) => m.slug === "pismi-lab1")!;
 const accent = categories.pismi.accent;
+const procedure = LAB_GUIDES["pismi-lab1"];
 
 export default function PismiLab1Page() {
   const [guideId, setGuideId] = useState(INSTALL_GUIDES[0].id);
@@ -29,6 +32,8 @@ export default function PismiLab1Page() {
           работает с ядром Linux, а откуда это ядро взялось — на файл окружения и команды
           не влияет.
         </InfoNote>
+
+        <LabProcedure guide={procedure} accent={accent} />
 
         <Card>
           <CardBody className="pt-6 space-y-6">
