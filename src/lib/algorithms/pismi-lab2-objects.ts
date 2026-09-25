@@ -478,7 +478,7 @@ export const OBJECT_TASKS: ObjectTask[] = [
       "В зависимости от месяца, года и имени выдать информацию о знаке зодиака и звере " +
       "года рождения.",
     params: [
-      { name: "name", label: "Имя", default: "Олександр" },
+      { name: "name", label: "Имя", default: "Іван" },
       { name: "month", label: "Месяц рождения", default: "4" },
       { name: "day", label: "День рождения", default: "15" },
       { name: "year", label: "Год рождения", default: "2002" },
@@ -496,7 +496,7 @@ export const OBJECT_TASKS: ObjectTask[] = [
       const animals = ["Обезьяна", "Петух", "Собака", "Свинья", "Крыса", "Бык",
                        "Тигр", "Кролик", "Дракон", "Змея", "Лошадь", "Коза"];
 
-      const name = text(v, "name", "Олександр");
+      const name = text(v, "name", "Іван");
       const month = int(v, "month", 4, 1, 12);
       const day = int(v, "day", 15, 1, 31);
       const year = int(v, "year", 2002, 1900, 2100);
