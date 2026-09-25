@@ -36,12 +36,15 @@ export function FileSet({
   files,
   accent,
   archive,
+  supportingNote = "Это оформление и общая основа: к заданию они не относятся, но без них работа не запустится.",
 }: {
   base: string;
   files: LabFile[];
   accent: string;
   /** Архив всего каталога работы, если он выложен. */
   archive?: { path: string; size: number };
+  /** Что за вспомогательные файлы: у каждой работы они свои. */
+  supportingNote?: string;
 }) {
   const [active, setActive] = useState(files[0]?.path ?? "");
   const [withSupporting, setWithSupporting] = useState(false);
@@ -155,8 +158,7 @@ export function FileSet({
               style={{ accentColor: accent }}
             />
             <span>
-              Показать вспомогательные файлы — {supportingCount}. Это оформление и общая
-              основа: к заданию они не относятся, но без них работа не запустится.
+              Показать вспомогательные файлы — {supportingCount}. {supportingNote}
             </span>
           </label>
         )}

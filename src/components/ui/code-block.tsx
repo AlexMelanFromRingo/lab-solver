@@ -57,9 +57,11 @@ export function CodeBlock({ code, filename, className }: { code: string; filenam
 
   return (
     <div className={cn("rounded-[4px] border border-border bg-black/40 overflow-hidden", className)}>
-      <div className="flex items-center justify-between border-b border-border px-4 py-2">
-        <span className="text-xs font-mono text-ink-faint">{filename}</span>
-        <div className="flex gap-2">
+      {/* На узком экране длинное имя файла обрезается, а не выталкивает
+          кнопки за край блока. */}
+      <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-2">
+        <span className="min-w-0 truncate text-xs font-mono text-ink-faint">{filename}</span>
+        <div className="flex shrink-0 gap-2">
           <button
             onClick={async () => {
               await navigator.clipboard.writeText(code);

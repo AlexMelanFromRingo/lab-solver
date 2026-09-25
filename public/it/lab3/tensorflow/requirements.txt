@@ -1,0 +1,3 @@
+# Перевірено: Python 3.12, RTX 4080 SUPER. Без [and-cuda] TensorFlow рахує на процесорі.
+tensorflow[and-cuda]
+pillow

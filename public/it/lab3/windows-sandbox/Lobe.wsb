@@ -1,0 +1,16 @@
+<Configuration>
+  <vGPU>Enable</vGPU>
+  <Networking>Enable</Networking>
+  <MemoryInMB>12288</MemoryInMB>
+  <ClipboardRedirection>Enable</ClipboardRedirection>
+  <MappedFolders>
+    <MappedFolder>
+      <HostFolder>C:\Users\user\LobeSandbox</HostFolder>
+      <SandboxFolder>C:\LobeSandbox</SandboxFolder>
+      <ReadOnly>false</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+  <LogonCommand>
+    <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File C:\LobeSandbox\agent\agent.ps1</Command>
+  </LogonCommand>
+</Configuration>

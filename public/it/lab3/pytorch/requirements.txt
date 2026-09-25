@@ -1,0 +1,5 @@
+# Перевірено: Python 3.12, torch 2.14.0+cu130, torchvision 0.29.0+cu130, RTX 4080 SUPER.
+# Без відеокарти працює й на процесорі, лише повільніше.
+torch
+torchvision
+pillow

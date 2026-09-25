@@ -1,0 +1,405 @@
+{
+ "lab3": {
+  "files": [
+   {
+    "path": "pytorch/lr3_pytorch.py",
+    "note": "PyTorch: ті самі етапи, що в Lobe (MobileNetV2, ResNet50)",
+    "size": 7797
+   },
+   {
+    "path": "pytorch/requirements.txt",
+    "note": "залежності варіанта PyTorch",
+    "size": 226
+   },
+   {
+    "path": "pytorch/results.json",
+    "note": "результати прогону PyTorch",
+    "size": 3333
+   },
+   {
+    "path": "tensorflow/lr3_tensorflow.py",
+    "note": "TensorFlow: ті самі етапи, що в Lobe (MobileNetV2, ResNet50V2)",
+    "size": 8266
+   },
+   {
+    "path": "tensorflow/requirements.txt",
+    "note": "залежності варіанта TensorFlow",
+    "size": 146
+   },
+   {
+    "path": "tensorflow/results.json",
+    "note": "результати прогону TensorFlow",
+    "size": 3438
+   },
+   {
+    "path": "make_dataset.py",
+    "note": "збирає набір зображень з Imagenette",
+    "size": 2319
+   },
+   {
+    "path": "lr3_dataset.csv",
+    "note": "склад набору: 360 файлів за теками й класами",
+    "size": 23267,
+    "supporting": true
+   },
+   {
+    "path": "lr3_validate.ps1",
+    "note": "Lobe: перевірка моделі через локальний API",
+    "size": 1479
+   },
+   {
+    "path": "lr3_check_tflite.py",
+    "note": "Lobe: модель TFLite без Lobe",
+    "size": 2281
+   },
+   {
+    "path": "windows-sandbox/Lobe.wsb",
+    "note": "конфігурація Windows Sandbox",
+    "size": 559
+   },
+   {
+    "path": "windows-sandbox/agent.ps1",
+    "note": "агент керування пісочницею",
+    "size": 8635,
+    "supporting": true
+   },
+   {
+    "path": "windows-sandbox/sbx.sh",
+    "note": "виклик агента з WSL",
+    "size": 684,
+    "supporting": true
+   },
+   {
+    "path": "windows-sandbox/README.md",
+    "note": "порядок роботи з пісочницею",
+    "size": 3789
+   },
+   {
+    "path": "lobe-wine.md",
+    "note": "Lobe під wine у WSL: латки й запуск",
+    "size": 8221
+   }
+  ],
+  "report": {
+   "path": "ЛР3_Іваненко_101М.pdf",
+   "pages": 17,
+   "size": 8013971
+  },
+  "results": {
+   "lobe": [
+    {
+     "stage": "Первое обучение",
+     "mode": "скорость (MobileNetV2)",
+     "train": "91 %",
+     "validation": "34/40"
+    },
+    {
+     "stage": "Исправлена метка",
+     "mode": "скорость",
+     "train": "34 %",
+     "validation": "14/40"
+    },
+    {
+     "stage": "Обучение заново",
+     "mode": "точность (ResNet50V2)",
+     "train": "99 %",
+     "validation": "38/40"
+    },
+    {
+     "stage": "Исправлена метка",
+     "mode": "точность",
+     "train": "100 %",
+     "validation": "40/40"
+    },
+    {
+     "stage": "Добавлена «доповнення»",
+     "mode": "точность",
+     "train": "89 %",
+     "validation": "37/40"
+    },
+    {
+     "stage": "Optimize Model",
+     "mode": "точность",
+     "train": "99 %",
+     "validation": "40/40"
+    }
+   ],
+   "lobe_extra_before_adding": {
+    "correct": 156,
+    "total": 160
+   },
+   "pytorch": {
+    "framework": "PyTorch 2.14.0+cu130, torchvision 0.29.0+cu130",
+    "device": "NVIDIA GeForce RTX 4080 SUPER",
+    "epochs": 15,
+    "seed": 7,
+    "stages": [
+     {
+      "stage": "1. MobileNetV2, навчання",
+      "train_images": 160,
+      "seconds": 3.2,
+      "train": {
+       "correct": 160,
+       "total": 160,
+       "per_class": {
+        "собака": "40/40",
+        "церква": "40/40",
+        "сміттєвоз": "40/40",
+        "парашут": "40/40"
+       },
+       "errors": []
+      },
+      "validation": {
+       "correct": 40,
+       "total": 40,
+       "per_class": {
+        "собака": "10/10",
+        "церква": "10/10",
+        "сміттєвоз": "10/10",
+        "парашут": "10/10"
+       },
+       "errors": []
+      }
+     },
+     {
+      "stage": "2. ResNet50, навчання",
+      "train_images": 160,
+      "seconds": 3.5,
+      "train": {
+       "correct": 160,
+       "total": 160,
+       "per_class": {
+        "собака": "40/40",
+        "церква": "40/40",
+        "сміттєвоз": "40/40",
+        "парашут": "40/40"
+       },
+       "errors": []
+      },
+      "validation": {
+       "correct": 39,
+       "total": 40,
+       "per_class": {
+        "собака": "10/10",
+        "церква": "10/10",
+        "сміттєвоз": "10/10",
+        "парашут": "9/10"
+       },
+       "errors": [
+        "парашут → собака"
+       ]
+      },
+      "extra_before_adding": {
+       "correct": 159,
+       "total": 160,
+       "per_class": {
+        "собака": "40/40",
+        "церква": "40/40",
+        "сміттєвоз": "40/40",
+        "парашут": "39/40"
+       },
+       "errors": [
+        "парашут → церква"
+       ]
+      }
+     },
+     {
+      "stage": "3. ResNet50, навчання + доповнення",
+      "train_images": 320,
+      "seconds": 6.6,
+      "train": {
+       "correct": 320,
+       "total": 320,
+       "per_class": {
+        "собака": "80/80",
+        "церква": "80/80",
+        "сміттєвоз": "80/80",
+        "парашут": "80/80"
+       },
+       "errors": []
+      },
+      "validation": {
+       "correct": 39,
+       "total": 40,
+       "per_class": {
+        "собака": "10/10",
+        "церква": "10/10",
+        "сміттєвоз": "10/10",
+        "парашут": "9/10"
+       },
+       "errors": [
+        "парашут → собака"
+       ]
+      }
+     },
+     {
+      "stage": "4. ResNet50, донавчання layer4",
+      "train_images": 320,
+      "seconds": 2.4,
+      "train": {
+       "correct": 320,
+       "total": 320,
+       "per_class": {
+        "собака": "80/80",
+        "церква": "80/80",
+        "сміттєвоз": "80/80",
+        "парашут": "80/80"
+       },
+       "errors": []
+      },
+      "validation": {
+       "correct": 39,
+       "total": 40,
+       "per_class": {
+        "собака": "10/10",
+        "церква": "10/10",
+        "сміттєвоз": "10/10",
+        "парашут": "9/10"
+       },
+       "errors": [
+        "парашут → собака"
+       ]
+      }
+     }
+    ]
+   },
+   "tensorflow": {
+    "framework": "TensorFlow 2.21.0",
+    "device": "NVIDIA GeForce RTX 4080 SUPER",
+    "epochs": 15,
+    "seed": 7,
+    "stages": [
+     {
+      "stage": "1. MobileNetV2, навчання",
+      "train_images": 160,
+      "seconds": 7.3,
+      "train": {
+       "correct": 160,
+       "total": 160,
+       "per_class": {
+        "собака": "40/40",
+        "церква": "40/40",
+        "сміттєвоз": "40/40",
+        "парашут": "40/40"
+       },
+       "errors": []
+      },
+      "validation": {
+       "correct": 40,
+       "total": 40,
+       "per_class": {
+        "собака": "10/10",
+        "церква": "10/10",
+        "сміттєвоз": "10/10",
+        "парашут": "10/10"
+       },
+       "errors": []
+      }
+     },
+     {
+      "stage": "2. ResNet50V2, навчання",
+      "train_images": 160,
+      "seconds": 7.3,
+      "train": {
+       "correct": 160,
+       "total": 160,
+       "per_class": {
+        "собака": "40/40",
+        "церква": "40/40",
+        "сміттєвоз": "40/40",
+        "парашут": "40/40"
+       },
+       "errors": []
+      },
+      "validation": {
+       "correct": 38,
+       "total": 40,
+       "per_class": {
+        "собака": "10/10",
+        "церква": "10/10",
+        "сміттєвоз": "10/10",
+        "парашут": "8/10"
+       },
+       "errors": [
+        "парашут → церква",
+        "парашут → собака"
+       ]
+      },
+      "extra_before_adding": {
+       "correct": 156,
+       "total": 160,
+       "per_class": {
+        "собака": "39/40",
+        "церква": "38/40",
+        "сміттєвоз": "40/40",
+        "парашут": "39/40"
+       },
+       "errors": [
+        "собака → парашут",
+        "церква → парашут",
+        "церква → парашут",
+        "парашут → церква"
+       ]
+      }
+     },
+     {
+      "stage": "3. ResNet50V2, навчання + доповнення",
+      "train_images": 320,
+      "seconds": 9.0,
+      "train": {
+       "correct": 320,
+       "total": 320,
+       "per_class": {
+        "собака": "80/80",
+        "церква": "80/80",
+        "сміттєвоз": "80/80",
+        "парашут": "80/80"
+       },
+       "errors": []
+      },
+      "validation": {
+       "correct": 39,
+       "total": 40,
+       "per_class": {
+        "собака": "10/10",
+        "церква": "10/10",
+        "сміттєвоз": "10/10",
+        "парашут": "9/10"
+       },
+       "errors": [
+        "парашут → собака"
+       ]
+      }
+     },
+     {
+      "stage": "4. ResNet50V2, донавчання conv5",
+      "train_images": 320,
+      "seconds": 10.7,
+      "train": {
+       "correct": 320,
+       "total": 320,
+       "per_class": {
+        "собака": "80/80",
+        "церква": "80/80",
+        "сміттєвоз": "80/80",
+        "парашут": "80/80"
+       },
+       "errors": []
+      },
+      "validation": {
+       "correct": 40,
+       "total": 40,
+       "per_class": {
+        "собака": "10/10",
+        "церква": "10/10",
+        "сміттєвоз": "10/10",
+        "парашут": "10/10"
+       },
+       "errors": []
+      }
+     }
+    ]
+   }
+  }
+ }
+}
