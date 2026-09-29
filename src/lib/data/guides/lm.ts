@@ -1,5 +1,6 @@
 import type { GuideComputed, GuideModule, GuideVariant } from "./types";
 import { lanVariant } from "@/lib/algorithms/lan";
+import { lanStructure, type LanLab } from "@/lib/algorithms/lan-figures";
 
 /**
  * «Локальні мережі» — методичні вказівки до лабораторних робіт
@@ -37,13 +38,33 @@ function variantData(n: number): GuideComputed {
   };
 }
 
-const VARIANT: GuideVariant = {
+const TITLES: Record<LanLab, string> = {
+  e1: "Ethernet",
+  e2: "Switched Ethernet",
+  e3: "Fast Ethernet",
+  e4: "Switched Fast Ethernet",
+  m1: "Token Ring",
+  m2: "Switched Token Ring",
+  m3: "FDDI",
+};
+
+const variantFor = (lab: LanLab): GuideVariant => ({
   label: "варианта",
   min: 1,
   max: 80,
   hint: "Номер варианта индивидуального задания выдаёт преподаватель; по таблице 1.1 он даёт тип инфраструктуры и тип трафика.",
-  compute: variantData,
-};
+  compute: (n) => ({
+    ...variantData(n),
+    figures: [
+      {
+        kind: "drawing",
+        title: `Структура мережі ${TITLES[lab]} з відстанями, місцем серверів і устаткування (варіант ${n})`,
+        drawing: lanStructure(n, lab),
+        note: "Серверна — в центральному здании, остальные здания — лучами на расстоянии варианта (как в примере методички). Число станций по комнатам — из найденного порога.",
+      },
+    ],
+  }),
+});
 
 const REPORT_TAIL = ["Висновки."];
 
@@ -70,7 +91,7 @@ export const LM_GUIDES: GuideModule[] = [
       "Сеть Ethernet 10 Мбит/с в NetCracker Pro на инфраструктуре варианта: выбор среды для горизонтальной, " +
       "вертикальной подсистем и кампуса, проверка конфигурации расчётом PDV и PVV, порог работоспособности и " +
       "статистика модели. Параметры варианта и расчёт — ниже.",
-    variant: VARIANT,
+    variant: variantFor("e1"),
     widget: "eth10",
     guide: {
       source: `${SRC}, ЛР E1`,
@@ -109,7 +130,7 @@ export const LM_GUIDES: GuideModule[] = [
     intro:
       "Та же сеть, но логически структурированная коммутатором: сколько доменов коллизий получается, куда ставить " +
       "коммутатор и как меняются время ответа, загрузка и стоимость по сравнению с Ethernet из E1.",
-    variant: VARIANT,
+    variant: variantFor("e2"),
     guide: {
       source: `${SRC}, ЛР E2`,
       goals: [
@@ -140,7 +161,7 @@ export const LM_GUIDES: GuideModule[] = [
       "Переход на Fast Ethernet: правило одного или двух повторителей и проверка диаметра зоны конфликта. В " +
       "примере методички на расстоянии 200 м между зданиями ни один из вариантов не проходит — калькулятор ниже " +
       "показывает это для своих расстояний.",
-    variant: VARIANT,
+    variant: variantFor("e3"),
     widget: "fast",
     guide: {
       source: `${SRC}, ЛР E3`,
@@ -181,7 +202,7 @@ export const LM_GUIDES: GuideModule[] = [
     intro:
       "Fast Ethernet с коммутатором в центре: зоны конфликта разбиваются по зданиям, и для каждой проверяются " +
       "диаметр и PDV — в примере 211 м и 452,232 bt для здания с оптическим подключением.",
-    variant: VARIANT,
+    variant: variantFor("e4"),
     widget: "fast",
     guide: {
       source: `${SRC}, ЛР E4`,
@@ -219,7 +240,7 @@ export const LM_GUIDES: GuideModule[] = [
     intro:
       "Token Ring на той же инфраструктуре: концентраторы MAU, ограничения длины кабеля между ними, логическое кольцо, " +
       "порог работоспособности (в примере 7 станций) и стоимость сети.",
-    variant: VARIANT,
+    variant: variantFor("m1"),
     guide: {
       source: `${SRC}, ЛР M1`,
       goals: [
@@ -250,7 +271,7 @@ export const LM_GUIDES: GuideModule[] = [
     intro:
       "Switched Token Ring: логическая структуризация сети из M1 коммутатором и сравнение стоимости, времени " +
       "ответа и загрузки с обычным Token Ring.",
-    variant: VARIANT,
+    variant: variantFor("m2"),
     guide: {
       source: `${SRC}, ЛР M2`,
       goals: [
@@ -279,7 +300,7 @@ export const LM_GUIDES: GuideModule[] = [
     intro:
       "FDDI: двойное кольцо деревьев, станции и концентраторы с одиночным и двойным подключением, порог " +
       "работоспособности и сравнение с Switched Fast Ethernet.",
-    variant: VARIANT,
+    variant: variantFor("m3"),
     guide: {
       source: `${SRC}, ЛР M3`,
       goals: [
