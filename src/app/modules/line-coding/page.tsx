@@ -7,7 +7,7 @@ import { InfoNote } from "@/components/ui/info-note";
 import { VariantDial } from "@/components/ui/variant-dial";
 import { categories, modules } from "@/lib/modules";
 import { LAB7_VARIANTS } from "@/lib/data/variant-tables";
-import { BARKER11, FIVE_B_CONTROL, barkerAcf, encode4b5b, encodeLine, lineCodeFromName, parseBitString, scramble, LINE_CODE_VERIFIED, type LineSample } from "@/lib/algorithms/line-coding";
+import { BARKER11, FIVE_B_CONTROL, barkerAcf, cck, chipText, encode4b5b, encodeLine, lineCodeFromName, parseBitString, piText, scramble, LINE_CODE_VERIFIED, type LineSample } from "@/lib/algorithms/line-coding";
 import { OutputBlock } from "@/components/ui/output-block";
 import { cn } from "@/lib/cn";
 
@@ -128,6 +128,25 @@ export default function LineCodingPage() {
               ].join("\n")}
               wrap={false}
             />
+            {[11, 5.5].map((rate) => {
+              const syms = cck(bits, rate as 11 | 5.5);
+              return (
+                <OutputBlock
+                  key={rate}
+                  label={`П. 3.4 — CCK, ${String(rate).replace(".", ",")} Мбіт/с: фази й чіпи c0…c7 (дані варіанту по ${rate === 11 ? 8 : 4} біти)`}
+                  value={syms
+                    .map(
+                      (y, k) =>
+                        `Символ ${k + 1} (${k % 2 ? "непарний" : "парний"}), d = ${y.bits}\n` +
+                        `  Δφ1 = ${piText(y.dphi1)}  φ1 = ${piText(y.phi[0])}  φ2 = ${piText(y.phi[1])}  φ3 = ${piText(y.phi[2])}  φ4 = ${piText(y.phi[3])}\n` +
+                        `  фази чипів: ${y.chips.map(piText).join("  ")}\n` +
+                        `  чипи c0…c7: ${y.chips.map(chipText).join("  ")}`,
+                    )
+                    .join("\n\n")}
+                  wrap={false}
+                />
+              );
+            })}
             <p className="text-sm text-ink-dim">
               Схема відновлення в методичці записана як «cᵢ = cᵢ + cᵢ₋₃ + cᵢ₋₅» — насправді дескремблер бере біти прийнятого потоку b:
               cᵢ = bᵢ ⊕ bᵢ₋₃ ⊕ bᵢ₋₅; тоді cᵢ = aᵢ. Біти до початку потоку вважаються нулями.
