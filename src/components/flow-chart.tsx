@@ -53,6 +53,12 @@ export function FlowChartView({ chart, title }: { chart: FlowChart; title: strin
                 <rect x={x} y={y} width={w} height={h} rx={h / 2} fill="var(--background)" stroke={DIM} />
               ) : s.k === "op" ? (
                 <rect x={x} y={y} width={w} height={h} fill="var(--background)" stroke={DIM} />
+              ) : s.k === "sub" ? (
+                <g>
+                  <rect x={x} y={y} width={w} height={h} fill="var(--background)" stroke={DIM} />
+                  <line x1={x + 10} y1={y} x2={x + 10} y2={y + h} stroke={DIM} />
+                  <line x1={x + w - 10} y1={y} x2={x + w - 10} y2={y + h} stroke={DIM} />
+                </g>
               ) : s.k === "io" ? (
                 <polygon points={`${x + 14},${y} ${x + w},${y} ${x + w - 14},${y + h} ${x},${y + h}`} fill="var(--background)" stroke={DIM} />
               ) : (

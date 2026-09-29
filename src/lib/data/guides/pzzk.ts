@@ -2,6 +2,8 @@ import type { GuideModule } from "./types";
 import { LAB1_NEW, LAB1_OLD, LAB2_TASKS, lab1Program, lab2Program, lab3Program } from "@/lib/data/pzzk-programs";
 import { LAB4_ROWS, SPECS, lab4Program, lab5Program } from "@/lib/data/pzzk-classes";
 import { STL, lab6Program } from "@/lib/data/pzzk-stl";
+import { cppFlows } from "@/lib/algorithms/cpp-flow";
+import { layoutFlow } from "@/lib/algorithms/flowchart";
 
 /**
  * «Програмні засоби загального користування» — лабораторні 1–6 (сторінки
@@ -53,6 +55,10 @@ export const PZZK_GUIDES: GuideModule[] = [
             rows: [...(v <= 13 ? [["з 2025 року", v, LAB1_NEW[v - 1]]] : []), ["до 2025 року", v, LAB1_OLD[v - 1]]],
           },
         ],
+        figures: [
+          ...(v <= 13 ? cppFlows(lab1Program("new", v)).map((f) => ({ kind: "flow" as const, title: `Блок-схема — варіант ${v} (з 2025 року), ${f.name === "main" ? "main" : f.signature}`, chart: layoutFlow(f.flow) })) : []),
+          ...cppFlows(lab1Program("old", v)).map((f) => ({ kind: "flow" as const, title: `Блок-схема — варіант ${v} (до 2025 року), ${f.name === "main" ? "main" : f.signature}`, chart: layoutFlow(f.flow) })),
+        ],
         code: [
           ...(v <= 13 ? [{ title: `Програма — варіант ${v} (з 2025 року)`, code: lab1Program("new", v) }] : []),
           { title: `Програма — варіант ${v} (до 2025 року)`, code: lab1Program("old", v) },
@@ -96,6 +102,7 @@ export const PZZK_GUIDES: GuideModule[] = [
       hint: "Номер варианта в списке индивидуальных заданий (10).",
       compute: (v) => ({
         tables: [{ title: "Індивідуальне завдання", columns: ["Варіант", "Завдання"], rows: [[v, LAB2_TASKS[v - 1]]] }],
+        figures: cppFlows(lab2Program(v)).map((f) => ({ kind: "flow" as const, title: `Блок-схема: ${f.name === "main" ? "головна програма (main)" : `функція ${f.signature}`}`, chart: layoutFlow(f.flow) })),
         code: [{ title: `Програма — варіант ${v}`, code: lab2Program(v) }],
         notes: [
           "Функція видалення названа deleteMatrix: delete — ключове слово C++, функцію з таким ім'ям оголосити не можна.",

@@ -13,6 +13,8 @@ export type Flow =
   | { t: "start" | "end"; text: string }
   | { t: "io"; text: string }
   | { t: "op"; text: string }
+  /** Визначений процес — виклик підпрограми. */
+  | { t: "call"; text: string }
   | { t: "if"; cond: string; yes: Flow; no?: Flow; yesLabel?: string; noLabel?: string }
   | { t: "while"; cond: string; body: Flow; yesLabel?: string; noLabel?: string }
   | { t: "until"; body: Flow; cond: string; yesLabel?: string; noLabel?: string }
@@ -41,7 +43,7 @@ function terminates(f: Flow): boolean {
 }
 
 export type Shape =
-  | { k: "term" | "op" | "io"; x: number; y: number; w: number; h: number; lines: string[] }
+  | { k: "term" | "op" | "io" | "sub"; x: number; y: number; w: number; h: number; lines: string[] }
   | { k: "dec"; x: number; y: number; w: number; h: number; lines: string[] }
   | { k: "line"; pts: [number, number][]; arrow?: boolean }
   | { k: "label"; x: number; y: number; text: string; anchor?: "start" | "end" | "middle" }
@@ -101,9 +103,9 @@ function joinBox(fromAbove: boolean): Box {
   return { w: cx + 10, h: 2 * y, cx, shapes };
 }
 
-function block(k: "term" | "op" | "io", text: string): Box {
+function block(k: "term" | "op" | "io" | "sub", text: string): Box {
   const lines = wrap(text);
-  const w = Math.max(k === "term" ? 110 : 150, Math.max(...lines.map((l) => l.length)) * CH + (k === "io" ? 40 : 24));
+  const w = Math.max(k === "term" ? 110 : 150, Math.max(...lines.map((l) => l.length)) * CH + (k === "io" || k === "sub" ? 40 : 24));
   const h = Math.max(34, lines.length * LINE_H + 16);
   return { w, h, cx: w / 2, shapes: [{ k, x: 0, y: 0, w, h, lines }] };
 }
@@ -122,6 +124,8 @@ function layout(f: Flow): Box {
       return block("term", f.text);
     case "op":
       return block("op", f.text);
+    case "call":
+      return block("sub", f.text);
     case "exit":
       return exitBox();
     case "join":
@@ -245,7 +249,7 @@ export interface FlowChart {
 export function layoutFlow(f: Flow): FlowChart {
   const b = layout(f);
   // наскрізна нумерація блоків (зверху вниз, зліва направо) у лівому верхньому куті
-  const blocks = b.shapes.filter((s): s is Extract<Shape, { k: "term" | "op" | "io" | "dec" }> => s.k === "term" || s.k === "op" || s.k === "io" || s.k === "dec");
+  const blocks = b.shapes.filter((s): s is Extract<Shape, { k: "term" | "op" | "io" | "sub" | "dec" }> => s.k === "term" || s.k === "op" || s.k === "io" || s.k === "sub" || s.k === "dec");
   blocks.sort((p, q) => p.y - q.y || p.x - q.x);
   const nums: Shape[] = blocks.map((s, i) => ({ k: "num", x: s.k === "dec" ? s.x + s.w / 2 - 14 : s.x - 2, y: s.y - 3, text: String(i + 1) }));
   return { w: b.w, h: b.h, shapes: [...b.shapes, ...nums] };
