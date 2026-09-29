@@ -12,11 +12,22 @@ export type Flow =
   | { t: "op"; text: string }
   | { t: "if"; cond: string; yes: Flow; no?: Flow; yesLabel?: string; noLabel?: string }
   | { t: "while"; cond: string; body: Flow; yesLabel?: string; noLabel?: string }
-  | { t: "until"; body: Flow; cond: string; yesLabel?: string; noLabel?: string };
+  | { t: "until"; body: Flow; cond: string; yesLabel?: string; noLabel?: string }
+  /** Нескінченний цикл: вихід — лише термінатором «Кінець» усередині тіла. */
+  | { t: "loop"; body: Flow };
 
 export const seq = (...items: (Flow | false | null | undefined)[]): Flow => ({ t: "seq", items: items.filter(Boolean) as Flow[] });
 export const op = (text: string): Flow => ({ t: "op", text });
 export const io = (text: string): Flow => ({ t: "io", text });
+export const END: Flow = { t: "end", text: "Кінець" };
+
+/** Гілка закінчується термінатором — з неї немає злиття. */
+function terminates(f: Flow): boolean {
+  if (f.t === "end") return true;
+  if (f.t === "seq") return f.items.length > 0 && terminates(f.items[f.items.length - 1]);
+  if (f.t === "if") return !!f.no && terminates(f.yes) && terminates(f.no);
+  return false;
+}
 
 export type Shape =
   | { k: "term" | "op" | "io"; x: number; y: number; w: number; h: number; lines: string[] }
@@ -83,14 +94,17 @@ function layout(f: Flow): Box {
     case "io":
       return block("io", f.text);
     case "seq": {
-      const boxes = f.items.map(layout);
+      // після термінатора послідовність не продовжується
+      const cut = f.items.findIndex((x) => x.t === "end");
+      const items = cut >= 0 && cut < f.items.length - 1 ? f.items.slice(0, cut + 1) : f.items;
+      const boxes = items.map(layout);
       if (!boxes.length) return { w: 10, h: 0, cx: 5, shapes: [] };
       const left = Math.max(...boxes.map((b) => b.cx));
       const right = Math.max(...boxes.map((b) => b.w - b.cx));
       const shapes: Shape[] = [];
       let y = 0;
       boxes.forEach((b, i) => {
-        if (i > 0) {
+        if (i > 0 && !terminates(items[i - 1])) {
           shapes.push({ k: "line", pts: [[left, y], [left, y + GAP]], arrow: true });
           y += GAP;
         }
@@ -130,8 +144,8 @@ function layout(f: Flow): Box {
       const h1 = branchY + a.h;
       const h2 = branchY + (b ? b.h : 0);
       const merge = Math.max(h1, h2) + GAP / 2;
-      shapes.push({ k: "line", pts: [[AX, h1], [AX, merge], [cx, merge]] });
-      shapes.push({ k: "line", pts: [[BX, h2], [BX, merge], [cx, merge]] });
+      if (!terminates(f.yes)) shapes.push({ k: "line", pts: [[AX, h1], [AX, merge], [cx, merge]] });
+      if (!(b && terminates(f.no!))) shapes.push({ k: "line", pts: [[BX, h2], [BX, merge], [cx, merge]] });
       return { w, h: merge, cx, shapes };
     }
     case "while": {
@@ -153,6 +167,17 @@ function layout(f: Flow): Box {
       shapes.push({ k: "line", pts: [[cx + d.w / 2, y0 + d.h / 2], [w - SIDE / 2, y0 + d.h / 2], [w - SIDE / 2, out], [cx, out]] });
       shapes.push({ k: "label", x: cx + d.w / 2 + 4, y: y0 + d.h / 2 - 5, text: f.noLabel ?? "ні" });
       return { w, h: out, cx, shapes };
+    }
+    case "loop": {
+      // тіло й безумовне повернення ліворуч на його початок
+      const body = layout(f.body);
+      const cx = SIDE + body.cx;
+      const w = cx + (body.w - body.cx) + SIDE / 2;
+      const y0 = GAP / 2;
+      const shapes: Shape[] = [{ k: "line", pts: [[cx, 0], [cx, y0]], arrow: true }, ...shift(body.shapes, cx - body.cx, y0)];
+      const end = y0 + body.h;
+      if (!terminates(f.body)) shapes.push({ k: "line", pts: [[cx, end], [cx, end + GAP / 2], [SIDE / 2, end + GAP / 2], [SIDE / 2, y0 / 2], [cx, y0 / 2]], arrow: true });
+      return { w, h: end + GAP / 2, cx, shapes };
     }
     case "until": {
       // тіло, під ним ромб; «так» — повернення ліворуч на початок тіла, «ні» — вихід донизу

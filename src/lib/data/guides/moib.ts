@@ -22,6 +22,8 @@ import {
   trialFactor,
   type ExtResult,
 } from "@/lib/algorithms/moib";
+import { layoutFlow } from "@/lib/algorithms/flowchart";
+import { congruenceFlow, euclidFlow, extEuclidFlow, fermatFlow, millerFlow, sieveFlow, solovayFlow, trialFlow } from "@/lib/algorithms/moib-flows";
 import {
   progCongruence,
   progEuclid,
@@ -121,6 +123,7 @@ function extTable(x: ExtResult, title: string) {
 function merge(...parts: GuideComputed[]): GuideComputed {
   return {
     tables: parts.flatMap((p) => p.tables ?? []),
+    figures: parts.flatMap((p) => p.figures ?? []),
     code: parts.flatMap((p) => p.code ?? []),
     notes: parts.flatMap((p) => p.notes ?? []),
   };
@@ -143,6 +146,7 @@ export const MOIB_GUIDES: GuideModule[] = [
       compute: (v) => {
         const [a, b] = T11[v - 1];
         return merge(euclidComputed(1234, 54, "контрольний приклад"), euclidComputed(a, b, `варіант ${v}`), {
+          figures: [{ kind: "flow", title: "Блок-схема за кроками 1–4 алгоритму Евкліда; НСК = a·b / НСД", chart: layoutFlow(euclidFlow()) }],
           code: [{ title: "Програма (C++)", code: progEuclid(a, b, `варіант ${v}`) }],
         });
       },
@@ -186,6 +190,7 @@ export const MOIB_GUIDES: GuideModule[] = [
         const bez = (e: ExtResult, p: number, q: number) =>
           `НСД(${p}, ${q}) = ${p}·(${e.x}) + ${q}·(${e.y}) = ${p * e.x} + ${q * e.y} = ${e.gcd}; НСК = ${(p / e.gcd) * q}`;
         return {
+          figures: [{ kind: "flow", title: "Блок-схема розширеного алгоритму Евкліда (табл. 1.2)", chart: layoutFlow(extEuclidFlow()) }],
           tables: [extTable(k, "Контрольний приклад: 1234 і 54 (табл. 1.3)"), extTable(x, `Варіант ${v}: ${a} і ${b}`)],
           code: [
             { title: "Результат", code: `${bez(k, 1234, 54)}\n${bez(x, a, b)}` },
@@ -240,6 +245,7 @@ export const MOIB_GUIDES: GuideModule[] = [
         const [a, b] = T11[v - 1];
         const g = gcdLcmByFactors(a, b);
         return {
+          figures: [{ kind: "flow", title: "Блок-схема розкладання методом проб (кроки 1–4)", chart: layoutFlow(trialFlow()) }],
           tables: [
             {
               title: `Метод проб для n = ${n}: найменший простий дільник F на кожному кроці`,
@@ -306,6 +312,7 @@ export const MOIB_GUIDES: GuideModule[] = [
         const r = fermatFactor(BigInt(n));
         const k = fermatFactor(45n);
         return {
+          figures: [{ kind: "flow", title: "Блок-схема алгоритму Ферма (кроки 1–3)", chart: layoutFlow(fermatFlow()) }],
           tables: [
             {
               title: `Алгоритм Ферма для n = ${n}`,
@@ -365,6 +372,7 @@ export const MOIB_GUIDES: GuideModule[] = [
         const [lo, hi] = T31[v - 1];
         const ctrl = sieveSteps(41);
         return {
+          figures: [{ kind: "flow", title: "Блок-схема «Решета Ератосфена» (кроки 1–4)", chart: layoutFlow(sieveFlow()) }],
           tables: [
             {
               title: "Контрольний приклад: викреслення до 41",
@@ -427,6 +435,7 @@ export const MOIB_GUIDES: GuideModule[] = [
                 .filter(Boolean)
                 .join("\n");
         return {
+          figures: [{ kind: "flow", title: "Блок-схема вирішення лінійного порівняння ax ≡ b (mod m)", chart: layoutFlow(congruenceFlow()) }],
           tables: [extTable(k.ext, "Контрольний приклад: 7x ≡ 3 (mod 15)"), extTable(s.ext, `Варіант ${v}: ${a}x ≡ ${b} (mod ${m})`)],
           code: [
             { title: "Розв’язання", code: `Контрольний приклад:\n${text(k)}\n\nВаріант ${v}:\n${text(s)}` },
@@ -463,6 +472,7 @@ export const MOIB_GUIDES: GuideModule[] = [
     computed: () => {
       const cases: [number, number][] = [[341, 2], [561, 2], [25, 2], [25, 7]];
       return {
+          figures: [{ kind: "flow", title: "Блок-схема тесту Міллера (кроки 1–5)", chart: layoutFlow(millerFlow()) }],
         tables: cases.map(([n, b]) => {
           const r = millerTest(n, b);
           return {
@@ -519,6 +529,7 @@ export const MOIB_GUIDES: GuideModule[] = [
       const row = (r: ReturnType<typeof solovayRow>) => [r.a, r.gcd, r.jSigned, r.jacobi < 0 ? "−1" : r.jacobi, r.passed ? "так" : "ні — складене"];
       const cols = ["a", "НСД(a, n)", "j = a^((n−1)/2) mod n", "J(a; n)", "пройдено"];
       return {
+          figures: [{ kind: "flow", title: "Блок-схема тесту Соловея–Штрассена (кроки 1–6)", chart: layoutFlow(solovayFlow()) }],
         tables: [
           { title: "Контрольний приклад № 1: n = 2023, a = 792", columns: cols, rows: [row(c1)], note: "j ≠ J → 2023 складене (7·17²)." },
           { title: "Контрольний приклад № 2: n = 5987, ε = 0,001 → 10 значень a (табл. 4.3)", columns: cols, rows: t2.map(row) },
