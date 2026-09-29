@@ -74,7 +74,7 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
                 <div className="space-y-3">
                   {guide.screenshots.map((shot, i) => (
                     <div
-                      key={shot.what}
+                      key={`${i}-${shot.what}`}
                       className="grid gap-3 rounded-[4px] border border-border bg-black/20 px-4 py-3.5 sm:grid-cols-[4.5rem_minmax(0,1fr)]"
                     >
                       <div className="text-xs font-medium" style={{ color: accent }}>

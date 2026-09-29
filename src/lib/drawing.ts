@@ -96,3 +96,120 @@ export function groundingScheme(): Drawing {
   items.push({ k: "ground", x1: 30, x2: 620, y: G });
   return { w: 640, h: 360, items };
 }
+
+// ------------------------------------------------------------ схемы сетей
+
+export interface NetNode {
+  id: string;
+  kind: "router" | "switch" | "pc" | "server" | "hub";
+  x: number;
+  y: number;
+  name: string;
+  /** Строки под (или над) значком: адрес, VLAN… */
+  lines?: string[];
+  /** Где подписи: снизу (по умолчанию), сверху или сбоку. */
+  above?: boolean;
+  side?: "left" | "right";
+}
+
+export interface NetLink {
+  a: string;
+  b: string;
+  /** Последовательный канал — излом посередине. */
+  serial?: boolean;
+  dashed?: boolean;
+  /** Подписи у концов (порт, адрес интерфейса) и посередине (сеть). */
+  aLabel?: string;
+  bLabel?: string;
+  label?: string;
+  /** Где подписи портов вдоль связи, доля длины от узла (по умолчанию 0,3). */
+  at?: number;
+}
+
+/** Схема сети: значки узлов, связи, порты и адреса у концов связей. */
+export function netDrawing(nodes: NetNode[], links: NetLink[], w: number, h: number): Drawing {
+  const items: DrawItem[] = [];
+  const at = (id: string) => nodes.find((n) => n.id === id)!;
+  for (const l of links) {
+    const a = at(l.a);
+    const b = at(l.b);
+    if (l.serial) {
+      const mx = (a.x + b.x) / 2;
+      const my = (a.y + b.y) / 2;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const d = Math.hypot(dx, dy);
+      const nx = -dy / d;
+      const ny = dx / d;
+      items.push({ k: "line", pts: [[a.x, a.y], [mx - (dx / d) * 6 + nx * 8, my - (dy / d) * 6 + ny * 8], [mx + (dx / d) * 6 - nx * 8, my + (dy / d) * 6 - ny * 8], [b.x, b.y]], bold: true });
+    } else items.push({ k: "line", pts: [[a.x, a.y], [b.x, b.y]], dashed: l.dashed });
+    // Нормаль к связи, смотрящая вверх (или вправо для вертикальных): с этой стороны — порты, с другой — имя сети.
+    const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    let nx = -(b.y - a.y) / len;
+    let ny = (b.x - a.x) / len;
+    if (ny > 0 || (Math.abs(ny) < 0.2 && nx < 0)) {
+      nx = -nx;
+      ny = -ny;
+    }
+    const block = (cx: number, cy: number, text: string, sgn: number, size: number, bold = false) => {
+      const rows = text.split("\n");
+      const hgt = rows.length * 11;
+      // Центр блока отнесён от линии по нормали на половину его высоты и ширины
+      const wid = Math.max(...rows.map((r) => r.length)) * size * 0.55;
+      const off = 6 + Math.abs(ny) * (hgt / 2) + Math.abs(nx) * (wid / 2);
+      const bx = cx + nx * off * sgn;
+      const by = cy + ny * off * sgn;
+      rows.forEach((r, i) => items.push({ k: "text", x: bx, y: by - hgt / 2 + 9 + i * 11, text: r, size, anchor: "middle", bold, plain: true }));
+    };
+    const t = l.at ?? 0.3;
+    if (l.aLabel) block(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, l.aLabel, 1, 9);
+    if (l.bLabel) block(b.x + (a.x - b.x) * t, b.y + (a.y - b.y) * t, l.bLabel, 1, 9);
+    if (l.label) block((a.x + b.x) / 2, (a.y + b.y) / 2, l.label, -1, 10, true);
+  }
+  for (const n of nodes) {
+    const { x, y } = n;
+    let half = 14;
+    switch (n.kind) {
+      case "router":
+        items.push({ k: "circle", x, y, r: 15 });
+        items.push({ k: "line", pts: [[x - 9, y - 4], [x + 9, y - 4]], arrow: true });
+        items.push({ k: "line", pts: [[x + 9, y + 4], [x - 9, y + 4]], arrow: true });
+        half = 15;
+        break;
+      case "switch":
+      case "hub":
+        items.push({ k: "rect", x: x - 22, y: y - 10, w: 44, h: 20 });
+        if (n.kind === "switch") {
+          items.push({ k: "line", pts: [[x - 14, y - 3], [x + 14, y - 3]], arrow: true });
+          items.push({ k: "line", pts: [[x + 14, y + 4], [x - 14, y + 4]], arrow: true });
+        } else items.push({ k: "text", x, y: y + 4, text: "HUB", size: 9, anchor: "middle", plain: true });
+        half = 10;
+        break;
+      case "pc":
+        items.push({ k: "rect", x: x - 14, y: y - 12, w: 28, h: 19 });
+        items.push({ k: "line", pts: [[x, y + 7], [x, y + 11]] });
+        items.push({ k: "line", pts: [[x - 9, y + 12], [x + 9, y + 12]], bold: true });
+        break;
+      case "server":
+        items.push({ k: "rect", x: x - 11, y: y - 16, w: 22, h: 32 });
+        for (const dy of [-8, -2, 4]) items.push({ k: "line", pts: [[x - 7, y + dy], [x + 7, y + dy]] });
+        half = 16;
+        break;
+    }
+    const text = [n.name, ...(n.lines ?? [])];
+    const wHalf = n.kind === "switch" || n.kind === "hub" ? 22 : 15;
+    text.forEach((s, i) =>
+      items.push({
+        k: "text",
+        x: n.side === "left" ? x - wHalf - 6 : n.side === "right" ? x + wHalf + 6 : x,
+        y: n.side ? y + 4 - 6 * (text.length - 1) + 12 * i : n.above ? y - half - 6 - 12 * (text.length - 1 - i) : y + half + 13 + 12 * i,
+        text: s,
+        size: i ? 9.5 : 10.5,
+        bold: i === 0,
+        anchor: n.side === "left" ? "end" : n.side === "right" ? "start" : "middle",
+        plain: true,
+      }),
+    );
+  }
+  return { w, h, items };
+}

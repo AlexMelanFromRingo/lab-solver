@@ -1,4 +1,5 @@
 import type { GuideModule } from "./types";
+import { extendedFigure, greFigure, simpleFigure, vlanOneFigure, vlanTwoFigure } from "@/lib/algorithms/zikm-figures";
 
 /**
  * «Захист інформації в комп'ютерних мережах», ЛР1–5 — методички из LIDER
@@ -114,6 +115,10 @@ export const ZIKM_GUIDES: GuideModule[] = [
                 "вернёт ответы на адреса NAT из ЛР2.",
             },
           ],
+          figures: [
+            { kind: "drawing", title: `Схема найпростішого полігону (рис. 1.1), варіант v = ${v}`, drawing: simpleFigure(v) },
+            { kind: "drawing", title: `Схема розширеного полігону (рис. 1.5), варіант v = ${v}`, drawing: extendedFigure(v) },
+          ],
           code: [
             {
               title: "1.6.2 — стандартный список на Router0 (терминал PC2)",
@@ -226,6 +231,7 @@ export const ZIKM_GUIDES: GuideModule[] = [
             },
             { title: "Полигон (из ЛР1 плюс PC3 в Net2)", columns: ["Узел", "Порт", "Сеть", "Адрес"], rows: [...e.rows, ["PC3", "", "Net2", `10.${v}.2.4/24, шлюз 10.${v}.2.1`]] },
           ],
+          figures: [{ kind: "drawing", title: `Схема полігону для дослідження NAT (рис. 4.1, з PC3), варіант v = ${v}`, drawing: extendedFigure(v, true) }],
           code: [
             {
               title: "4.2 — статический NAT на Central (терминал PC1)",
@@ -370,6 +376,7 @@ export const ZIKM_GUIDES: GuideModule[] = [
             note: "Адреса концов туннеля методичка оставляет на выбор; здесь — по её примеру 100.10.v.1 и .2.",
           },
         ],
+        figures: [{ kind: "drawing", title: `Полігон з тунелем GRE (рис. 3–4), варіант v = ${v}`, drawing: greFigure(v) }],
         code: [
           {
             title: "Router3",
@@ -530,6 +537,10 @@ export const ZIKM_GUIDES: GuideModule[] = [
               ],
               note: "На рис. 8 маски /16, в таблице 2 — /24; взята таблица. Коммутаторы 2950T-24 — у них есть порты g1/1.",
             },
+          ],
+          figures: [
+            { kind: "drawing", title: `Полігон з одним комутатором (рис. 5), N = ${n}`, drawing: vlanOneFigure(n) },
+            { kind: "drawing", title: `Полігон із двома комутаторами (рис. 8), N = ${n}`, drawing: vlanTwoFigure(n) },
           ],
           code: [
             {
