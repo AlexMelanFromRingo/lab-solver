@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { AclBuilder } from "@/components/acl-builder";
+import { Ethernet10Calc, FastEthernetCalc } from "@/components/lan-calc";
 import { ModuleHeader } from "@/components/module-header";
 import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
@@ -111,6 +112,8 @@ export function GuideView({ slug }: { slug: string }) {
         )}
 
         {g.widget === "acl" && <AclBuilder accent={accent} />}
+        {g.widget === "eth10" && <Ethernet10Calc accent={accent} />}
+        {g.widget === "fast" && <FastEthernetCalc accent={accent} />}
 
         {g.errata && g.errata.length > 0 && (
           <Card>

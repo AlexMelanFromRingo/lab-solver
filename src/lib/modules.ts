@@ -5,6 +5,7 @@ export type Category =
   | "plis"
   | "zikm"
   | "km"
+  | "lm"
   | "pk"
   | "ak"
   | "tik"
@@ -61,6 +62,13 @@ export const categories: Record<
     stage: "Бакалавриат · 3 курс",
     accent: "var(--cat-networks)",
     accentSoft: "var(--cat-networks-soft)",
+  },
+  lm: {
+    title: "Локальні мережі",
+    short: "Модели в NetCracker Pro: Ethernet, Fast Ethernet, Token Ring, FDDI",
+    stage: "Бакалавриат · 3 курс",
+    accent: "var(--cat-lm)",
+    accentSoft: "var(--cat-lm-soft)",
   },
   pk: {
     title: "Прикладна криптологія",
@@ -248,6 +256,90 @@ export const modules: LabModule[] = [
       "Персональная страница на Laravel с Breeze по руководству к заданию: перечень работ из базы с управлением в кабинете и форма обратной связи. Готовая работа — накладка на проект из ЛР4 с вашими ПІБ и группой, в одном из четырёх оформлений.",
     hasVariants: false,
     source: "Індивідуальне_завдання_ПІСМІ_2021.pdf + Laravel_NotesList_tutorial.pdf",
+    size: "md",
+  },
+  {
+    slug: "lm-e1",
+    title: "ЛР E1 · Дослідження параметрів локальної мережі технології Ethernet на створеній імітаційній моделі",
+    category: "lm",
+    tagline: "Вариант 1–80 · PDV и PVV",
+    description:
+      "Инфраструктура и серверы по варианту, калькулятор PDV и PVV по сегментам пути между самыми удалёнными станциями и порядок построения модели в NetCracker Pro.",
+    hasVariants: true,
+    variantCount: 80,
+    source: "Локальні мережі, методичні вказівки (Пахомова В.М.), ЛР E1",
+    size: "md",
+  },
+  {
+    slug: "lm-e2",
+    title: "ЛР E2 · Дослідження параметрів локальної мережі технології Switched Ethernet на створеній імітаційній моделі",
+    category: "lm",
+    tagline: "Коммутатор вместо центрального хаба",
+    description:
+      "Данные варианта, порядок логической структуризации сети E1 коммутатором и что сравнивать в отчёте.",
+    hasVariants: true,
+    variantCount: 80,
+    source: "Локальні мережі, методичні вказівки (Пахомова В.М.), ЛР E2",
+    size: "md",
+  },
+  {
+    slug: "lm-e3",
+    title: "ЛР E3 · Дослідження параметрів локальної мережі технології Fast Ethernet на створеній імітаційній моделі",
+    category: "lm",
+    tagline: "Правила одного и двух повторителей",
+    description:
+      "Данные варианта и калькулятор диаметра зоны конфликта и PDV Fast Ethernet для повторителей I и II класса.",
+    hasVariants: true,
+    variantCount: 80,
+    source: "Локальні мережі, методичні вказівки (Пахомова В.М.), ЛР E3",
+    size: "md",
+  },
+  {
+    slug: "lm-e4",
+    title: "ЛР E4 · Дослідження параметрів локальної мережі технології Switched Fast Ethernet на створеній імітаційній моделі",
+    category: "lm",
+    tagline: "Зоны конфликта по зданиям",
+    description:
+      "Данные варианта, три пути в каждой зоне конфликта с диаметром и PDV и порядок построения модели Switched Fast Ethernet.",
+    hasVariants: true,
+    variantCount: 80,
+    source: "Локальні мережі, методичні вказівки (Пахомова В.М.), ЛР E4",
+    size: "md",
+  },
+  {
+    slug: "lm-m1",
+    title: "ЛР M1 · Дослідження параметрів локальної мережі технології Token Ring на створеній імітаційній моделі",
+    category: "lm",
+    tagline: "Концентраторы MAU · порог станций",
+    description:
+      "Данные варианта, ограничения длины кабеля Token Ring, порядок построения логического кольца и что должно быть в отчёте.",
+    hasVariants: true,
+    variantCount: 80,
+    source: "Локальні мережі, методичні вказівки (Пахомова В.М.), ЛР M1",
+    size: "md",
+  },
+  {
+    slug: "lm-m2",
+    title: "ЛР M2 · Дослідження параметрів локальної мережі технології Switched Token Ring на створеній імітаційній моделі",
+    category: "lm",
+    tagline: "Коммутатор Token Ring",
+    description:
+      "Данные варианта, логическая структуризация сети из M1 и сравнение с обычным Token Ring.",
+    hasVariants: true,
+    variantCount: 80,
+    source: "Локальні мережі, методичні вказівки (Пахомова В.М.), ЛР M2",
+    size: "md",
+  },
+  {
+    slug: "lm-m3",
+    title: "ЛР M3 · Дослідження параметрів локальної мережі технології FDDI на створеній імітаційній моделі",
+    category: "lm",
+    tagline: "Двойное кольцо деревьев",
+    description:
+      "Данные варианта, ограничения стандарта FDDI, порядок построения модели и сравнение с Switched Fast Ethernet.",
+    hasVariants: true,
+    variantCount: 80,
+    source: "Локальні мережі, методичні вказівки (Пахомова В.М.), ЛР M3",
     size: "md",
   },
   {
