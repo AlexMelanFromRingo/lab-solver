@@ -31,7 +31,9 @@ function axis(values: number[]) {
   const hi = Math.max(0, ...values) * k;
   const step = niceUp((hi - lo) / 6 || 1);
   const min = Math.floor(lo / step) * step;
-  const top = Math.ceil(hi / step) * step || step;
+  let top = Math.ceil(hi / step) * step || step;
+  // Запас сверху, чтобы точка на максимуме и её подпись не упирались в край.
+  if (top - hi < 0.04 * (top - min)) top += step;
   const ticks: number[] = [];
   for (let t = min; t <= top + step / 2; t += step) ticks.push(Number(t.toFixed(10)));
   return { e, k, min, max: top, ticks };
@@ -77,12 +79,18 @@ function Marker({ x, y, kind }: { x: number; y: number; kind: number }) {
   }
 }
 
+/** Курсив — только для буквенных обозначений величин (B, Hст, μa), не для слов. */
+const italic = (label: string) => (label.split("_")[0].length <= 2 ? "italic" : undefined);
+
 const unitText = (unit: string, e: number) => (e ? `×10${sup(e)} ${unit}` : unit);
 
 export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
   const pts = fig.series.flatMap((s) => s.points).filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y));
-  const ax = axis(pts.map((p) => p[0]));
-  const ay = axis(pts.map((p) => p[1]));
+  const ax = fig.xTicks
+    ? { e: 0, k: 1, min: Math.min(...fig.xTicks.map((t) => t.at)) - 0.5, max: Math.max(...fig.xTicks.map((t) => t.at)) + 0.5, ticks: fig.xTicks.map((t) => t.at) }
+    : axis(pts.map((p) => p[0]));
+  const ay = axis([...pts.map((p) => p[1]), ...(fig.hlines ?? []).map((h) => h.y)]);
+  const xLabel = (t: number) => fig.xTicks?.find((x) => x.at === t)?.label ?? fmtNum(t, 4);
   const X = (v: number) => r2(PAD.left + ((v * ax.k - ax.min) / (ax.max - ax.min)) * PW);
   const Y = (v: number) => r2(PAD.top + PH - ((v * ay.k - ay.min) / (ay.max - ay.min)) * PH);
   const vh = H + (fig.series.length > 1 ? 18 : 0);
@@ -98,14 +106,40 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
             <line key={`hy${t}`} x1={PAD.left} x2={PAD.left + PW} y1={Y(t / ay.k)} y2={Y(t / ay.k)} />
           ))}
         </g>
+        {fig.shade?.map((sh, i) => (
+          <g key={`sh${i}`}>
+            <rect x={X(sh.from)} y={PAD.top} width={X(sh.to) - X(sh.from)} height={PH} fill={FAINT} fillOpacity={0.28} />
+            {sh.label && (
+              <text x={(X(sh.from) + X(sh.to)) / 2} y={PAD.top + 12} fontSize={10} fill={INK} textAnchor="middle">
+                {sh.label}
+              </text>
+            )}
+          </g>
+        ))}
         <g stroke={DIM} strokeWidth={1}>
-          <line x1={PAD.left} x2={PAD.left + PW} y1={Y(0)} y2={Y(0)} />
-          <line x1={X(0)} x2={X(0)} y1={PAD.top} y2={PAD.top + PH} />
+          <line x1={PAD.left} x2={PAD.left + PW} y1={PAD.top + PH} y2={PAD.top + PH} />
+          <line x1={PAD.left} x2={PAD.left} y1={PAD.top} y2={PAD.top + PH} />
+          {ay.min < 0 && <line x1={PAD.left} x2={PAD.left + PW} y1={Y(0)} y2={Y(0)} />}
+          {!fig.xTicks && ax.min < 0 && <line x1={X(0)} x2={X(0)} y1={PAD.top} y2={PAD.top + PH} />}
         </g>
+        {fig.hlines?.map((h) => {
+          // Подпись линии — у того края, где кривые дальше от неё.
+          const sorted = [...pts].sort((a, b) => a[0] - b[0]);
+          const gap = (p?: [number, number]) => (p ? Math.abs(p[1] - h.y) : Infinity);
+          const left = gap(sorted[0]) >= gap(sorted[sorted.length - 1]);
+          return (
+            <g key={`hl${h.label}`}>
+              <line x1={PAD.left} x2={PAD.left + PW} y1={Y(h.y)} y2={Y(h.y)} stroke={INK} strokeWidth={1.2} strokeDasharray="8 4" />
+              <text x={left ? PAD.left + 6 : PAD.left + PW - 4} y={Y(h.y) - 5} fontSize={11} fill={INK} textAnchor={left ? "start" : "end"}>
+                <SubLabel text={h.label} />
+              </text>
+            </g>
+          );
+        })}
         <g fontSize={10} fill={DIM}>
           {ax.ticks.map((t) => (
             <text key={`tx${t}`} x={X(t / ax.k)} y={PAD.top + PH + 14} textAnchor="middle">
-              {fmtNum(t, 4)}
+              {xLabel(t)}
             </text>
           ))}
           {ay.ticks.map((t) => (
@@ -115,13 +149,13 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
           ))}
         </g>
         <text x={PAD.left + PW / 2} y={H - 12} fontSize={12} fill={INK} textAnchor="middle">
-          <tspan fontStyle="italic">
+          <tspan fontStyle={italic(fig.x.label)}>
             <SubLabel text={fig.x.label} />
           </tspan>
           , {unitText(fig.x.unit, ax.e)}
         </text>
         <text transform={`translate(16 ${PAD.top + PH / 2}) rotate(-90)`} fontSize={12} fill={INK} textAnchor="middle">
-          <tspan fontStyle="italic">
+          <tspan fontStyle={italic(fig.y.label)}>
             <SubLabel text={fig.y.label} />
           </tspan>
           , {unitText(fig.y.unit, ay.e)}
@@ -135,18 +169,26 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
               {sp.map(([x, y], j) => (
                 <Marker key={j} x={x} y={y} kind={i} />
               ))}
+              {s.values &&
+                s.points
+                  .filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y))
+                  .map(([x, y], j) => (
+                    <text key={`v${j}`} x={X(x) > PAD.left + PW - 30 ? X(x) - 5 : X(x) + 5} y={Y(y) - 7} fontSize={10} fill={INK} textAnchor={X(x) > PAD.left + PW - 30 ? "end" : "start"}>
+                      {fmtNum(y, Math.abs(y) >= 100 ? 1 : 2)}
+                    </text>
+                  ))}
             </g>
           );
         })}
         {fig.series.length > 1 &&
           fig.series.map((s, i) => {
-            const x = PAD.left + i * 190;
+            const x = PAD.left + fig.series.slice(0, i).reduce((t, p) => t + 62 + p.label.length * 5.8, 0);
             return (
               <g key={`lg${s.label}`} fontSize={11} fill={INK}>
                 <line x1={x} x2={x + 30} y1={H + 6} y2={H + 6} stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />
                 <Marker x={x + 15} y={H + 6} kind={i} />
                 <text x={x + 38} y={H + 10}>
-                  {s.label}
+                  <SubLabel text={s.label} />
                 </text>
               </g>
             );

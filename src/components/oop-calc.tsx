@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Card, CardBody } from "@/components/ui/card";
 import { SelectField, TextField } from "@/components/ui/field";
 import { OutputBlock } from "@/components/ui/output-block";
+import { XYPlot } from "@/components/xy-plot";
+import { lightPlot } from "@/lib/algorithms/oop-figures";
 
 // Таблица 5 методички ЛР3 (ДБН В.2.5-28:2018): КПО eн, % при верхнем/комбинированном и боковом освещении.
 const ROOMS = [
@@ -84,6 +86,9 @@ export function LightCalc() {
             ].join("\n")}
             wrap={false}
           />
+        ) : null}
+        {ok ? (
+          <XYPlot fig={lightPlot(e.map((v) => (v / eo) * 100), norm)} title="Залежність фактичного КПО від відстані до вікна та нормоване значення" />
         ) : (
           <p className="text-sm text-codes">Введите освещённости числами через пробел и Eзовн больше нуля.</p>
         )}

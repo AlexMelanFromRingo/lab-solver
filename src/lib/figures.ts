@@ -56,6 +56,8 @@ export interface PlotSeries {
   label: string;
   points: [number, number][];
   dashed?: boolean;
+  /** Подписать значения у точек. */
+  values?: boolean;
 }
 
 export interface PlotFigure {
@@ -64,6 +66,12 @@ export interface PlotFigure {
   series: PlotSeries[];
   /** Плавная кривая через опытные точки (монотонный кубический сплайн); иначе ломаная. */
   smooth?: boolean;
+  /** Свои деления оси x (октавные полосы и т. п.): x точек — позиции at. */
+  xTicks?: { at: number; label: string }[];
+  /** Горизонтальные линии — норма и т. п. */
+  hlines?: { y: number; label: string }[];
+  /** Выделенные диапазоны по x (превышение нормы). */
+  shade?: { from: number; to: number; label?: string }[];
 }
 
 /** Шаг 1–2–5·10ⁿ не меньше v; с wide — ещё и 2,5 (масштабы вроде 0,25 А/см). */

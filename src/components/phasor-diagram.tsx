@@ -17,17 +17,20 @@ const FAINT = "var(--ink-faint)";
 /** Округление координат: Math.sin/cos на сервере и в браузере расходятся в последних знаках — иначе ошибка гидратации. */
 const r2 = (v: number) => Math.round(v * 100) / 100;
 
-/** «U_Rк» → U с нижним индексом Rк. */
+/** «U_Rк» → U с нижним индексом Rк; индекс — до первого пробела («e_норм = 1 %»). */
 export function SubLabel({ text, underline }: { text: string; underline?: boolean }) {
   const i = text.indexOf("_");
   const deco = underline ? "underline" : undefined;
   if (i < 0) return <tspan textDecoration={deco}>{text}</tspan>;
+  const sp = text.indexOf(" ", i);
+  const end = sp < 0 ? text.length : sp;
   return (
     <>
       <tspan textDecoration={deco}>{text.slice(0, i)}</tspan>
       <tspan baselineShift="sub" fontSize="0.75em">
-        {text.slice(i + 1)}
+        {text.slice(i + 1, end)}
       </tspan>
+      {end < text.length && <tspan>{text.slice(end)}</tspan>}
     </>
   );
 }

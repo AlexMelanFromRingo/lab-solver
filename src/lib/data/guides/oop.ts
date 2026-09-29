@@ -1,5 +1,7 @@
 import type { GuideModule } from "./types";
 import { FREQ, LAB1, LAB2, MICRO_NORMS, NOISE, NOISE_NORMS, VENT, dust, gasVolume, humidity, ventilation } from "@/lib/algorithms/oop";
+import { noisePlot, ventPlot } from "@/lib/algorithms/oop-figures";
+import { groundingScheme } from "@/lib/drawing";
 
 /**
  * «Основи охорони праці» — методички кафедры к лабораторным 1–7 (в LIDER их
@@ -166,6 +168,12 @@ export const OOP_GUIDES: GuideModule[] = [
             ],
             note: k === 1 ? "Для учебной лаборатории обычно берут категорию 2." : undefined,
           })),
+          figures: NOISE_NORMS.map((norm, k) => ({
+            kind: "plot" as const,
+            title: `Рівні звукового тиску Lвим (варіант ${v}) і Lдоп, категорія ${k + 1}`,
+            plot: noisePlot(FREQ, m, norm.l),
+            note: k === 1 ? "Выделены октавные полосы с превышением допустимого уровня." : undefined,
+          })),
         };
       },
     },
@@ -218,6 +226,7 @@ export const OOP_GUIDES: GuideModule[] = [
       max: 16,
       hint: "Вариант — табл. 2 методички по номеру в списке группы.",
       compute: (v) => {
+        const ls = VENT[v - 1].map(([p, ps]) => ventilation(p, ps).l);
         const rows = VENT[v - 1].map(([p, ps], i) => {
           const r = ventilation(p, ps);
           return [["0", "0,25", "0,5"][i], "0,04", p, ps, r.pd, f2(r.v), f2(r.l), r.w.toFixed(3).replace(".", ","), f2(r.n)];
@@ -231,6 +240,7 @@ export const OOP_GUIDES: GuideModule[] = [
               note: "Pd = P − Ps; V = √(2g·Pd/ρ), ρ = 1,2 кг/м³, g = 9,81 м/с²; L = 3600·V·A; W = P·L/(3600·120·η), η ≈ 0,5; n = L/Vп, Vп = 45 м³ — сравнить с Додатком А.",
             },
           ],
+          figures: [{ kind: "plot", title: `Залежність продуктивності ВУ від забруднення фільтра (варіант ${v})`, plot: ventPlot(ls) }],
         };
       },
     },
@@ -252,7 +262,22 @@ export const OOP_GUIDES: GuideModule[] = [
   },
   {
     slug: "oop-lab7",
-    intro: "Теоретическая работа по электробезопасности: определения, схема защитного заземления, пути тока через тело человека и ответы на вопросы бланка.",
+    intro:
+      "Теоретическая работа по электробезопасности: определения, схема защитного заземления, пути тока через тело человека и ответы на вопросы бланка. " +
+      "Схема защитного заземления строится ниже — с сетью, местом замыкания, заземлителем и путями токов.",
+    computed: () => ({
+      figures: [
+        {
+          kind: "drawing",
+          title: "Схема захисного заземлення в мережі з ізольованою нейтраллю",
+          drawing: groundingScheme(),
+          note:
+            "Фаза L3 замкнула на корпус: ток замыкания Iз идёт через заземлитель Rз и возвращается через изоляцию исправных фаз. " +
+            "Человек, коснувшийся корпуса, включён параллельно Rз: Uдот = Iз·Rз, Iл = Uдот/Rл, и при Rз ≤ 4 Ом (сети до 1000 В) " +
+            "Rз ≪ Rл ≈ 1000 Ом — почти весь ток уходит в землю мимо человека.",
+        },
+      ],
+    }),
     guide: {
       source: `${SRC}, ЛР7 «Основи електробезпеки» (бланк завдання)`,
       goals: ["Изучить основы электробезопасности."],

@@ -5,6 +5,9 @@ import { AclBuilder } from "@/components/acl-builder";
 import { PpiCalc } from "@/components/ppi-calc";
 import { AccessSqlCalc, ErCalc, NormalizerCalc } from "@/components/db-calc";
 import { GraphCalc } from "@/components/graph-calc";
+import { XYPlot } from "@/components/xy-plot";
+import { DrawingView } from "@/components/drawing-view";
+import { PhasorDiagram } from "@/components/phasor-diagram";
 import { LightCalc } from "@/components/oop-calc";
 import { Lab1Calc, Lab2Calc, Lab3Calc, MagnetCalc, RgrCalc } from "@/components/circuits-calc";
 import { ApproxCalc, CauchyCalc, IterationCalc, RootsCalc, SlaeCalc } from "@/components/amo-calc";
@@ -142,6 +145,9 @@ export function GuideView({ slug }: { slug: string }) {
                     <div key={f.title} className="space-y-1.5">
                       {f.kind === "regs" && <RegSchemeView scheme={f.scheme} title={f.title} />}
                       {f.kind === "flow" && <FlowChartView chart={f.chart} title={f.title} />}
+                      {f.kind === "plot" && <XYPlot fig={f.plot} title={f.title} />}
+                      {f.kind === "phasor" && <PhasorDiagram fig={f.phasor} title={f.title} />}
+                      {f.kind === "drawing" && <DrawingView drawing={f.drawing} title={f.title} />}
                       {f.note && <p className="text-xs text-ink-faint">{f.note}</p>}
                     </div>
                   ))}
