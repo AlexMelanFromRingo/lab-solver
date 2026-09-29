@@ -24,7 +24,7 @@ import {
 } from "@/lib/algorithms/feistel-variant";
 
 const mod = modules.find((m) => m.slug === "feistel-variant")!;
-const accent = categories.crypto.accent;
+const accent = categories.pk.accent;
 
 function toBig(v: string): bigint {
   const t = v.trim();

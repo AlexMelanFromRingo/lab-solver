@@ -11,7 +11,7 @@ import { LAB6_VARIANTS } from "@/lib/data/variant-tables";
 import { buildChannelReport } from "@/lib/algorithms/shannon-hartley";
 
 const mod = modules.find((m) => m.slug === "shannon-hartley")!;
-const accent = categories.theory.accent;
+const accent = categories.tik.accent;
 
 export default function ShannonHartleyPage() {
   const [variantNum, setVariantNum] = useState(1);

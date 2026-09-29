@@ -12,7 +12,7 @@ import { categories, modules } from "@/lib/modules";
 import { GOST_ROUND_KEYS, gostDecryptBlock, gostEncryptBlock, rc4Encrypt } from "@/lib/algorithms/gost-rc4";
 
 const mod = modules.find((m) => m.slug === "gost-rc4")!;
-const accent = categories.crypto.accent;
+const accent = categories.plis.accent;
 
 function textToBytes(s: string): number[] {
   return Array.from(new TextEncoder().encode(s));

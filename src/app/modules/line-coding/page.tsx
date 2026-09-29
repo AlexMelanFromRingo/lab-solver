@@ -11,7 +11,7 @@ import { encodeLine, lineCodeFromName, parseBitString, LINE_CODE_VERIFIED, type 
 import { cn } from "@/lib/cn";
 
 const mod = modules.find((m) => m.slug === "line-coding")!;
-const accent = categories.theory.accent;
+const accent = categories.tik.accent;
 
 function Waveform({ samples, color }: { samples: LineSample[]; color: string }) {
   const w = 24;

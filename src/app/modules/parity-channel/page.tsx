@@ -13,7 +13,7 @@ import { analyzeChannel, buildParityMatrix, checkAndCorrect, flipBit, matrixToBi
 import { cn } from "@/lib/cn";
 
 const mod = modules.find((m) => m.slug === "parity-channel")!;
-const accent = categories.theory.accent;
+const accent = categories.tik.accent;
 
 export default function ParityChannelPage() {
   const [variantNum, setVariantNum] = useState(1);

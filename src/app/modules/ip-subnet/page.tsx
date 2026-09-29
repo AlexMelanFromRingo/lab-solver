@@ -23,7 +23,7 @@ import {
 } from "@/lib/algorithms/ip-subnet";
 
 const mod = modules.find((m) => m.slug === "ip-subnet")!;
-const accent = categories.networks.accent;
+const accent = categories.km.accent;
 
 const KIND_LABEL = {
   host: "адреса вузла",

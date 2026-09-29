@@ -1,71 +1,93 @@
 export type Category =
-  | "crypto"
-  | "number"
-  | "theory"
-  | "codes"
-  | "arch"
-  | "networks"
   | "pismi"
   | "ai"
-  | "it";
+  | "it"
+  | "plis"
+  | "km"
+  | "pk"
+  | "ak"
+  | "tik"
+  | "moib"
+  | "extra";
 
+/**
+ * Разделы — дисциплины под официальными названиями (как в LIDER и на титульных
+ * листах), а не темы: работа ищется по предмету, по которому её задали.
+ * Модули, не относящиеся ни к одной лабораторной, собраны в «extra».
+ */
 export const categories: Record<
   Category,
-  { title: string; short: string; accent: string; accentSoft: string }
+  { title: string; short: string; stage: string; accent: string; accentSoft: string }
 > = {
-  crypto: {
-    title: "Криптография",
-    short: "Шифры и сети",
-    accent: "var(--cat-crypto)",
-    accentSoft: "var(--cat-crypto-soft)",
-  },
-  number: {
-    title: "Теория чисел",
-    short: "Простота, сравнения",
-    accent: "var(--cat-number)",
-    accentSoft: "var(--cat-number-soft)",
-  },
-  theory: {
-    title: "Теория информации",
-    short: "Энтропия, каналы",
-    accent: "var(--cat-theory)",
-    accentSoft: "var(--cat-theory-soft)",
-  },
-  codes: {
-    title: "Помехоустойчивое кодирование",
-    short: "Обнаружение и коррекция ошибок",
-    accent: "var(--cat-codes)",
-    accentSoft: "var(--cat-codes-soft)",
-  },
-  arch: {
-    title: "Архитектура ЭВМ",
-    short: "Микропрограммы",
-    accent: "var(--cat-arch)",
-    accentSoft: "var(--cat-arch-soft)",
-  },
-  networks: {
-    title: "Компьютерные сети",
-    short: "Адресация, подсети",
-    accent: "var(--cat-networks)",
-    accentSoft: "var(--cat-networks-soft)",
-  },
   pismi: {
-    title: "Проектирование ИС в сетях Интернет",
-    short: "Готовые работы со своими данными",
+    title: "Проектування інформаційних систем в мережах Інтернет",
+    short: "Docker, PHP, MySQL, Laravel — готовые работы со своими данными",
+    stage: "Магистратура · 1 семестр",
     accent: "var(--cat-pismi)",
     accentSoft: "var(--cat-pismi-soft)",
   },
   ai: {
-    title: "Искусственный интеллект",
+    title: "Штучний інтелект в комп'ютерних системах та мережах",
     short: "Токенизаторы и нечёткий вывод",
+    stage: "Магистратура · 1 семестр",
     accent: "var(--cat-ai)",
     accentSoft: "var(--cat-ai-soft)",
   },
   it: {
-    title: "ИТ в управленческой деятельности",
+    title: "Інформаційні технології в управлінській, науковій та викладацькій діяльності",
     short: "Диаграммы, графики, классификация изображений",
+    stage: "Магистратура · 1 семестр",
     accent: "var(--cat-it)",
     accentSoft: "var(--cat-it-soft)",
+  },
+  plis: {
+    title: "Проектування засобів захисту інформації на ПЛІС",
+    short: "Шифры на VHDL",
+    stage: "Бакалавриат · 4 курс",
+    accent: "var(--cat-plis)",
+    accentSoft: "var(--cat-plis-soft)",
+  },
+  km: {
+    title: "Комп'ютерні мережі",
+    short: "Адресация IPv4, Cisco Packet Tracer",
+    stage: "Бакалавриат · 3 курс",
+    accent: "var(--cat-networks)",
+    accentSoft: "var(--cat-networks-soft)",
+  },
+  pk: {
+    title: "Прикладна криптологія",
+    short: "Классические и блочные шифры, генераторы гаммы, RSA",
+    stage: "Бакалавриат · 3 курс",
+    accent: "var(--cat-crypto)",
+    accentSoft: "var(--cat-crypto-soft)",
+  },
+  ak: {
+    title: "Архітектура комп'ютерних систем",
+    short: "Микропрограммы на JOLS-M",
+    stage: "Бакалавриат · 3 курс",
+    accent: "var(--cat-arch)",
+    accentSoft: "var(--cat-arch-soft)",
+  },
+  tik: {
+    title: "Теорія інформації та кодування",
+    short: "Энтропия, контроль ошибок, кодирование канала, сигналы",
+    stage: "Бакалавриат · 2 курс",
+    accent: "var(--cat-theory)",
+    accentSoft: "var(--cat-theory-soft)",
+  },
+  moib: {
+    title: "Математичні основи інформаційної безпеки",
+    short: "Алгоритм Евклида, сравнения, китайская теорема об остатках",
+    stage: "Бакалавриат · 2 курс",
+    accent: "var(--cat-number)",
+    accentSoft: "var(--cat-number-soft)",
+  },
+  extra: {
+    title: "Вне учебной программы",
+    short: "Расчёты, не привязанные к лабораторной: коды с исправлением ошибок, алгоритм Луна",
+    stage: "Справочно",
+    accent: "var(--cat-codes)",
+    accentSoft: "var(--cat-codes-soft)",
   },
 };
 
@@ -84,7 +106,7 @@ export interface LabModule {
 export const modules: LabModule[] = [
   {
     slug: "it-lab1",
-    title: "Лаба 1 · таблица и диаграммы в Excel",
+    title: "ЛР 1 · Побудова графіків та діаграм у табличному процесорі Microsoft Excel",
     category: "it",
     tagline: "Свои данные · три типа диаграмм",
     description:
@@ -97,7 +119,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "it-lab2",
-    title: "Лаба 2 · графики в SMath и Mathcad",
+    title: "ЛР 2 · Побудова графіків у середовищі інженерних розрахунків",
     category: "it",
     tagline: "Три задания · готовая запись",
     description:
@@ -110,7 +132,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "it-lab3",
-    title: "Лаба 3 · классификатор изображений в Lobe",
+    title: "ЛР 3 · Навчання моделі класифікації зображень за допомогою програми Lobe",
     category: "it",
     tagline: "Lobe · PyTorch · TensorFlow",
     description:
@@ -124,7 +146,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "ai-tokenizer",
-    title: "Лаба 1 · исследование готового токенизатора",
+    title: "ЛР 1 · Дослідження готового токенізатора великої мовної моделі",
     category: "ai",
     tagline: "10 вариантов · GPT-2 и токенизатор варианта",
     description:
@@ -138,7 +160,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "ai-lab1",
-    title: "Лаба 1 · нечёткий вывод в среде FLS",
+    title: "ЛР 1 прежней программы · Нечітке логічне виведення в середовищі Fuzzy Logic Systems",
     category: "ai",
     tagline: "Прежняя программа курса · разбор примера",
     description:
@@ -152,7 +174,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "ai-lab2",
-    title: "Лаба 2 · логико-лингвистическая система",
+    title: "ЛР 2 прежней программы · Логіко-лінгвістична система",
     category: "ai",
     tagline: "Прежняя программа курса · 10 заданий",
     description:
@@ -166,7 +188,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "pismi-lab1",
-    title: "Лаба 1 · платформа для веб-приложения",
+    title: "ЛР 1 · Підготування платформи для розгортання web-додатку",
     category: "pismi",
     tagline: "Docker · страница с ПІБ и группой",
     description:
@@ -177,7 +199,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "pismi-lab2",
-    title: "Лаба 2 · PHP: функции и объекты",
+    title: "ЛР 2 · PHP. Сценарії, функції, об’єкти",
     category: "pismi",
     tagline: "15 + 13 вариантов · расчёт и готовая работа",
     description:
@@ -189,7 +211,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "pismi-lab3",
-    title: "Лаба 3 · MySQL и операции CRUD",
+    title: "ЛР 3 · Використання MySQL у якості бази даних web-додатку",
     category: "pismi",
     tagline: "три контейнера · 14 тем справочника",
     description:
@@ -200,7 +222,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "pismi-lab4",
-    title: "Лаба 4 · Laravel и Breeze в Docker",
+    title: "ЛР 4 · Встановлення Laravel та Laravel Breeze у Docker",
     category: "pismi",
     tagline: "окружение из архива · Laravel · Breeze",
     description:
@@ -211,7 +233,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "pismi-lab5",
-    title: "Лаба 5 · индивидуальное задание",
+    title: "ЛР 5 · Розробка веб-додатку за допомогою фреймворку з MVC архітектурою",
     category: "pismi",
     tagline: "визитка на Laravel · четыре оформления",
     description:
@@ -223,19 +245,19 @@ export const modules: LabModule[] = [
   {
     slug: "feistel-variant",
     title: "Сеть Фейстеля по варианту",
-    category: "crypto",
+    category: "pk",
     tagline: "24 варианта · n, K, F1/F2/F3",
     description:
       "Конструктор блочного шифра: по номеру варианта из таблицы собирается сеть Фейстеля с нужным размером блока, ключа и тройкой функций раунда.",
     hasVariants: true,
     variantCount: 24,
-    source: "AppliedCryptology_Lab3_Gen/Variants.md + AnyaLaboratoryWork",
+    source: "Прикладна криптологія, ЛР3: таблиця варіантів",
     size: "lg",
   },
   {
     slug: "jolsm",
     title: "Симулятор JOLS-M",
-    category: "arch",
+    category: "ak",
     tagline: "Микропрограммы · регистры · пошагово",
     description:
       "Интерпретатор учебного языка JOLS-M: READ/OPERATION/PRINT/GOTO/IF — выполняет микропрограмму и показывает состояние регистров и памяти на каждом шаге.",
@@ -246,7 +268,7 @@ export const modules: LabModule[] = [
   {
     slug: "rsa",
     title: "RSA",
-    category: "crypto",
+    category: "pk",
     tagline: "Генерация ключей · шифрование · подпись",
     description:
       "Генерация простых p, q, вычисление n, φ(n), e, d, пошаговое модульное возведение в степень для шифрования и расшифрования сообщений.",
@@ -257,18 +279,18 @@ export const modules: LabModule[] = [
   {
     slug: "classical-ciphers",
     title: "Цезарь, Виженер, гамма, OTP",
-    category: "crypto",
+    category: "pk",
     tagline: "Лаба 1 · классические шифры",
     description:
       "Шифр сдвига, полиалфавитный Виженер, гаммирование XOR и одноразовый блокнот — кодирование и раскодирование текста произвольным ключом.",
     hasVariants: false,
-    source: "AnyaLaboratoryWork + Univetsity Lab1",
+    source: "Прикладна криптологія, ЛР1",
     size: "sm",
   },
   {
     slug: "sdes",
     title: "S-DES (учебный)",
-    category: "crypto",
+    category: "pk",
     tagline: "Лаба 4 · канонический алгоритм",
     description:
       "Классический Simplified DES: P10/P8, IP/IP⁻¹, EP, P4, два S-box, генерация раундовых ключей и два раунда сети Фейстеля — фиксированные таблицы, свои ключ и блок.",
@@ -279,7 +301,7 @@ export const modules: LabModule[] = [
   {
     slug: "primality",
     title: "Тесты на простоту",
-    category: "number",
+    category: "pk",
     tagline: "Пробное деление · Ферма · Миллер–Рабин · Соловей–Штрассен",
     description:
       "Четыре теста простоты числа с трассировкой шагов: детерминированное пробное деление и три вероятностных теста со свидетелями.",
@@ -290,7 +312,7 @@ export const modules: LabModule[] = [
   {
     slug: "crt",
     title: "Система сравнений (СКО)",
-    category: "number",
+    category: "moib",
     tagline: "Китайская теорема об остатках",
     description:
       "Решает систему x ≡ aᵢ (mod mᵢ) методом обобщённой Китайской теоремы об остатках с пошаговым выводом обратных элементов.",
@@ -301,7 +323,7 @@ export const modules: LabModule[] = [
   {
     slug: "number-theory",
     title: "Евклид и линейное сравнение",
-    category: "number",
+    category: "moib",
     tagline: "НСД/НСК · ax≡b (mod n)",
     description:
       "Алгоритм Евклида для НСД и НСК с полной трассировкой шагов, и решение линейного сравнения ax≡b(mod n) через поиск обратного элемента — портировано с реального C++ кода из отчётов.",
@@ -312,7 +334,7 @@ export const modules: LabModule[] = [
   {
     slug: "luhn",
     title: "Алгоритм Луна",
-    category: "number",
+    category: "extra",
     tagline: "Проверка и довычисление контрольной цифры",
     description:
       "Проверка номера карты/документа по модулю 10 с удвоением через цифру и вычисление недостающей контрольной цифры.",
@@ -323,7 +345,7 @@ export const modules: LabModule[] = [
   {
     slug: "entropy-coding",
     title: "Энтропия, Шеннон-Фано, Хаффман",
-    category: "theory",
+    category: "tik",
     tagline: "Лаба 2 · 12 вариантов",
     description:
       "По распределению вероятностей символов вашего варианта считает энтропию источника и строит коды Шеннона-Фано и Хаффмана с таблицей длин.",
@@ -335,7 +357,7 @@ export const modules: LabModule[] = [
   {
     slug: "parity-channel",
     title: "Код чётности и пропускная способность",
-    category: "theory",
+    category: "tik",
     tagline: "Лаба 4 · 12 вариантов",
     description:
       "Двумерный код с проверкой по строкам и столбцам — обнаружение и исправление ошибки, плюс расчёт пропускной способности двоичного симметричного канала по формуле Шеннона.",
@@ -347,7 +369,7 @@ export const modules: LabModule[] = [
   {
     slug: "crc",
     title: "Циклический код (CRC)",
-    category: "theory",
+    category: "tik",
     tagline: "Лаба 5 · 12 вариантов",
     description:
       "Кодирование делением многочлена на образующий, синдром принятого слова и исправление однократной ошибки по таблице синдромов.",
@@ -359,7 +381,7 @@ export const modules: LabModule[] = [
   {
     slug: "hamming",
     title: "Код Хэмминга",
-    category: "codes",
+    category: "extra",
     tagline: "Кодирование · синдром · исправление",
     description:
       "Кодирование информационных бит кодом Хэмминга, вычисление синдрома по принятому слову и исправление однократной ошибки.",
@@ -370,7 +392,7 @@ export const modules: LabModule[] = [
   {
     slug: "shannon-hartley",
     title: "Непрерывный канал с шумом",
-    category: "theory",
+    category: "tik",
     tagline: "Лаба 6 · 12 вариантов",
     description:
       "Пропускная способность непрерывного канала по формуле Шеннона-Хартли для двух уровней шума из варианта — формула сверена по числам из реального отчёта.",
@@ -382,7 +404,7 @@ export const modules: LabModule[] = [
   {
     slug: "line-coding",
     title: "Линейное кодирование сигналов",
-    category: "theory",
+    category: "tik",
     tagline: "Лаба 7 · 12 вариантов",
     description:
       "NRZ, RZ, Манчестер, NRZI, MLT-3, 2B1Q, PAM5 — преобразование битовой последовательности варианта в форму сигнала с визуализацией.",
@@ -394,7 +416,7 @@ export const modules: LabModule[] = [
   {
     slug: "bbs-lfsr",
     title: "BBS и LFSR — генераторы гаммы",
-    category: "crypto",
+    category: "pk",
     tagline: "Лаба 5 · потоковые шифры",
     description:
       "Blum-Blum-Shub (X_i = X_{i-1}² mod n, младший бит — выход) и LFSR с линейной обратной связью — два способа получить псевдослучайную гамму для потокового шифрования.",
@@ -405,7 +427,7 @@ export const modules: LabModule[] = [
   {
     slug: "gost-rc4",
     title: "ГОСТ 28147-89 и RC4",
-    category: "crypto",
+    category: "plis",
     tagline: "ПЛІС · схемы на VHDL и расчёт",
     description:
       "ГОСТ: 32-раундовая сеть Фейстеля (24 прямых + 8 обратных), один S-box на все нибблы, " +
@@ -418,7 +440,7 @@ export const modules: LabModule[] = [
   {
     slug: "reed-solomon",
     title: "Код Рида-Соломона",
-    category: "codes",
+    category: "extra",
     tagline: "GF(2⁸) · Берлекэмп-Мэсси · Форни",
     description:
       "Кодирование над полем Галуа, вычисление синдромов, поиск полинома-локатора ошибок, позиций (Чень) и величин ошибок (Форни) для их исправления.",
@@ -429,7 +451,7 @@ export const modules: LabModule[] = [
   {
     slug: "polar",
     title: "Полярные коды",
-    category: "codes",
+    category: "extra",
     tagline: "Батачария · SC / ML декодер",
     description:
       "Выбор замороженных/информационных каналов по параметру Батачария, кодирование через матрицу Кронекера, декодирование последовательным вычёркиванием (SC) или полным перебором (ML).",
@@ -440,7 +462,7 @@ export const modules: LabModule[] = [
   {
     slug: "ldpc",
     title: "LDPC-коды",
-    category: "codes",
+    category: "extra",
     tagline: "Граф Таннера · belief propagation",
     description:
       "Порождающая матрица из разреженной проверочной через исключение Гаусса над GF(2), итеративное декодирование min-sum belief propagation с проверкой синдрома.",
@@ -450,8 +472,8 @@ export const modules: LabModule[] = [
   },
   {
     slug: "ip-subnet",
-    title: "Лаба 4 · маски и префиксы IPv4",
-    category: "networks",
+    title: "ЛР 4 · Дослідження методу використання масок та префіксів для визначення IPv4-адрес мереж та хостів",
+    category: "km",
     tagline: "25 вариантов · маска или префикс",
     description:
       "Таблицы 4.1 и 4.2 по варианту: префикс по маске, маска по префиксу, адрес сети и хоста, " +

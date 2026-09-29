@@ -13,7 +13,7 @@ import { bitsToString, checkAndCorrect, encode, flipBits, generatorBits, hexToBi
 import { cn } from "@/lib/cn";
 
 const mod = modules.find((m) => m.slug === "crc")!;
-const accent = categories.theory.accent;
+const accent = categories.tik.accent;
 
 export default function CrcPage() {
   const [variantNum, setVariantNum] = useState(1);

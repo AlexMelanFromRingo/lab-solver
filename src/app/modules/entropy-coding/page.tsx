@@ -11,7 +11,7 @@ import { LAB2_VARIANTS } from "@/lib/data/variant-tables";
 import { buildReport, encodeSequence, type SymbolProb } from "@/lib/algorithms/entropy-coding";
 
 const mod = modules.find((m) => m.slug === "entropy-coding")!;
-const accent = categories.theory.accent;
+const accent = categories.tik.accent;
 const SYMS = ["z1", "z2", "z3", "z4", "z5"];
 
 function CodeTableView({ title, codes, items }: { title: string; codes: Record<string, string>; items: SymbolProb[] }) {
