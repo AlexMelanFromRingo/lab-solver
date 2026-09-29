@@ -26,6 +26,8 @@ export default function PismiLab5Page() {
           (Laravel_NotesList_tutorial): о себе, перечень работ из базы, которым владелец
           управляет в кабинете, и форма обратной связи, письма из которой читаются там же.
           Таблицы users и projects связаны «один ко многим», как users и notes в руководстве.
+          Кабинет только для владельца — первого зарегистрированного пользователя; после него
+          регистрация закрывается.
         </InfoNote>
 
         <LabProcedure guide={procedure} accent={accent} />

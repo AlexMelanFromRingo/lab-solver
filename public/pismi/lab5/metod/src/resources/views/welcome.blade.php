@@ -23,7 +23,7 @@
                 <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-gray-700 hover:text-gray-900">
                     Увійти
                 </a>
-                @if (Route::has('register'))
+                @if (Route::has('register') && ! \App\Models\User::query()->exists())
                     <a href="{{ route('register') }}" class="rounded-md px-3 py-2 text-gray-700 hover:text-gray-900">
                         Зареєструватися
                     </a>

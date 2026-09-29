@@ -50,6 +50,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Власник сайту – перший зареєстрований користувач. Лише він може
+     * заходити до кабінету; після його реєстрації реєстрацію закрито.
+     */
+    public function isOwner(): bool
+    {
+        return (int) $this->getKey() === (int) static::query()->min('id');
+    }
+
+    /**
      * Роботи, які додав користувач (відношення «один до багатьох»).
      */
     public function projects(): HasMany
