@@ -5,10 +5,10 @@ import { ModuleHeader } from "@/components/module-header";
 import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
-import { TextField } from "@/components/ui/field";
+import { NumberField, TextField } from "@/components/ui/field";
 import { OutputBlock } from "@/components/ui/output-block";
 import { VariantDial } from "@/components/ui/variant-dial";
-import { FlavourSwitch } from "@/components/flavour-switch";
+import { PismiRun, PismiWork } from "@/components/pismi-work";
 import { categories, modules } from "@/lib/modules";
 import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { usePismiIndex } from "@/lib/pismi-files";
@@ -29,13 +29,20 @@ const SYMBOLS: Record<string, string> = {
   alpha: "α", beta: "β", a: "a", b: "b", x: "x", t: "t",
 };
 
-export default function PismiLab2Page() {
-  const [variantNum, setVariantNum] = useState(1);
-  const variant = FORMULA_VARIANTS.find((v) => v.variant === variantNum)!;
+/** Наборы вариантов разной длины: 15 у первой программы, 13 у второй. */
+const P1_COUNT = 15;
+const P2_COUNT = 13;
 
-  // Наборов заданий два и они разной длины: 15 в первой программе и 13 во
-  // второй. Номер, выходящий за набор, заходит на второй круг.
-  const taskNum = ((variantNum - 1) % 13) + 1;
+/** Номер в списке группы → вариант набора длины m: за концом набора — второй круг. */
+const wrap = (n: number, m: number) => ((n - 1) % m) + 1;
+
+export default function PismiLab2Page() {
+  // Методичка выдаёт варианты «за узгодженням з викладачем» — у каждой
+  // программы свой, поэтому выбираются они независимо.
+  const [variantNum, setVariantNum] = useState(1);
+  const [taskNum, setTaskNum] = useState(1);
+  const [listNum, setListNum] = useState("");
+  const variant = FORMULA_VARIANTS.find((v) => v.variant === variantNum)!;
   const task = taskByVariant(taskNum);
 
   const [argEdits, setArgEdits] = useState<Record<number, Record<string, number>>>({});
@@ -46,30 +53,75 @@ export default function PismiLab2Page() {
   const taskValues = taskEdits[taskNum] ?? defaultValues(task);
   const output = useMemo(() => task.build(taskValues), [task, taskValues]);
 
-  const index = usePismiIndex();
-  const bundle = index?.lab2.find((b) => b.variant === variantNum);
-  const [flavour, setFlavour] = useState<"basic" | "extended">("basic");
+  const { index, failed } = usePismiIndex();
+  const lab = index?.labs["2"];
+
+  function byListNumber(raw: string) {
+    setListNum(raw);
+    const n = Math.trunc(Number(raw));
+    if (raw.trim() === "" || !Number.isFinite(n) || n < 1) return;
+    setVariantNum(wrap(n, P1_COUNT));
+    setTaskNum(wrap(n, P2_COUNT));
+  }
 
   return (
     <div>
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Работа состоит из двух программ: первая считает выражения варианта и проверяет их
-          равенство, вторая выполняет задание созданным объектом. Ниже — расчёт по любому
-          варианту и готовые файлы работы: описание окружения и исходники, которые
-          достаточно положить в каталог и поднять одной командой.
+          Работа состоит из двух программ: первая считает функции варианта и проверяет их
+          равенство, вторая выполняет задание созданным объектом. Ниже — расчёт по любым
+          вариантам и готовая работа: окружение и обе программы с вашими ПІБ и группой в
+          коде, в выбранном оформлении.
         </InfoNote>
 
         <LabProcedure guide={procedure} accent={accent} />
 
-        <VariantDial value={variantNum} min={1} max={15} onChange={setVariantNum} accent={accent} />
+        <Card>
+          <CardBody className="pt-6 space-y-5">
+            <div>
+              <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Варианты</h2>
+              <p className="mt-1.5 max-w-3xl text-sm leading-relaxed text-ink-dim">
+                Варианты выдаются по согласованию с преподавателем, у каждой программы свой: у
+                первой их {P1_COUNT}, у второй {P2_COUNT}. Если вариант — номер в списке группы,
+                впишите его справа: номер за пределами набора уходит на второй круг.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-end gap-4">
+              <VariantDial
+                value={variantNum}
+                min={1}
+                max={P1_COUNT}
+                onChange={setVariantNum}
+                accent={accent}
+                label="Программа № 1"
+              />
+              <VariantDial
+                value={taskNum}
+                min={1}
+                max={P2_COUNT}
+                onChange={setTaskNum}
+                accent={accent}
+                label="Программа № 2"
+              />
+              <div className="w-full sm:w-44">
+                <NumberField
+                  label="Номер в списке"
+                  min={1}
+                  value={listNum}
+                  onChange={(e) => byListNumber(e.target.value)}
+                  placeholder="—"
+                />
+              </div>
+            </div>
+          </CardBody>
+        </Card>
 
         {/* --- Программа 1 ------------------------------------------------ */}
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <p className="text-xs text-ink-faint">Программа № 1</p>
+              <p className="text-xs text-ink-faint">Программа № 1 · вариант {variantNum}</p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
                 {variant.title}
               </h2>
@@ -156,7 +208,7 @@ export default function PismiLab2Page() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <p className="text-xs text-ink-faint">
-                Программа № 2 · задание {taskNum}
+                Программа № 2 · вариант {taskNum}
               </p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
                 {task.title}
@@ -194,35 +246,29 @@ export default function PismiLab2Page() {
           </CardBody>
         </Card>
 
-        {/* --- Файлы ------------------------------------------------------ */}
-        <Card>
-          <CardBody className="pt-6 space-y-5">
-            <div>
-              <h2 className="font-display text-lg font-semibold text-ink">
-                Готовые файлы работы · вариант {variantNum}
-              </h2>
-              <p className="mt-1.5 text-sm text-ink-dim">
-                Положить рядом, выполнить <code>docker compose up -d</code> и открыть
-                localhost:{bundle?.port ?? 8100 + variantNum}.
-              </p>
-            </div>
-
-            {bundle ? (
-              <FlavourSwitch
-                base={`../../pismi/lab2/v${String(variantNum).padStart(2, "0")}`}
-                basic={bundle.basic}
-                extended={bundle.extended}
-                value={flavour}
-                onChange={setFlavour}
-                accent={accent}
-                basicNote="Окружение и две программы — ровно то, что требует задание. Каждый файл самодостаточен: вычисления, класс задания и разметка лежат в нём самом."
-                extendedNote="То же самое, но с общим началом документа, отдельным файлом стилей и основой для класса. Удобнее в работе, однако добавляет файлы, которых задание не требует."
-              />
-            ) : (
-              <p className="text-sm text-ink-faint">Загрузка…</p>
-            )}
-          </CardBody>
-        </Card>
+        {/* --- Готовая работа -------------------------------------------- */}
+        {lab && index ? (
+          <>
+            <PismiWork
+              index={index}
+              lab={lab}
+              accent={accent}
+              choice={{ v1: variantNum, v2: taskNum }}
+              intro={
+                <>
+                  Программа № 1 — вариант {variantNum}, программа № 2 — вариант {taskNum} (выбраны
+                  выше). Окружение — тот же docker-compose.yml, что в первой работе: порт 8080,
+                  контейнер php_web.
+                </>
+              }
+            />
+            <PismiRun lab={lab} accent={accent} />
+          </>
+        ) : (
+          <p className="text-sm text-ink-faint">
+            {failed ? "Готовая работа не загрузилась. Обновите страницу." : "Загрузка готовой работы…"}
+          </p>
+        )}
       </div>
     </div>
   );

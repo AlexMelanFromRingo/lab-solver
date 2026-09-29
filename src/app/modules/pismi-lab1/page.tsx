@@ -6,7 +6,7 @@ import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
 import { SelectField } from "@/components/ui/field";
-import { FlavourSwitch } from "@/components/flavour-switch";
+import { PismiRun, PismiWork } from "@/components/pismi-work";
 import { categories, modules } from "@/lib/modules";
 import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { INSTALL_GUIDES } from "@/lib/data/pismi-install";
@@ -18,9 +18,9 @@ const procedure = LAB_GUIDES["pismi-lab1"];
 
 export default function PismiLab1Page() {
   const [guideId, setGuideId] = useState(INSTALL_GUIDES[0].id);
-  const [flavour, setFlavour] = useState<"basic" | "extended">("basic");
   const guide = INSTALL_GUIDES.find((g) => g.id === guideId)!;
-  const index = usePismiIndex();
+  const { index, failed } = usePismiIndex();
+  const lab = index?.labs["1"];
 
   return (
     <div>
@@ -28,16 +28,20 @@ export default function PismiLab1Page() {
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
           Задание лабораторной — поднять контейнер с PHP и Apache и показать в браузере
-          страницу со своими ФИО и группой. Методичка описывает один путь, через VirtualBox
+          страницу со своими ПІБ и группой. Методичка описывает один путь, через VirtualBox
           с Ubuntu внутри. На деле годится любая из четырёх конфигураций ниже: Docker
           работает с ядром Linux, а откуда это ядро взялось — на файл окружения и команды
-          не влияет.
+          не влияет. Готовая работа внизу страницы: ПІБ и группа вписываются прямо в
+          index.php, как того требует задание.
         </InfoNote>
 
         <LabProcedure guide={procedure} accent={accent} />
 
         <Card>
           <CardBody className="pt-6 space-y-6">
+            <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
+              Установка Docker
+            </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <SelectField
                 label="Система"
@@ -101,32 +105,28 @@ export default function PismiLab1Page() {
           </CardBody>
         </Card>
 
-        <Card>
-          <CardBody className="pt-6 space-y-5">
-            <div>
-              <h2 className="font-display text-lg font-semibold text-ink">Готовые файлы работы</h2>
-              <p className="mt-1.5 text-sm text-ink-dim">
-                Положить в каталог проекта, выполнить <code>docker compose up -d</code> и
-                открыть localhost:{index?.lab1.port ?? 8090}. ФИО и группа подставляются
-                строкой браузера, поэтому править исходник под себя не нужно.
-              </p>
-            </div>
-            {index ? (
-              <FlavourSwitch
-                base="../../pismi/lab1"
-                basic={index.lab1.basic}
-                extended={index.lab1.extended}
-                value={flavour}
-                onChange={setFlavour}
-                accent={accent}
-                basicNote="Окружение и страница, которая выводит ФИО и группу, — ровно то, что требует задание. Файл самодостаточен, стили в нём же, несколько строк."
-                extendedNote="То же самое, но с общим началом документа и отдельным файлом оформления. Выглядит опрятнее, однако добавляет файлы, которых задание не требует."
-              />
-            ) : (
-              <p className="text-sm text-ink-faint">Загрузка…</p>
-            )}
-          </CardBody>
-        </Card>
+        {lab && index ? (
+          <>
+            <PismiWork
+              index={index}
+              lab={lab}
+              accent={accent}
+              intro={
+                <>
+                  Окружение — дословно пример методички, index.php выводит ПІБ и группу.
+                  Разложить как в методичке (архив так и устроен), выполнить{" "}
+                  <code className="whitespace-nowrap font-mono text-ink">docker compose up -d</code> и открыть
+                  http://localhost:8080.
+                </>
+              }
+            />
+            <PismiRun lab={lab} accent={accent} />
+          </>
+        ) : (
+          <p className="text-sm text-ink-faint">
+            {failed ? "Готовая работа не загрузилась. Обновите страницу." : "Загрузка готовой работы…"}
+          </p>
+        )}
       </div>
     </div>
   );

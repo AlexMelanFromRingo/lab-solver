@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 /**
  * Порядок запуска и грабли — разметка, общая для модулей лабораторных.
  *
@@ -7,24 +9,38 @@
  */
 
 export interface LabStep {
-  title: string;
+  /** Без заголовка шаг — одна фраза (так записаны шаги в manifest.json курса). */
+  title?: string;
   body?: string;
   commands?: string[];
   /** Дерево каталогов: там, где шаг о структуре проекта, его и надо видеть. */
   tree?: string[];
 }
 
-export function Steps({ steps, accent }: { steps: LabStep[]; accent: string }) {
+export function Steps({
+  steps,
+  accent,
+  compact = false,
+}: {
+  steps: LabStep[];
+  accent: string;
+  /** Шаги-фразы без заголовков стоят плотнее. */
+  compact?: boolean;
+}) {
   return (
-    <ol className="space-y-6">
+    <ol className={compact ? "space-y-3" : "space-y-6"}>
       {steps.map((step, i) => (
-        <li key={step.title} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
+        <li key={`${i}-${step.title ?? step.body}`} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
           <span className="font-mono text-sm tabular-nums" style={{ color: accent }}>
             {String(i + 1).padStart(2, "0")}
           </span>
           <div className="space-y-2">
-            <h3 className="font-medium text-ink">{step.title}</h3>
-            {step.body && <p className="text-sm leading-relaxed text-ink-dim">{step.body}</p>}
+            {step.title && <h3 className="font-medium text-ink">{step.title}</h3>}
+            {step.body && (
+              <p className={step.title ? "text-sm leading-relaxed text-ink-dim" : "text-sm leading-relaxed text-ink"}>
+                {step.body}
+              </p>
+            )}
             {step.tree && (
               <pre
                 className="overflow-x-auto rounded-[4px] border px-4 py-3 font-mono text-xs leading-relaxed text-ink-dim"
@@ -45,15 +61,23 @@ export function Steps({ steps, accent }: { steps: LabStep[]; accent: string }) {
   );
 }
 
-export function Pitfalls({ items, accent }: { items: string[]; accent: string }) {
+export function Pitfalls({
+  items,
+  accent,
+  title = "Где спотыкаются",
+}: {
+  items: ReactNode[];
+  accent: string;
+  title?: string;
+}) {
   return (
     <div>
-      <h3 className="mb-2 text-sm font-medium text-ink-dim">Где спотыкаются</h3>
+      <h3 className="mb-2 text-sm font-medium text-ink-dim">{title}</h3>
       <ul className="space-y-2 text-sm text-ink-dim">
-        {items.map((item) => (
-          <li key={item} className="flex gap-2 leading-relaxed">
+        {items.map((item, i) => (
+          <li key={typeof item === "string" ? item : i} className="flex gap-2 leading-relaxed">
             <span style={{ color: accent }}>·</span>
-            {item}
+            <div className="min-w-0">{item}</div>
           </li>
         ))}
       </ul>

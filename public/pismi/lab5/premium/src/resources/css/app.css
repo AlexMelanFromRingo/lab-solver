@@ -1,0 +1,806 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Оформлення сайту: темна сталь, акрилове скло, гарнітура IBM Plex.
+ * Правила стоять після утиліт Tailwind, тому перекривають їх там, де
+ * стандартні сторінки Breeze (вхід, профіль) задають світлі кольори.
+ */
+
+:root {
+    --field: #0f1a22;
+    --field-deep: #081018;
+    --glass: rgba(206, 222, 236, 0.055);
+    --glass-strong: rgba(206, 222, 236, 0.09);
+    --edge: rgba(206, 222, 236, 0.13);
+    --edge-strong: rgba(206, 222, 236, 0.24);
+    --ink: #e7edf2;
+    --muted: #93a4b2;
+    --good: #7fd1a8;
+    --bad: #ff9b8f;
+    --accent: %%ACCENT%%;
+    --accent-soft: %%ACCENT_SOFT%%;
+    --accent-ink: %%ACCENT_INK%%;
+    --accent-text: color-mix(in srgb, var(--accent) 52%, #ffffff);
+    --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --rail: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.5 2h9a1.5 1.5 0 0 1 1.5 1.5V6a1.5 1.5 0 0 1-1.5 1.5h-2.9v8.2l5.9 3.8V22H4.5v-2.5l5.9-3.8V7.5H7.5A1.5 1.5 0 0 1 6 6V3.5A1.5 1.5 0 0 1 7.5 2Z'/%3E%3C/svg%3E");
+
+    /* Кольори діалогу підтвердження SweetAlert2 */
+    --dialog-bg: #16242f;
+    --dialog-ink: #e7edf2;
+}
+
+html {
+    background: var(--field-deep);
+}
+
+body.shell {
+    min-height: 100vh;
+    color: var(--ink);
+    font: 400 16px/1.55 var(--sans);
+    background:
+        radial-gradient(760px 520px at 6% -12%, color-mix(in srgb, var(--accent) 36%, transparent), transparent 72%),
+        radial-gradient(900px 640px at 105% 112%, rgba(52, 96, 128, 0.5), transparent 70%),
+        linear-gradient(155deg, #13222f 0%, var(--field) 48%, var(--field-deep) 100%);
+    background-attachment: fixed;
+    isolation: isolate;
+}
+
+/* Великий профіль рейки за склом: університет виріс із залізничного інституту */
+body.shell::before {
+    content: "";
+    position: fixed;
+    right: -170px;
+    bottom: -330px;
+    z-index: -1;
+    width: 820px;
+    height: 820px;
+    background: var(--accent);
+    opacity: 0.2;
+    transform: rotate(-14deg);
+    -webkit-mask: var(--rail) center / contain no-repeat;
+    mask: var(--rail) center / contain no-repeat;
+}
+
+.shell a {
+    color: var(--accent-text);
+    text-underline-offset: 3px;
+}
+
+.shell :focus-visible {
+    outline: 2px solid var(--accent-text);
+    outline-offset: 2px;
+}
+
+.page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 26px 40px 56px;
+}
+
+/* --- Верхній рядок ------------------------------------------------------ */
+
+.top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 28px;
+    margin-bottom: 44px;
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.shell a.brand {
+    color: var(--muted);
+}
+
+.brand b {
+    display: block;
+    color: var(--ink);
+    font-weight: 500;
+}
+
+.rail {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    background: var(--accent-text);
+    -webkit-mask: var(--rail) center / contain no-repeat;
+    mask: var(--rail) center / contain no-repeat;
+}
+
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.shell .menu a,
+.menu button {
+    padding: 7px 12px;
+    border-radius: 9px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s, background-color 0.15s;
+}
+
+.shell .menu a:hover,
+.menu button:hover {
+    color: var(--ink);
+    background: var(--glass);
+}
+
+.shell .menu a[aria-current="page"] {
+    color: var(--ink);
+    background: var(--glass-strong);
+}
+
+.menu form {
+    display: contents;
+}
+
+/* --- Скло та кнопки ----------------------------------------------------- */
+
+.glass,
+.panel {
+    border: 1px solid var(--edge);
+    border-radius: 16px;
+    background: var(--glass);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    backdrop-filter: blur(22px) saturate(150%);
+}
+
+.glass.strong {
+    border-color: var(--edge-strong);
+    background: var(--glass-strong);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px 18px;
+    border: 1px solid var(--edge-strong);
+    border-radius: 10px;
+    background: var(--glass);
+    color: var(--ink);
+    font: 500 15px/1.2 var(--sans);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.shell a.btn {
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.btn:hover {
+    border-color: rgba(206, 222, 236, 0.4);
+    background: var(--glass-strong);
+}
+
+.btn-primary,
+.shell a.btn-primary {
+    border-color: transparent;
+    background: var(--accent);
+    color: var(--accent-ink);
+}
+
+.btn-primary:hover {
+    border-color: transparent;
+    background: color-mix(in srgb, var(--accent) 86%, #ffffff);
+}
+
+.btn-danger {
+    border-color: rgba(255, 155, 143, 0.35);
+    background: transparent;
+    color: var(--bad);
+}
+
+.btn-danger:hover {
+    border-color: rgba(255, 155, 143, 0.6);
+    background: rgba(255, 155, 143, 0.08);
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* --- Форми ---------------------------------------------------------------- */
+
+.label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.input {
+    width: 100%;
+    padding: 10px 13px;
+    border: 1px solid var(--edge-strong);
+    border-radius: 10px;
+    background: rgba(8, 16, 24, 0.45);
+    color: var(--ink);
+    font: 400 16px/1.4 var(--sans);
+}
+
+.input::placeholder {
+    color: rgba(147, 164, 178, 0.6);
+}
+
+.input:focus {
+    border-color: var(--accent-text);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+textarea.input {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.error-list {
+    margin-top: 6px;
+    color: var(--bad);
+    font-size: 14px;
+}
+
+.status,
+.flash {
+    color: var(--good);
+    font-size: 15px;
+}
+
+.flash {
+    margin: 0 0 18px;
+    padding: 11px 16px;
+    border: 1px solid rgba(127, 209, 168, 0.3);
+    border-radius: 12px;
+    background: rgba(127, 209, 168, 0.08);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 20px;
+}
+
+.field-wide,
+.form-actions {
+    grid-column: 1 / -1;
+}
+
+.field-short .input {
+    max-width: 10rem;
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+/* --- Знак (ініціали) ------------------------------------------------------ */
+
+.logo {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+}
+
+/* === Головна сторінка ===================================================== */
+
+.hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 40px;
+    align-items: end;
+    margin-bottom: 88px;
+}
+
+.hero h1 {
+    margin: 0 0 22px;
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+}
+
+.hero h1 .surname {
+    display: block;
+    font-size: clamp(48px, 7.4vw, 92px);
+}
+
+.hero h1 .given {
+    display: block;
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+}
+
+.hero .lede {
+    max-width: 34rem;
+    margin: 0 0 28px;
+    color: var(--muted);
+    font-size: 18px;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.card {
+    padding: 26px 28px;
+}
+
+.card dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px 22px;
+    margin: 0;
+}
+
+.card dt {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.card dd {
+    margin: 0;
+    font-weight: 500;
+}
+
+.card .group {
+    color: var(--accent-text);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.section {
+    margin-bottom: 88px;
+    scroll-margin-top: 24px;
+}
+
+.section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 24px;
+    margin-bottom: 30px;
+}
+
+.section h2 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+}
+
+.section-head p {
+    max-width: 30rem;
+    margin: 0;
+    color: var(--muted);
+}
+
+/* Роботи як маршрут: рейка ліворуч, станції – у порядку виконання */
+.route {
+    position: relative;
+    display: grid;
+    gap: 18px;
+    margin: 0;
+    padding: 0 0 0 56px;
+    list-style: none;
+}
+
+.route::before {
+    content: "";
+    position: absolute;
+    top: 30px;
+    bottom: 30px;
+    left: 17px;
+    width: 2px;
+    background: linear-gradient(var(--edge-strong), var(--accent));
+}
+
+.stop {
+    position: relative;
+    padding: 22px 26px 24px;
+}
+
+/* Станція на рейці */
+.stop::before {
+    content: "";
+    position: absolute;
+    top: 28px;
+    left: -46px;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--accent-text);
+    border-radius: 50%;
+    background: var(--field);
+}
+
+.stop:last-child::before {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: 0 0 0 6px var(--accent-soft);
+}
+
+.stop:last-child {
+    border-color: var(--edge-strong);
+    background: var(--glass-strong);
+}
+
+.stop-meta {
+    margin: 0 0 4px;
+    color: var(--muted);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+}
+
+.stop h3 {
+    margin: 0 0 8px;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.stop p {
+    max-width: 46rem;
+    margin: 0;
+}
+
+.stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--accent-text);
+    font-size: 14px;
+}
+
+.stop .link {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 15px;
+}
+
+.empty {
+    margin: 0;
+    padding: 22px 26px;
+    color: var(--muted);
+}
+
+.about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 40px;
+    padding: 34px 36px;
+}
+
+.about h2 {
+    margin: 0;
+}
+
+.about p {
+    margin: 0 0 14px;
+    max-width: 40rem;
+}
+
+.about p:last-child {
+    margin-bottom: 0;
+}
+
+.contact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 40px;
+    align-items: start;
+}
+
+.contact .intro p {
+    max-width: 24rem;
+    margin: 14px 0 0;
+    color: var(--muted);
+}
+
+.contact form {
+    padding: 28px;
+}
+
+.foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding-top: 22px;
+    border-top: 1px solid var(--edge);
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* === Кабінет ============================================================= */
+
+.page-head {
+    margin-bottom: 26px;
+}
+
+.page-head h1,
+.page-head h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+}
+
+.page-head p {
+    margin: 6px 0 0;
+    color: var(--muted);
+}
+
+.panel {
+    margin-bottom: 22px;
+    padding: 24px 26px;
+}
+
+.panel-title {
+    margin: 0 0 18px;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.data-wrap {
+    overflow-x: auto;
+}
+
+.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.data th {
+    padding: 0 14px 10px;
+    border-bottom: 1px solid var(--edge-strong);
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.data td {
+    padding: 14px;
+    border-bottom: 1px solid var(--edge);
+    vertical-align: top;
+}
+
+.data tr:last-child td {
+    border-bottom: 0;
+}
+
+.data .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.data .note {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.data .text {
+    max-width: 34rem;
+    white-space: pre-line;
+}
+
+/* Кнопки дій у клітинці таблиці: сама клітинка лишається table-cell */
+.row-actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.row-actions form {
+    display: inline;
+}
+
+.row-actions .btn {
+    min-height: 34px;
+    margin-left: 6px;
+    padding: 5px 13px;
+    font-size: 14px;
+}
+
+/* Сторінки входу та реєстрації */
+.guest {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    padding: 32px 18px;
+}
+
+.guest-box {
+    width: 100%;
+    max-width: 440px;
+}
+
+.guest-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.35;
+    text-decoration: none;
+}
+
+.shell a.guest-head {
+    color: var(--muted);
+}
+
+.guest-head b {
+    display: block;
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.guest-card {
+    padding: 28px;
+}
+
+/* Стандартні сторінки Breeze (вхід, профіль) у темному оформленні */
+.shell .bg-white {
+    border: 1px solid var(--edge);
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    backdrop-filter: blur(22px) saturate(150%);
+}
+
+.shell .shadow,
+.shell .shadow-sm,
+.shell .shadow-xl {
+    box-shadow: none;
+}
+
+.shell .text-gray-900,
+.shell .text-gray-800 {
+    color: var(--ink);
+}
+
+.shell .text-gray-700,
+.shell .text-gray-600,
+.shell .text-gray-500 {
+    color: var(--muted);
+}
+
+.shell .hover\:text-gray-900:hover {
+    color: var(--ink);
+}
+
+.shell .text-green-600 {
+    color: var(--good);
+}
+
+.shell .text-indigo-600 {
+    color: var(--accent);
+}
+
+.shell .border-gray-300 {
+    border-color: var(--edge-strong);
+    background-color: transparent;
+}
+
+.shell .bg-gray-500 {
+    background-color: #03080c;
+}
+
+/* Сторінка профілю Breeze: без власних відступів усередині кабінету */
+.shell main .py-12 {
+    padding-top: 0;
+}
+
+.shell main .max-w-7xl {
+    max-width: none;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+@media (max-width: 900px) {
+    .page {
+        padding: 20px 18px 40px;
+    }
+
+    .top {
+        margin-bottom: 30px;
+    }
+
+    .hero,
+    .about,
+    .contact {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 26px;
+    }
+
+    .hero,
+    .section {
+        margin-bottom: 56px;
+    }
+
+    .about {
+        padding: 24px 22px;
+    }
+
+    .route {
+        padding-left: 36px;
+    }
+
+    .route::before {
+        left: 9px;
+    }
+
+    .stop {
+        padding: 18px 18px 20px;
+    }
+
+    .stop::before {
+        left: -34px;
+    }
+
+    .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .row-actions {
+        text-align: left;
+    }
+
+    .row-actions .btn {
+        margin: 0 6px 6px 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}

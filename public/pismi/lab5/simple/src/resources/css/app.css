@@ -1,0 +1,442 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Оформлення сайту: світла сторінка, системні шрифти, колір акценту.
+ * Правила стоять після утиліт Tailwind і доповнюють стандартні сторінки
+ * Breeze (вхід, профіль), не змінюючи їхньої розмітки.
+ */
+
+:root {
+    --accent: %%ACCENT%%;
+    --accent-soft: %%ACCENT_SOFT%%;
+    --accent-ink: %%ACCENT_INK%%;
+    --accent-text: color-mix(in srgb, var(--accent) 78%, #000000);
+    --text: #1d242b;
+    --muted: #5f6b76;
+    --line: #dde2e7;
+    --field: #f4f6f8;
+    --good: #1e7a46;
+    --bad: #b3261e;
+}
+
+body.shell {
+    background: var(--field);
+    color: var(--text);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.shell a {
+    color: var(--accent-text);
+    text-underline-offset: 3px;
+}
+
+.shell :focus-visible {
+    outline: 2px solid var(--accent-text);
+    outline-offset: 2px;
+}
+
+/* Аркуш сторінки: біле поле з кольоровою смугою згори */
+.card {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 28px 40px 36px;
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--accent);
+    border-radius: 6px;
+    background: #ffffff;
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 24px;
+    margin: 0 0 22px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.meta nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
+}
+
+.meta nav a[aria-current] {
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.meta form {
+    display: inline;
+}
+
+.meta button {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+h1.name {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.role {
+    margin: 4px 0 18px;
+    color: var(--muted);
+}
+
+.about p {
+    max-width: 44rem;
+    margin: 0 0 10px;
+}
+
+.shell h2.part {
+    margin: 30px 0 12px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+/* Перелік робіт: рік праворуч від назви, технології під нею */
+.works {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.works li {
+    padding: 12px 0;
+}
+
+.works li + li {
+    border-top: 1px dashed var(--line);
+}
+
+.work-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.work-head b {
+    font-size: 17px;
+}
+
+.year {
+    flex: none;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.works .stack {
+    margin: 0 0 4px;
+    color: var(--accent-text);
+    font-size: 14px;
+}
+
+.works p {
+    max-width: 44rem;
+    margin: 0;
+}
+
+.foot {
+    max-width: 900px;
+    margin: -16px auto 32px;
+    padding: 0 40px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* --- Кнопки та форми ---------------------------------------------------- */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 16px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #ffffff;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    cursor: pointer;
+}
+
+.shell a.btn {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.btn:hover {
+    border-color: #c3cad1;
+    background: var(--field);
+}
+
+.btn-primary,
+.shell a.btn-primary {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+}
+
+.btn-primary:hover {
+    border-color: var(--accent-text);
+    background: var(--accent-text);
+    color: #ffffff;
+}
+
+.btn-danger {
+    border-color: #efc4c0;
+    color: var(--bad);
+}
+
+.btn-danger:hover {
+    border-color: var(--bad);
+    background: #fdf1f0;
+}
+
+.label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.input {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid #c3cad1;
+    border-radius: 6px;
+    background: #ffffff;
+    color: var(--text);
+    font: inherit;
+}
+
+.input:focus {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+textarea.input {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.error-list {
+    margin-top: 4px;
+    color: var(--bad);
+    font-size: 14px;
+}
+
+.status,
+.flash {
+    color: var(--good);
+    font-size: 15px;
+}
+
+.flash {
+    margin: 0 0 16px;
+    padding: 8px 12px;
+    border-left: 3px solid var(--good);
+    background: #eef7f1;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 18px;
+    max-width: 44rem;
+}
+
+.field-wide,
+.form-actions {
+    grid-column: 1 / -1;
+}
+
+.field-short .input {
+    max-width: 9rem;
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+}
+
+/* --- Кабінет ---------------------------------------------------------------- */
+
+.page-head {
+    margin-bottom: 18px;
+}
+
+.page-head h1,
+.page-head h2 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.page-head p {
+    margin: 4px 0 0;
+    color: var(--muted);
+}
+
+.panel + .panel {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+}
+
+.panel-title {
+    margin: 0 0 12px;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.empty {
+    margin: 0;
+    color: var(--muted);
+}
+
+.data-wrap {
+    overflow-x: auto;
+}
+
+.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.data th,
+.data td {
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+}
+
+.data th {
+    background: var(--field);
+    font-weight: 600;
+}
+
+.data .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.data .note {
+    display: block;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.data .text {
+    white-space: pre-line;
+}
+
+.row-actions {
+    white-space: nowrap;
+}
+
+.row-actions form {
+    display: inline;
+}
+
+.row-actions .btn {
+    margin: 2px 4px 2px 0;
+    padding: 4px 11px;
+    font-size: 14px;
+}
+
+/* Вхід і реєстрація */
+.guest {
+    max-width: 460px;
+}
+
+.guest-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.shell a.guest-head {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.guest-head b {
+    display: block;
+    color: var(--text);
+    font-size: 16px;
+}
+
+/* Стандартні сторінки Breeze (профіль) усередині аркуша */
+.shell main .py-12 {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.shell main .max-w-7xl {
+    max-width: none;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.shell main .bg-white {
+    border: 1px solid var(--line);
+    box-shadow: none;
+}
+
+.shell .text-indigo-600 {
+    color: var(--accent);
+}
+
+@media (max-width: 720px) {
+    .card {
+        margin: 0;
+        padding: 20px 16px;
+        border-radius: 0;
+    }
+
+    .foot {
+        margin: 0;
+        padding: 16px;
+    }
+
+    .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

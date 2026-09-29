@@ -36,6 +36,7 @@ export function FileSet({
   files,
   accent,
   archive,
+  contents,
   supportingNote = "Это оформление и общая основа: к заданию они не относятся, но без них работа не запустится.",
 }: {
   base: string;
@@ -43,6 +44,11 @@ export function FileSet({
   accent: string;
   /** Архив всего каталога работы, если он выложен. */
   archive?: { path: string; size: number };
+  /**
+   * Тексты уже на руках (путь → текст): тогда ничего не подгружается. Так
+   * показываются работы, в которые данные студента подставлены на странице.
+   */
+  contents?: Record<string, string>;
   /** Что за вспомогательные файлы: у каждой работы они свои. */
   supportingNote?: string;
 }) {
@@ -67,6 +73,7 @@ export function FileSet({
   });
 
   useEffect(() => {
+    if (contents) return;
     let cancelled = false;
 
     fetch(url)
@@ -84,11 +91,12 @@ export function FileSet({
     return () => {
       cancelled = true;
     };
-  }, [url]);
+  }, [url, contents]);
 
-  const settled = loaded.url === url;
-  const state = !settled ? "loading" : loaded.code === null ? "failed" : "ready";
-  const code = loaded.code ?? "";
+  const given = contents ? contents[current] : undefined;
+  const settled = contents ? true : loaded.url === url;
+  const state = !settled ? "loading" : (contents ? given === undefined : loaded.code === null) ? "failed" : "ready";
+  const code = (contents ? given : loaded.code) ?? "";
 
   return (
     <div className="space-y-4">
