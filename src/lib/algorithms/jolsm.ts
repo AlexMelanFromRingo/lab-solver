@@ -1,17 +1,17 @@
 /**
  * Интерпретатор языка JOLS-M (ЯОЛС-М) — учебного языка микропрограмм для
- * лабораторных по архитектуре ЭВМ ("АРХІТЕКТУРА КОМП'ЮТЕРІВ Lab 1 (JOLS-M)").
+ * практичних робіт «Архітектура комп'ютерів».
  *
- * Порт jolsm-toolkit/jolsm.py (834 строки, чистый Python, без внешних
- * зависимостей) на TypeScript, семантика сохранена насколько возможно 1:1 —
- * тот же грамматика, синонимы ключевых слов на трёх языках, тот же набор
- * операций (=,+,-,&,|,^,<<,>>,циклические сдвиги, сложение с переносом).
- * Значения регистров — BigInt, т.к. JOLS-M допускает разрядность до 64 бит,
- * а битовые операции JS-Number ограничены 32 битами.
+ * Порт jolsm-toolkit/jolsm.py на TypeScript. Эталон поведения — IDE
+ * yal.cc/r/jaols-m (LDLS2.js): оба интерпретатора сверены с ней
+ * дифференциальным прогоном (программы студентов, тесты toolkit, все
+ * операции и сравнения) — вывод совпадает построчно, включая формат печати
+ * «a(00000101 05 5)» и ошибки, которые IDE выдаёт при сборке.
+ * Значения регистров — BigInt, т.к. JOLS-M допускает разрядность до 64 бит.
  *
  * Отличие от оригинала: run() дополнительно копит trace — снимок состояния
  * всех переменных после каждого шага, чтобы веб-интерфейс мог показать
- * пошаговое выполнение микропрограммы (в CLI-версии это не требовалось).
+ * пошаговое выполнение микропрограммы.
  */
 
 const KW: Record<string, string> = {};
@@ -19,7 +19,7 @@ const KW_GROUPS: [string, string][] = [
   ["var def dim define задать создать объявить обьявить", "DECL"],
   ["do op оп операция operation", "OP"],
   ["if если", "IF"],
-  ["then то", "THEN"],
+  ["then то тогда", "THEN"],
   ["print write echo печать вывести", "PRINT"],
   ["scan read ввести ввод input", "INPUT"],
   ["jump goto идти идти_к go_to", "GOTO"],
@@ -34,13 +34,27 @@ for (const [words, kind] of KW_GROUPS) {
 }
 
 const STACK_LIMIT = 65535;
-// "!=" — не входит в формальную грамматику языка (там "<>"), но реально встречается в
-// конспектах лаб как более привычный C-подобный синоним неравенства — принимаем оба.
-const RELS = ["<=", ">=", "<>", "!=", "=", "<", ">"];
-const BINOPS = ["+!", "++", "|<", ">|", "<<", ">>", ">]", "[<", "=", "+", "-", "&", "|", "/", "^", "@"];
-const OP_CANON: Record<string, string> = { "/": "|", "@": "^", ">]": ">|", "[<": "|<", "++": "+!" };
+// Знак операції/порівняння IDE читає як неперервний ланцюжок цих символів
+// (lvm.Lexer.ops), тому «a=-1» — невідомий оператор «=-», а не a := −1.
+const OPCHARS = "=+-<>&|^~!*/";
+// порівняння IDE (lvm.Parser.getComparator) → канонічне
+const COMPARATORS: Record<string, string> = { "=": "=", "==": "=", "<>": "<>", "!=": "<>", "~=": "<>", "<": "<", ">": ">", "<=": "<=", ">=": ">=" };
+// двомісні операції IDE (lvm.Parser.getOperator) → канонічне; наприкінці —
+// позначення методички, яких IDE не знає
+const OPS: Record<string, string> = {
+  "=": "=", "+": "+", "+=": "+", "-": "-", "-=": "-", "&": "&", "&=": "&", "|": "|", "|=": "|", "^": "^", "^=": "^",
+  "<<": "<<", "<<=": "<<", ">>": ">>", ">>=": ">>", "|<": "|<", "<<<": "|<", "<<<=": "|<", ">|": ">|", ">>>": ">|", ">>>=": ">|",
+  "+!": "+!", "+!=": "+!", "<->": "<->", "<=>": "<->",
+  "/": "|", "@": "^", ">]": ">|", "[<": "|<",
+};
+// одномісні: інверсія, інкремент, декремент (у IDE «++» — це +1)
+const UNARY: Record<string, string> = { "~": "~", "~~": "~", "!": "~", "!!": "~", "++": "inc", "--": "dec" };
+const OP_CANON = OPS;
 
-const IDENT = "[A-Za-zА-Яа-яЁё_][A-Za-zА-Яа-яЁё0-9_]*";
+const L = "A-Za-zА-Яа-яЁёІіЇїЄєҐґ";
+const IDENT = `[${L}_][${L}0-9_]*`;
+const CONST = "\\d+|\\$[0-9A-Fa-f]+|#[01]+";
+const CONST_RE = new RegExp(`^(?:${CONST})$`);
 
 export class JolsmError extends Error {
   line?: number;
@@ -55,8 +69,26 @@ function stripComments(src: string): string {
   const out: string[] = [];
   let line: string[] = [];
   let inBlock = false;
+  let quote = "";
   for (let i = 0; i < src.length; i++) {
     const c = src[i];
+    if (quote) {
+      // % і { усередині рядка — це текст
+      if (c === "\n") {
+        quote = "";
+        out.push(line.join(""));
+        line = [];
+        continue;
+      }
+      line.push(c);
+      if (c === quote) quote = "";
+      continue;
+    }
+    if (!inBlock && (c === '"' || c === "'")) {
+      quote = c;
+      line.push(c);
+      continue;
+    }
     if (inBlock) {
       if (c === "}") inBlock = false;
       else if (c === "\n") {
@@ -99,7 +131,7 @@ function splitLines(src: string): SrcLine[] {
     if (!t) return;
     let label = "";
     let text = t;
-    const m = t.match(new RegExp(`^([A-Za-zА-Яа-яЁё0-9_]+)\\s*:\\s*(.*)$`));
+    const m = t.match(new RegExp(`^([${L}0-9_]+)\\s*:\\s*(.*)$`));
     if (m) {
       label = m[1];
       text = m[2].trim();
@@ -165,23 +197,42 @@ interface Operand {
   name: string;
   hi: number;
   lo: number;
+  /** 'cell': індекс (константа або змінна); 'bits': змінна з номером біта */
   index: Operand | null;
   invert: boolean;
+  /** ширина константи при друку, як в IDE */
+  cwidth?: number;
 }
 
 function mkConst(v: bigint, invert = false): Operand {
   return { kind: "const", const: v, name: "", hi: 0, lo: 0, index: null, invert };
 }
 
+/** Ширина константи в IDE: #b — за цифрами, $h — по 4 біти на цифру, десяткова — цілими байтами. */
+function constWidth(tok: string, v: bigint): number {
+  if (tok.startsWith("#")) return tok.length - 1;
+  if (tok.startsWith("$")) return 4 * (tok.length - 1);
+  return Math.max(8, Math.ceil(v.toString(2).length / 8) * 8);
+}
+
+/** Те, що IDE відкидає ще під час збирання: інверсія операнда в операції, від'ємний літерал. */
+function checkOperandSyntax(textIn: string, line?: number) {
+  const t = textIn.trim();
+  if (t.endsWith("~") || t.startsWith("~"))
+    throw new JolsmError(
+      `інверсія операнда всередині операції ('${t}') в IDE yal.cc не підтримується — інвертуйте окремою командою '${t.replace(/^~+|~+$/g, "")}~'`,
+      line,
+    );
+  if (/^-\d+$/.test(t)) throw new JolsmError(`від'ємна константа '${t}' у тексті програми неприпустима (IDE читає '-' як знак операції)`, line);
+}
+
 function parseOperand(textIn: string, machine: Machine): Operand {
-  let text = textIn.trim();
-  let inv = false;
-  if (text.endsWith("~")) {
-    inv = true;
-    text = text.slice(0, -1).trim();
-  }
-  if (/^-?\d+$|^\$[0-9A-Fa-f]+$|^#[01]+$/.test(text)) {
-    return mkConst(parseNumber(text), inv);
+  const text = textIn.trim();
+  const inv = false;
+  checkOperandSyntax(text);
+  if (CONST_RE.test(text)) {
+    const v = parseNumber(text);
+    return { ...mkConst(v), cwidth: constWidth(text, v) };
   }
   const m = text.match(new RegExp(`^(${IDENT})\\s*\\((.+)\\)$`));
   if (m) {
@@ -190,7 +241,7 @@ function parseOperand(textIn: string, machine: Machine): Operand {
     const v = machine.vars.get(base);
     if (v && v.isMem) {
       let idx: Operand;
-      if (/^-?\d+$|^\$[0-9A-Fa-f]+$|^#[01]+$/.test(inside)) {
+      if (CONST_RE.test(inside)) {
         idx = mkConst(parseNumber(inside));
       } else if (new RegExp(`^${IDENT}$`).test(inside)) {
         idx = { kind: "var", const: 0n, name: inside, hi: 0, lo: 0, index: null, invert: false };
@@ -210,6 +261,11 @@ function parseOperand(textIn: string, machine: Machine): Operand {
       const b = parseInt(inside, 10);
       return { kind: "bits", const: 0n, name: base, hi: b, lo: b, index: null, invert: inv };
     }
+    if (new RegExp(`^${IDENT}$`).test(inside)) {
+      // біт з номером із регістра: a(i)
+      const idx: Operand = { kind: "var", const: 0n, name: inside, hi: 0, lo: 0, index: null, invert: false };
+      return { kind: "bits", const: 0n, name: base, hi: 0, lo: 0, index: idx, invert: inv };
+    }
     throw new JolsmError(`некорректный операнд: '${text}'`);
   }
   if (new RegExp(`^${IDENT}$`).test(text)) {
@@ -227,7 +283,15 @@ function cellIndex(op: Operand, m: Machine): number {
   return Number(v.value);
 }
 
-function readOp(op: Operand, m: Machine): bigint {
+/** a(i): номер біта береться з регістра i в момент виконання. */
+function bindBit(op: Operand, m: Machine): Operand {
+  if (op.kind !== "bits" || !op.index) return op;
+  const b = Number(m.getVar(op.index.name).value);
+  return { ...op, hi: b, lo: b, index: null };
+}
+
+function readOp(opIn: Operand, m: Machine): bigint {
+  const op = bindBit(opIn, m);
   if (op.kind === "const") {
     return op.invert ? ~op.const : op.const;
   }
@@ -255,7 +319,8 @@ function readOp(op: Operand, m: Machine): bigint {
   throw new JolsmError("внутренняя ошибка: неизвестный операнд");
 }
 
-function writeOp(op: Operand, value: bigint, m: Machine) {
+function writeOp(opIn: Operand, value: bigint, m: Machine) {
+  const op = bindBit(opIn, m);
   if (op.kind === "const") throw new JolsmError("нельзя присваивать константе");
   if (op.kind === "var") {
     const v = m.getVar(op.name);
@@ -337,7 +402,7 @@ interface Stmt {
 }
 
 function firstWord(t: string): [string | null, string] {
-  const m = t.match(/^([A-Za-zА-Яа-яЁё_]+)\b/);
+  const m = t.match(new RegExp(`^([${L}_]+)(?![${L}0-9_])`));
   if (!m) return [null, t];
   return [m[1], t.slice(m[0].length).trim()];
 }
@@ -346,7 +411,19 @@ function splitTop(text: string): string[] {
   const parts: string[] = [];
   let buf: string[] = [];
   let depth = 0;
+  let quote = "";
   for (const c of text) {
+    if (quote) {
+      // коми всередині рядка не ділять
+      buf.push(c);
+      if (c === quote) quote = "";
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      quote = c;
+      buf.push(c);
+      continue;
+    }
     if (c === "(") {
       depth += 1;
       buf.push(c);
@@ -374,28 +451,34 @@ interface OpData {
   rhs: string | null;
 }
 
-function parseOpStatement(t: string): OpData {
-  const s = t.trim();
-  if (s.endsWith("~~")) return { dest: s.slice(0, -2).trim(), opcode: "~", rhs: null };
-  if (s.endsWith("!")) return { dest: s.slice(0, -1).trim(), opcode: "~", rhs: null };
+/** Позиція й текст першого ланцюжка знаків операції на нульовій глибині дужок (як лексер IDE). */
+function opRun(s: string): [number, string] {
   let depth = 0;
   for (let i = 0; i < s.length; i++) {
     const c = s[i];
     if (c === "(") depth += 1;
     else if (c === ")") depth -= 1;
-    else if (depth === 0) {
-      for (const opt of BINOPS) {
-        if (i > 0 && s.startsWith(opt, i)) {
-          return { dest: s.slice(0, i).trim(), opcode: opt, rhs: s.slice(i + opt.length).trim() };
-        }
-      }
+    else if (depth === 0 && i > 0 && (OPCHARS.includes(c) || c === "[" || c === "@")) {
+      let j = i;
+      while (j < s.length && (OPCHARS.includes(s[j]) || "[]@".includes(s[j]))) j++;
+      return [i, s.slice(i, j)];
     }
   }
-  // Одиночный завершающий "~" без парной операции — тоже воспринимается как
-  // "инвертировать операнд на месте" (в реальных конспектах лабы встречается
-  // и такая запись наравне с формальными "X~~"/"X!" из справочника языка).
-  if (s.endsWith("~")) return { dest: s.slice(0, -1).trim(), opcode: "~", rhs: null };
-  throw new JolsmError(`не распознана операция: '${t}'`);
+  return [-1, ""];
+}
+
+function parseOpStatement(t: string): OpData {
+  const s = t.trim();
+  const [i, op] = opRun(s);
+  if (i < 0) throw new JolsmError(`не распознана операция: '${t}'`);
+  const dest = s.slice(0, i).trim();
+  const rhs = s.slice(i + op.length).trim();
+  if (!rhs) {
+    if (!(op in UNARY)) throw new JolsmError(`невідома одномісна операція '${op}' у '${t}'`);
+    return { dest, opcode: UNARY[op], rhs: null };
+  }
+  if (!(op in OPS)) throw new JolsmError(`невідомий оператор '${op}' у '${t}'`);
+  return { dest, opcode: OPS[op], rhs };
 }
 
 function parseStatement(no: number, t: string): Stmt {
@@ -442,26 +525,12 @@ function parseStatement(no: number, t: string): Stmt {
 
   if (kw === "IF") {
     const body = rest;
-    let depth = 0;
-    let relpos = -1;
-    let reltok = "";
-    outer: for (let i = 0; i < body.length; i++) {
-      const c = body[i];
-      if (c === "(") depth += 1;
-      else if (c === ")") depth -= 1;
-      else if (depth === 0) {
-        for (const rl of RELS) {
-          if (body.startsWith(rl, i)) {
-            relpos = i;
-            reltok = rl;
-            break outer;
-          }
-        }
-      }
-    }
+    const [relpos, relraw] = opRun(body);
     if (relpos < 0) throw new JolsmError(`в 'если' нет операции сравнения: '${t}'`, no);
+    if (!(relraw in COMPARATORS)) throw new JolsmError(`невідоме порівняння '${relraw}' у '${t}'`, no);
+    const reltok = COMPARATORS[relraw];
     const left = body.slice(0, relpos).trim();
-    const after = body.slice(relpos + reltok.length).trim();
+    const after = body.slice(relpos + relraw.length).trim();
     const spaceIdx = after.search(/\s/);
     const right = spaceIdx === -1 ? after : after.slice(0, spaceIdx);
     let action = spaceIdx === -1 ? "" : after.slice(spaceIdx + 1).trim();
@@ -489,21 +558,49 @@ function compileProgram(code: string): Program {
   for (const ln of lines) {
     const idx = stmts.length;
     if (ln.label) {
+      if (KW[ln.label.toLowerCase()]) throw new JolsmError(`метка '${ln.label}' збігається з ключовим словом — в IDE це помилка`, ln.no);
       if (labels.has(ln.label)) throw new JolsmError(`метка '${ln.label}' уже определена`, ln.no);
       labels.set(ln.label, idx);
     }
     stmts.push(parseStatement(ln.no, ln.text));
   }
+  checkSyntax(stmts);
   return { stmts, labels };
 }
 
+/** Перевірки, які IDE робить ще під час збирання (див. checkOperandSyntax), і друк масиву цілком. */
+function checkSyntax(stmts: Stmt[]) {
+  const mems = new Set<string>();
+  for (const st of stmts)
+    if (st.kind === "DECL") for (const d of st.data.decls as { name: string; isMem: boolean }[]) if (d.isMem) mems.add(d.name);
+  const check = (st: Stmt) => {
+    if (st.kind === "IF") {
+      checkOperandSyntax(st.data.left as string, st.no);
+      checkOperandSyntax(st.data.right as string, st.no);
+      check(st.data.inner as Stmt);
+    } else if (st.kind === "OP") {
+      const d = st.data as unknown as OpData;
+      checkOperandSyntax(d.dest, st.no);
+      if (d.rhs !== null) checkOperandSyntax(d.rhs, st.no);
+    } else if (st.kind === "INPUT") {
+      for (const it of st.data.targets as string[]) checkOperandSyntax(it, st.no);
+    } else if (st.kind === "PRINT") {
+      for (const raw of st.data.items as string[]) {
+        const it = raw.trim();
+        if (/^".*"$|^'.*'$/.test(it)) continue;
+        checkOperandSyntax(it, st.no);
+        if (mems.has(it)) throw new JolsmError(`масив пам'яті '${it}' цілком друкувати не можна (в IDE — помилка) — друкуйте комірки: ${it}(0)…`, st.no);
+      }
+    }
+  };
+  stmts.forEach(check);
+}
+
 // ── formatting ────────────────────────────────────────────────────────────
-function fmtVal(name: string, val: bigint, width: number): string {
-  const m = (1n << BigInt(width)) - 1n;
-  const u = val & m;
-  const signed = ((u >> BigInt(width - 1)) & 1n) === 1n ? u - (1n << BigInt(width)) : u;
-  const b = u.toString(2).padStart(width, "0");
-  return `${name} = ${b}b = $${u.toString(16).toUpperCase()} = ${u} (знак.: ${signed})`;
+/** Значення так, як друкує IDE: (двійкове HEX десяткове). */
+function fmtVal(val: bigint, width: number): string {
+  const u = val & ((1n << BigInt(width)) - 1n);
+  return `(${u.toString(2).padStart(width, "0")} ${u.toString(16).toUpperCase().padStart(Math.ceil(width / 4), "0")} ${u})`;
 }
 
 // ── public result types ───────────────────────────────────────────────────
@@ -612,29 +709,24 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
         return null;
       }
       case "PRINT": {
-        const items = s.data.items as string[];
-        const chunks: string[] = [];
-        for (const itRaw of items) {
-          const it = itRaw.trim();
+        // Як в IDE: єдина змінна друкується з іменем — «a(00000101 05 5)»;
+        // інакше значення без імен, після кожного пробіл.
+        const items = (s.data.items as string[]).map((x) => x.trim());
+        const parts: string[] = [];
+        for (const it of items) {
           const sm = it.match(/^"(.*)"$|^'(.*)'$/);
           if (sm) {
-            chunks.push(sm[1] !== undefined ? sm[1] : sm[2]);
+            parts.push(sm[1] !== undefined ? sm[1] : sm[2]);
             continue;
           }
           const op = parseOperand(it, m);
-          if (op.kind === "var" && m.vars.get(op.name)?.isMem) {
-            const v = m.vars.get(op.name)!;
-            chunks.push(`${op.name}[0..${v.count - 1}] = ` + v.cells.join(" "));
-          } else {
-            const val = readOp(op, m);
-            let w: number;
-            if (op.kind === "bits") w = op.hi - op.lo + 1;
-            else if (op.kind === "const") w = Math.max(1, val.toString(2).length);
-            else w = m.getVar(op.name).width;
-            chunks.push(fmtVal(it, val, w));
-          }
+          if (op.kind === "var" && m.getVar(op.name).isMem)
+            throw new JolsmError(`масив пам'яті '${op.name}' цілком друкувати не можна — друкуйте комірки: ${op.name}(0)…`);
+          const val = readOp(op, m);
+          const w = op.kind === "bits" ? (op.index ? 1 : op.hi - op.lo + 1) : op.kind === "const" ? op.cwidth ?? 8 : m.getVar(op.name).width;
+          parts.push(items.length === 1 && op.kind !== "const" ? op.name + fmtVal(val, w) : fmtVal(val, w) + " ");
         }
-        res.output.push(chunks.join("  |  "));
+        res.output.push(parts.join(""));
         return null;
       }
       case "GOTO":
@@ -654,6 +746,7 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
         return null;
       case "END":
         res.ended = s.data.msg as string;
+        if (res.ended) res.output.push(res.ended); // IDE друкує повідомлення кінця
         return -1;
       case "IF": {
         const lo = parseOperand(s.data.left as string, m);
@@ -683,6 +776,14 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
         const cur = readOp(dest, m);
         if (data.opcode === "~") {
           writeOp(dest, ~cur & ((1n << BigInt(w)) - 1n), m);
+        } else if (data.opcode === "inc" || data.opcode === "dec") {
+          writeOp(dest, cur + (data.opcode === "inc" ? 1n : -1n), m);
+        } else if (data.opcode === "<->") {
+          const other = parseOperand(data.rhs!, m);
+          if (other.kind === "const") throw new JolsmError("обмін '<->' можливий лише зі змінною");
+          const ov = readOp(other, m);
+          writeOp(other, cur, m);
+          writeOp(dest, ov, m);
         } else {
           const rhs = readOp(parseOperand(data.rhs!, m), m);
           writeOp(dest, applyOp(cur, data.opcode, rhs, w), m);
@@ -802,7 +903,7 @@ export function validate(code: string): string[] {
 
   function chkLabel(tgtIn: string, no: number) {
     const tgt = tgtIn.trim();
-    if (/^-?\d+$|^\$[0-9A-Fa-f]+$|^#[01]+$/.test(tgt)) {
+    if (CONST_RE.test(tgt)) {
       if (!prog.labels.has(parseNumber(tgt).toString())) {
         out.push(`ОШИБКА (строка ${no}): метка '${tgt}' не определена`);
       }
@@ -841,11 +942,15 @@ export function validate(code: string): string[] {
     if (s.kind === "OP") {
       const data = s.data as unknown as OpData;
       const dest = chkOperand(data.dest, s.no);
-      if (data.opcode === "~") return;
+      if (data.opcode === "~" || data.opcode === "inc" || data.opcode === "dec") return;
       const rhs = chkOperand(data.rhs!, s.no);
       if (rhs === null || dest === null) return;
+      if (data.opcode === "<->") {
+        if (rhs.kind === "const") out.push(`ОШИБКА (строка ${s.no}): обмін '<->' можливий лише зі змінною`);
+        return;
+      }
       if (rhs.kind === "const") {
-        chkConstFits(rhs.invert ? ~rhs.const : rhs.const, dest, s.no);
+        chkConstFits(rhs.const, dest, s.no);
       } else {
         const dw = widthOf(dest);
         const rw = widthOf(rhs);
