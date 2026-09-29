@@ -28,6 +28,8 @@ import {
   toPk,
 } from "@/lib/algorithms/aks";
 import { lab2Scheme, lab3Scheme, lab4Scheme, lab5Scheme, lab6Scheme } from "@/lib/algorithms/aks-schemes";
+import { lab2Flow, lab3Flow, lab4Flow, lab5Flow, lab6Flow } from "@/lib/algorithms/aks-flows";
+import { layoutFlow } from "@/lib/algorithms/flowchart";
 
 /**
  * «Архітектура комп'ютерів» — методичні рекомендації до практичних робіт
@@ -157,7 +159,7 @@ export const AKS_GUIDES: GuideModule[] = [
               rows: runs.map(({ c, inputs, res }) => [c.title, c.a, c.b, inputs.join("  "), Math.abs(c.a + c.b) > M ? `${c.a + c.b} — поза ±${M}` : c.a + c.b, res]),
             },
           ],
-          figures: [{ kind: "regs", title: `Структура пристрою (рис. 2.4) для n = ${n}: Рг1, Рг2, См — два знакові розряди модифікованого коду`, scheme: lab2Scheme(v) }],
+          figures: [{ kind: "regs", title: `Структура пристрою (рис. 2.4) для n = ${n}: Рг1, Рг2, См — два знакові розряди модифікованого коду`, scheme: lab2Scheme(v) }, { kind: "flow", title: "Алгоритм (блок-схема) — як у мікропрограмі, з розрядами варіанта", chart: layoutFlow(lab2Flow(v)) }],
           code: [
             { title: "Мікропрограма (IDE JOLS-M)", code: prog },
             ...runs.map(({ c, inputs, r }) => ({ title: `Моделювання: ${c.title}`, code: `введення: ${inputs.join(" ")}\n\n${r.text}` })),
@@ -219,7 +221,7 @@ export const AKS_GUIDES: GuideModule[] = [
             { title: "Варіант", columns: ["Розрядність", "Спосіб", ""], rows: [[n, method, METHOD3[method]]] },
             { title: "Приклад", columns: ["Множене", "Множник", "Добуток", "Програма"], rows: [[a, b, a * b, lastValue(r.lines)]] },
           ],
-          figures: [{ kind: "regs", title: `Структура пристрою для способу ${method} (рис. 3.${2 * method - 1}), n = ${n}`, scheme: lab3Scheme(v) }],
+          figures: [{ kind: "regs", title: `Структура пристрою для способу ${method} (рис. 3.${2 * method - 1}), n = ${n}`, scheme: lab3Scheme(v) }, { kind: "flow", title: "Алгоритм (блок-схема) — як у мікропрограмі, з розрядами варіанта", chart: layoutFlow(lab3Flow(v)) }],
           code: [
             { title: "Мікропрограма (IDE JOLS-M)", code: prog },
             { title: `Моделювання: ${a} × ${b}`, code: `введення: ${a} ${b}\n\n${r.text}` },
@@ -288,7 +290,7 @@ export const AKS_GUIDES: GuideModule[] = [
             },
             { title: "Приклад", columns: ["Множене", "Множник", "Добуток", "Програма"], rows: [[a, b, a * b, lastValue(r.lines)]] },
           ],
-          figures: [{ kind: "regs", title: `Структура пристрою множення з аналізом двох розрядів, спосіб ${method}, n = ${n}`, scheme: lab4Scheme(v), note: "Методичка окремого рисунка не дає («аналогічна пристрою з порозрядним аналізом»): регістри й розряди — як у програмі." }],
+          figures: [{ kind: "regs", title: `Структура пристрою множення з аналізом двох розрядів, спосіб ${method}, n = ${n}`, scheme: lab4Scheme(v), note: "Методичка окремого рисунка не дає («аналогічна пристрою з порозрядним аналізом»): регістри й розряди — як у програмі." }, { kind: "flow", title: "Алгоритм (блок-схема) — як у мікропрограмі, з розрядами варіанта", chart: layoutFlow(lab4Flow(v)) }],
           code: [
             { title: "Мікропрограма (IDE JOLS-M)", code: prog },
             { title: `Моделювання: ${a} × ${b}`, code: `введення: ${a} ${b}\n\n${r.text}` },
@@ -357,7 +359,7 @@ export const AKS_GUIDES: GuideModule[] = [
               rows: [[x, b, `0,${q.toString(2).padStart(n, "0")} = ${(q / 2 ** n).toFixed(4)}`, `0,${lastValue(r.lines).toString(2).padStart(n, "0")}`]],
             },
           ],
-          figures: [{ kind: "regs", title: `Структура пристрою ділення зі зсувом ${shift} (рис. 5.${shift === "залишку" ? 1 : 2}), n = ${n}`, scheme: lab5Scheme(v), note: "Кружок — інверсія: цифра частки — інвертований знак залишку. ДК і ПК — подача дільника в доповняльному (віднімання) і прямому (відновлення, додавання) коді." }],
+          figures: [{ kind: "regs", title: `Структура пристрою ділення зі зсувом ${shift} (рис. 5.${shift === "залишку" ? 1 : 2}), n = ${n}`, scheme: lab5Scheme(v), note: "Кружок — інверсія: цифра частки — інвертований знак залишку. ДК і ПК — подача дільника в доповняльному (віднімання) і прямому (відновлення, додавання) коді." }, { kind: "flow", title: "Алгоритм (блок-схема) — як у мікропрограмі, з розрядами варіанта", chart: layoutFlow(lab5Flow(v)) }],
           code: [
             { title: "Мікропрограма (IDE JOLS-M)", code: prog },
             { title: `Моделювання: ${x} / ${b}`, code: `введення: ${x} ${b}\n\n${r.text}` },
@@ -442,7 +444,7 @@ export const AKS_GUIDES: GuideModule[] = [
               ]),
             },
           ],
-          figures: [{ kind: "regs", title: `Структура пристрою (рис. 6.1): мантиса ${m}, порядок ${n} розрядів`, scheme: lab6Scheme(v), note: "Як на рис. 6.1: ЗН і П суматорів, модуль у розрядах m−2…0 і n−2…0. РгМ і РгП у програмі мають ще копію знака (зн′) — для додавання в модифікованому коді." }],
+          figures: [{ kind: "regs", title: `Структура пристрою (рис. 6.1): мантиса ${m}, порядок ${n} розрядів`, scheme: lab6Scheme(v), note: "Як на рис. 6.1: ЗН і П суматорів, модуль у розрядах m−2…0 і n−2…0. РгМ і РгП у програмі мають ще копію знака (зн′) — для додавання в модифікованому коді." }, { kind: "flow", title: "Алгоритм (блок-схема) — як у мікропрограмі, з розрядами варіанта", chart: layoutFlow(lab6Flow(v)) }],
           code: [
             { title: "Мікропрограма (IDE JOLS-M)", code: prog },
             ...runs.map(({ c, inputs, r }) => ({ title: `Моделювання: ${c.title}`, code: `введення: ${inputs.join(" ")}\n\n${r.text}` })),
