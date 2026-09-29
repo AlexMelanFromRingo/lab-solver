@@ -4,24 +4,26 @@
  * перестановка, Цезаря, одноразовий блокнот, Віженера з паролем, Віженера з
  * датчиком випадкових чисел, гамування.
  *
- * Шифрування йде в алфавіті N1: X1 = Ord(C) − 32, Y = Y1 + 32, N = 224, тож
- * символи 20h…FFh переходять у 20h…FFh і керуючих кодів у шифртексті не
- * з'являється. Керуючі символи 00h…1Fh (CR/LF і ті, що навмисне вставлені в
- * тестовий source.txt) лишаються на місці й ключа не споживають.
+ * Прийом методички — алфавіт N1: X1 = Ord(C) − 32, Y1 = (X1 + зсув) mod 224,
+ * Y = Y1 + 32. Кожен символ рядка обробляється однією формулою, без
+ * розгалужень, і результат завжди в 20h…FFh — керуючих кодів шифр не
+ * породжує (рядки читаються без CR/LF, як Readln/Writeln). Керуючі символи,
+ * що є в самому файлі (CR/LF між рядками, 05h 06h 07h у тестовому
+ * source.txt), обходяться — лишаються як є.
+ *
+ * Ключ береться за позицією байта у файлі: CR/LF займають свою позицію
+ * ключа, хоч і не змінюються. Так зашифровано еталон викладача до ЛР 1
+ * (текст і його шифр Віженера з періодом 11 збігаються побайтно).
  */
 
 export const N = 224;
 const BASE = 32;
 const mod = (a: number, n: number) => ((a % n) + n) % n;
 
-/** Зсув кожного символу 20h…FFh на shifts(j) — j рахує лише шифровані символи. */
-function substitute(bytes: ArrayLike<number>, shift: (j: number) => number, sign: 1 | -1): number[] {
-  let j = 0;
-  return Array.from(bytes, (b) => (b < BASE ? b : BASE + mod(b - BASE + sign * shift(j++), N)));
+/** Y = ((X − 32 ± shift(i)) mod 224) + 32 для символів 20h…FFh; i — позиція байта у файлі. */
+function substitute(bytes: ArrayLike<number>, shift: (i: number) => number, sign: 1 | -1): number[] {
+  return Array.from(bytes, (b, i) => (b < BASE ? b : BASE + mod(b - BASE + sign * shift(i), N)));
 }
-
-/** Скільки символів шифрується (довжина ключа одноразового блокнота). */
-export const n1Length = (bytes: ArrayLike<number>) => Array.from(bytes).filter((b) => b >= BASE).length;
 
 // ---------------------------------------------------------------- Цезар
 
@@ -37,8 +39,8 @@ export function otpKey(length: number): number[] {
 }
 
 export function otp(bytes: ArrayLike<number>, key: number[], sign: 1 | -1 = 1) {
-  if (key.length < n1Length(bytes)) throw new Error(`Ключ коротший за текст: ${key.length} < ${n1Length(bytes)}`);
-  return substitute(bytes, (j) => key[j], sign);
+  if (key.length < bytes.length) throw new Error(`Ключ коротший за текст: ${key.length} < ${bytes.length}`);
+  return substitute(bytes, (i) => key[i], sign);
 }
 
 // ------------------------------------------------------ Віженер з паролем
@@ -50,7 +52,7 @@ export function passwordShifts(password: ArrayLike<number>): number[] {
   return k;
 }
 
-export const vigenere = (bytes: ArrayLike<number>, shifts: number[], sign: 1 | -1 = 1) => substitute(bytes, (j) => shifts[j % shifts.length], sign);
+export const vigenere = (bytes: ArrayLike<number>, shifts: number[], sign: 1 | -1 = 1) => substitute(bytes, (i) => shifts[i % shifts.length], sign);
 
 // -------------------------------------------------- датчик Random з Delphi
 
@@ -74,8 +76,8 @@ export const vigenereRandomShifts = (seed: number, k: number) => delphiRandom(se
 
 /** Гамування: гама — Random(224) для кожного символу тексту. */
 export function gamma(bytes: ArrayLike<number>, seed: number, sign: 1 | -1 = 1) {
-  const g = delphiRandom(seed, n1Length(bytes));
-  return substitute(bytes, (j) => g[j], sign);
+  const g = delphiRandom(seed, bytes.length);
+  return substitute(bytes, (i) => g[i], sign);
 }
 
 // ------------------------------------------------------------ перестановка

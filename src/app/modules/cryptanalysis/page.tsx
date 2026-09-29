@@ -21,11 +21,11 @@ import {
   keyByte,
   n1Symbols,
   reduceKey,
-  shiftBytes,
   shiftGuesses,
-  vigenereBytes,
+  symbolCount,
   type Hypothesis,
 } from "@/lib/algorithms/cryptanalysis";
+import { caesar, passwordShifts, vigenere } from "@/lib/algorithms/classical-ciphers";
 
 const mod = modules.find((m) => m.slug === "cryptanalysis")!;
 const ACCENT = categories.pk.accent;
@@ -102,7 +102,7 @@ export default function CryptanalysisPage() {
       if (source === "file") return fileBytes ? Array.from(fileBytes) : "Оберіть зашифрований файл (CP1251)";
       if (source === "text") return pasted ? Array.from(cp1251Encode(pasted)) : "Вставте шифртекст";
       const p = cp1251Encode(plain);
-      return method === "shift" ? shiftBytes(p, ((shift % N) + N) % N) : vigenereBytes(p, cp1251Encode(password));
+      return method === "shift" ? caesar(p, ((shift % N) + N) % N) : vigenere(p, passwordShifts(cp1251Encode(password)));
     } catch (e) {
       return (e as Error).message;
     }
@@ -111,7 +111,7 @@ export default function CryptanalysisPage() {
   const a = useMemo(() => {
     if (typeof cipher === "string") return null;
     const s = n1Symbols(cipher);
-    if (s.length < 4) return null;
+    if (symbolCount(s) < 4) return null;
     const ac = autocorrelation(s, tMax);
     const tris = kasiskiTrigrams(s);
     return { s, freq: frequencies(s), guesses: shiftGuesses(s), ac, acp: acPeriod(ac), tris, kp: kasiskiPeriod(tris) };
@@ -122,7 +122,7 @@ export default function CryptanalysisPage() {
   const cols = a ? columnShifts(a.s, period, picks) : [];
   const key = reduceKey(cols.map((c) => c.key));
   const keyBytes = key.map(keyByte);
-  const decrypted = typeof cipher !== "string" && keyBytes.length ? cp1251Decode(vigenereBytes(cipher, keyBytes, -1)) : "";
+  const decrypted = typeof cipher !== "string" && key.length ? cp1251Decode(vigenere(cipher, key, -1)) : "";
 
   const setPick = (c: number, h: Hypothesis) =>
     setPicks((p) => {
@@ -137,7 +137,7 @@ export default function CryptanalysisPage() {
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote title="Що робиться">
           Шифртекст — результат програм ЛР 1: алфавіт N1, позиція символу <code>X1 = Ord(C) − 32</code>, N = 224, керуючі
-          символи 00h…1Fh не шифруються. Шифр зсуву розкривається частотним методом (2.1), шифр Віженера — автокореляційним
+          символи 00h…1Fh не шифруються, але займають свою позицію ключа (як в еталоні викладача). Шифр зсуву розкривається частотним методом (2.1), шифр Віженера — автокореляційним
           методом або методом Казіскі (2.2, 2.3): спершу період ключа, потім частотний аналіз кожного стовпця.
         </InfoNote>
 
@@ -193,7 +193,7 @@ export default function CryptanalysisPage() {
             {typeof cipher === "string" ? (
               <p className="text-sm text-codes">{cipher}</p>
             ) : (
-              <OutputBlock label={`Шифртекст у CP1251 · ${a?.s.length ?? 0} символів N1 (L)`} value={cp1251Decode(cipher)} />
+              <OutputBlock label={`Шифртекст у CP1251 · L = ${a?.s.length ?? 0} байт, з них ${a ? symbolCount(a.s) : 0} символів N1`} value={cp1251Decode(cipher)} />
             )}
           </CardBody>
         </Card>
@@ -213,7 +213,7 @@ export default function CryptanalysisPage() {
                     `${g.assumed === "пробіл" ? "найчастіший" : "другий"} ↔ ${g.assumed === "пробіл" ? "␣ (X1 = 0)" : "«о» (X1 = 206)"}`,
                     `${sym(g.cipherX1)} (X1 = ${g.cipherX1})`,
                     g.key,
-                    typeof cipher === "string" ? "" : cp1251Decode(shiftBytes(cipher, -g.key)).slice(0, 48),
+                    typeof cipher === "string" ? "" : cp1251Decode(caesar(cipher, g.key, -1)).slice(0, 48),
                   ])}
                 />
                 <p className="text-xs text-ink-faint">

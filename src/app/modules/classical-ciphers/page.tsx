@@ -11,7 +11,6 @@ import { cp1251Decode, cp1251Encode } from "@/lib/algorithms/cp1251";
 import {
   caesar,
   gamma,
-  n1Length,
   newControlChars,
   otp,
   otpKey,
@@ -71,7 +70,7 @@ export default function ClassicalCiphersPage() {
   const [password, setPassword] = useState("трактор");
   const [seed, setSeed] = useState(12345);
   const [k, setK] = useState(8);
-  const [pad, setPad] = useState<number[]>(() => otpKey(n1Length(SOURCE_TXT)));
+  const [pad, setPad] = useState<number[]>(() => otpKey(SOURCE_TXT.length));
 
   const r = useMemo(() => {
     try {
@@ -126,10 +125,11 @@ export default function ClassicalCiphersPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote title="Що робиться">
-          Файл читається як байти (CP1251 — «розширений» ASCII: кирилиця в кодах C0h…FFh). Символи 20h…FFh шифруються в
-          алфавіті N1: <code>X1 = Ord(C) − 32</code>, <code>Y1 = (X1 + зсув) mod 224</code>, <code>Y = Y1 + 32</code> — тож
-          результат теж у 20h…FFh і керуючих символів не утворює. Керуючі 00h…1Fh (CR/LF і 05h 06h 07h, навмисне вставлені в
-          тестовий <code>source.txt</code>) лишаються на місці й ключа не споживають.
+          Файл читається як байти (CP1251 — «розширений» ASCII: кирилиця в кодах C0h…FFh). Прийом методички — алфавіт N1:{" "}
+          <code>X1 = Ord(C) − 32</code>, <code>Y1 = (X1 + зсув) mod 224</code>, <code>Y = Y1 + 32</code>. Кожен символ рядка
+          обробляється однією формулою, без розгалужень, і результат завжди в 20h…FFh — керуючих кодів шифр не породжує. Керуючі
+          символи, що вже є у файлі (CR/LF між рядками і 05h 06h 07h, навмисне вставлені в тестовий <code>source.txt</code>),
+          обходяться. Ключ іде за позицією байта у файлі — CR/LF займають позицію ключа, як в еталоні викладача.
         </InfoNote>
 
         <Card>
@@ -142,7 +142,7 @@ export default function ClassicalCiphersPage() {
                 onClick={() => {
                   setSrc(SOURCE_TXT);
                   setSrcName("source.txt");
-                  setPad(otpKey(n1Length(SOURCE_TXT)));
+                  setPad(otpKey(SOURCE_TXT.length));
                 }}
               >
                 Тестовий source.txt
@@ -158,7 +158,7 @@ export default function ClassicalCiphersPage() {
                     const b = Array.from(new Uint8Array(await f.arrayBuffer()));
                     setSrc(b);
                     setSrcName(f.name);
-                    setPad(otpKey(n1Length(b)));
+                    setPad(otpKey(b.length));
                   }}
                 />
               </label>
@@ -174,7 +174,7 @@ export default function ClassicalCiphersPage() {
                 const b = Array.from(cp1251Encode(e.target.value.replace(/\r?\n/g, "\r\n")));
                 setSrc(b);
                 setSrcName("текст");
-                setPad(otpKey(n1Length(b)));
+                setPad(otpKey(b.length));
               }}
             />
             <div className="grid gap-4 sm:grid-cols-2">
@@ -206,7 +206,7 @@ export default function ClassicalCiphersPage() {
                 <button
                   type="button"
                   className="self-end rounded-[3px] border border-border px-3 py-2 text-sm text-ink-dim hover:text-ink"
-                  onClick={() => setPad(otpKey(n1Length(src)))}
+                  onClick={() => setPad(otpKey(src.length))}
                 >
                   Новий ключ блокнота
                 </button>

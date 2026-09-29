@@ -4,8 +4,9 @@
  * методом Казіскі (шифр Віженера).
  *
  * Алфавіт — N1 з ЛР 1: символ з кодом 20h…FFh (CP1251) має позицію
- * X1 = Ord(C) − 32, N = 224; керуючі символи 00h…1Fh не шифруються і в
- * аналізі не беруть участі, ключ Віженера по них не просувається.
+ * X1 = Ord(C) − 32, N = 224. Ключ у ЛР 1 іде за позицією байта у файлі,
+ * тому й тут позиції рахуються по всьому файлу: керуючі символи (CR/LF)
+ * не аналізуються, але своє місце в періоді займають.
  */
 
 export const N = 224;
@@ -16,25 +17,12 @@ export const X1_O = 0xee - BASE;
 
 const mod = (a: number, n: number) => ((a % n) + n) % n;
 
-/** Послідовність позицій X1 символів, що шифрувалися (коди ≥ 20h). */
+/** X1 кожного байта файлу; −1 — керуючий символ (не шифрувався). */
 export function n1Symbols(bytes: ArrayLike<number>): number[] {
-  const out: number[] = [];
-  for (let i = 0; i < bytes.length; i++) if (bytes[i] >= BASE) out.push(bytes[i] - BASE);
-  return out;
+  return Array.from(bytes, (b) => (b >= BASE ? b - BASE : -1));
 }
 
-/** Шифр зсуву ЛР 1 над байтами: Y1 = (X1 + k) mod 224, керуючі символи без змін. */
-export function shiftBytes(bytes: ArrayLike<number>, key: number): number[] {
-  return Array.from(bytes, (b) => (b < BASE ? b : BASE + mod(b - BASE + key, N)));
-}
-
-/** Шифр Віженера ЛР 1: зсув — позиція в N1 чергового символу пароля. sign = −1 — розшифрування. */
-export function vigenereBytes(bytes: ArrayLike<number>, password: ArrayLike<number>, sign: 1 | -1 = 1): number[] {
-  const k = n1Symbols(password);
-  if (!k.length) throw new Error("Пароль не містить жодного символу з кодом 20h…FFh");
-  let j = 0;
-  return Array.from(bytes, (b) => (b < BASE ? b : BASE + mod(b - BASE + sign * k[j++ % k.length], N)));
-}
+export const symbolCount = (sym: number[]) => sym.filter((x) => x >= 0).length;
 
 // --------------------------------------------------------------- 2.1 частотний метод
 
@@ -47,9 +35,14 @@ export interface FreqRow {
 /** Частоти символів шифртексту — від найчастішого. */
 export function frequencies(sym: number[]): FreqRow[] {
   const cnt = new Map<number, number>();
-  for (const s of sym) cnt.set(s, (cnt.get(s) ?? 0) + 1);
+  let total = 0;
+  for (const s of sym)
+    if (s >= 0) {
+      cnt.set(s, (cnt.get(s) ?? 0) + 1);
+      total++;
+    }
   return [...cnt]
-    .map(([x1, count]) => ({ x1, count, share: count / sym.length }))
+    .map(([x1, count]) => ({ x1, count, share: count / total }))
     .sort((a, b) => b.count - a.count || a.x1 - b.x1);
 }
 
@@ -80,13 +73,13 @@ export interface AcRow {
   gamma: number;
 }
 
-/** nₜ — кількість i ∈ [1, L − t] з Cᵢ = Cᵢ₊ₜ; γₜ = nₜ / (L − t). */
+/** nₜ — кількість i ∈ [1, L − t] з Cᵢ = Cᵢ₊ₜ (керуючі символи не рахуються); γₜ = nₜ / (L − t). */
 export function autocorrelation(sym: number[], tMax: number): AcRow[] {
   const L = sym.length;
   const rows: AcRow[] = [];
   for (let t = 1; t <= Math.min(tMax, L - 1); t++) {
     let n = 0;
-    for (let i = 0; i + t < L; i++) if (sym[i] === sym[i + t]) n++;
+    for (let i = 0; i + t < L; i++) if (sym[i] >= 0 && sym[i] === sym[i + t]) n++;
     rows.push({ t, n, gamma: n / (L - t) });
   }
   return rows;
@@ -119,6 +112,7 @@ const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
 export function kasiskiTrigrams(sym: number[]): Trigram[] {
   const pos = new Map<string, number[]>();
   for (let i = 0; i + 3 <= sym.length; i++) {
+    if (sym[i] < 0 || sym[i + 1] < 0 || sym[i + 2] < 0) continue;
     const k = `${sym[i]},${sym[i + 1]},${sym[i + 2]}`;
     const list = pos.get(k);
     if (list) list.push(i + 1);
@@ -163,10 +157,10 @@ export interface ColumnShift {
   key: number; // зсув за обраною гіпотезою
 }
 
-/** Частотний криптоаналіз серед перших, других, … символів блоків довжини period. */
+/** Частотний криптоаналіз серед перших, других, … символів блоків довжини period (позиції — по файлу). */
 export function columnShifts(sym: number[], period: number, pick: Hypothesis[] = []): ColumnShift[] {
   return Array.from({ length: period }, (_, c) => {
-    const col = sym.filter((_, i) => i % period === c);
+    const col = sym.filter((s, i) => i % period === c && s >= 0);
     const top = frequencies(col).slice(0, 2);
     const h = pick[c] ?? "1-пробіл";
     const cipher = (h.startsWith("1") ? top[0] : top[1] ?? top[0])?.x1 ?? X1_SPACE;
