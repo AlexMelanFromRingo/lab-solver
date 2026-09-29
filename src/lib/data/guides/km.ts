@@ -1,4 +1,5 @@
 import type { GuideModule } from "./types";
+import { iosContexts, kmLab6Figure } from "@/lib/algorithms/km-figures";
 import { routerConfig, routingPlan, traceHops, type RouterName } from "@/lib/algorithms/static-routing";
 
 /**
@@ -242,6 +243,10 @@ export const KM_GUIDES: GuideModule[] = [
               ["FastEthernet0/1 (п. 6.2.6)", `10.${x}.1.2 255.255.255.0`],
             ],
           },
+        ],
+        figures: [
+          { kind: "drawing", title: `Полігон варіанту X = ${x}`, drawing: kmLab6Figure(x) },
+          { kind: "drawing", title: "Схема контекстів IOS і переходів між ними (рис. 6.1)", drawing: iosContexts(x) },
         ],
         code: [
           {
