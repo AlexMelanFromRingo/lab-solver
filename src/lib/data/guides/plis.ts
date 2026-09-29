@@ -16,6 +16,9 @@ import {
   lab4Vhdl,
   periodNs,
 } from "@/lib/algorithms/vhdl";
+import { buildGates } from "@/lib/algorithms/schematics";
+import { logicDiagram } from "@/lib/algorithms/ks-figures";
+import { cpuScheme, cpuStates, cpuTiming, lab2Timing, lab3Timing, lab4Timing } from "@/lib/algorithms/plis-figures";
 
 /**
  * «Проектування засобів захисту інформації на ПЛІС» — методичні вказівки
@@ -41,6 +44,18 @@ function formulaNote(v: number): string[] {
   return d.length ? [`${f.out} не залежить від ${d.join(", ")} — синтезатор цей вхід відкине (у звіті синтезу — попередження про невикористаний вхід).`] : [];
 }
 
+const XS: Record<string, string> = { "7400": "nand2", "7402": "nor2", "7404": "inv", "7408": "and2", "7411": "and3", "7410": "nand3", "7427": "nor3", "7432": "or2" };
+
+/** Схема варианта в УГП ДСТУ; подписи — символы Xilinx (and2, inv…), которые ставятся в Schematic. */
+function schemeFigure(v: number) {
+  const f = formula(v);
+  return {
+    kind: "drawing" as const,
+    title: `Схемна реалізація ${FORMULAS[v - 1]} (УГП за ДСТУ, варіант ${v})`,
+    drawing: logicDiagram(f, buildGates(f).gates, (g) => `${g.ref.replace(/A$/, "")} ${XS[g.part]}`),
+  };
+}
+
 const bin = (x: number, w: number) => x.toString(2).padStart(w, "0");
 const hex = (x: number) => x.toString(16).toUpperCase();
 
@@ -64,6 +79,7 @@ export const PLIS_GUIDES: GuideModule[] = [
           },
           truth(v),
         ],
+        figures: [schemeFigure(v)],
         code: [{ title: "VHDL Module (Entity + Architecture)", code: lab1Vhdl(v) }],
         notes: [
           "Entity описує порти (у майстрі New Source → VHDL Module), Architecture — функцію одним паралельним оператором присвоювання.",
@@ -119,6 +135,10 @@ export const PLIS_GUIDES: GuideModule[] = [
               rows: truthTable(f).map((r, i) => [`${i * 10} – ${(i + 1) * 10}`, ...r.inputs, r.out]),
               note: `Вхід ${f.vars[0]} перемикається кожні ${10 * (1 << (n - 1))} нс, ${f.vars[n - 1]} — кожні 10 нс: за ${10 * (1 << n)} нс перебираються всі ${1 << n} комбінації.`,
             },
+          ],
+          figures: [
+            schemeFigure(v),
+            { kind: "timing", title: `Очікувана часова діаграма стенда (варіант ${v})`, timing: lab2Timing(v), note: "Однакова для всіх чотирьох стилів опису." },
           ],
           code: [
             { title: "Поведінковий стиль з if", code: s.ifStyle },
@@ -183,6 +203,14 @@ export const PLIS_GUIDES: GuideModule[] = [
               note: odd
                 ? "Скидання до 30 нс; далі D = 01, 10, 11, 00 — кожне значення з'являється на Q на найближчому фронті."
                 : "Din = 1, 0, 1, 1, 0 на послідовних фронтах: біт входить у старший розряд і за три такти доходить до Q(0).",
+            },
+          ],
+          figures: [
+            {
+              kind: "timing",
+              title: odd ? "Очікувана часова діаграма: 2-розрядний регістр з паралельним занесенням" : "Очікувана часова діаграма: 3-розрядний зсувний регістр",
+              timing: lab3Timing(odd),
+              note: "Q змінюється лише на передньому фронті Clk (20, 60, 100… нс); поки Rst = 1, регістр тримається в нулі.",
             },
           ],
           code: [
@@ -253,6 +281,10 @@ export const PLIS_GUIDES: GuideModule[] = [
               note: "Послідовний вхід SerIn = '1': при зсуві вправо одиниця входить у старший розряд, вліво — у молодший. На 10-му фронті En неактивний — Q не змінюється.",
             },
           ],
+          figures: [
+            { kind: "timing", title: `Очікувана часова діаграма універсального регістра (варіант ${v}, Q у hex)`, timing: lab4Timing(v, "rg") },
+            { kind: "timing", title: `Очікувана часова діаграма універсального лічильника (варіант ${v}, Q у hex)`, timing: lab4Timing(v, "ct") },
+          ],
           code: [
             { title: "Універсальний регістр", code: s.rg },
             { title: "Універсальний лічильник", code: s.ct },
@@ -321,6 +353,11 @@ export const PLIS_GUIDES: GuideModule[] = [
               rows: p.map((x) => [x.i, `${bin(x.code, c.opBits)} ${bin(x.a, c.k)} ${bin(x.b, c.k)}`, x.op, x.a, x.b, x.y, 50 + 60 * x.i]),
               note: "Такт стенда 20 нс, скидання до 15 нс; кожна команда — 3 такти (60 нс), результат оновлюється на фронті такту EXEC. Операнди беззнакові, результат обрізається до K розрядів.",
             },
+          ],
+          figures: [
+            { kind: "drawing", title: `Функціональна схема спрощеного обчислювача (варіант ${v})`, drawing: cpuScheme(v) },
+            { kind: "drawing", title: "Діаграма станів кінцевого автомата", drawing: cpuStates() },
+            { kind: "timing", title: "Очікувана часова діаграма перших трьох команд (Y, IR, PC у hex)", timing: cpuTiming(v) },
           ],
           code: [
             { title: "VHDL-опис обчислювача", code: s.top },

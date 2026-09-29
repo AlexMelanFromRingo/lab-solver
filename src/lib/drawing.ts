@@ -9,7 +9,8 @@ export type DrawItem =
   | { k: "rect"; x: number; y: number; w: number; h: number; bold?: boolean; dashed?: boolean; fill?: boolean }
   | { k: "circle"; x: number; y: number; r: number; fill?: boolean }
   | { k: "dot"; x: number; y: number }
-  | { k: "text"; x: number; y: number; text: string; anchor?: "start" | "middle" | "end"; size?: number; italic?: boolean; bold?: boolean }
+  /** В тексте «_» — нижний индекс, если не plain (имена вроде NEXT_ADDR). */
+  | { k: "text"; x: number; y: number; text: string; anchor?: "start" | "middle" | "end"; size?: number; italic?: boolean; bold?: boolean; plain?: boolean }
   /** Земля: линия с косой штриховкой снизу. */
   | { k: "ground"; x1: number; x2: number; y: number };
 

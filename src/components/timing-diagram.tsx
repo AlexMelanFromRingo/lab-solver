@@ -37,7 +37,11 @@ export function TimingDiagram({ fig, title }: { fig: TimingFigure; title: string
           const hi = y0 + 6;
           const lo = y0 + ROW - 8;
           const mid = (hi + lo) / 2;
-          const ch = s.changes.filter(([t]) => t < fig.to).map(([t, v]) => [Math.max(t, fig.from), v] as [number, number | string]);
+          // Повтор того же значения — не переключение: соседние равные участки сливаются.
+          const ch = s.changes
+            .filter(([t]) => t < fig.to)
+            .map(([t, v]) => [Math.max(t, fig.from), v] as [number, number | string])
+            .filter(([, v], i, a) => i === 0 || String(v) !== String(a[i - 1][1]));
           const segs = ch.map(([t, v], i) => ({ a: X(t), b: X(i + 1 < ch.length ? ch[i + 1][0] : fig.to), v }));
           let body: React.ReactNode;
           if (s.bus) {
@@ -51,7 +55,7 @@ export function TimingDiagram({ fig, title }: { fig: TimingFigure; title: string
                   strokeWidth={1.1}
                 />
                 {g.b - g.a > 14 && (
-                  <text x={(g.a + g.b) / 2} y={mid + 3.5} fontSize={10} textAnchor="middle" fill={INK}>
+                  <text x={(g.a + g.b) / 2} y={mid + 3.5} fontSize={Math.max(6.5, Math.min(10, (g.b - g.a - 8) / (String(g.v).length * 0.6)))} textAnchor="middle" fill={INK}>
                     {String(g.v)}
                   </text>
                 )}

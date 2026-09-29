@@ -34,7 +34,7 @@ export function evalNets(f: Formula, gates: Gate[], inputs: number[]): Record<st
  * входам не пересекают чужие элементы. Входные переменные — вертикальные
  * шины слева.
  */
-export function logicDiagram(f: Formula, gates: Gate[]): Drawing {
+export function logicDiagram(f: Formula, gates: Gate[], label: (g: Gate) => string = (g) => `${g.ref} ${g.part}`): Drawing {
   const items: DrawItem[] = [];
   const RAIL = 22;
   const railX = (i: number) => 24 + i * RAIL;
@@ -55,7 +55,7 @@ export function logicDiagram(f: Formula, gates: Gate[]): Drawing {
     const fn = FN[g.part];
     items.push({ k: "rect", x, y, w: BW, h });
     items.push({ k: "text", x: x + BW / 2, y: y + 14, text: fn.sym, anchor: "middle", size: 12 });
-    items.push({ k: "text", x: x + BW / 2, y: y - 4, text: `${g.ref} ${g.part}`, anchor: "middle", size: 9 });
+    items.push({ k: "text", x: x + BW / 2, y: y - 4, text: label(g), anchor: "middle", size: 9 });
     const oy = y + h / 2;
     const ox = x + BW + (fn.inv ? 7 : 0);
     if (fn.inv) items.push({ k: "circle", x: x + BW + 3.5, y: oy, r: 3.5 });

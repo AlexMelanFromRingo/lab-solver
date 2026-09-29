@@ -71,7 +71,7 @@ export function DrawingView({ drawing, title }: { drawing: Drawing; title: strin
                   fontStyle={it.italic ? "italic" : undefined}
                   fontWeight={it.bold ? 700 : undefined}
                 >
-                  <SubLabel text={it.text} />
+                  {it.plain ? it.text : <SubLabel text={it.text} />}
                 </text>
               );
             case "ground": {
