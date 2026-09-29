@@ -57,7 +57,7 @@ export function GuideView({ slug }: { slug: string }) {
   const [raw, setRaw] = useState(String(Math.max(1, g.variant?.min ?? 1)));
 
   const computed = useMemo(() => {
-    if (!g.variant) return null;
+    if (!g.variant) return g.computed ? { data: g.computed() } : null;
     const v = Number(raw);
     if (!Number.isInteger(v) || v < g.variant.min || v > g.variant.max) {
       return { error: `Номер — целое число от ${g.variant.min} до ${g.variant.max}` };
@@ -75,19 +75,21 @@ export function GuideView({ slug }: { slug: string }) {
       <div className="mx-auto max-w-5xl space-y-8 px-6 py-10">
         <InfoNote>{g.intro}</InfoNote>
 
-        {g.variant && computed && (
+        {computed && (
           <Card>
             <CardBody className="space-y-6 pt-6">
-              <div className="grid gap-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:items-end">
-                <NumberField
-                  label={`Номер ${g.variant.label}`}
-                  value={raw}
-                  min={g.variant.min}
-                  max={g.variant.max}
-                  onChange={(e) => setRaw(e.target.value)}
-                />
-                <p className="text-sm leading-relaxed text-ink-faint">{g.variant.hint}</p>
-              </div>
+              {g.variant && (
+                <div className="grid gap-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:items-end">
+                  <NumberField
+                    label={`Номер ${g.variant.label}`}
+                    value={raw}
+                    min={g.variant.min}
+                    max={g.variant.max}
+                    onChange={(e) => setRaw(e.target.value)}
+                  />
+                  <p className="text-sm leading-relaxed text-ink-faint">{g.variant.hint}</p>
+                </div>
+              )}
 
               {"error" in computed ? (
                 <p className="text-sm text-codes">{computed.error}</p>

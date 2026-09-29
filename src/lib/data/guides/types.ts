@@ -49,6 +49,8 @@ export interface GuideModule {
   intro: string;
   guide: LabGuide;
   variant?: GuideVariant;
+  /** Расчёт без варианта: задание одно на всех (как в ЛР 4_1 и 4_2 МОІБ). */
+  computed?: () => GuideComputed;
   findings?: GuideFinding[];
   /** Опечатки и противоречия методички — с тем, как поступить. */
   errata?: string[];
