@@ -4,7 +4,7 @@
  * Источник таблицы вариантов: RiderProjects/AppliedCryptology_Lab3_Gen/Variants.md
  * (и её более чистая копия в Obsidian-заметке Третий курс/Прикладная криптология/Variants.md).
  * Референсные реализации: RiderProjects/AppliedCryptology_Lab3_Gen/*.cpp (общий конструктор),
- * RiderProjects/Lab3/Lab3.cpp и Обсидиан-заметка "Lab 3.md" (конкретный вариант 19 Ани:
+ * RiderProjects/Lab3/Lab3.cpp и Обсидиан-заметка "Lab 3.md" (конкретный вариант 19:
  * n=16, K=16, F1=XOR, round = rightRotate(sbox(R XOR roundKey), 3)).
  *
  * Ключевая идея (её же фиксирует TODO в самой Variants.md): при размере блока n=16

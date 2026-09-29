@@ -35,7 +35,7 @@ function toBig(v: string): bigint {
 }
 
 export default function FeistelVariantPage() {
-  const [variantNum, setVariantNum] = useState(19);
+  const [variantNum, setVariantNum] = useState(1);
   const spec = getVariant(variantNum);
   const halfWidth = spec.n / 2;
 

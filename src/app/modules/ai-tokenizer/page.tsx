@@ -85,7 +85,7 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 export default function AiTokenizerPage() {
-  const [variantNum, setVariantNum] = useState(7);
+  const [variantNum, setVariantNum] = useState(1);
   const tok = useMemo(() => tokenizerFor(variantNum), [variantNum]);
   const normalised = ((variantNum - 1) % TOKENIZER_VARIANTS.length) + 1;
 

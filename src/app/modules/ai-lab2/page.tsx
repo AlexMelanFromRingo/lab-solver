@@ -86,7 +86,7 @@ function VariableCard({ variable, output }: { variable: Variable; output?: boole
 }
 
 export default function AiLab2Page() {
-  const [variantNum, setVariantNum] = useState(7);
+  const [variantNum, setVariantNum] = useState(1);
   const task = FUZZY_VARIANTS.find((t) => t.variant === variantNum)!;
 
   const [edits, setEdits] = useState<Record<number, Record<string, number>>>({});
