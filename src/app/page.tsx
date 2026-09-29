@@ -13,6 +13,7 @@ const CATEGORY_ORDER: Category[] = [
   "zikm",
   "oop",
   "km",
+  "spz",
   "lm",
   "pk",
   "ak",

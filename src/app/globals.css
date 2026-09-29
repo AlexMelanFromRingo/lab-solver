@@ -45,6 +45,8 @@
   --cat-temk-soft: #f9a8d41a;
   --cat-oop: #86efac;
   --cat-oop-soft: #86efac1a;
+  --cat-spz: #93c5fd;
+  --cat-spz-soft: #93c5fd1a;
 }
 
 @theme inline {
@@ -89,6 +91,8 @@
   --color-temk-soft: var(--cat-temk-soft);
   --color-oop: var(--cat-oop);
   --color-oop-soft: var(--cat-oop-soft);
+  --color-spz: var(--cat-spz);
+  --color-spz-soft: var(--cat-spz-soft);
 
   --font-display: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--ff-body), ui-sans-serif, system-ui, sans-serif;

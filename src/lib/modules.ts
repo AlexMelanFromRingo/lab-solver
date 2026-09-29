@@ -14,6 +14,7 @@ export type Category =
   | "kdm"
   | "temk"
   | "oop"
+  | "spz"
   | "extra";
 
 /**
@@ -129,6 +130,13 @@ export const categories: Record<
     stage: "Бакалавриат · 4 курс",
     accent: "var(--cat-oop)",
     accentSoft: "var(--cat-oop-soft)",
+  },
+  spz: {
+    title: "Системне програмне забезпечення",
+    short: "Unix: shell, файлы, процессы, сигналы; QNX Neutrino: приоритеты, сообщения, таймеры",
+    stage: "Бакалавриат · 3 курс",
+    accent: "var(--cat-spz)",
+    accentSoft: "var(--cat-spz-soft)",
   },
   extra: {
     title: "Вне учебной программы",
@@ -783,6 +791,101 @@ export const modules: LabModule[] = [
       "Определения, схема защитного заземления, пути тока через тело человека и вопросы бланка.",
     hasVariants: false,
     source: "Основи охорони праці, методичні вказівки до лабораторних робіт",
+    size: "md",
+  },
+  {
+    slug: "spz-lab1",
+    title: "ЛР 1 · Вивчення роботи в операційній системі Unix",
+    category: "spz",
+    tagline: "10 вариантов · C, gcc",
+    description:
+      "Команды shell и программа на C, обрабатывающая введённый с клавиатуры массив, — для каждого из 10 вариантов с примером запуска.",
+    hasVariants: true,
+    variantCount: 10,
+    source: "Системне програмне забезпечення, LIDER",
+    size: "md",
+  },
+  {
+    slug: "spz-lab2",
+    title: "ЛР 2 · Файлова система Unix. Примітиви доступу до файлів",
+    category: "spz",
+    tagline: "8 вариантов · open/read/write",
+    description:
+      "chmod, запрет записи и обработка текстового файла системными вызовами open/read/write/close по варианту таблицы 1.",
+    hasVariants: true,
+    variantCount: 8,
+    source: "Системне програмне забезпечення, LIDER",
+    size: "md",
+  },
+  {
+    slug: "spz-lab3",
+    title: "ЛР 3 · Виконання програми як нового породженого процесу",
+    category: "spz",
+    tagline: "fork · exec · wait · exit",
+    description:
+      "Программа ЛР 2 как порождённый процесс: PID потомка и код его завершения в родителе, включая ошибку exec.",
+    hasVariants: true,
+    variantCount: 8,
+    source: "Системне програмне забезпечення, LIDER",
+    size: "md",
+  },
+  {
+    slug: "spz-lab4",
+    title: "ЛР 4 · Сигнали в Unix",
+    category: "spz",
+    tagline: "SIGUSR1 · SIGUSR2 · sigsuspend",
+    description:
+      "Главный процесс со слушателем сигналов, потомок с заданием ЛР 2 и второй потомок — без потерянных сигналов и зависаний.",
+    hasVariants: true,
+    variantCount: 8,
+    source: "Системне програмне забезпечення, LIDER",
+    size: "md",
+  },
+  {
+    slug: "spz-lab5",
+    title: "ЛР 5 · Знайомство з операційною системою реального часу QNX Neutrino",
+    category: "spz",
+    tagline: "14 + 10 вариантов · uname, sh",
+    description:
+      "Программа-справка через system() или popen()/pclose() и скрипт командного интерпретатора по таблицам 2 и 3.",
+    hasVariants: true,
+    variantCount: 14,
+    source: "Системне програмне забезпечення, LIDER",
+    size: "md",
+  },
+  {
+    slug: "spz-lab6",
+    title: "ЛР 6 · Інверсія пріоритетів та механізм їх наслідування в ОСРЧ QNX Neutrino",
+    category: "spz",
+    tagline: "м'ютекс · семафор · пріоритети",
+    description:
+      "Исправленная программа методички с выводом приоритетов потоков и разбор трёх запусков: без блокировки, мьютекс, семафор.",
+    hasVariants: false,
+    source: "Системне програмне забезпечення, LIDER",
+    size: "md",
+  },
+  {
+    slug: "spz-lab7",
+    title: "ЛР 7 · Повідомлення в QNX як засіб взаємодії між модулями",
+    category: "spz",
+    tagline: "10 вариантов · MsgSend/MsgReply",
+    description:
+      "Клиент и сервер — потоки одного процесса: строка с клавиатуры, обработка на сервере по варианту, ответ клиенту.",
+    hasVariants: true,
+    variantCount: 10,
+    source: "Системне програмне забезпечення, LIDER",
+    size: "md",
+  },
+  {
+    slug: "spz-lab8",
+    title: "ЛР 8 · Таймери в QNX",
+    category: "spz",
+    tagline: "6 вариантов · timer_create",
+    description:
+      "Относительные и абсолютные, одноразовые и периодические таймеры с уведомлением импульсом, сигналом или потоком.",
+    hasVariants: true,
+    variantCount: 6,
+    source: "Системне програмне забезпечення, LIDER",
     size: "md",
   },
   {
