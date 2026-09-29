@@ -1227,17 +1227,76 @@ export const modules: LabModule[] = [
     size: "sm",
   },
   {
-    slug: "gost-rc4",
-    title: "ГОСТ 28147-89 и RC4",
+    slug: "plis-lab1",
+    title: "ЛР 1 · Ознайомлення із САПР Xilinx WebPACK ISE",
     category: "plis",
-    tagline: "ПЛІС · схемы на VHDL и расчёт",
+    tagline: "28 формул · Schematic, VHDL",
     description:
-      "ГОСТ: 32-раундовая сеть Фейстеля (24 прямых + 8 обратных), один S-box на все нибблы, " +
-      "сдвиг на 11 бит. RC4: классические KSA и PRGA. Рядом — сами схемы на VHDL с " +
-      "испытательными стендами по опубликованным контрольным векторам.",
+      "Схема по формуле варианта в редакторе Schematic и тот же объект на VHDL, проверка синтаксиса и синтез для Spartan-3.",
+    hasVariants: true,
+    variantCount: 28,
+    source: "Проектування засобів захисту інформації на ПЛІС, LIDER",
+    size: "md",
+  },
+  {
+    slug: "plis-lab2",
+    title: "ЛР 2 · Стилі VHDL-опису цифрових пристроїв і їх моделювання в САПР Xilinx WebPACK ISE",
+    category: "plis",
+    tagline: "if · case · потоковий · структурний",
+    description:
+      "Формула варианта в четырёх стилях VHDL и испытательный стенд со всеми комбинациями входов — сверено в GHDL.",
+    hasVariants: true,
+    variantCount: 28,
+    source: "Проектування засобів захисту інформації на ПЛІС, LIDER",
+    size: "md",
+  },
+  {
+    slug: "plis-lab3",
+    title: "ЛР 3 · VHDL-опис D тригерів і регістрів та їх моделювання в САПР Xilinx WebPACK ISE",
+    category: "plis",
+    tagline: "D-тригери · регістри · UCF",
+    description:
+      "Прозрачный и непрозрачный D-триггеры, регистр по чётности номера в двух стилях, стенд и UCF для Spartan-3.",
+    hasVariants: true,
+    variantCount: 30,
+    source: "Проектування засобів захисту інформації на ПЛІС, LIDER",
+    size: "md",
+  },
+  {
+    slug: "plis-lab4",
+    title: "ЛР 4 · VHDL-опис, моделювання та реалізація в ПЛІС універсальних регістрів і лічильників",
+    category: "plis",
+    tagline: "22 варианта · RG, CT",
+    description:
+      "Универсальные регистр и счётчик с полярностями входов по варианту, стенд с ожидаемыми значениями и UCF.",
+    hasVariants: true,
+    variantCount: 22,
+    source: "Проектування засобів захисту інформації на ПЛІС, LIDER",
+    size: "md",
+  },
+  {
+    slug: "gost-rc4",
+    title: "ЛР 5 · Проєктування потокового шифру RC4 у Xilinx мовою VHDL",
+    category: "plis",
+    tagline: "RC4 · ГОСТ 28147-89 · VHDL",
+    description:
+      "RC4 (KSA и PRGA) и ГОСТ 28147-89 в двух видах — стандарт с узлами замены, как в показанном VHDL, " +
+      "и учебный GOST.vhd из лабораторной. Рядом — сами схемы на VHDL с самопроверяющимися стендами.",
     hasVariants: false,
-    source: "ПЛІС, GOST.vhd + RC4",
+    source: "Проектування засобів захисту інформації на ПЛІС; сховище vhdl-rc4",
     size: "sm",
+  },
+  {
+    slug: "plis-kr",
+    title: "Контрольне завдання · Проектування обчислювача з використанням мови VHDL",
+    category: "plis",
+    tagline: "22 варианта · ROM, FSM, ALP",
+    description:
+      "Упрощённый вычислитель: формат команды, коды операций, автомат на 3 такта, тестовая программа и результаты по GHDL.",
+    hasVariants: true,
+    variantCount: 22,
+    source: "Проектування засобів захисту інформації на ПЛІС, LIDER",
+    size: "md",
   },
   {
     slug: "reed-solomon",
