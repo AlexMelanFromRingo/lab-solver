@@ -424,7 +424,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "feistel-variant",
-    title: "Сеть Фейстеля по варианту",
+    title: "ЛР 3 · Проектування блокових шифрів",
     category: "pk",
     tagline: "24 варианта · n, K, F1/F2/F3",
     description:
@@ -447,7 +447,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "rsa",
-    title: "RSA",
+    title: "ЛР 2 (2-й семестр) · RSA",
     category: "pk",
     tagline: "Генерация ключей · шифрование · подпись",
     description:
@@ -458,7 +458,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "classical-ciphers",
-    title: "Цезарь, Виженер, гамма, OTP",
+    title: "ЛР 1 · Криптозахист текстових файлів",
     category: "pk",
     tagline: "Лаба 1 · классические шифры",
     description:
@@ -480,7 +480,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "primality",
-    title: "Тесты на простоту",
+    title: "ЛР 3 (2-й семестр) · Перевірка чисел на простоту",
     category: "pk",
     tagline: "Пробное деление · Ферма · Миллер–Рабин · Соловей–Штрассен",
     description:
@@ -1368,7 +1368,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "bbs-lfsr",
-    title: "BBS и LFSR — генераторы гаммы",
+    title: "ЛР 5 · Генератори гами BBS і LFSR",
     category: "pk",
     tagline: "Лаба 5 · потоковые шифры",
     description:
