@@ -7,7 +7,7 @@ import { InfoNote } from "@/components/ui/info-note";
 import { VariantDial } from "@/components/ui/variant-dial";
 import { categories, modules } from "@/lib/modules";
 import { LAB7_VARIANTS } from "@/lib/data/variant-tables";
-import { encodeLine, parseBitString, LINE_CODE_VERIFIED, type LineCode, type LineSample } from "@/lib/algorithms/line-coding";
+import { encodeLine, lineCodeFromName, parseBitString, LINE_CODE_VERIFIED, type LineSample } from "@/lib/algorithms/line-coding";
 import { cn } from "@/lib/cn";
 
 const mod = modules.find((m) => m.slug === "line-coding")!;
@@ -40,10 +40,16 @@ function Waveform({ samples, color }: { samples: LineSample[]; color: string }) 
 export default function LineCodingPage() {
   const [variantNum, setVariantNum] = useState(1);
   const variant = LAB7_VARIANTS.find((v) => v.variant === variantNum)!;
-  const wiredCodes = variant.wiredCodes.split(",").map((c) => c.trim()) as LineCode[];
-
   const bits = useMemo(() => parseBitString(variant.dataBits), [variant]);
-  const encodings = useMemo(() => wiredCodes.map((code) => ({ code, samples: encodeLine(bits, code) })), [wiredCodes, bits]);
+  // название — как в таблице вариантов («Манчестер»), код — для расчёта
+  const encodings = useMemo(
+    () =>
+      variant.wiredCodes.split(",").map((name) => {
+        const code = lineCodeFromName(name);
+        return { name: name.trim(), code, samples: encodeLine(bits, code) };
+      }),
+    [variant, bits],
+  );
 
   return (
     <div>
@@ -67,12 +73,12 @@ export default function LineCodingPage() {
               <span className="rounded-full border border-border px-3 py-1.5 text-ink-dim">Wi-Fi: {variant.wifiStandard}, переходов: {variant.hops}</span>
             </div>
 
-            {encodings.map(({ code, samples }) => {
+            {encodings.map(({ name, code, samples }) => {
               const verified = LINE_CODE_VERIFIED[code];
               return (
                 <div key={code} className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-medium text-ink">{code}</h3>
+                    <h3 className="text-sm font-medium text-ink">{name}</h3>
                     <span
                       className={cn(
                         "text-[10px] px-2 py-0.5 rounded-full border",

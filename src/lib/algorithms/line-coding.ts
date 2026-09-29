@@ -24,6 +24,32 @@ export const LINE_CODE_VERIFIED: Record<LineCode, boolean> = {
   PAM5: false,
 };
 
+/**
+ * Название кода в таблице вариантов → код для encodeLine. В таблице коды
+ * записаны так, как в методичке: «Манчестер» по-русски, MLT3 без дефиса, 2B1Q
+ * как B2Q1, поэтому название нельзя просто привести к LineCode.
+ */
+const LINE_CODE_NAMES: Record<string, LineCode> = {
+  nrz: "NRZ",
+  rz: "RZ",
+  manchester: "Manchester",
+  "манчестер": "Manchester",
+  "манчестерский": "Manchester",
+  nrzi: "NRZI",
+  mlt3: "MLT3",
+  "mlt-3": "MLT3",
+  b2q1: "B2Q1",
+  "2b1q": "B2Q1",
+  pam5: "PAM5",
+  "pam-5": "PAM5",
+};
+
+export function lineCodeFromName(name: string): LineCode {
+  const code = LINE_CODE_NAMES[name.trim().toLowerCase()];
+  if (!code) throw new Error(`Неизвестный линейный код: «${name}»`);
+  return code;
+}
+
 export function encodeLine(bits: number[], code: LineCode): LineSample[] {
   switch (code) {
     case "NRZ":
@@ -93,6 +119,9 @@ export function encodeLine(bits: number[], code: LineCode): LineSample[] {
       }
       return out;
     }
+
+    default:
+      throw new Error(`Неизвестный линейный код: «${code satisfies never}»`);
   }
 }
 
