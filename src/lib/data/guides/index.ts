@@ -5,9 +5,10 @@ import { LM_GUIDES } from "./lm";
 import { MOIB_GUIDES } from "./moib";
 import { AMO_GUIDES } from "./amo";
 import { KDM_GUIDES } from "./kdm";
+import { TEMK_GUIDES } from "./temk";
 
 /** Все работы-инструкции; страница /modules/<slug> строится по этим данным. */
-export const GUIDES: GuideModule[] = [...KM_GUIDES, ...ZIKM_GUIDES, ...LM_GUIDES, ...MOIB_GUIDES, ...AMO_GUIDES, ...KDM_GUIDES];
+export const GUIDES: GuideModule[] = [...KM_GUIDES, ...ZIKM_GUIDES, ...LM_GUIDES, ...MOIB_GUIDES, ...AMO_GUIDES, ...KDM_GUIDES, ...TEMK_GUIDES];
 
 export function guideBySlug(slug: string): GuideModule | undefined {
   return GUIDES.find((g) => g.slug === slug);

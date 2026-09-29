@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { AclBuilder } from "@/components/acl-builder";
 import { GraphCalc } from "@/components/graph-calc";
+import { Lab1Calc, Lab2Calc, Lab3Calc, MagnetCalc, RgrCalc } from "@/components/circuits-calc";
 import { ApproxCalc, CauchyCalc, IterationCalc, RootsCalc, SlaeCalc } from "@/components/amo-calc";
 import { Ethernet10Calc, FastEthernetCalc } from "@/components/lan-calc";
 import { ModuleHeader } from "@/components/module-header";
@@ -83,6 +84,11 @@ export function GuideView({ slug }: { slug: string }) {
       {g.widget === "approx" && <ApproxCalc />}
       {g.widget === "cauchy" && <CauchyCalc />}
       {g.widget === "graph" && <GraphCalc accent={accent} />}
+      {g.widget === "c-lab1" && <Lab1Calc />}
+      {g.widget === "c-lab2" && <Lab2Calc />}
+      {g.widget === "c-lab3" && <Lab3Calc />}
+      {g.widget === "c-magnet" && <MagnetCalc />}
+      {g.widget === "c-rgr" && <RgrCalc />}
     </>
   );
 
