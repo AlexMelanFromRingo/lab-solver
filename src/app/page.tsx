@@ -17,6 +17,7 @@ const CATEGORY_ORDER: Category[] = [
   "ak",
   "tik",
   "moib",
+  "amo",
   "extra",
 ];
 

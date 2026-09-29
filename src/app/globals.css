@@ -37,6 +37,8 @@
   --cat-zikm-soft: #fde0471a;
   --cat-lm: #4ade80;
   --cat-lm-soft: #4ade801a;
+  --cat-amo: #c4b5fd;
+  --cat-amo-soft: #c4b5fd1a;
 }
 
 @theme inline {
@@ -73,6 +75,8 @@
   --color-zikm-soft: var(--cat-zikm-soft);
   --color-lm: var(--cat-lm);
   --color-lm-soft: var(--cat-lm-soft);
+  --color-amo: var(--cat-amo);
+  --color-amo-soft: var(--cat-amo-soft);
 
   --font-display: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--ff-body), ui-sans-serif, system-ui, sans-serif;

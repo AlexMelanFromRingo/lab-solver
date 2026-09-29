@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { AclBuilder } from "@/components/acl-builder";
+import { ApproxCalc, CauchyCalc, IterationCalc, RootsCalc, SlaeCalc } from "@/components/amo-calc";
 import { Ethernet10Calc, FastEthernetCalc } from "@/components/lan-calc";
 import { ModuleHeader } from "@/components/module-header";
 import { LabProcedure } from "@/components/lab-procedure";
@@ -69,11 +70,27 @@ export function GuideView({ slug }: { slug: string }) {
     }
   }, [g, raw]);
 
+  // калькулятор с вводом своих данных идёт первым, если у работы нет таблицы вариантов
+  const widget = (
+    <>
+      {g.widget === "acl" && <AclBuilder accent={accent} />}
+      {g.widget === "eth10" && <Ethernet10Calc accent={accent} />}
+      {g.widget === "fast" && <FastEthernetCalc accent={accent} />}
+      {g.widget === "slae" && <SlaeCalc />}
+      {g.widget === "iter" && <IterationCalc />}
+      {g.widget === "roots" && <RootsCalc />}
+      {g.widget === "approx" && <ApproxCalc />}
+      {g.widget === "cauchy" && <CauchyCalc />}
+    </>
+  );
+
   return (
     <div>
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl space-y-8 px-6 py-10">
         <InfoNote>{g.intro}</InfoNote>
+
+        {!g.variant && widget}
 
         {computed && (
           <Card>
@@ -113,9 +130,7 @@ export function GuideView({ slug }: { slug: string }) {
           </Card>
         )}
 
-        {g.widget === "acl" && <AclBuilder accent={accent} />}
-        {g.widget === "eth10" && <Ethernet10Calc accent={accent} />}
-        {g.widget === "fast" && <FastEthernetCalc accent={accent} />}
+        {g.variant && widget}
 
         {g.errata && g.errata.length > 0 && (
           <Card>
