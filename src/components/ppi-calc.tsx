@@ -6,6 +6,7 @@ import { SelectField, TextField } from "@/components/ui/field";
 import { OutputBlock } from "@/components/ui/output-block";
 import { asmHex, hx, ppiBsr, ppiControlWord, ppiHandshake, ppiScheme, type Dir, type PpiConfig, type PortMode } from "@/lib/algorithms/i8080";
 import { DrawingView } from "@/components/drawing-view";
+import { mpsStructure, type Channel } from "@/lib/algorithms/mps-structure";
 
 const dirLabel = (d: Dir) => (d === "in" ? "ввод" : "вивід");
 
@@ -102,6 +103,70 @@ export function PpiCalc() {
         )}
         <DrawingView drawing={ppiScheme(b, c)} title={`Схема підключення ППА 8255A (адреси ${addr(0)}–${addr(3)})`} />
         <OutputBlock label="Заготовка програми (асемблер 8080)" value={program} wrap={false} />
+      </CardBody>
+    </Card>
+  );
+}
+
+const CHANNELS: { key: string; group: string; label: string; ch: Channel }[] = [
+  { key: "in-ps", group: "ввід", label: "пар. синхр.", ch: { kind: "par", sync: true, dir: "in" } },
+  { key: "in-pa", group: "ввід", label: "пар. асинхр.", ch: { kind: "par", sync: false, dir: "in" } },
+  { key: "in-ss", group: "ввід", label: "посл. синхр.", ch: { kind: "ser", sync: true, dir: "in" } },
+  { key: "in-sa", group: "ввід", label: "посл. асинхр.", ch: { kind: "ser", sync: false, dir: "in" } },
+  { key: "in-an", group: "ввід", label: "аналог", ch: { kind: "analog", sync: true, dir: "in" } },
+  { key: "io-sa", group: "ввід/вивід", label: "посл. дупл. асинхр.", ch: { kind: "ser", sync: false, dir: "io" } },
+  { key: "io-ss", group: "ввід/вивід", label: "посл. дупл. синхр.", ch: { kind: "ser", sync: true, dir: "io" } },
+  { key: "io-pa", group: "ввід/вивід", label: "пар. напівдупл. асинхр.", ch: { kind: "par", sync: false, dir: "io" } },
+  { key: "out-ps", group: "вивід", label: "пар. синхр.", ch: { kind: "par", sync: true, dir: "out" } },
+  { key: "out-pa", group: "вивід", label: "пар. асинхр.", ch: { kind: "par", sync: false, dir: "out" } },
+  { key: "out-ss", group: "вивід", label: "посл. синхр.", ch: { kind: "ser", sync: true, dir: "out" } },
+  { key: "out-sa", group: "вивід", label: "посл. асинхр.", ch: { kind: "ser", sync: false, dir: "out" } },
+  { key: "out-an", group: "вивід", label: "аналог", ch: { kind: "analog", sync: true, dir: "out" } },
+];
+
+/** Курсова ПМС: канали завдання → структурна схема. */
+export function MpsStructureCalc() {
+  const [sel, setSel] = useState<string[]>(["in-pa", "io-sa", "out-ps"]);
+  const [sensors, setSensors] = useState("2");
+  const [speed, setSpeed] = useState("3600");
+  const [addr, setAddr] = useState("16");
+  const channels = CHANNELS.filter((c) => sel.includes(c.key)).map((c) => c.ch);
+  const toggle = (k: string) => setSel((s) => (s.includes(k) ? s.filter((x) => x !== k) : [...s, k]));
+  return (
+    <Card>
+      <CardBody className="space-y-5 pt-6">
+        <h2 className="font-display text-lg font-semibold text-ink">Структурна схема за завданням</h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {["ввід", "ввід/вивід", "вивід"].map((g) => (
+            <fieldset key={g} className="space-y-1.5">
+              <legend className="mb-1 text-xs font-medium text-ink-dim">{g}</legend>
+              {CHANNELS.filter((c) => c.group === g).map((c) => (
+                <label key={c.key} className="flex items-center gap-2 text-sm text-ink">
+                  <input type="checkbox" checked={sel.includes(c.key)} onChange={() => toggle(c.key)} />
+                  {c.label}
+                </label>
+              ))}
+            </fieldset>
+          ))}
+        </div>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <TextField label="Двійкових датчиків" value={sensors} onChange={(e) => setSensors(e.target.value.replace(/\D/g, ""))} />
+          <TextField label="Швидкість послідовних каналів, біт/с" value={speed} onChange={(e) => setSpeed(e.target.value.replace(/\D/g, ""))} />
+          <SelectField label="Шина адреси" value={addr} onChange={(e) => setAddr(e.target.value)}>
+            <option value="8">8 розрядів</option>
+            <option value="12">12 розрядів</option>
+            <option value="16">16 розрядів</option>
+          </SelectField>
+        </div>
+        {channels.length > 0 ? (
+          <DrawingView drawing={mpsStructure({ addrBits: Number(addr), channels, sensors: Number(sensors) || 0, speed: Number(speed) || 0 })} title="Структурна схема мікропроцесорної системи" />
+        ) : (
+          <p className="text-sm text-ink-dim">Позначте канали із завдання.</p>
+        )}
+        <p className="text-xs leading-relaxed text-ink-faint">
+          Асинхронні канали і датчики подають запити на контролер переривань (у 8051 лише два входи INT0/INT1, тому КП),
+          синхронні опитуються програмою. Генератор G задає швидкість ІРПС (таймер 8253 або кварц — розрахунок нижче).
+        </p>
       </CardBody>
     </Card>
   );
