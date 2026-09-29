@@ -15,6 +15,66 @@ import { cn } from "@/lib/cn";
 const mod = modules.find((m) => m.slug === "parity-channel")!;
 const accent = categories.tik.accent;
 
+
+/** Система Вердана: повідомлення тричі, декодер — мажоритарний вибір по кожному елементу (табл. 4.1 методички). */
+function Verdan({ message }: { message: string }) {
+  const bits = message.split("").map(Number);
+  const cases = [
+    { title: "Однократна помилка", flip: [0] },
+    { title: "Двократна помилка", flip: [0, 1] },
+    { title: "Багатократна помилка", flip: bits.map((_, i) => i) },
+  ];
+  const n = bits.length * 3;
+  return (
+    <Card>
+      <CardBody className="pt-6 space-y-5">
+        <h2 className="font-display text-lg font-semibold text-ink">Система Вердана (мажоритарне декодування)</h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {cases.map((c) => {
+            const row2 = bits.map((b, i) => (c.flip.includes(i) ? 1 - b : b));
+            const rows = [bits, row2, bits];
+            const out = bits.map((_, i) => (rows.reduce((s, r) => s + r[i], 0) >= 2 ? 1 : 0));
+            const ok = out.every((b, i) => b === bits[i]);
+            return (
+              <div key={c.title} className="space-y-2">
+                <p className="text-sm text-ink-dim">{c.title}</p>
+                <table className="w-full font-mono text-sm">
+                  <tbody>
+                    {rows.map((r, k) => (
+                      <tr key={k} className="border-b border-border">
+                        <td className="px-2 py-1 text-ink-faint">{k + 1}</td>
+                        {r.map((b, i) => (
+                          <td key={i} className={cn("px-2 py-1 text-center", k === 1 && c.flip.includes(i) && "text-codes")}>
+                            {b}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                    <tr>
+                      <td className="px-2 py-1 text-ink-faint">вихід</td>
+                      {out.map((b, i) => (
+                        <td key={i} className="px-2 py-1 text-center font-semibold text-ink">
+                          {b}
+                        </td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+                <p className="text-xs text-ink-faint">{ok ? "вихід збігається з повідомленням — помилку виправлено" : "вихід не збігається — помилку не виправлено"}</p>
+              </div>
+            );
+          })}
+        </div>
+        <p className="text-sm text-ink-dim">
+          Помилки лише в одному з трьох рядків (будь-якої кратності) мажоритарний декодер виправляє завжди: у кожному
+          стовпці дві правильні копії з трьох. Не виправляються помилки в одній позиції двох різних рядків. Надмірність за (4.1):
+          r/n = {bits.length * 2}/{n} = {((bits.length * 2) / n).toFixed(3).replace(".", ",")}.
+        </p>
+      </CardBody>
+    </Card>
+  );
+}
+
 export default function ParityChannelPage() {
   const [variantNum, setVariantNum] = useState(1);
   const variant = LAB4_VARIANTS.find((v) => v.variant === variantNum)!;
@@ -113,6 +173,8 @@ export default function ParityChannelPage() {
             {check.corrected && <OutputBlock label="Исправленное сообщение" value={matrixToBitString(check.corrected)} />}
           </CardBody>
         </Card>
+
+        <Verdan message={variant.message1} />
 
         <Card>
           <CardBody className="pt-6 space-y-5">

@@ -7,7 +7,8 @@ import { InfoNote } from "@/components/ui/info-note";
 import { VariantDial } from "@/components/ui/variant-dial";
 import { categories, modules } from "@/lib/modules";
 import { LAB7_VARIANTS } from "@/lib/data/variant-tables";
-import { encodeLine, lineCodeFromName, parseBitString, LINE_CODE_VERIFIED, type LineSample } from "@/lib/algorithms/line-coding";
+import { BARKER11, FIVE_B_CONTROL, barkerAcf, encode4b5b, encodeLine, lineCodeFromName, parseBitString, scramble, LINE_CODE_VERIFIED, type LineSample } from "@/lib/algorithms/line-coding";
+import { OutputBlock } from "@/components/ui/output-block";
 import { cn } from "@/lib/cn";
 
 const mod = modules.find((m) => m.slug === "line-coding")!;
@@ -94,6 +95,43 @@ export default function LineCodingPage() {
                 </div>
               );
             })}
+                    </CardBody>
+        </Card>
+
+        <Card>
+          <CardBody className="pt-6 space-y-4">
+            <h2 className="font-display text-lg font-semibold text-ink">4B/5B, скремблювання, код Баркера</h2>
+            <OutputBlock
+              label="П. 2.3 — логічне кодування 4B/5B і кадр"
+              value={[
+                ...encode4b5b(bits).map((x) => `${x.nibble} → ${x.code}`),
+                "",
+                `кадр: I ${FIVE_B_CONTROL.I} | J K ${FIVE_B_CONTROL.J} ${FIVE_B_CONTROL.K} | дані ${encode4b5b(bits).map((x) => x.code).join(" ")} | T R ${FIVE_B_CONTROL.T} ${FIVE_B_CONTROL.R} | I ${FIVE_B_CONTROL.I}`,
+              ].join("\n")}
+              wrap={false}
+            />
+            <OutputBlock
+              label="П. 2.4 — скремблер bᵢ = aᵢ ⊕ bᵢ₋₃ ⊕ bᵢ₋₅ і відновлення cᵢ = bᵢ ⊕ bᵢ₋₃ ⊕ bᵢ₋₅"
+              value={(() => {
+                const r = scramble(bits);
+                return [`a: ${bits.join(" ")}`, `b: ${r.b.join(" ")}`, `c: ${r.c.join(" ")}  ${r.c.join("") === bits.join("") ? "(= a ✓)" : ""}`].join("\n");
+              })()}
+              wrap={false}
+            />
+            <OutputBlock
+              label={`П. 3.2 — автокореляція коду Баркера: «свій» (зсув 0) і «чужий» (циклічний зсув ${variant.hops})`}
+              value={[
+                `послідовність: ${BARKER11.map((x) => (x > 0 ? "+1" : "−1")).join(" ")}`,
+                `R(0) = ${barkerAcf(0)} — «свій» сигнал`,
+                `R(${variant.hops}) = ${barkerAcf(variant.hops)} — «чужий» сигнал`,
+                `усі зсуви 1…10: ${Array.from({ length: 10 }, (_, k) => barkerAcf(k + 1)).join(", ")}`,
+              ].join("\n")}
+              wrap={false}
+            />
+            <p className="text-sm text-ink-dim">
+              Схема відновлення в методичці записана як «cᵢ = cᵢ + cᵢ₋₃ + cᵢ₋₅» — насправді дескремблер бере біти прийнятого потоку b:
+              cᵢ = bᵢ ⊕ bᵢ₋₃ ⊕ bᵢ₋₅; тоді cᵢ = aᵢ. Біти до початку потоку вважаються нулями.
+            </p>
           </CardBody>
         </Card>
       </div>

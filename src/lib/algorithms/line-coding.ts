@@ -132,3 +132,34 @@ export function parseBitString(s: string): number[] {
     .filter((c) => c === "0" || c === "1")
     .map(Number);
 }
+
+// ---------------------------------------------------------------------------
+// ЛР 7, пп. 2.3, 2.4, 3.2: логічне кодування 4B/5B, скремблювання і код Баркера
+
+/** Таблиця 4B/5B (100BASE-TX/FDDI): тетрада даних → 5-бітний символ. */
+export const FOUR_B_FIVE_B = ["11110", "01001", "10100", "10101", "01010", "01011", "01110", "01111", "10010", "10011", "10110", "10111", "11010", "11011", "11100", "11101"];
+/** Керуючі символи кадру: Idle, початок (J, K), кінець (T, R). */
+export const FIVE_B_CONTROL = { I: "11111", J: "11000", K: "10001", T: "01101", R: "00111" };
+
+export function encode4b5b(bits: number[]): { nibble: string; code: string }[] {
+  const out: { nibble: string; code: string }[] = [];
+  for (let i = 0; i + 4 <= bits.length; i += 4) {
+    const nibble = bits.slice(i, i + 4).join("");
+    out.push({ nibble, code: FOUR_B_FIVE_B[parseInt(nibble, 2)] });
+  }
+  return out;
+}
+
+/** Скремблер bi = ai ⊕ bi−3 ⊕ bi−5 (до початку — нулі) і дескремблер ci = bi ⊕ bi−3 ⊕ bi−5. */
+export function scramble(a: number[]): { b: number[]; c: number[] } {
+  const b: number[] = [];
+  a.forEach((ai, i) => b.push(ai ^ (b[i - 3] ?? 0) ^ (b[i - 5] ?? 0)));
+  const c = b.map((bi, i) => bi ^ (b[i - 3] ?? 0) ^ (b[i - 5] ?? 0));
+  return { b, c };
+}
+
+/** 11-чіпова послідовність Баркера (802.11 DSSS). */
+export const BARKER11 = [1, -1, 1, 1, -1, 1, 1, 1, -1, -1, -1];
+
+/** Циклічна автокореляція: R(k) = Σ s(i)·s((i+k) mod N). */
+export const barkerAcf = (k: number) => BARKER11.reduce((s, x, i) => s + x * BARKER11[(i + k) % 11], 0);
