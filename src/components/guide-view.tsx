@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AclBuilder } from "@/components/acl-builder";
 import { ModuleHeader } from "@/components/module-header";
 import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
@@ -108,6 +109,8 @@ export function GuideView({ slug }: { slug: string }) {
             </CardBody>
           </Card>
         )}
+
+        {g.widget === "acl" && <AclBuilder accent={accent} />}
 
         {g.errata && g.errata.length > 0 && (
           <Card>

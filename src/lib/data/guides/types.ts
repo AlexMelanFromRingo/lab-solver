@@ -52,4 +52,6 @@ export interface GuideModule {
   findings?: GuideFinding[];
   /** Опечатки и противоречия методички — с тем, как поступить. */
   errata?: string[];
+  /** Интерактивный расчёт сверх таблиц варианта (см. components/guide-view). */
+  widget?: "acl";
 }

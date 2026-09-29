@@ -3,6 +3,7 @@ export type Category =
   | "ai"
   | "it"
   | "plis"
+  | "zikm"
   | "km"
   | "pk"
   | "ak"
@@ -46,6 +47,13 @@ export const categories: Record<
     stage: "Бакалавриат · 4 курс",
     accent: "var(--cat-plis)",
     accentSoft: "var(--cat-plis-soft)",
+  },
+  zikm: {
+    title: "Захист інформації в комп'ютерних мережах",
+    short: "ACL, NAT, GRE, VLAN в Cisco Packet Tracer и сканирование Nmap",
+    stage: "Бакалавриат · 4 курс",
+    accent: "var(--cat-zikm)",
+    accentSoft: "var(--cat-zikm-soft)",
   },
   km: {
     title: "Комп'ютерні мережі",
@@ -469,6 +477,61 @@ export const modules: LabModule[] = [
     hasVariants: false,
     source: "error-codes-explorer",
     size: "sm",
+  },
+  {
+    slug: "zikm-lab1",
+    title: "ЛР 1 · Дослідження можливостей фільтрації пакетів в операційній системі Cisco IOS з використанням списків контролю доступу (ACL)",
+    category: "zikm",
+    tagline: "Стандартный и расширенный ACL · конструктор",
+    description:
+      "Адреса обоих полигонов по варианту, команды стандартного и расширенного списков с тем, куда их вешать, и конструктор правил для индивидуального задания: маска переводится в шаблонную, неявный deny any учитывается.",
+    hasVariants: false,
+    source: "Захист інформації в комп'ютерних мережах, ЛР1, Lr1_ACL_ua.pdf",
+    size: "md",
+  },
+  {
+    slug: "zikm-lab2",
+    title: "ЛР 2 · Дослідження можливостей технології трансляції адрес Network Address Translation (NAT)",
+    category: "zikm",
+    tagline: "Статический, динамический NAT и PAT",
+    description:
+      "Таблица статического NAT по варианту, команды статического, динамического NAT и PAT на Central с тем, как их снимать, и опечатки методички, из-за которых NAT молча не работает.",
+    hasVariants: false,
+    source: "Захист інформації в комп'ютерних мережах, ЛР2, Lr2_NAT_ua.pdf",
+    size: "md",
+  },
+  {
+    slug: "zikm-lab3",
+    title: "ЛР 3 · Дослідження можливостей технології тунелювання з використанням протоколу GRE",
+    category: "zikm",
+    tagline: "Туннель между частными сетями",
+    description:
+      "Адреса четырёх сетей по варианту, концы туннеля и полные команды для Router3, Router4 и Router5, плюс что меняется в пакете после входа в туннель.",
+    hasVariants: false,
+    source: "Захист інформації в комп'ютерних мережах, ЛР3, Lr3_GRE_ua.pdf",
+    size: "md",
+  },
+  {
+    slug: "zikm-lab4",
+    title: "ЛР 4 · Дослідження побудування і роботи VLAN у середовищі Cisco Packet Tracer",
+    category: "zikm",
+    tagline: "VLAN N+1 и N+2 · магистраль 802.1Q",
+    description:
+      "Адреса по таблицам 1 и 2 для своего N, номера VLAN и команды для одного и двух коммутаторов с магистралью, ожидаемые результаты пингов.",
+    hasVariants: false,
+    source: "Захист інформації в комп'ютерних мережах, ЛР4, Lr4_VLAN_ua.pdf",
+    size: "md",
+  },
+  {
+    slug: "zikm-lab5",
+    title: "ЛР 5 · Дослідження принципів сканування портів в середовищі віртуальних машин",
+    category: "zikm",
+    tagline: "Kali · Basic Pentesting · nmap",
+    description:
+      "Изолированная сеть VirtualBox, адрес Kali по варианту, DHCP-сервер и команды nmap для каждого из пяти заданий, а также место, где методичка разводит машины по разным внутренним сетям.",
+    hasVariants: false,
+    source: "Захист інформації в комп'ютерних мережах, ЛР5, Lr5_Nmap_ua_2.pdf",
+    size: "md",
   },
   {
     slug: "km-lab1",
