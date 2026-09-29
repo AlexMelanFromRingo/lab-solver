@@ -1,3 +1,4 @@
+import { FigureFrame } from "@/components/figure-frame";
 import type { RegScheme, SchemeReg, SchemeWire } from "@/lib/algorithms/aks-schemes";
 import { REG_H, regWidth } from "@/lib/algorithms/aks-schemes";
 
@@ -95,43 +96,40 @@ export function RegSchemeView({ scheme, title }: { scheme: RegScheme; title: str
   const vw = (scheme.w + PAD * 2) * U;
   const vh = (scheme.h + PAD * 2) * U;
   return (
-    <figure className="space-y-2">
-      <div className="overflow-x-auto rounded-[4px] border border-border bg-black/20 p-2">
-        <svg viewBox={`${-PAD * U} ${-PAD * U} ${vw} ${vh}`} width={vw} height={vh} role="img" aria-label={title} className="max-w-none">
-          <defs>
-            <marker id={id} viewBox="0 0 10 10" refX={9} refY={5} markerWidth={7} markerHeight={7} orient="auto-start-reverse">
-              <path d="M0 0 L10 5 L0 10 Z" fill={DIM} />
-            </marker>
-          </defs>
-          {scheme.bus && (
-            <g fill="none" stroke={DIM} strokeWidth={1.2}>
-              <path
-                d={`M${scheme.bus.x1 * U} ${scheme.bus.y * U} l${U * 0.8} ${-U * 0.6} v${U * 0.3} H${scheme.bus.x2 * U - U * 0.8} v${-U * 0.3} l${U * 0.8} ${U * 0.6} l${-U * 0.8} ${U * 0.6} v${-U * 0.3} H${scheme.bus.x1 * U + U * 0.8} v${U * 0.3} Z`}
-              />
-            </g>
-          )}
-          {scheme.wires.map((w, i) => (
-            <Wire key={i} w={w} id={id} />
-          ))}
-          {scheme.boxes.map((b, i) => (
-            <g key={i}>
-              <rect x={b.x * U} y={b.y * U} width={b.w * U} height={b.h * U} fill="var(--background)" stroke={DIM} />
-              <text x={(b.x + b.w / 2) * U} y={(b.y + b.h / 2) * U + 4} fontSize={11} textAnchor="middle" fill={INK} fontWeight={600}>
-                {b.text}
-              </text>
-            </g>
-          ))}
-          {scheme.regs.map((r, i) => (
-            <Reg key={i} r={r} />
-          ))}
-          {scheme.texts.map((t, i) => (
-            <text key={i} x={t.x * U} y={t.y * U} fontSize={11} textAnchor={t.anchor ?? "start"} fill={t.bold ? INK : DIM} fontWeight={t.bold ? 700 : 400}>
-              {t.text}
+    <FigureFrame title={title}>
+      <svg viewBox={`${-PAD * U} ${-PAD * U} ${vw} ${vh}`} width={vw} height={vh} role="img" aria-label={title} className="max-w-none">
+        <defs>
+          <marker id={id} viewBox="0 0 10 10" refX={9} refY={5} markerWidth={7} markerHeight={7} orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 Z" fill={DIM} />
+          </marker>
+        </defs>
+        {scheme.bus && (
+          <g fill="none" stroke={DIM} strokeWidth={1.2}>
+            <path
+              d={`M${scheme.bus.x1 * U} ${scheme.bus.y * U} l${U * 0.8} ${-U * 0.6} v${U * 0.3} H${scheme.bus.x2 * U - U * 0.8} v${-U * 0.3} l${U * 0.8} ${U * 0.6} l${-U * 0.8} ${U * 0.6} v${-U * 0.3} H${scheme.bus.x1 * U + U * 0.8} v${U * 0.3} Z`}
+            />
+          </g>
+        )}
+        {scheme.wires.map((w, i) => (
+          <Wire key={i} w={w} id={id} />
+        ))}
+        {scheme.boxes.map((b, i) => (
+          <g key={i}>
+            <rect x={b.x * U} y={b.y * U} width={b.w * U} height={b.h * U} fill="var(--background)" stroke={DIM} />
+            <text x={(b.x + b.w / 2) * U} y={(b.y + b.h / 2) * U + 4} fontSize={11} textAnchor="middle" fill={INK} fontWeight={600}>
+              {b.text}
             </text>
-          ))}
-        </svg>
-      </div>
-      <figcaption className="text-xs text-ink-faint">{title}</figcaption>
-    </figure>
+          </g>
+        ))}
+        {scheme.regs.map((r, i) => (
+          <Reg key={i} r={r} />
+        ))}
+        {scheme.texts.map((t, i) => (
+          <text key={i} x={t.x * U} y={t.y * U} fontSize={11} textAnchor={t.anchor ?? "start"} fill={t.bold ? INK : DIM} fontWeight={t.bold ? 700 : 400}>
+            {t.text}
+          </text>
+        ))}
+      </svg>
+    </FigureFrame>
   );
 }

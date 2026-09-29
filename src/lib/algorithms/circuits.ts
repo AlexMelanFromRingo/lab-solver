@@ -115,6 +115,27 @@ export function magnet(inp: MagnetInput, iN: number, n: number) {
   return { phi, b, h0, hst, mua, mur: mua / MU0, rst, r0, r: rst + r0 };
 }
 
+/**
+ * Проверка зазора: сталь та же, поэтому точки с промежутком должны лечь на
+ * кривую B(Hст) без промежутка. Для каждой точки с промежутком Hст берётся с
+ * этой кривой (линейная интерполяция, ниже первой точки — прямая из нуля), и
+ * δ = (Wн·Iн − Hст·ℓст)/H0. Точки за пределами кривой пропускаются.
+ */
+export function gapEstimate(inp: Omit<MagnetInput, "delta">, noGap: { i: number; n: number }[], gap: { i: number; n: number }[]): number[] {
+  const curve = noGap.map((r) => magnet({ ...inp, delta: 0 }, r.i, r.n)).sort((a, b) => a.b - b.b);
+  const hAt = (b: number) => {
+    if (curve.length === 0 || !(b > 0)) return NaN;
+    if (b <= curve[0].b) return (curve[0].hst * b) / curve[0].b;
+    for (let k = 1; k < curve.length; k++)
+      if (b <= curve[k].b) return curve[k - 1].hst + ((b - curve[k - 1].b) / (curve[k].b - curve[k - 1].b)) * (curve[k].hst - curve[k - 1].hst);
+    return NaN;
+  };
+  return gap.map((r) => {
+    const b = magnet({ ...inp, delta: 0 }, r.i, r.n).b;
+    return (inp.wn * r.i - hAt(b) * inp.l) / (b / MU0);
+  });
+}
+
 // ------------------------------------------------------------ комплекс
 
 export interface C {
