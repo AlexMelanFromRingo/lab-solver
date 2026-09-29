@@ -22,6 +22,7 @@
  */
 
 import type { FuzzySystem, Methods, Variable } from "./fuzzy-mamdani";
+import { cp1251Encode } from "./cp1251";
 
 /** Хвост строки с границами универса; во всех примерах он одинаков. */
 const VAR_TAIL = "0 0.95 0.7 1";
@@ -102,39 +103,8 @@ export function buildFlsFile(
  *
  * Программа читает файлы только в этой кодировке: в UTF-8 имена термов
  * превращаются в мусор, и система не открывается. Браузер кодирует лишь в
- * UTF-8, поэтому таблица нужна своя — кириллица, украинские буквы и знак
- * номера, всё остальное совпадает с ASCII.
+ * UTF-8, поэтому таблица своя — общая, в cp1251.ts.
  */
 export function encodeCp1251(text: string): Uint8Array<ArrayBuffer> {
-  const special: Record<string, number> = {
-    "Ђ": 0x80, "Ѓ": 0x81, "‚": 0x82, "ѓ": 0x83,
-    "„": 0x84, "…": 0x85, "†": 0x86, "‡": 0x87,
-    "€": 0x88, "‰": 0x89, "Љ": 0x8a, "‹": 0x8b,
-    "Њ": 0x8c, "Ќ": 0x8d, "Ћ": 0x8e, "Џ": 0x8f,
-    "ђ": 0x90, "‘": 0x91, "’": 0x92, "“": 0x93,
-    "”": 0x94, "•": 0x95, "–": 0x96, "—": 0x97,
-    "™": 0x99, "њ": 0x9a, "›": 0x9b, "ќ": 0x9c,
-    "ћ": 0x9e, "џ": 0x9f, " ": 0xa0, "Ў": 0xa1,
-    "ў": 0xa2, "Ј": 0xa3, "Ґ": 0xa5, "Ё": 0xa8,
-    "Є": 0xaa, "Ї": 0xaf, "°": 0xb0, "І": 0xb2,
-    "і": 0xb3, "ґ": 0xb4, "µ": 0xb5, "ё": 0xb8,
-    "№": 0xb9, "є": 0xba, "ј": 0xbc, "Ѕ": 0xbd,
-    "ѕ": 0xbe, "ї": 0xbf,
-  };
-
-  // Буфер создаётся явно: Blob принимает только Uint8Array над ArrayBuffer.
-  const bytes = new Uint8Array(new ArrayBuffer(text.length));
-  for (let i = 0; i < text.length; i++) {
-    const code = text.charCodeAt(i);
-    if (code < 0x80) {
-      bytes[i] = code;
-    } else if (code >= 0x0410 && code <= 0x044f) {
-      // А…я идут подряд и в юникоде, и в CP1251.
-      bytes[i] = code - 0x0410 + 0xc0;
-    } else {
-      bytes[i] = special[text[i]] ?? 0x3f; // «?» для всего остального
-    }
-  }
-
-  return bytes;
+  return cp1251Encode(text);
 }

@@ -1,136 +1,128 @@
 /**
- * Классические шифры — Лаба 1 (Univetsity/.../Cryptology/Криптология/Лаба 1 Шифры,
- * AnyaLaboratoryWork/Caesar.cpp, Vigenere.cpp, GammaOTP_File.cpp).
+ * «Прикладна криптологія», ЛР 1 «Криптозахист текстових файлів» — шість
+ * методів методички над байтами файлу (CP1251):
+ * перестановка, Цезаря, одноразовий блокнот, Віженера з паролем, Віженера з
+ * датчиком випадкових чисел, гамування.
  *
- * Оригинальные C++ реализации работают побайтово в диапазоне [32,255] (224 символа —
- * печатные ASCII + верхняя половина однобайтовой кириллической кодовой страницы).
- * Браузер оперирует UTF-16, поэтому режим "bytes" применяет ту же арифметику
- * к кодам символов, а режим "ru33" — классический вариант по 33-буквенному
- * кириллическому алфавиту (без "ё"), как в 1.py и вузовских методичках.
+ * Шифрування йде в алфавіті N1: X1 = Ord(C) − 32, Y = Y1 + 32, N = 224, тож
+ * символи 20h…FFh переходять у 20h…FFh і керуючих кодів у шифртексті не
+ * з'являється. Керуючі символи 00h…1Fh (CR/LF і ті, що навмисне вставлені в
+ * тестовий source.txt) лишаються на місці й ключа не споживають.
  */
 
-export type Alphabet = "bytes" | "ru33";
+export const N = 224;
+const BASE = 32;
+const mod = (a: number, n: number) => ((a % n) + n) % n;
 
-const RU33 = "абвгдежзийклмнопрстуфхцчшщъыьэюя";
-const BYTES_MIN = 32;
-const BYTES_RANGE = 224; // [32, 255]
+/** Зсув кожного символу 20h…FFh на shifts(j) — j рахує лише шифровані символи. */
+function substitute(bytes: ArrayLike<number>, shift: (j: number) => number, sign: 1 | -1): number[] {
+  let j = 0;
+  return Array.from(bytes, (b) => (b < BASE ? b : BASE + mod(b - BASE + sign * shift(j++), N)));
+}
 
-function shiftChar(ch: string, shift: number, alphabet: Alphabet): string {
-  if (alphabet === "bytes") {
-    const code = ch.codePointAt(0)!;
-    if (code < BYTES_MIN || code > 255) return ch;
-    const shifted = ((code - BYTES_MIN + shift) % BYTES_RANGE + BYTES_RANGE) % BYTES_RANGE;
-    return String.fromCharCode(BYTES_MIN + shifted);
+/** Скільки символів шифрується (довжина ключа одноразового блокнота). */
+export const n1Length = (bytes: ArrayLike<number>) => Array.from(bytes).filter((b) => b >= BASE).length;
+
+// ---------------------------------------------------------------- Цезар
+
+export const caesar = (bytes: ArrayLike<number>, shift: number, sign: 1 | -1 = 1) => substitute(bytes, () => shift, sign);
+
+// ---------------------------------------------------- одноразовий блокнот
+
+/** Ключ — послідовність зсувів 0…223 довжиною в текст (нова для кожного тексту). */
+export function otpKey(length: number): number[] {
+  const r = new Uint32Array(length);
+  crypto.getRandomValues(r);
+  return Array.from(r, (x) => x % N);
+}
+
+export function otp(bytes: ArrayLike<number>, key: number[], sign: 1 | -1 = 1) {
+  if (key.length < n1Length(bytes)) throw new Error(`Ключ коротший за текст: ${key.length} < ${n1Length(bytes)}`);
+  return substitute(bytes, (j) => key[j], sign);
+}
+
+// ------------------------------------------------------ Віженер з паролем
+
+/** Зсуви пароля — позиції його символів у N1. */
+export function passwordShifts(password: ArrayLike<number>): number[] {
+  const k = Array.from(password).filter((b) => b >= BASE).map((b) => b - BASE);
+  if (!k.length) throw new Error("Пароль не містить жодного символу з кодом 20h…FFh");
+  return k;
+}
+
+export const vigenere = (bytes: ArrayLike<number>, shifts: number[], sign: 1 | -1 = 1) => substitute(bytes, (j) => shifts[j % shifts.length], sign);
+
+// -------------------------------------------------- датчик Random з Delphi
+
+/**
+ * Генератор Random(N) середовища Delphi: RandSeed := RandSeed·134775813 + 1
+ * (mod 2³²), результат — старші 32 біти добутку RandSeed·N. Початкове
+ * значення RandSeed і є ключем.
+ */
+export function delphiRandom(seed: number, count: number, range = N): number[] {
+  let s = seed >>> 0;
+  const out: number[] = [];
+  for (let i = 0; i < count; i++) {
+    s = (Math.imul(s, 134775813) + 1) >>> 0;
+    out.push(Number((BigInt(s) * BigInt(range)) >> BigInt(32)));
   }
-  const lower = ch.toLowerCase();
-  const idx = RU33.indexOf(lower);
-  if (idx === -1) return ch;
-  const isUpper = ch !== lower;
-  const shifted = ((idx + shift) % 33 + 33) % 33;
-  const out = RU33[shifted];
-  return isUpper ? out.toUpperCase() : out;
-}
-
-export function caesarEncode(text: string, shift: number, alphabet: Alphabet = "bytes"): string {
-  return Array.from(text).map((ch) => shiftChar(ch, shift, alphabet)).join("");
-}
-
-export function caesarDecode(text: string, shift: number, alphabet: Alphabet = "bytes"): string {
-  return caesarEncode(text, -shift, alphabet);
-}
-
-function keyShifts(key: string, alphabet: Alphabet): number[] {
-  if (alphabet === "bytes") {
-    return Array.from(key).map((ch) => {
-      const code = ch.codePointAt(0)!;
-      return ((code - BYTES_MIN) % BYTES_RANGE + BYTES_RANGE) % BYTES_RANGE;
-    });
-  }
-  return Array.from(key).map((ch) => {
-    const idx = RU33.indexOf(ch.toLowerCase());
-    return idx === -1 ? 0 : idx;
-  });
-}
-
-export function vigenereEncode(text: string, key: string, alphabet: Alphabet = "bytes"): string {
-  if (!key) return text;
-  const shifts = keyShifts(key, alphabet);
-  let ki = 0;
-  return Array.from(text)
-    .map((ch) => {
-      const out = shiftChar(ch, shifts[ki % shifts.length], alphabet);
-      ki += 1;
-      return out;
-    })
-    .join("");
-}
-
-export function vigenereDecode(text: string, key: string, alphabet: Alphabet = "bytes"): string {
-  if (!key) return text;
-  const shifts = keyShifts(key, alphabet).map((s) => -s);
-  let ki = 0;
-  return Array.from(text)
-    .map((ch) => {
-      const out = shiftChar(ch, shifts[ki % shifts.length], alphabet);
-      ki += 1;
-      return out;
-    })
-    .join("");
-}
-
-function toBytes(text: string): Uint8Array {
-  return new TextEncoder().encode(text);
-}
-
-function bytesToHex(bytes: Uint8Array): string {
-  return Array.from(bytes)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-function hexToBytes(hex: string): Uint8Array {
-  const clean = hex.replace(/\s+/g, "");
-  const out = new Uint8Array(clean.length / 2);
-  for (let i = 0; i < out.length; i++) out[i] = parseInt(clean.substr(i * 2, 2), 16);
   return out;
 }
 
-/** Гаммирование: XOR с повторяющимся ключом. Самообратная операция — encode === decode. */
-export function gammaXorHex(text: string, key: string): string {
-  const data = toBytes(text);
-  const keyBytes = toBytes(key || "\0");
-  const out = new Uint8Array(data.length);
-  for (let i = 0; i < data.length; i++) out[i] = data[i] ^ keyBytes[i % keyBytes.length];
-  return bytesToHex(out);
+/** Віженер з датчиком: таблиця з K зсувів заповнюється Random(224) після RandSeed := seed. */
+export const vigenereRandomShifts = (seed: number, k: number) => delphiRandom(seed, k);
+
+/** Гамування: гама — Random(224) для кожного символу тексту. */
+export function gamma(bytes: ArrayLike<number>, seed: number, sign: 1 | -1 = 1) {
+  const g = delphiRandom(seed, n1Length(bytes));
+  return substitute(bytes, (j) => g[j], sign);
 }
 
-export function gammaXorFromHex(hex: string, key: string): string {
-  const data = hexToBytes(hex);
-  const keyBytes = toBytes(key || "\0");
-  const out = new Uint8Array(data.length);
-  for (let i = 0; i < data.length; i++) out[i] = data[i] ^ keyBytes[i % keyBytes.length];
-  return new TextDecoder().decode(out);
+// ------------------------------------------------------------ перестановка
+
+/**
+ * Таблиця CryptTab: CryptTab[i] — місце, на яке стає i-й символ блоку
+ * (методичка: «шифр» з CryptTab = 2 4 1 3 → «фшри»). Перевіряє, що це
+ * перестановка чисел 1…K.
+ */
+export function parseCryptTab(src: string): number[] {
+  const t = src.trim().split(/[\s,;]+/).filter(Boolean).map(Number);
+  const k = t.length;
+  if (k < 2 || t.some((x) => !Number.isInteger(x) || x < 1 || x > k) || new Set(t).size !== k)
+    throw new Error("CryptTab — перестановка чисел 1…K без повторів, K ≥ 2");
+  return t;
 }
 
-/** Одноразовый блокнот: ключ той же длины, что и сообщение (в байтах), генерируется случайно. */
-export function otpGenerateKeyHex(byteLength: number): string {
-  const key = new Uint8Array(byteLength);
-  crypto.getRandomValues(key);
-  return bytesToHex(key);
+/**
+ * Перестановка в межах рядків (між керуючими символами), повними блоками по
+ * K символів; неповний хвіст рядка лишається як є — так рядкова структура
+ * файлу не порушується.
+ */
+export function permute(bytes: ArrayLike<number>, tab: number[], inverse = false): number[] {
+  const out = Array.from(bytes);
+  const k = tab.length;
+  let start = 0;
+  const flush = (end: number) => {
+    for (let b = start; b + k <= end; b += k) {
+      const block = out.slice(b, b + k);
+      for (let i = 0; i < k; i++) {
+        if (inverse) out[b + i] = block[tab[i] - 1];
+        else out[b + tab[i] - 1] = block[i];
+      }
+    }
+  };
+  for (let i = 0; i <= out.length; i++) {
+    if (i === out.length || out[i] < BASE) {
+      flush(i);
+      start = i + 1;
+    }
+  }
+  return out;
 }
 
-export function otpEncodeHex(text: string, keyHex: string): string {
-  const data = toBytes(text);
-  const keyBytes = hexToBytes(keyHex);
-  const out = new Uint8Array(data.length);
-  for (let i = 0; i < data.length; i++) out[i] = data[i] ^ keyBytes[i % keyBytes.length];
-  return bytesToHex(out);
-}
-
-export function otpDecodeFromHex(cipherHex: string, keyHex: string): string {
-  const data = hexToBytes(cipherHex);
-  const keyBytes = hexToBytes(keyHex);
-  const out = new Uint8Array(data.length);
-  for (let i = 0; i < data.length; i++) out[i] = data[i] ^ keyBytes[i % keyBytes.length];
-  return new TextDecoder().decode(out);
+/** Керуючі символи в шифртексті, крім тих, що стояли у вихідному тексті на тих самих місцях. */
+export function newControlChars(src: ArrayLike<number>, enc: ArrayLike<number>): number {
+  let n = 0;
+  for (let i = 0; i < enc.length; i++) if (enc[i] < BASE && enc[i] !== src[i]) n++;
+  return n;
 }

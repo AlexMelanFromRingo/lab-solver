@@ -1,11 +1,12 @@
 /**
- * S-DES — портировано 1:1 с реального решателя студента:
- * Univetsity/3rd_year/2nd_half/Cryptology/Криптология/Лаба 4 S-DES/Optimized3.py
+ * S-DES — ЛР 4 «Прикладної криптології». Еталон — програма S-DES (клієнт),
+ * з якою виконується й тестується робота: таблиці P10, P8, IP, IP⁻¹, E/P, P4 і
+ * S-блоки звірені з її вікнами «Общий алгоритм» і «Раунд», проміжні значення —
+ * з демонстраційним записом (ключ 1110011110, символ 10100000 → 01011100).
  *
- * Таблицы перестановок и порядок шагов взяты дословно оттуда же. Важно: S-box здесь
- * НЕ канонические учебные (Schaefer) — они отличаются на пару значений от версии из
- * большинства учебников, но именно эти были в реальном решателе, которым сдавали лабу,
- * так что тут воспроизведены именно они, а не "исправленный" общий вариант.
+ * S-блоки програми відрізняються від учбових (Schaefer, Stallings) двома
+ * клітинками: S0[3][3] = 1 замість 2, S1[0][0] = 1 замість 0 — рахувати треба
+ * саме з ними, інакше сервер тестування зарахує помилки.
  */
 
 type Bits = number[]; // массив 0/1, старший бит первым
@@ -17,7 +18,7 @@ const IP_INV = [4, 1, 3, 5, 7, 2, 8, 6];
 const EP = [4, 1, 2, 3, 2, 3, 4, 1];
 const P4 = [2, 4, 3, 1];
 
-// Именно эти значения — из реального Optimized3.py (не общеучебные Schaefer S-box).
+// Як у вікні «Раунд» програми S-DES (не учбові Schaefer S-box).
 const S0 = [
   [1, 0, 3, 2],
   [3, 2, 1, 0],
@@ -78,7 +79,7 @@ export interface KeyGenTrace {
   k2: Bits;
 }
 
-/** Дословно generate_keys() из Optimized3.py — тот же порядок и та же арифметика сдвигов. */
+/** Генерація ключів: P10 → Shift < 1 → P8 = K1 → Shift < 2 (ще на 2 від першого) → P8 = K2. */
 export function generateKeys(key10: Bits): KeyGenTrace {
   const p10 = permute(key10, P10);
   const shifted1 = leftShift(p10, 1);
@@ -99,7 +100,7 @@ export interface RoundTrace {
   output: Bits;
 }
 
-/** Дословно round_function() из Optimized3.py. */
+/** Функція F раунду: E/P, xor з ключем, S0/S1, P4, xor з лівою половиною. */
 export function roundFunction(data: Bits, key: Bits): RoundTrace {
   const left = data.slice(0, 4);
   const right = data.slice(4);
@@ -122,7 +123,7 @@ export interface SdesFullTrace {
   output: Bits;
 }
 
-/** Дословно encrypt()/decrypt() из Optimized3.py — при decrypt меняются местами key1/key2. */
+/** IP → F(K1) → SW → F(K2) → IP⁻¹; при розшифруванні ключі в зворотному порядку. */
 function run(data: Bits, key10: Bits, order: "encrypt" | "decrypt"): SdesFullTrace {
   const keys = generateKeys(key10);
   const [first, second] = order === "encrypt" ? [keys.k1, keys.k2] : [keys.k2, keys.k1];
