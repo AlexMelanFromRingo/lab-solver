@@ -7,6 +7,7 @@ import { TextField } from "@/components/ui/field";
 import { InfoNote } from "@/components/ui/info-note";
 import { modules } from "@/lib/modules";
 import { run, type VarSnapshot } from "@/lib/algorithms/jolsm";
+import { JolsmEditor } from "@/components/jolsm-editor";
 import { cn } from "@/lib/cn";
 
 const mod = modules.find((m) => m.slug === "jolsm")!;
@@ -120,12 +121,12 @@ export default function JolsmPage() {
           <Card>
             <CardBody className="pt-6 space-y-4">
               <h2 className="font-display text-lg font-semibold text-ink">Микропрограмма</h2>
-              <textarea
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                spellCheck={false}
-                className="w-full h-80 rounded-[3px] border border-border bg-black/30 px-4 py-3 font-mono text-sm text-ink resize-y focus:outline-none focus:border-border-strong"
-              />
+              <JolsmEditor value={code} onChange={setCode} />
+              <p className="text-xs text-ink-faint">
+                Ctrl+Пробел — подсказки: команды, объявленные регистры и метки, поля бит после «имя(», шаблоны
+                (цикл по счётчику, обратный и дополнительный код, проверка переполнения…). Наведите на команду,
+                регистр или знак операции — справка. Ошибки подчёркиваются так, как их выдаст IDE.
+              </p>
               <TextField
                 label="Значения для read/ввести (по порядку, через запятую)"
                 value={inputsStr}
