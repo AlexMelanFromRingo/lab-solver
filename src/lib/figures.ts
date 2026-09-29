@@ -50,6 +50,8 @@ export interface PhasorFigure {
 export interface PlotAxis {
   label: string;
   unit: string;
+  /** false — ось не обязана начинаться с нуля (узлы около 1000 и т. п.). */
+  zero?: boolean;
 }
 
 export interface PlotSeries {
@@ -60,6 +62,8 @@ export interface PlotSeries {
   values?: boolean;
   /** false — без маркеров (густые расчётные точки, осциллограммы). */
   markers?: boolean;
+  /** false — только точки, без линии (узлы, опытные точки). */
+  line?: boolean;
 }
 
 export interface PlotFigure {

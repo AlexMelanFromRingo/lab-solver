@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Card, CardBody } from "@/components/ui/card";
 import { NumberField, TextAreaField, TextField } from "@/components/ui/field";
 import { OutputBlock } from "@/components/ui/output-block";
+import { XYPlot } from "@/components/xy-plot";
+import type { PlotFigure } from "@/lib/figures";
 import { d1, d2, fn1, fn2 } from "@/lib/math/expr";
 import {
   cauchy,
@@ -51,6 +53,27 @@ function Shell({ title, children }: { title: string; children: React.ReactNode }
       </CardBody>
     </Card>
   );
+}
+
+/** График функции для отделения корня: отрезок [a; b] с запасом по обе стороны, корень — точкой. */
+function rootPlot(f: (x: number) => number, a: number, b: number, root?: number, name = "f"): PlotFigure {
+  const w = Math.max(b - a, 1e-6);
+  const lo = a - 2 * w;
+  const hi = b + 2 * w;
+  const pts: [number, number][] = [];
+  for (let i = 0; i <= 200; i++) {
+    const x = lo + ((hi - lo) * i) / 200;
+    const y = f(x);
+    if (Number.isFinite(y)) pts.push([x, y]);
+  }
+  return {
+    x: { label: "x", unit: "", zero: false },
+    y: { label: `${name}(x)`, unit: "", zero: false },
+    series: [
+      { label: `${name}(x)`, points: pts, markers: false },
+      ...(root !== undefined && Number.isFinite(root) ? [{ label: "корінь", points: [[root, 0]] as [number, number][], line: false }] : []),
+    ],
+  };
 }
 
 /** Расчёты мгновенные, поэтому считаются на каждом рендере, без мемоизации. */
@@ -158,7 +181,7 @@ export function IterationCalc() {
   const [eps, setEps] = useState("0.001");
   const r = run(() => {
     const f = fn1(src);
-    return simpleIteration(f, (x) => d1(f, x), Number(a), Number(b), Number(x0), Number(eps));
+    return { ...simpleIteration(f, (x) => d1(f, x), Number(a), Number(b), Number(x0), Number(eps)), f };
   });
   return (
     <Shell title="Простая итерация: g(x) = x − f(x)/k">
@@ -177,6 +200,9 @@ export function IterationCalc() {
           value={r.v.steps.map((s) => `${String(s.i).padStart(3)}  x = ${f6(s.x).padEnd(16)} x₁ = ${f6(s.next).padEnd(16)} |x₁−x|/|x| = ${s.delta.toExponential(3)}`).join("\n")}
           wrap={false}
         />
+      ) : null}
+      {r.ok ? (
+        <XYPlot fig={rootPlot(r.v.f, Number(a), Number(b), r.v.converged ? r.v.root : undefined)} title={`Відокремлення кореня: графік f(x) = ${src} біля [${a}; ${b}]`} />
       ) : (
         <p className="text-sm text-codes">{r.error}</p>
       )}
@@ -205,6 +231,7 @@ export function RootsCalc() {
       k: combined(f, fp, fpp, A, B, e),
       fppa: fpp(A),
       fppb: fpp(B),
+      f,
     };
   });
   return (
@@ -238,6 +265,7 @@ export function RootsCalc() {
             value={r.v.k.steps.map((s) => `${s.i}: [${f6(s.a)}; ${f6(s.b)}], длина ${s.len.toExponential(4)}`).join("\n")}
             wrap={false}
           />
+          <XYPlot fig={rootPlot(r.v.f, Number(a), Number(b), r.v.n.root, "F")} title={`Графік F(x) = ${src} і корінь на [${a}; ${b}]`} />
         </div>
       ) : (
         <p className="text-sm text-codes">{r.error}</p>
@@ -260,7 +288,20 @@ export function ApproxCalc() {
     const L = lagrange(X, Y);
     const q = leastSquares(X, Y, Math.min(deg, X.length - 1));
     const poly = (c: number[]) => c.map((v, i) => `${v >= 0 && i ? "+ " : v < 0 ? "− " : ""}${f6(Math.abs(v))}${i ? `·x${i > 1 ? `^${i}` : ""}` : ""}`).join(" ");
-    return { L, at: L.at(Number(x0)), lp: poly(L.coef), q, qp: poly(q.coef), qAt: q.coef.reduce((s, c, i) => s + c * Number(x0) ** i, 0) };
+    const lo = Math.min(...X);
+    const hi = Math.max(...X);
+    const grid = Array.from({ length: 121 }, (_, i) => lo + ((hi - lo) * i) / 120);
+    const qf = (x: number) => q.coef.reduce((s, c, i) => s + c * x ** i, 0);
+    const plot: PlotFigure = {
+      x: { label: "x", unit: "", zero: false },
+      y: { label: "y", unit: "", zero: false },
+      series: [
+        { label: "вузли", points: X.map((x, i) => [x, Y[i]] as [number, number]), line: false },
+        { label: "Лагранж L(x)", points: grid.map((x) => [x, L.at(x)] as [number, number]), markers: false },
+        { label: `МНК, степінь ${Math.min(deg, X.length - 1)}`, points: grid.map((x) => [x, qf(x)] as [number, number]), markers: false, dashed: true },
+      ],
+    };
+    return { L, at: L.at(Number(x0)), lp: poly(L.coef), q, qp: poly(q.coef), qAt: qf(Number(x0)), plot };
   });
   return (
     <Shell title="Интерполяция Лагранжа и метод наименьших квадратов">
@@ -274,6 +315,7 @@ export function ApproxCalc() {
         <div className="space-y-4">
           <OutputBlock label={`Многочлен Лагранжа, L(${x0}) = ${f6(r.v.at)}`} value={`L(x) = ${r.v.lp}`} />
           <OutputBlock label={`МНК, степень ${deg}: сумма квадратов отклонений ${f6(r.v.q.residual)}, значение в x₀ = ${f6(r.v.qAt)}`} value={`P(x) = ${r.v.qp}`} />
+          <XYPlot fig={r.v.plot} title="Вузли інтерполяції, многочлен Лагранжа і наближення МНК" />
         </div>
       ) : (
         <p className="text-sm text-codes">{r.error}</p>
@@ -320,6 +362,20 @@ export function CauchyCalc() {
             ...r.v.map((row) => `${f6(row.x).padStart(8)}${f6(row.euler).padStart(16)}${f6(row.eulerCauchy).padStart(16)}${f6(row.rk4).padStart(16)}`),
           ].join("\n")}
           wrap={false}
+        />
+      ) : null}
+      {r.ok ? (
+        <XYPlot
+          fig={{
+            x: { label: "x", unit: "", zero: false },
+            y: { label: "y", unit: "", zero: false },
+            series: [
+              { label: "Ейлер", points: r.v.map((row) => [row.x, row.euler] as [number, number]) },
+              { label: "Ейлер–Коші", points: r.v.map((row) => [row.x, row.eulerCauchy] as [number, number]), dashed: true },
+              { label: "Рунге–Кутта", points: r.v.map((row) => [row.x, row.rk4] as [number, number]) },
+            ],
+          }}
+          title={`Розв'язки задачі Коші y′ = ${src}, y(${a}) = ${y0}`}
         />
       ) : (
         <p className="text-sm text-codes">{r.error}</p>

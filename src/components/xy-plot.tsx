@@ -23,12 +23,12 @@ const r2 = (v: number) => Math.round(v * 100) / 100;
 const SUP: Record<string, string> = { "-": "⁻", "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹" };
 const sup = (n: number) => String(n).replace(/./g, (c) => SUP[c] ?? c);
 
-function axis(values: number[]) {
+function axis(values: number[], zero = true) {
   const max = Math.max(...values.map(Math.abs), 0);
   const e = max >= 1e4 || (max > 0 && max < 0.1) ? Math.floor(Math.log10(max)) : 0;
   const k = 10 ** -e;
-  const lo = Math.min(0, ...values) * k;
-  const hi = Math.max(0, ...values) * k;
+  const lo = (zero ? Math.min(0, ...values) : Math.min(...values)) * k;
+  const hi = (zero ? Math.max(0, ...values) : Math.max(...values)) * k;
   const step = niceUp((hi - lo) / 6 || 1);
   const min = Math.floor(lo / step) * step;
   let top = Math.ceil(hi / step) * step || step;
@@ -82,14 +82,14 @@ function Marker({ x, y, kind }: { x: number; y: number; kind: number }) {
 /** Курсив — только для буквенных обозначений величин (B, Hст, μa), не для слов. */
 const italic = (label: string) => (label.split("_")[0].length <= 2 ? "italic" : undefined);
 
-const unitText = (unit: string, e: number) => (e ? `×10${sup(e)} ${unit}` : unit);
+const unitText = (unit: string, e: number) => (e ? `×10${sup(e)} ${unit}`.trim() : unit);
 
 export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
   const pts = fig.series.flatMap((s) => s.points).filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y));
   const ax = fig.xTicks
     ? { e: 0, k: 1, min: Math.min(...fig.xTicks.map((t) => t.at)) - 0.5, max: Math.max(...fig.xTicks.map((t) => t.at)) + 0.5, ticks: fig.xTicks.map((t) => t.at) }
-    : axis(pts.map((p) => p[0]));
-  const ay = axis([...pts.map((p) => p[1]), ...(fig.hlines ?? []).map((h) => h.y)]);
+    : axis(pts.map((p) => p[0]), fig.x.zero !== false);
+  const ay = axis([...pts.map((p) => p[1]), ...(fig.hlines ?? []).map((h) => h.y)], fig.y.zero !== false);
   const xLabel = (t: number) => fig.xTicks?.find((x) => x.at === t)?.label ?? fmtNum(t, 4);
   const X = (v: number) => r2(PAD.left + ((v * ax.k - ax.min) / (ax.max - ax.min)) * PW);
   const Y = (v: number) => r2(PAD.top + PH - ((v * ay.k - ay.min) / (ay.max - ay.min)) * PH);
@@ -119,8 +119,8 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
         <g stroke={DIM} strokeWidth={1}>
           <line x1={PAD.left} x2={PAD.left + PW} y1={PAD.top + PH} y2={PAD.top + PH} />
           <line x1={PAD.left} x2={PAD.left} y1={PAD.top} y2={PAD.top + PH} />
-          {ay.min < 0 && <line x1={PAD.left} x2={PAD.left + PW} y1={Y(0)} y2={Y(0)} />}
-          {!fig.xTicks && ax.min < 0 && <line x1={X(0)} x2={X(0)} y1={PAD.top} y2={PAD.top + PH} />}
+          {ay.min < 0 && ay.max > 0 && <line x1={PAD.left} x2={PAD.left + PW} y1={Y(0)} y2={Y(0)} />}
+          {!fig.xTicks && ax.min < 0 && ax.max > 0 && <line x1={X(0)} x2={X(0)} y1={PAD.top} y2={PAD.top + PH} />}
         </g>
         {fig.hlines?.map((h) => {
           // Подпись линии — у того края, где кривые дальше от неё.
@@ -152,20 +152,20 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
           <tspan fontStyle={italic(fig.x.label)}>
             <SubLabel text={fig.x.label} />
           </tspan>
-          , {unitText(fig.x.unit, ax.e)}
+          {unitText(fig.x.unit, ax.e) && `, ${unitText(fig.x.unit, ax.e)}`}
         </text>
         <text transform={`translate(16 ${PAD.top + PH / 2}) rotate(-90)`} fontSize={12} fill={INK} textAnchor="middle">
           <tspan fontStyle={italic(fig.y.label)}>
             <SubLabel text={fig.y.label} />
           </tspan>
-          , {unitText(fig.y.unit, ay.e)}
+          {unitText(fig.y.unit, ay.e) && `, ${unitText(fig.y.unit, ay.e)}`}
         </text>
         {fig.series.map((s, i) => {
           const sp = s.points.filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y)).map(([x, y]) => [X(x), Y(y)] as [number, number]);
           const sorted = [...sp].sort((a, b) => a[0] - b[0]);
           return (
             <g key={s.label}>
-              {sorted.length > 1 && <path d={fig.smooth ? monotone(sorted) : `M${sorted.map((p) => p.join(" ")).join(" L")}`} fill="none" stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />}
+              {sorted.length > 1 && s.line !== false && <path d={fig.smooth ? monotone(sorted) : `M${sorted.map((p) => p.join(" ")).join(" L")}`} fill="none" stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />}
               {s.markers !== false &&
                 sp.map(([x, y], j) => (
                   <Marker key={j} x={x} y={y} kind={i} />
@@ -186,7 +186,7 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
             const x = PAD.left + fig.series.slice(0, i).reduce((t, p) => t + 62 + p.label.length * 5.8, 0);
             return (
               <g key={`lg${s.label}`} fontSize={11} fill={INK}>
-                <line x1={x} x2={x + 30} y1={H + 6} y2={H + 6} stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />
+                {s.line !== false && <line x1={x} x2={x + 30} y1={H + 6} y2={H + 6} stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />}
                 {s.markers !== false && <Marker x={x + 15} y={H + 6} kind={i} />}
                 <text x={x + 38} y={H + 10}>
                   <SubLabel text={s.label} />
