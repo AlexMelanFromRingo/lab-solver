@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { AclBuilder } from "@/components/acl-builder";
+import { GraphCalc } from "@/components/graph-calc";
 import { ApproxCalc, CauchyCalc, IterationCalc, RootsCalc, SlaeCalc } from "@/components/amo-calc";
 import { Ethernet10Calc, FastEthernetCalc } from "@/components/lan-calc";
 import { ModuleHeader } from "@/components/module-header";
@@ -81,6 +82,7 @@ export function GuideView({ slug }: { slug: string }) {
       {g.widget === "roots" && <RootsCalc />}
       {g.widget === "approx" && <ApproxCalc />}
       {g.widget === "cauchy" && <CauchyCalc />}
+      {g.widget === "graph" && <GraphCalc accent={accent} />}
     </>
   );
 
