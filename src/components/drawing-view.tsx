@@ -71,9 +71,20 @@ export function DrawingView({ drawing, title }: { drawing: Drawing; title: strin
                   textAnchor={it.anchor ?? "start"}
                   fontStyle={it.italic ? "italic" : undefined}
                   fontWeight={it.bold ? 700 : undefined}
+                  textDecoration={it.underline ? "underline" : undefined}
                 >
                   {it.plain ? it.text : <SubLabel text={it.text} />}
                 </text>
+              );
+            case "diamond":
+              return (
+                <polygon
+                  key={i}
+                  points={`${it.x},${it.y - it.h / 2} ${it.x + it.w / 2},${it.y} ${it.x},${it.y + it.h / 2} ${it.x - it.w / 2},${it.y}`}
+                  fill="var(--background)"
+                  stroke={INK}
+                  strokeWidth={1.2}
+                />
               );
             case "ground": {
               const hatch: React.ReactNode[] = [];

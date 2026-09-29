@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Card, CardBody } from "@/components/ui/card";
 import { SelectField, TextAreaField, TextField } from "@/components/ui/field";
+import { DrawingView } from "@/components/drawing-view";
+import { erDiagram, fdGraph } from "@/lib/algorithms/db-figures";
 import { OutputBlock } from "@/components/ui/output-block";
 import { DEFAULT_SCHEMA, lab3Ddl, lab4Dml, lab5Dql, lab6Complex, parseFields, type Schema } from "@/lib/algorithms/access-sql";
 import { erRule, normalize, parseFds, type Cls, type Degree } from "@/lib/algorithms/normalize";
@@ -25,7 +27,8 @@ export function NormalizerCalc() {
   const r = run(() => {
     const a = attrs.split(",").map((s) => s.trim()).filter(Boolean);
     const k = key.split(",").map((s) => s.trim()).filter(Boolean);
-    return normalize(a, parseFds(fds), k);
+    const f = parseFds(fds);
+    return { ...normalize(a, f, k), attrs: a, fds: f };
   });
   return (
     <Card>
@@ -39,6 +42,7 @@ export function NormalizerCalc() {
         {r.ok ? (
           <div className="space-y-4">
             <OutputBlock label="Потенційні ключі" value={r.v.keys.map((k) => `(${k.join(", ")})`).join("; ")} />
+            <DrawingView drawing={fdGraph(r.v.attrs, r.v.key, r.v.fds)} title="Графічна інтерпретація залежностей між атрибутами (початкове відношення, 1НФ)" />
             <OutputBlock
               label="1НФ → 2НФ: часткові залежності"
               value={[
@@ -57,6 +61,11 @@ export function NormalizerCalc() {
               ].join("\n")}
               wrap={false}
             />
+            {[...r.v.nf2, ...r.v.nf3]
+              .filter((x, i, all) => all.findIndex((y) => y.name === x.name) === i)
+              .map((x) => (
+                <DrawingView key={x.name} drawing={fdGraph(x.attrs, x.key, r.v.fds)} title={`Графічна інтерпретація залежностей ${x.name}`} />
+              ))}
             <OutputBlock
               label="Перевірка БКНФ"
               value={r.v.bcnfViolations.length ? r.v.bcnfViolations.map((v) => `${v.rel}: ${v.fd.lhs.join(", ")} → ${v.fd.rhs.join(", ")} — детермінант не є потенційним ключем`).join("\n") : "усі відношення в БКНФ: кожен детермінант — потенційний ключ"}
@@ -102,6 +111,7 @@ export function ErCalc() {
         </div>
         {entity(e1, setE1, "Сутність 1")}
         {entity(e2, setE2, "Сутність 2")}
+        <DrawingView drawing={erDiagram(deg, e1, e2, verb)} title={`Діаграма ER-типу: ${e1.name} ${verb} ${e2.name}`} />
         <OutputBlock label={`Правило ${r.rule}`} value={`${r.why}\n\n${r.relations.join("\n")}`} wrap={false} />
       </CardBody>
     </Card>

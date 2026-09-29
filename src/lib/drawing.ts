@@ -10,7 +10,9 @@ export type DrawItem =
   | { k: "circle"; x: number; y: number; r: number; fill?: boolean }
   | { k: "dot"; x: number; y: number }
   /** В тексте «_» — нижний индекс, если не plain (имена вроде NEXT_ADDR). */
-  | { k: "text"; x: number; y: number; text: string; anchor?: "start" | "middle" | "end"; size?: number; italic?: boolean; bold?: boolean; plain?: boolean }
+  | { k: "text"; x: number; y: number; text: string; anchor?: "start" | "middle" | "end"; size?: number; italic?: boolean; bold?: boolean; plain?: boolean; underline?: boolean }
+  /** Ромб (связь на ER-диаграмме). */
+  | { k: "diamond"; x: number; y: number; w: number; h: number }
   /** Земля: линия с косой штриховкой снизу. */
   | { k: "ground"; x1: number; x2: number; y: number };
 
