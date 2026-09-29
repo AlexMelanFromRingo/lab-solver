@@ -16,6 +16,7 @@ export type Category =
   | "oop"
   | "spz"
   | "ks"
+  | "pzzk"
   | "extra";
 
 /**
@@ -145,6 +146,13 @@ export const categories: Record<
     stage: "Бакалавриат · 2 курс",
     accent: "var(--cat-ks)",
     accentSoft: "var(--cat-ks-soft)",
+  },
+  pzzk: {
+    title: "Програмні засоби загального користування",
+    short: "C++: алгоритмические структуры, матрицы, указатели на функции, классы, наследование, STL",
+    stage: "Бакалавриат · 2 курс",
+    accent: "var(--cat-pzzk)",
+    accentSoft: "var(--cat-pzzk-soft)",
   },
   extra: {
     title: "Вне учебной программы",
@@ -954,6 +962,77 @@ export const modules: LabModule[] = [
     hasVariants: true,
     variantCount: 28,
     source: "Комп'ютерна схемотехніка, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pzzk-lab1",
+    title: "ЛР 1 · Розробка програм з основними алгоритмічними структурами",
+    category: "pzzk",
+    tagline: "13 + 14 вариантов · C++",
+    description:
+      "Программы без массивов и строк на ветвления и циклы — для обоих списков вариантов из LIDER.",
+    hasVariants: true,
+    variantCount: 14,
+    source: "Програмні засоби загального користування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pzzk-lab2",
+    title: "ЛР 2 · Обробка масивів з використанням структур та функцій",
+    category: "pzzk",
+    tagline: "10 вариантов · struct Matrix",
+    description:
+      "Матрица в структуре и обязательный набор функций: создание, удаление, обработка без ввода-вывода, заполнение, вывод.",
+    hasVariants: true,
+    variantCount: 10,
+    source: "Програмні засоби загального користування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pzzk-lab3",
+    title: "ЛР 3 · Вказівники на функції",
+    category: "pzzk",
+    tagline: "void* · масиви вказівників",
+    description:
+      "Калькулятор выражений: функции ввода и вычисления в массивах указателей с одинаковыми индексами, данные через void*.",
+    hasVariants: false,
+    source: "Програмні засоби загального користування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pzzk-lab4",
+    title: "ЛР 4 · Класи та об'єкти",
+    category: "pzzk",
+    tagline: "15 вариантов · friend, operator",
+    description:
+      "Класс сущности со всеми конструкторами, сеттерами, геттерами и toString, «друг» и перегруженные операции варианта.",
+    hasVariants: true,
+    variantCount: 15,
+    source: "Програмні засоби загального користування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pzzk-lab5",
+    title: "ЛР 5 · Успадкування та поліморфізм",
+    category: "pzzk",
+    tagline: "15 вариантов · virtual",
+    description:
+      "Абстрактный класс из ЛР 4 и два наследника: позднее связывание через указатели на базу и раннее — для сравнения.",
+    hasVariants: true,
+    variantCount: 15,
+    source: "Програмні засоби загального користування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pzzk-lab6",
+    title: "ЛР 6 · Шаблони класів: STL",
+    category: "pzzk",
+    tagline: "10 вариантов · queue, stack, deque, list",
+    description:
+      "Модели ситуаций на контейнерах STL с меню и обоснованием выбора контейнера и альтернатив.",
+    hasVariants: true,
+    variantCount: 10,
+    source: "Програмні засоби загального користування, LIDER",
     size: "md",
   },
   {

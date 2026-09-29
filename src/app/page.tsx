@@ -21,6 +21,7 @@ const CATEGORY_ORDER: Category[] = [
   "moib",
   "amo",
   "ks",
+  "pzzk",
   "kdm",
   "temk",
   "extra",
