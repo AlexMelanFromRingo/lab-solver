@@ -58,6 +58,8 @@ export interface PlotSeries {
   dashed?: boolean;
   /** Подписать значения у точек. */
   values?: boolean;
+  /** false — без маркеров (густые расчётные точки, осциллограммы). */
+  markers?: boolean;
 }
 
 export interface PlotFigure {
@@ -72,6 +74,23 @@ export interface PlotFigure {
   hlines?: { y: number; label: string }[];
   /** Выделенные диапазоны по x (превышение нормы). */
   shade?: { from: number; to: number; label?: string }[];
+}
+
+/** Сигнал временной диаграммы: значение действует с момента t до следующего изменения. */
+export interface TimingSignal {
+  name: string;
+  /** Шина: значения пишутся в «шестигранниках», как в PSpice. */
+  bus?: boolean;
+  changes: [number, number | string][];
+}
+
+export interface TimingFigure {
+  from: number;
+  to: number;
+  unit: string;
+  signals: TimingSignal[];
+  /** Деления оси времени; по умолчанию — шаг 1–2–5. */
+  ticks?: number[];
 }
 
 /** Шаг 1–2–5·10ⁿ не меньше v; с wide — ещё и 2,5 (масштабы вроде 0,25 А/см). */

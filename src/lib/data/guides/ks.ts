@@ -16,6 +16,7 @@ import {
   type Formula,
   type Mode,
 } from "@/lib/algorithms/schematics";
+import { lab3Timing, lab6Timing, lab6Zoom, logicDiagram, rcPlots } from "@/lib/algorithms/ks-figures";
 
 /**
  * «Комп'ютерна схемотехніка» — методичні вказівки до практичних занять 1–3
@@ -163,6 +164,14 @@ export const KS_GUIDES: GuideModule[] = [
             gateTable(f),
             truthTableOf(f),
           ],
+          figures: [
+            {
+              kind: "drawing",
+              title: `Логічна схема ${f.out} = ${FORMULAS[v - 1].split("=").slice(1).join("=")} (УГП за ДСТУ, варіант ${v})`,
+              drawing: logicDiagram(f, gates),
+              note: "Та сама схема, що в Capture, але в позначеннях ДСТУ (ГОСТ 2.743-91): «&» — І, «1» — АБО, кружок — інверсія виходу. Вихід — коло " + f.out + ", а не додатковий вхід.",
+            },
+          ],
           code: [{ title: "Список кіл (.net)", code: netlist(`LR1_${v}`, gates) }],
           notes: [
             `Place Part — ${gates.length} раз (за кількістю компонентів), Place Net Alias — ${f.vars.length + 1} (входи ${f.vars.join(", ")} і вихід ${f.out}), далі Place Wire між виводами.`,
@@ -232,6 +241,13 @@ export const KS_GUIDES: GuideModule[] = [
               note: `За півперіод перехідний процес проходить на ${n(res.settle, 1)} % (T/2 = ${n(k / 2, 2)}·Trc). Усталені рівні: максимум ${n(res.vMax)} В, мінімум ${n(res.vMin)} В.`,
             },
           ],
+          figures: (() => {
+            const p = rcPlots(res.tau, res.period, m);
+            return [
+              { kind: "plot" as const, title: `Інтегруюча RC-цепочка: X і Y (варіант ${v})`, plot: p.int },
+              { kind: "plot" as const, title: `Диференціююча RC-цепочка: X і Y (варіант ${v})`, plot: p.dif },
+            ];
+          })(),
           code: [
             { title: "Список кіл — інтегруюча цепочка", code: `* source RC_Int\nV_V1         X 0 STIMULUS=x\nR_R1         X Y ${sp(r)}k\nC_C1         Y 0 ${sp(c)}n` },
             { title: "Список кіл — диференціююча цепочка (R і C поміняні місцями)", code: `* source RC_Dif\nV_V1         X 0 STIMULUS=x\nC_C1         X Y ${sp(c)}n\nR_R1         Y 0 ${sp(r)}k` },
@@ -300,6 +316,15 @@ export const KS_GUIDES: GuideModule[] = [
               note: "Фактичні перемикання виходу запізнюються на затримки елементів (одиниці–десятки нс) — їх видно при розтягуванні осі часу.",
             },
             gateTable(f),
+          ],
+          figures: [
+            { kind: "drawing", title: `Логічна схема варіанту ${v} (УГП за ДСТУ)`, drawing: logicDiagram(f, gates) },
+            {
+              kind: "timing",
+              title: `Очікувана часова діаграма за період T = ${n(T)} мкс (варіант ${v})`,
+              timing: lab3Timing(f, gates, T),
+              note: "Без затримок елементів; у PSpice фронти проміжних кіл і виходу запізнюються на одиниці–десятки нс.",
+            },
           ],
           code: [{ title: "Список кіл зі стимуляторами", code: netlist(`LR3_${v}`, gates, f.vars) }],
           notes: [
@@ -446,6 +471,19 @@ export const KS_GUIDES: GuideModule[] = [
               note: "Дешифратор на 4 елементах 7400: Y0 = ¬(NQ1·NQ0), Y1 = ¬(NQ1·Q0), Y2 = ¬(Q1·NQ0), Y3 = ¬(Q1·Q0); шини Q[1:0] і Y[3:0] — для відображення в hex.",
             },
             ...lab6Tables(T),
+          ],
+          figures: [
+            { kind: "timing", title: `Підсумовуючий лічильник з дешифратором: 9 періодів Clk (T = ${n(T)} мкс)`, timing: lab6Timing("up", T) },
+            { kind: "timing", title: "Віднімаючий лічильник: 9 періодів Clk", timing: lab6Timing("down", T) },
+            { kind: "timing", title: "Регістр: 9 періодів Clk", timing: lab6Timing("reg", T, REG_DATA) },
+            {
+              kind: "timing",
+              title: "Фрагмент біля фронту Clk: підсумовуючий лічильник, перехід 1 → 2",
+              timing: lab6Zoom("up", 1),
+              note: `Затримки 7474 з методички: 0 → 1 — ${T_LH} нс, 1 → 0 — ${T_HL} нс; хибний стан Q = 0 і хибні коди Y тривають кілька нс.`,
+            },
+            { kind: "timing", title: "Фрагмент: віднімаючий лічильник, перехід 0 → 3", timing: lab6Zoom("down", 0) },
+            { kind: "timing", title: "Фрагмент: регістр, перехід 1 → 2", timing: lab6Zoom("reg", 1, 2) },
           ],
           code: [
             {

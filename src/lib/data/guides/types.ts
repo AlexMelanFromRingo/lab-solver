@@ -1,7 +1,7 @@
 import type { LabGuide } from "@/lib/data/pismi-labs";
 import type { RegScheme } from "@/lib/algorithms/aks-schemes";
 import type { FlowChart } from "@/lib/algorithms/flowchart";
-import type { PhasorFigure, PlotFigure } from "@/lib/figures";
+import type { PhasorFigure, PlotFigure, TimingFigure } from "@/lib/figures";
 import type { Drawing } from "@/lib/drawing";
 
 /**
@@ -31,7 +31,8 @@ export type GuideFigure =
   | { kind: "flow"; title: string; chart: FlowChart; note?: string }
   | { kind: "plot"; title: string; plot: PlotFigure; note?: string }
   | { kind: "phasor"; title: string; phasor: PhasorFigure; note?: string }
-  | { kind: "drawing"; title: string; drawing: Drawing; note?: string };
+  | { kind: "drawing"; title: string; drawing: Drawing; note?: string }
+  | { kind: "timing"; title: string; timing: TimingFigure; note?: string };
 
 export interface GuideComputed {
   tables?: GuideTable[];

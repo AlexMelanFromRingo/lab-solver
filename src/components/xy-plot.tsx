@@ -166,9 +166,10 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
           return (
             <g key={s.label}>
               {sorted.length > 1 && <path d={fig.smooth ? monotone(sorted) : `M${sorted.map((p) => p.join(" ")).join(" L")}`} fill="none" stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />}
-              {sp.map(([x, y], j) => (
-                <Marker key={j} x={x} y={y} kind={i} />
-              ))}
+              {s.markers !== false &&
+                sp.map(([x, y], j) => (
+                  <Marker key={j} x={x} y={y} kind={i} />
+                ))}
               {s.values &&
                 s.points
                   .filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y))
@@ -186,7 +187,7 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
             return (
               <g key={`lg${s.label}`} fontSize={11} fill={INK}>
                 <line x1={x} x2={x + 30} y1={H + 6} y2={H + 6} stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />
-                <Marker x={x + 15} y={H + 6} kind={i} />
+                {s.markers !== false && <Marker x={x + 15} y={H + 6} kind={i} />}
                 <text x={x + 38} y={H + 10}>
                   <SubLabel text={s.label} />
                 </text>
