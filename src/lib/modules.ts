@@ -1378,6 +1378,17 @@ export const modules: LabModule[] = [
     size: "sm",
   },
   {
+    slug: "unicode-coding",
+    title: "ЛР 1 · Дослідження способів кодування повідомлень",
+    category: "tik",
+    tagline: "Лаба 1 · по своему имени",
+    description:
+      "Таблица 1 по первой букве имени и emoji: код Unicode, байты и hex в UTF-8 и UTF-16 BE, двоичный код; дампы файлов UTF-8, UTF-16 BE и CP-1251 как в Far Manager; CR LF, бітрейт WAV и размер растра.",
+    hasVariants: false,
+    source: "Теория информации, Лаба 1",
+    size: "md",
+  },
+  {
     slug: "entropy-coding",
     title: "ЛР 2 · Дослідження кодування джерела",
     category: "tik",
