@@ -200,3 +200,37 @@ export function lab6Zoom(mode: Mode, from: number, d = 0): TimingFigure {
     ],
   };
 }
+
+/**
+ * ЛР 4: передаточная характеристика КМОН-инвертора на моделях MOS уровня 1
+ * по умолчанию (KP = 20 мкА/В², VTO = 0, W = L): для каждого V(x) — V(y), при
+ * котором токи NMOS и PMOS равны (бисекция), и ID(M2)·10000, как на рис. 8–9.
+ */
+export function cmosTransfer(vd: number): PlotFigure {
+  const KP = 2e-5;
+  const id = (vgs: number, vds: number) => (vgs <= 0 ? 0 : vds < vgs ? (KP / 2) * (2 * vgs * vds - vds * vds) : (KP / 2) * vgs * vgs);
+  const vy: [number, number][] = [];
+  const cur: [number, number][] = [];
+  for (let i = 0; i <= 100; i++) {
+    const x = (vd * i) / 100;
+    let lo = 0;
+    let hi = vd;
+    for (let k = 0; k < 60; k++) {
+      const y = (lo + hi) / 2;
+      // При росте y ток NMOS растёт, PMOS — падает
+      if (id(x, y) - id(vd - x, vd - y) > 0) hi = y;
+      else lo = y;
+    }
+    const y = (lo + hi) / 2;
+    vy.push([x, y]);
+    cur.push([x, id(x, y) * 1e4]);
+  }
+  return {
+    x: { label: "V(x)", unit: "В" },
+    y: { label: "V(y), ID(M2)·10⁴", unit: "В, А" },
+    series: [
+      { label: "V(y)", points: vy, markers: false },
+      { label: "ID(M2)·10000", points: cur, markers: false, dashed: true },
+    ],
+  };
+}

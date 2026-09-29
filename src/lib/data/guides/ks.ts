@@ -16,7 +16,7 @@ import {
   type Formula,
   type Mode,
 } from "@/lib/algorithms/schematics";
-import { lab3Timing, lab6Timing, lab6Zoom, logicDiagram, rcPlots } from "@/lib/algorithms/ks-figures";
+import { cmosTransfer, lab3Timing, lab6Timing, lab6Zoom, logicDiagram, rcPlots } from "@/lib/algorithms/ks-figures";
 
 /**
  * «Комп'ютерна схемотехніка» — методичні вказівки до практичних занять 1–3
@@ -390,6 +390,14 @@ export const KS_GUIDES: GuideModule[] = [
                 ["Рівні виходу", `≈ ${n(V)} В при V(x) = 0 і ≈ 0 В при V(x) = ${n(V)} В`],
               ],
               note: "Стандартна модель MOS у PSpice: KP = 20 мкА/В², VTO = 0, W = L = 100 мкм. Для 5 В формула дає 62,5 мкА — методичка на рис. 9 читає «приблизно 65 мкА».",
+            },
+          ],
+          figures: [
+            {
+              kind: "plot",
+              title: `Очікувана передаточна характеристика КМОН-інвертора, Vd = ${n(V)} В`,
+              plot: cmosTransfer(V),
+              note: `Моделі MOS рівня 1 за замовчуванням: поріг ${n(V / 2, 2)} В, пік ID(M2) ≈ ${n(ipk, 1)} мкА (на графіку ×10000 — ${n(ipk / 100, 2)}).`,
             },
           ],
           code: [

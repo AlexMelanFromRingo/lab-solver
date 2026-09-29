@@ -23,7 +23,7 @@ const r2 = (v: number) => Math.round(v * 100) / 100;
 const SUP: Record<string, string> = { "-": "⁻", "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹" };
 const sup = (n: number) => String(n).replace(/./g, (c) => SUP[c] ?? c);
 
-function axis(values: number[], zero = true) {
+function axis(values: number[], zero = true, headroom = true) {
   const max = Math.max(...values.map(Math.abs), 0);
   const e = max >= 1e4 || (max > 0 && max < 0.1) ? Math.floor(Math.log10(max)) : 0;
   const k = 10 ** -e;
@@ -33,7 +33,7 @@ function axis(values: number[], zero = true) {
   const min = Math.floor(lo / step) * step;
   let top = Math.ceil(hi / step) * step || step;
   // Запас сверху, чтобы точка на максимуме и её подпись не упирались в край.
-  if (top - hi < 0.04 * (top - min)) top += step;
+  if (headroom && top - hi < 0.04 * (top - min)) top += step;
   const ticks: number[] = [];
   for (let t = min; t <= top + step / 2; t += step) ticks.push(Number(t.toFixed(10)));
   return { e, k, min, max: top, ticks };
@@ -88,7 +88,7 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
   const pts = fig.series.flatMap((s) => s.points).filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y));
   const ax = fig.xTicks
     ? { e: 0, k: 1, min: Math.min(...fig.xTicks.map((t) => t.at)) - 0.5, max: Math.max(...fig.xTicks.map((t) => t.at)) + 0.5, ticks: fig.xTicks.map((t) => t.at) }
-    : axis(pts.map((p) => p[0]), fig.x.zero !== false);
+    : axis(pts.map((p) => p[0]), fig.x.zero !== false, false);
   const ay = axis([...pts.map((p) => p[1]), ...(fig.hlines ?? []).map((h) => h.y)], fig.y.zero !== false);
   const xLabel = (t: number) => fig.xTicks?.find((x) => x.at === t)?.label ?? fmtNum(t, 4);
   const X = (v: number) => r2(PAD.left + ((v * ax.k - ax.min) / (ax.max - ax.min)) * PW);
