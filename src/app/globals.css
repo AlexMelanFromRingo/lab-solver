@@ -55,6 +55,8 @@
   --cat-pp-soft: #67e8f91a;
   --cat-mps: #a5b4fc;
   --cat-mps-soft: #a5b4fc1a;
+  --cat-db: #f5d0fe;
+  --cat-db-soft: #f5d0fe1a;
 }
 
 @theme inline {
@@ -109,6 +111,8 @@
   --color-pp-soft: var(--cat-pp-soft);
   --color-mps: var(--cat-mps);
   --color-mps-soft: var(--cat-mps-soft);
+  --color-db: var(--cat-db);
+  --color-db-soft: var(--cat-db-soft);
 
   --font-display: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--ff-body), ui-sans-serif, system-ui, sans-serif;

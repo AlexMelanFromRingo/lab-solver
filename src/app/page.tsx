@@ -15,6 +15,7 @@ const CATEGORY_ORDER: Category[] = [
   "km",
   "spz",
   "mps",
+  "db",
   "lm",
   "pk",
   "ak",

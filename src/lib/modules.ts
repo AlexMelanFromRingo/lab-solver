@@ -19,6 +19,7 @@ export type Category =
   | "pzzk"
   | "pp"
   | "mps"
+  | "db"
   | "extra";
 
 /**
@@ -169,6 +170,13 @@ export const categories: Record<
     stage: "Бакалавриат · 3 курс",
     accent: "var(--cat-mps)",
     accentSoft: "var(--cat-mps-soft)",
+  },
+  db: {
+    title: "Бази даних",
+    short: "Microsoft Access: таблицы, запросы, SQL (DDL, DML, DQL), нормализация и метод «сущность — связь»",
+    stage: "Бакалавриат · 3 курс",
+    accent: "var(--cat-db)",
+    accentSoft: "var(--cat-db-soft)",
   },
   extra: {
     title: "Вне учебной программы",
@@ -1197,6 +1205,83 @@ export const modules: LabModule[] = [
       "Содержание курсовой по методичке и расчёт скорости последовательного канала для 8051 и 8251.",
     hasVariants: false,
     source: "Проектування мікропроцесорних систем, LIDER",
+    size: "md",
+  },
+  {
+    slug: "db-lab1",
+    title: "ЛР 1 · Створення, редагування та зв'язування таблиць бази даних у діалоговому режимі програми Microsoft Access",
+    category: "db",
+    tagline: "Access · схема даних",
+    description:
+      "Общая таблица, таблицы сущностей и таблица связи по своей предметной области, маски ввода и схема данных.",
+    hasVariants: false,
+    source: "Бази даних, LIDER",
+    size: "md",
+  },
+  {
+    slug: "db-lab2",
+    title: "ЛР 2 · Обробка бази даних у діалоговому режимі програми Microsoft Access",
+    category: "db",
+    tagline: "запити · звіти · фільтри",
+    description:
+      "Сложные запросы «і»/«або», запрос по связанным таблицам, отчёт мастером и фильтры — что и как делать.",
+    hasVariants: false,
+    source: "Бази даних, LIDER",
+    size: "md",
+  },
+  {
+    slug: "db-lab3",
+    title: "ЛР 3 · Мова DDL програми Microsoft Access для створення та редагування структури бази даних",
+    category: "db",
+    tagline: "DDL · CREATE, ALTER, DROP",
+    description:
+      "Операторы Create, Alter, Drop и индексы для своей схемы «ІМЕННИК1 — ДІЄСЛОВО — ІМЕННИК2».",
+    hasVariants: false,
+    source: "Бази даних, LIDER",
+    size: "md",
+  },
+  {
+    slug: "db-lab4",
+    title: "ЛР 4 · Мова DML програми Microsoft Access для маніпулювання даними",
+    category: "db",
+    tagline: "DML · INSERT, UPDATE, DELETE",
+    description:
+      "Перенос данных, добавление записи, все формы Update и удаление — для своей схемы.",
+    hasVariants: false,
+    source: "Бази даних, LIDER",
+    size: "md",
+  },
+  {
+    slug: "db-lab5",
+    title: "ЛР 5 · Мова DQL програми Microsoft Access для створення запитів",
+    category: "db",
+    tagline: "DQL · SELECT",
+    description:
+      "Select с логическими операциями, предикатами отбора, группировкой и сортировкой — для своей схемы.",
+    hasVariants: false,
+    source: "Бази даних, LIDER",
+    size: "md",
+  },
+  {
+    slug: "db-lab6",
+    title: "ЛР 6 · Створення складних запитів за допомогою SQL-мови програми Microsoft Access",
+    category: "db",
+    tagline: "JOIN · підзапити · UNION",
+    description:
+      "Все виды соединений, подзапросы в Select, Insert, Update, Delete и объединение запросов.",
+    hasVariants: false,
+    source: "Бази даних, LIDER",
+    size: "md",
+  },
+  {
+    slug: "db-kr",
+    title: "Індивідуальне завдання · Проектування бази даних",
+    category: "db",
+    tagline: "нормальні форми · ER",
+    description:
+      "Нормализация по функциональным зависимостям (2НФ, 3НФ, БКНФ) и правила формирования отношений метода «сущность — связь».",
+    hasVariants: false,
+    source: "Бази даних, LIDER",
     size: "md",
   },
   {

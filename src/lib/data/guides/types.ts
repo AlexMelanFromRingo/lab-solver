@@ -55,5 +55,5 @@ export interface GuideModule {
   /** Опечатки и противоречия методички — с тем, как поступить. */
   errata?: string[];
   /** Интерактивный расчёт сверх таблиц варианта (см. components/guide-view). */
-  widget?: "acl" | "eth10" | "fast" | "slae" | "iter" | "roots" | "approx" | "cauchy" | "graph" | "c-lab1" | "c-lab2" | "c-lab3" | "c-magnet" | "c-rgr" | "oop-light" | "ppi";
+  widget?: "acl" | "eth10" | "fast" | "slae" | "iter" | "roots" | "approx" | "cauchy" | "graph" | "c-lab1" | "c-lab2" | "c-lab3" | "c-magnet" | "c-rgr" | "oop-light" | "ppi" | "db-l3" | "db-l4" | "db-l5" | "db-l6" | "db-norm";
 }

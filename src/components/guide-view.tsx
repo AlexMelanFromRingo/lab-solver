@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { AclBuilder } from "@/components/acl-builder";
 import { PpiCalc } from "@/components/ppi-calc";
+import { AccessSqlCalc, ErCalc, NormalizerCalc } from "@/components/db-calc";
 import { GraphCalc } from "@/components/graph-calc";
 import { LightCalc } from "@/components/oop-calc";
 import { Lab1Calc, Lab2Calc, Lab3Calc, MagnetCalc, RgrCalc } from "@/components/circuits-calc";
@@ -93,6 +94,16 @@ export function GuideView({ slug }: { slug: string }) {
       {g.widget === "c-rgr" && <RgrCalc />}
       {g.widget === "oop-light" && <LightCalc />}
       {g.widget === "ppi" && <PpiCalc />}
+      {g.widget === "db-l3" && <AccessSqlCalc lab={3} />}
+      {g.widget === "db-l4" && <AccessSqlCalc lab={4} />}
+      {g.widget === "db-l5" && <AccessSqlCalc lab={5} />}
+      {g.widget === "db-l6" && <AccessSqlCalc lab={6} />}
+      {g.widget === "db-norm" && (
+        <>
+          <NormalizerCalc />
+          <ErCalc />
+        </>
+      )}
     </>
   );
 
