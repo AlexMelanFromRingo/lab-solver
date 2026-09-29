@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Card, CardBody } from "@/components/ui/card";
 import { SelectField, TextField } from "@/components/ui/field";
 import { OutputBlock } from "@/components/ui/output-block";
-import { asmHex, hx, ppiBsr, ppiControlWord, ppiHandshake, type Dir, type PpiConfig, type PortMode } from "@/lib/algorithms/i8080";
+import { asmHex, hx, ppiBsr, ppiControlWord, ppiHandshake, ppiScheme, type Dir, type PpiConfig, type PortMode } from "@/lib/algorithms/i8080";
+import { DrawingView } from "@/components/drawing-view";
 
 const dirLabel = (d: Dir) => (d === "in" ? "ввод" : "вивід");
 
@@ -99,6 +100,7 @@ export function PpiCalc() {
             Лінії квитування формує сам ППА; командою BSR для них перемикаються лише тригери дозволу переривань INTE: {hs.inte.map((x) => `PC${x.bit} — ${x.name} (${hx(ppiBsr(x.bit, true))}h встановити, ${hx(ppiBsr(x.bit, false))}h скинути)`).join("; ")}.
           </p>
         )}
+        <DrawingView drawing={ppiScheme(b, c)} title={`Схема підключення ППА 8255A (адреси ${addr(0)}–${addr(3)})`} />
         <OutputBlock label="Заготовка програми (асемблер 8080)" value={program} wrap={false} />
       </CardBody>
     </Card>

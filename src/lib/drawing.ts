@@ -5,7 +5,7 @@
  */
 
 export type DrawItem =
-  | { k: "line"; pts: [number, number][]; arrow?: boolean; dashed?: boolean; bold?: boolean }
+  | { k: "line"; pts: [number, number][]; arrow?: boolean; arrowStart?: boolean; dashed?: boolean; bold?: boolean }
   | { k: "rect"; x: number; y: number; w: number; h: number; bold?: boolean; dashed?: boolean; fill?: boolean }
   | { k: "circle"; x: number; y: number; r: number; fill?: boolean }
   | { k: "dot"; x: number; y: number }

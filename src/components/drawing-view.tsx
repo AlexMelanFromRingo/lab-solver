@@ -39,6 +39,7 @@ export function DrawingView({ drawing, title }: { drawing: Drawing; title: strin
                   strokeWidth={it.bold ? 2 : 1.2}
                   strokeDasharray={it.dashed ? "6 4" : undefined}
                   markerEnd={it.arrow ? `url(#${id})` : undefined}
+                  markerStart={it.arrowStart ? `url(#${id})` : undefined}
                 />
               );
             case "rect":

@@ -4,6 +4,7 @@
  * код — мнемокод», контрольная сумма (директива КС стенда) и результат
  * выполнения в регистрах и памяти.
  */
+import type { Drawing, DrawItem } from "@/lib/drawing";
 
 const R8: Record<string, number> = { B: 0, C: 1, D: 2, E: 3, H: 4, L: 5, M: 6, A: 7 };
 const RP: Record<string, number> = { B: 0, D: 1, H: 2, SP: 3, PSW: 3 };
@@ -414,4 +415,73 @@ export function ppiHandshake(c: PpiConfig) {
     inte.push({ bit: 2, name: "INTE B" });
   }
   return { lines: lines.sort((x, y) => y.bit - x.bit), inte };
+}
+
+// ------------------------------------------------ схема підключення ППА (ЛР5)
+
+
+/**
+ * Схема подключения 8255A к системной шине 8080: шина данных, IOR/IOW,
+ * A0/A1, дешифратор адреса на CS, RESET; справа — порты A и B по режимам
+ * и линии порта C (квитирование или свободные биты) со стрелками направления.
+ */
+export function ppiScheme(base: number, c: PpiConfig): Drawing {
+  const items: DrawItem[] = [];
+  const hs = ppiHandshake(c);
+  const X0 = 300;
+  const X1 = 460;
+  items.push({ k: "rect", x: X0, y: 30, w: X1 - X0, h: 360, bold: true });
+  items.push({ k: "text", x: (X0 + X1) / 2, y: 50, text: "8255A (ППА)", anchor: "middle", bold: true, plain: true });
+  const pinL = (y: number, name: string) => items.push({ k: "text", x: X0 + 6, y: y + 4, text: name, size: 10, plain: true });
+  const pinR = (y: number, name: string) => items.push({ k: "text", x: X1 - 6, y: y + 4, text: name, size: 10, anchor: "end", plain: true });
+  const left = (y: number, label: string, opts: { into?: boolean; both?: boolean; bold?: boolean; from?: number } = {}) => {
+    items.push({ k: "line", pts: [[opts.from ?? 40, y], [X0, y]], arrow: opts.into || opts.both, arrowStart: opts.both, bold: opts.bold });
+    if (!opts.from) items.push({ k: "text", x: 40, y: y - 5, text: label, size: 10, plain: true });
+  };
+  // Системная шина
+  left(80, "D7–D0 (шина даних)", { both: true, bold: true });
+  pinL(80, "D7–D0");
+  left(120, "IOR̅ (читання)", { into: true });
+  pinL(120, "RD̅");
+  left(150, "IOW̅ (запис)", { into: true });
+  pinL(150, "WR̅");
+  left(180, "A0", { into: true });
+  pinL(180, "A0");
+  left(210, "A1", { into: true });
+  pinL(210, "A1");
+  left(340, "RESET", { into: true });
+  pinL(340, "RESET");
+  // Дешифратор адреса
+  const hex = (v: number) => v.toString(16).toUpperCase().padStart(4, "0");
+  items.push({ k: "rect", x: 150, y: 240, w: 90, h: 70, bold: true });
+  items.push({ k: "text", x: 195, y: 262, text: "DC", anchor: "middle", bold: true, plain: true });
+  items.push({ k: "text", x: 195, y: 280, text: `${hex(base & 0xfffc)}h–`, anchor: "middle", size: 9.5, plain: true });
+  items.push({ k: "text", x: 195, y: 293, text: `${hex((base & 0xfffc) + 3)}h`, anchor: "middle", size: 9.5, plain: true });
+  items.push({ k: "line", pts: [[40, 275], [150, 275]], arrow: true, bold: true });
+  items.push({ k: "text", x: 40, y: 270, text: "A15–A2", size: 10, plain: true });
+  items.push({ k: "line", pts: [[240, 262], [X0, 262]], arrow: true });
+  items.push({ k: "circle", x: 243, y: 262, r: 3 });
+  pinL(262, "CS̅");
+  // Порты A и B
+  const modeName = (m: PortMode) => (m === "sync" ? "режим 0" : m === "async" ? "режим 1" : "режим 2");
+  const right = (y: number, label: string, dir: Dir | "both", bold = false) => {
+    if (dir === "in") items.push({ k: "line", pts: [[X1 + 110, y], [X1, y]], arrow: true, bold });
+    else items.push({ k: "line", pts: [[X1, y], [X1 + 110, y]], arrow: true, arrowStart: dir === "both", bold });
+    items.push({ k: "text", x: X1 + 116, y: y + 4, text: label, size: 10, plain: true });
+  };
+  const dn = (d: Dir) => (d === "in" ? "ввід" : "вивід");
+  right(80, `Порт A: ${modeName(c.aMode)}, ${c.aMode === "bidir" ? "ввід/вивід" : dn(c.aDir)}`, c.aMode === "bidir" ? "both" : c.aDir, true);
+  pinR(80, "PA7–PA0");
+  right(120, `Порт B: ${modeName(c.bMode)}, ${dn(c.bDir)}`, c.bDir, true);
+  pinR(120, "PB7–PB0");
+  // Порт C по битам
+  for (let bit = 7; bit >= 0; bit--) {
+    const y = 160 + (7 - bit) * 26;
+    const l = hs.lines.find((x) => x.bit === bit);
+    const isIn = l ? /\(вхід\)/.test(l.role) : (bit >= 4 ? c.cUpper : c.cLower) === "in";
+    const label = l ? `${l.name} — ${l.role.replace(/ \((вхід|вихід)\)/, "")}${/^INTR/.test(l.name) ? " → INT" : ""}` : `вільний, ${dn(bit >= 4 ? c.cUpper : c.cLower)}`;
+    right(y, label, isIn ? "in" : "out");
+    pinR(y, `PC${bit}`);
+  }
+  return { w: 780, h: 400, items };
 }
