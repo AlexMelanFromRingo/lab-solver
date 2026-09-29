@@ -17,6 +17,7 @@ export type Category =
   | "spz"
   | "ks"
   | "pzzk"
+  | "pp"
   | "extra";
 
 /**
@@ -153,6 +154,13 @@ export const categories: Record<
     stage: "Бакалавриат · 2 курс",
     accent: "var(--cat-pzzk)",
     accentSoft: "var(--cat-pzzk-soft)",
+  },
+  pp: {
+    title: "Проектний практикум",
+    short: "C# и Visual Studio: консоль и Windows Forms, массивы и сортировки, классы, наследование, интерфейсы",
+    stage: "Бакалавриат · 2 курс",
+    accent: "var(--cat-pp)",
+    accentSoft: "var(--cat-pp-soft)",
   },
   extra: {
     title: "Вне учебной программы",
@@ -1033,6 +1041,96 @@ export const modules: LabModule[] = [
     hasVariants: true,
     variantCount: 10,
     source: "Програмні засоби загального користування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pp-lab1",
+    title: "ЛР 1 · Обчислення величини струму в опорі",
+    category: "pp",
+    tagline: "консоль · Windows Forms",
+    description:
+      "Первое решение в Visual Studio: ток I = U/R в консоли и на форме, ошибки компиляции и выполнения, точка останова.",
+    hasVariants: false,
+    source: "Проектний практикум, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pp-lab2",
+    title: "ЛР 2 · Обчислення енергії сигналу",
+    category: "pp",
+    tagline: "15 вариантов · прямоугольники, Рунге",
+    description:
+      "Энергия сигнала методом средних прямоугольников: эталон, таблицы 2.3 и 2.4, некорректные данные и доля кода защиты.",
+    hasVariants: true,
+    variantCount: 15,
+    source: "Проектний практикум, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pp-lab3",
+    title: "ЛР 3 · Дослідження ефективності методів сортування",
+    category: "pp",
+    tagline: "вставки · Шелл",
+    description:
+      "Число обменов при сортировке вставками и Шелла для массивов 10–40 элементов и итоговый код формы.",
+    hasVariants: false,
+    source: "Проектний практикум, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pp-lab4",
+    title: "ЛР 4 · Оцінка складності алгоритму обробки двомірного масиву",
+    category: "pp",
+    tagline: "16 вариантов · List<int>",
+    description:
+      "Выборка из матрицы и её характеристика по варианту, подсчёт операций и таблица 4.4 с оценкой роста.",
+    hasVariants: true,
+    variantCount: 16,
+    source: "Проектний практикум, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pp-lab5",
+    title: "ЛР 5 · Моделювання лампи та лінзового комплекту світлофору",
+    category: "pp",
+    tagline: "класи · посилальні типи",
+    description:
+      "Классы Lamp и LensKit и таблица 5.1: после lamp1 = lamp2 обе переменные указывают на одну лампу.",
+    hasVariants: false,
+    source: "Проектний практикум, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pp-lab6",
+    title: "ЛР 6 · Моделювання сигнального вогню лінзового світлофору",
+    category: "pp",
+    tagline: "агрегація · конструктори",
+    description:
+      "Класс LightSignal из лампы и линзового комплекта, дневной режим 10,5–12 В и таблица 6.1.",
+    hasVariants: false,
+    source: "Проектний практикум, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pp-lab7",
+    title: "ЛР 7 · Моделювання імпульсного рейкового кола",
+    category: "pp",
+    tagline: "спадкування · abstract",
+    description:
+      "Рельсовая цепь через абстрактный класс и наследника: сигнал на приёмнике по таблице 7.1.",
+    hasVariants: false,
+    source: "Проектний практикум, LIDER",
+    size: "md",
+  },
+  {
+    slug: "pp-lab8",
+    title: "ЛР 8 · Моделювання електромагнітного реле",
+    category: "pp",
+    tagline: "інтерфейси · гістерезис",
+    description:
+      "Реле КШ1-280 через интерфейсы с явной реализацией: релейная характеристика с гистерезисом.",
+    hasVariants: false,
+    source: "Проектний практикум, LIDER",
     size: "md",
   },
   {
