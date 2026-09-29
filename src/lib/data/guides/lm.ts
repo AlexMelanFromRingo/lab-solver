@@ -2,12 +2,12 @@ import type { GuideComputed, GuideModule, GuideVariant } from "./types";
 import { lanVariant } from "@/lib/algorithms/lan";
 
 /**
- * «Локальні мережі» — Пахомова В.М., методичні вказівки до лабораторних робіт
- * (ЛМ_ЛАБ_укр_Пахомова.pdf): семь моделей в NetCracker Professional на одной и
+ * «Локальні мережі» — методичні вказівки до лабораторних робіт
+ * (ЛМ_ЛАБ_укр.pdf): семь моделей в NetCracker Professional на одной и
  * той же инфраструктуре варианта.
  */
 
-const SRC = "Локальні мережі, методичні вказівки до лабораторних робіт (Пахомова В.М.)";
+const SRC = "Локальні мережі, методичні вказівки до лабораторних робіт";
 
 function variantData(n: number): GuideComputed {
   const { infra: i, traffic: t } = lanVariant(n);
