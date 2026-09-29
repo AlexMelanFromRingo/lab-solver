@@ -8,9 +8,10 @@ import { KDM_GUIDES } from "./kdm";
 import { TEMK_GUIDES } from "./temk";
 import { OOP_GUIDES } from "./oop";
 import { SPZ_GUIDES } from "./spz";
+import { KS_GUIDES } from "./ks";
 
 /** Все работы-инструкции; страница /modules/<slug> строится по этим данным. */
-export const GUIDES: GuideModule[] = [...KM_GUIDES, ...ZIKM_GUIDES, ...LM_GUIDES, ...MOIB_GUIDES, ...AMO_GUIDES, ...KDM_GUIDES, ...TEMK_GUIDES, ...OOP_GUIDES, ...SPZ_GUIDES];
+export const GUIDES: GuideModule[] = [...KM_GUIDES, ...ZIKM_GUIDES, ...LM_GUIDES, ...MOIB_GUIDES, ...AMO_GUIDES, ...KDM_GUIDES, ...TEMK_GUIDES, ...OOP_GUIDES, ...SPZ_GUIDES, ...KS_GUIDES];
 
 export function guideBySlug(slug: string): GuideModule | undefined {
   return GUIDES.find((g) => g.slug === slug);

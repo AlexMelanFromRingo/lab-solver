@@ -25,8 +25,8 @@ function Table({ table }: { table: GuideTable }) {
         <table className="w-full font-mono text-sm">
           <thead className="border-b border-border text-xs text-ink-faint">
             <tr>
-              {table.columns.map((c) => (
-                <th key={c} className="px-3 py-2 text-left align-bottom font-normal">
+              {table.columns.map((c, i) => (
+                <th key={i} className="px-3 py-2 text-left align-bottom font-normal">
                   {c}
                 </th>
               ))}

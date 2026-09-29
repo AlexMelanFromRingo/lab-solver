@@ -15,6 +15,7 @@ export type Category =
   | "temk"
   | "oop"
   | "spz"
+  | "ks"
   | "extra";
 
 /**
@@ -137,6 +138,13 @@ export const categories: Record<
     stage: "Бакалавриат · 3 курс",
     accent: "var(--cat-spz)",
     accentSoft: "var(--cat-spz-soft)",
+  },
+  ks: {
+    title: "Комп'ютерна схемотехніка",
+    short: "Моделирование в OrCAD/PSpice: логические схемы, RC-цепочки, ТТЛ и КМОН, счётчики и дешифраторы",
+    stage: "Бакалавриат · 2 курс",
+    accent: "var(--cat-ks)",
+    accentSoft: "var(--cat-ks-soft)",
   },
   extra: {
     title: "Вне учебной программы",
@@ -886,6 +894,66 @@ export const modules: LabModule[] = [
     hasVariants: true,
     variantCount: 6,
     source: "Системне програмне забезпечення, LIDER",
+    size: "md",
+  },
+  {
+    slug: "ks-lab1",
+    title: "ЛР 1 · Ознайомлення із САПР OrCAD",
+    category: "ks",
+    tagline: "28 формул · 7400, список кіл",
+    description:
+      "Логическая формула варианта — элементы серии 7400, список цепей PSpice и таблица истинности; вырожденные формулы отмечены.",
+    hasVariants: true,
+    variantCount: 28,
+    source: "Комп'ютерна схемотехніка, LIDER",
+    size: "md",
+  },
+  {
+    slug: "ks-lab2",
+    title: "ЛР 2 · Моделювання RC-ланцюжків за допомогою програми PSpice в САПР OrCAD",
+    category: "ks",
+    tagline: "28 вариантов · Trc, T, Tmod",
+    description:
+      "Постоянная времени, период и время моделирования, стимул Pulse, списки цепей и установившиеся уровни выхода.",
+    hasVariants: true,
+    variantCount: 28,
+    source: "Комп'ютерна схемотехніка, LIDER",
+    size: "md",
+  },
+  {
+    slug: "ks-lab3",
+    title: "ЛР 3 · Моделювання цифрової схеми за допомогою програми PSpice в САПР OrCAD",
+    category: "ks",
+    tagline: "DigStim · часова діаграма",
+    description:
+      "Схема из ЛР 1 со стимулами T, T/2, T/4 из ЛР 2: список цепей со стимуляторами и ожидаемая диаграмма выхода.",
+    hasVariants: true,
+    variantCount: 28,
+    source: "Комп'ютерна схемотехніка, LIDER",
+    size: "md",
+  },
+  {
+    slug: "ks-lab4",
+    title: "ЛР 4 · Дослідження базових елементів транзисторно-транзисторної логіки ТТЛ і логіки на комплементарних метал-окисел-напівпровідник структурах КМОН в САПР OrCAD",
+    category: "ks",
+    tagline: "28 вариантов · .cir, КМОН",
+    description:
+      "Файлы .cir для передаточной характеристики и переключения КМОН-инвертора, стимулы 7400 и CD4001A, ожидаемый порог и ток.",
+    hasVariants: true,
+    variantCount: 28,
+    source: "Комп'ютерна схемотехніка, LIDER",
+    size: "md",
+  },
+  {
+    slug: "ks-lab6",
+    title: "ЛР 6 · Дослідження лічильників, дешифраторів і регістрів в САПР OrCAD",
+    category: "ks",
+    tagline: "7474 · хибні комбінації",
+    description:
+      "Счётчик вверх и вниз, регистр и дешифратор 2 на 4: состояния по фронтам за 9 периодов и ложные коды с задержками 7474.",
+    hasVariants: true,
+    variantCount: 28,
+    source: "Комп'ютерна схемотехніка, LIDER",
     size: "md",
   },
   {
