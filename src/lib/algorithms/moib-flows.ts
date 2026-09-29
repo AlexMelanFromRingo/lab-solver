@@ -7,7 +7,7 @@
  * (кроки 1–6).
  */
 
-import { END, io, op, seq, type Flow } from "./flowchart";
+import { END, EXIT, JOIN, io, op, seq, type Flow } from "./flowchart";
 
 const START: Flow = { t: "start", text: "Початок" };
 
@@ -21,9 +21,11 @@ export const euclidFlow = (): Flow =>
       t: "loop",
       body: seq(
         op("R := A mod B"),
-        { t: "if", cond: "R = 0", yes: seq(io("НСД(a, b) = B"), op("НСК(a, b) := a·b / НСД"), io("НСК(a, b)"), END), no: op("A := B; B := R") },
+        { t: "if", cond: "R = 0", yes: seq(io("НСД(a, b) = B"), op("НСК(a, b) := a·b / НСД"), io("НСК(a, b)"), EXIT), no: op("A := B; B := R") },
       ),
     },
+    JOIN,
+    END,
   );
 
 /** ЛР 1_2: таблиця 1.2 розширеного алгоритму. */
@@ -68,15 +70,17 @@ export const fermatFlow = (): Flow =>
     START,
     io("Введення непарного n"),
     op("x := ⌊√n⌋"),
-    { t: "if", cond: "n = x²", yes: seq(io("x — дільник n"), END), no: op("x := x + 1") },
+    { t: "if", cond: "n = x²", yes: seq(io("x — дільник n"), EXIT), no: op("x := x + 1") },
     {
       t: "loop",
       body: seq(
-        { t: "if", cond: "x = (n + 1) / 2", yes: seq(io("n — просте"), END) },
+        { t: "if", cond: "x = (n + 1) / 2", yes: seq(io("n — просте"), EXIT) },
         op("y := √(x² − n)"),
-        { t: "if", cond: "y — ціле", yes: seq(io("n = (x + y)(x − y)"), END), no: op("x := x + 1") },
+        { t: "if", cond: "y — ціле", yes: seq(io("n = (x + y)(x − y)"), EXIT), no: op("x := x + 1") },
       ),
     },
+    JOIN,
+    END,
   );
 
 /** ЛР 3_1: кроки 1–4 «Решета Ератосфена» (вектор лише для непарних чисел). */
@@ -88,7 +92,7 @@ export const sieveFlow = (): Flow =>
     {
       t: "loop",
       body: seq(
-        { t: "if", cond: "p² > n", yes: seq(io("Вивести 2j + 1 для всіх v(j) = 1 — по десятках"), END) },
+        { t: "if", cond: "p² > n", yes: seq(io("Вивести 2j + 1 для всіх v(j) = 1 — по десятках"), EXIT) },
         {
           t: "if",
           cond: "v((p − 1)/2) = 0",
@@ -97,6 +101,8 @@ export const sieveFlow = (): Flow =>
         },
       ),
     },
+    JOIN,
+    END,
   );
 
 /** ЛР 3_2: ax ≡ b (mod m) через зворотний елемент з розширеного алгоритму. */
@@ -130,12 +136,14 @@ export const millerFlow = (): Flow =>
     {
       t: "loop",
       body: seq(
-        { t: "if", cond: "i = 0 і r = 1 або r = n − 1", yes: seq(io("Нічого певного сказати не можна"), END) },
+        { t: "if", cond: "i = 0 і r = 1 або r = n − 1", yes: seq(io("Нічого певного сказати не можна"), EXIT) },
         op("i := i + 1; r := r² mod n"),
         io("Рядок таблиці: i, r"),
-        { t: "if", cond: "i ≥ k", yes: seq(io("n — складене"), END) },
+        { t: "if", cond: "i ≥ k", yes: seq(io("n — складене"), EXIT) },
       ),
     },
+    JOIN,
+    END,
   );
 
 /** ЛР 4_2: кроки 1–6 тесту Соловея–Штрассена. */

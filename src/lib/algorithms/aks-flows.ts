@@ -4,7 +4,7 @@
  * Л1/П1 — зсув ліворуч/праворуч на розряд, ¬ — інверсія.
  */
 
-import { io, op, seq, type Flow } from "./flowchart";
+import { EXIT, JOIN, io, op, seq, type Flow } from "./flowchart";
 import { lab2Variant, lab3Variant, lab4Variant, lab5Variant, lab6Variant } from "./aks";
 
 const START: Flow = { t: "start", text: "Початок" };
@@ -215,7 +215,7 @@ export function lab6Flow(v: number): Flow {
         op(`СмП := T = 0 ? PA : PB (у ${code})`),
         op(`СмМ, РгМ — у модифікований ${code}\nСмМ := СмМ + РгМ${add}`),
         op("СмМ — у прямий код (П — розряд переповнення)"),
-        { t: "if", cond: `СмМ(${m - 1}) = 1`, yes: seq(op("СмМ := СмМ П1\nСмП := СмП + 1"), { t: "if", cond: `СмП(${n}) ≠ СмП(${n - 1})`, yes: io("Переповнення порядку") }) },
+        { t: "if", cond: `СмМ(${m - 1}) = 1`, yes: seq(op("СмМ := СмМ П1\nСмП := СмП + 1"), { t: "if", cond: `СмП(${n}) ≠ СмП(${n - 1})`, yes: seq(io("Переповнення порядку"), EXIT) }) },
         {
           t: "if",
           cond: `СмМ(${m - 2}:0) = 0`,
@@ -224,7 +224,7 @@ export function lab6Flow(v: number): Flow {
             {
               t: "while",
               cond: `СмМ(${m - 2}) = 0`,
-              body: seq(op("СмМ := СмМ Л1\nСмП := СмП − 1"), io("Друк СмМ, СмП"), { t: "if", cond: `СмП(${n}) ≠ СмП(${n - 1})`, yes: io("Зникнення порядку: нуль") }),
+              body: seq(op("СмМ := СмМ Л1\nСмП := СмП − 1"), io("Друк СмМ, СмП"), { t: "if", cond: `СмП(${n}) ≠ СмП(${n - 1})`, yes: seq(io("Зникнення порядку: нуль"), EXIT) }),
             },
             op("СмП — у прямий код"),
             io("Друк мантиси й порядку"),
@@ -232,6 +232,7 @@ export function lab6Flow(v: number): Flow {
         },
       ),
     },
+    JOIN,
     END,
   );
 }

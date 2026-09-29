@@ -26,6 +26,21 @@ export function FlowChartView({ chart, title }: { chart: FlowChart; title: strin
           {chart.shapes.map((s, i) => {
             if (s.k === "line")
               return <polyline key={i} points={s.pts.map(([x, y]) => `${x},${y}`).join(" ")} fill="none" stroke={DIM} strokeWidth={1.2} markerEnd={s.arrow ? `url(#${id})` : undefined} />;
+            if (s.k === "conn")
+              return (
+                <g key={i}>
+                  <circle cx={s.x} cy={s.y} r={11} fill="var(--background)" stroke={DIM} />
+                  <text x={s.x} y={s.y + 4} fontSize={11} textAnchor="middle" fill={INK} fontWeight={600}>
+                    {s.text}
+                  </text>
+                </g>
+              );
+            if (s.k === "num")
+              return (
+                <text key={i} x={s.x} y={s.y} fontSize={9} textAnchor="end" fill="var(--ink-faint)">
+                  {s.text}
+                </text>
+              );
             if (s.k === "label")
               return (
                 <text key={i} x={s.x} y={s.y} fontSize={10} fill={DIM} textAnchor={s.anchor ?? "start"}>

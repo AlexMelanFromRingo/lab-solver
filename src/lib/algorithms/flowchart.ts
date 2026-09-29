@@ -1,8 +1,11 @@
 /**
- * Структурні блок-схеми (ГОСТ 19.701 / ДСТУ: термінатор, введення-виведення,
- * процес, рішення) з автоматичним розміщенням: послідовність, розгалуження
- * (гілки ліворуч і праворуч, як на рисунках методичок), цикл з передумовою
- * й з післяумовою. Розміщення — рекурсивне, координати в пікселях.
+ * Структурні блок-схеми за ДСТУ ISO 5807:2016 (ISO 5807:1985; раніше
+ * ГОСТ 19.701-90): термінатор, введення-виведення, процес, рішення,
+ * з'єднувач. Один вхід «Початок» і один вихід «Кінець»: дострокові виходи
+ * ведуть через з'єднувач «А» до спільного термінатора; блоки мають наскрізну
+ * нумерацію в лівому верхньому куті. Розміщення — рекурсивне: послідовність,
+ * розгалуження (гілки ліворуч і праворуч, як на рисунках методичок), цикли з
+ * перед- і післяумовою, нескінченний цикл з виходом із тіла.
  */
 
 export type Flow =
@@ -13,17 +16,25 @@ export type Flow =
   | { t: "if"; cond: string; yes: Flow; no?: Flow; yesLabel?: string; noLabel?: string }
   | { t: "while"; cond: string; body: Flow; yesLabel?: string; noLabel?: string }
   | { t: "until"; body: Flow; cond: string; yesLabel?: string; noLabel?: string }
-  /** Нескінченний цикл: вихід — лише термінатором «Кінець» усередині тіла. */
-  | { t: "loop"; body: Flow };
+  /** Нескінченний цикл: вихід — лише через EXIT усередині тіла. */
+  | { t: "loop"; body: Flow }
+  /** Достроковий вихід: з'єднувач, що веде до спільного «Кінець». */
+  | { t: "exit" }
+  /** Вхідний з'єднувач перед «Кінець»: сюди сходяться всі EXIT. */
+  | { t: "join" };
 
 export const seq = (...items: (Flow | false | null | undefined)[]): Flow => ({ t: "seq", items: items.filter(Boolean) as Flow[] });
 export const op = (text: string): Flow => ({ t: "op", text });
 export const io = (text: string): Flow => ({ t: "io", text });
 export const END: Flow = { t: "end", text: "Кінець" };
+export const EXIT: Flow = { t: "exit" };
+export const JOIN: Flow = { t: "join" };
+const CONN = "А";
+const R = 11;
 
-/** Гілка закінчується термінатором — з неї немає злиття. */
+/** Гілка далі не продовжується (кінець, вихід через з'єднувач, нескінченний цикл) — з неї немає злиття. */
 function terminates(f: Flow): boolean {
-  if (f.t === "end") return true;
+  if (f.t === "end" || f.t === "exit" || f.t === "loop") return true;
   if (f.t === "seq") return f.items.length > 0 && terminates(f.items[f.items.length - 1]);
   if (f.t === "if") return !!f.no && terminates(f.yes) && terminates(f.no);
   return false;
@@ -33,7 +44,9 @@ export type Shape =
   | { k: "term" | "op" | "io"; x: number; y: number; w: number; h: number; lines: string[] }
   | { k: "dec"; x: number; y: number; w: number; h: number; lines: string[] }
   | { k: "line"; pts: [number, number][]; arrow?: boolean }
-  | { k: "label"; x: number; y: number; text: string; anchor?: "start" | "end" | "middle" };
+  | { k: "label"; x: number; y: number; text: string; anchor?: "start" | "end" | "middle" }
+  | { k: "conn"; x: number; y: number; text: string }
+  | { k: "num"; x: number; y: number; text: string };
 
 interface Box {
   w: number;
@@ -70,6 +83,24 @@ function shift(shapes: Shape[], dx: number, dy: number): Shape[] {
   });
 }
 
+/** З'єднувач виходу: коло «А» під гілкою. */
+function exitBox(): Box {
+  return { w: 2 * R + 4, h: 2 * R, cx: R + 2, shapes: [{ k: "conn", x: R + 2, y: R, text: CONN }] };
+}
+
+/** Вхідний з'єднувач «А» ліворуч від лінії: вливається в неї над «Кінець». */
+function joinBox(fromAbove: boolean): Box {
+  const cx = 3 * R + 20;
+  const y = R + 4;
+  const shapes: Shape[] = [
+    { k: "conn", x: R + 2, y, text: CONN },
+    { k: "line", pts: [[2 * R + 2, y], [cx, y]], arrow: true },
+  ];
+  if (fromAbove) shapes.push({ k: "line", pts: [[cx, 0], [cx, y]] });
+  shapes.push({ k: "line", pts: [[cx, y], [cx, 2 * y]] });
+  return { w: cx + 10, h: 2 * y, cx, shapes };
+}
+
 function block(k: "term" | "op" | "io", text: string): Box {
   const lines = wrap(text);
   const w = Math.max(k === "term" ? 110 : 150, Math.max(...lines.map((l) => l.length)) * CH + (k === "io" ? 40 : 24));
@@ -91,20 +122,24 @@ function layout(f: Flow): Box {
       return block("term", f.text);
     case "op":
       return block("op", f.text);
+    case "exit":
+      return exitBox();
+    case "join":
+      return joinBox(true);
     case "io":
       return block("io", f.text);
     case "seq": {
       // після термінатора послідовність не продовжується
       const cut = f.items.findIndex((x) => x.t === "end");
       const items = cut >= 0 && cut < f.items.length - 1 ? f.items.slice(0, cut + 1) : f.items;
-      const boxes = items.map(layout);
+      const boxes = items.map((x, i) => (x.t === "join" ? joinBox(i > 0 && !terminates(items[i - 1])) : layout(x)));
       if (!boxes.length) return { w: 10, h: 0, cx: 5, shapes: [] };
       const left = Math.max(...boxes.map((b) => b.cx));
       const right = Math.max(...boxes.map((b) => b.w - b.cx));
       const shapes: Shape[] = [];
       let y = 0;
       boxes.forEach((b, i) => {
-        if (i > 0 && !terminates(items[i - 1])) {
+        if (i > 0 && !terminates(items[i - 1]) && items[i].t !== "join") {
           shapes.push({ k: "line", pts: [[left, y], [left, y + GAP]], arrow: true });
           y += GAP;
         }
@@ -209,5 +244,9 @@ export interface FlowChart {
 
 export function layoutFlow(f: Flow): FlowChart {
   const b = layout(f);
-  return { w: b.w, h: b.h, shapes: b.shapes };
+  // наскрізна нумерація блоків (зверху вниз, зліва направо) у лівому верхньому куті
+  const blocks = b.shapes.filter((s): s is Extract<Shape, { k: "term" | "op" | "io" | "dec" }> => s.k === "term" || s.k === "op" || s.k === "io" || s.k === "dec");
+  blocks.sort((p, q) => p.y - q.y || p.x - q.x);
+  const nums: Shape[] = blocks.map((s, i) => ({ k: "num", x: s.k === "dec" ? s.x + s.w / 2 - 14 : s.x - 2, y: s.y - 3, text: String(i + 1) }));
+  return { w: b.w, h: b.h, shapes: [...b.shapes, ...nums] };
 }
