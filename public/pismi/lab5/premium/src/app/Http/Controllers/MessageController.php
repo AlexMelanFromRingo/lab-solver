@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 /**
- * Форма зворотного зв'язку: відвідувачі надсилають повідомлення,
+ * Форма зворотного зв’язку: відвідувачі надсилають повідомлення,
  * власник сайту читає та видаляє їх після входу.
  */
 class MessageController extends Controller

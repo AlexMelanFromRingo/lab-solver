@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Повідомлення, надіслане відвідувачем через форму зворотного зв'язку.
+ * Повідомлення, надіслане відвідувачем через форму зворотного зв’язку.
  */
 class Message extends Model
 {

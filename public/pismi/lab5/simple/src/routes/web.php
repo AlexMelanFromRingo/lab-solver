@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 // Головна сторінка – візитка з переліком робіт
 Route::get('/', [ProjectController::class, 'index'])->name('welcome');
 
-// Форма зворотного зв'язку відкрита всім; не частіше 5 повідомлень за хвилину
+// Форма зворотного зв’язку відкрита всім; не частіше 5 повідомлень за хвилину
 Route::post('/messages', [MessageController::class, 'store'])
     ->middleware('throttle:5,1')->name('messages.store');
 

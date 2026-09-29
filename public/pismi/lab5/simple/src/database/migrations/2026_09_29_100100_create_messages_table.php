@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
     /**
-     * Таблиця повідомлень із форми зворотного зв'язку.
+     * Таблиця повідомлень із форми зворотного зв’язку.
      */
     public function up(): void
     {

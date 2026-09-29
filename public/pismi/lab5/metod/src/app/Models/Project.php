@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Робота з переліку на сторінці-візитці.
  *
  * Кожна робота належить користувачу, який її додав: таблиці users та
- * projects пов'язані відношенням «один до багатьох».
+ * projects пов’язані відношенням «один до багатьох».
  */
 class Project extends Model
 {

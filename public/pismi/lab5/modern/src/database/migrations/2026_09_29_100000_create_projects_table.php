@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
     /**
-     * Таблиця робіт. Кожна робота пов'язана з користувачем через user_id:
+     * Таблиця робіт. Кожна робота пов’язана з користувачем через user_id:
      * один користувач – багато робіт.
      */
     public function up(): void

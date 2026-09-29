@@ -78,7 +78,7 @@
                 </div>
             </section>
 
-            <!-- Форма зворотного зв'язку -->
+            <!-- Форма зворотного зв’язку -->
             <section id="contact" class="p-6 bg-white shadow-sm sm:rounded-lg">
                 <h2 class="text-lg font-medium text-gray-900 mb-4">Написати мені</h2>
 

@@ -49,7 +49,7 @@ class ChessBoard
         for ($rank = 8; $rank >= 1; $rank--) {
             $html .= '<tr><th>' . $rank . '</th>';
             for ($file = 1; $file <= 8; $file++) {
-                // Колір клітинки визначає парність суми координат: a1 — чорна.
+                // Колір клітинки визначає парність суми координат: a1 – чорна.
                 $colour = ($file + $rank) % 2 === 0 ? 'dark' : 'light';
                 $king = $file === $this->file && $rank === $this->rank;
                 $html .= '<td class="' . $colour . ($king ? ' king' : '') . '">'

@@ -77,7 +77,7 @@ class NumberSystem
         $html = '<p class="answer"><span>' . $this->number . '<sub>10</sub></span> = <b>'
             . $this->convert() . '<sub>' . $this->base . '</sub></b></p>'
             . '<p class="caption">Число ' . $this->number . ' у ' . self::NAMES[$this->base]
-            . ' системі числення. Цифри — це остачі від ділення на ' . $this->base
+            . ' системі числення. Цифри – це остачі від ділення на ' . $this->base
             . ', прочитані знизу вгору.</p>'
             . '<table class="division"><tr><th>Ділене</th><th>Частка</th><th>Остача</th></tr>';
 
@@ -90,7 +90,7 @@ class NumberSystem
     }
 }
 
-// Параметри з рядка браузера: 1-й — число, 2-й — основа системи числення.
+// Параметри з рядка браузера: 1-й – число, 2-й – основа системи числення.
 $params = [
     'number' => 'число (десяткове)',
     'base' => 'основа системи: 2, 10 або 16',

@@ -44,7 +44,7 @@ class NetworkAddress
         // Маска правильна, лише якщо в ній спершу йдуть одиниці, а потім нулі.
         $bits = $this->bitString($this->mask);
         if (!preg_match('/^1*0*$/', $bits)) {
-            throw new InvalidArgumentException('Маска: одиниці мають іти підряд, а за ними — нулі (наприклад, 255.255.240.0).');
+            throw new InvalidArgumentException('Маска: одиниці мають іти підряд, а за ними – нулі (наприклад, 255.255.240.0).');
         }
         $this->prefix = substr_count($bits, '1');
     }
@@ -99,7 +99,7 @@ class NetworkAddress
     }
 
     /**
-     * Двійковий запис; біти вузлової частини — у span.net.
+     * Двійковий запис; біти вузлової частини – у span.net.
      *
      * @param int[] $bytes
      */
