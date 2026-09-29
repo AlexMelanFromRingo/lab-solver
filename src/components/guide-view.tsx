@@ -10,6 +10,7 @@ import { Lab1Calc, Lab2Calc, Lab3Calc, MagnetCalc, RgrCalc } from "@/components/
 import { ApproxCalc, CauchyCalc, IterationCalc, RootsCalc, SlaeCalc } from "@/components/amo-calc";
 import { Ethernet10Calc, FastEthernetCalc } from "@/components/lan-calc";
 import { ModuleHeader } from "@/components/module-header";
+import { RegSchemeView } from "@/components/reg-scheme";
 import { LabProcedure } from "@/components/lab-procedure";
 import { Card, CardBody } from "@/components/ui/card";
 import { NumberField } from "@/components/ui/field";
@@ -136,6 +137,12 @@ export function GuideView({ slug }: { slug: string }) {
               ) : (
                 <>
                   {computed.data.tables?.map((t) => <Table key={t.title} table={t} />)}
+                  {computed.data.figures?.map((f) => (
+                    <div key={f.title} className="space-y-1.5">
+                      {f.kind === "regs" && <RegSchemeView scheme={f.scheme} title={f.title} />}
+                      {f.note && <p className="text-xs text-ink-faint">{f.note}</p>}
+                    </div>
+                  ))}
                   {computed.data.code?.map((c) => (
                     <div key={c.title} className="space-y-1.5">
                       <OutputBlock label={c.title} value={c.code} wrap={false} />

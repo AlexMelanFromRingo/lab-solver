@@ -1,4 +1,5 @@
 import type { LabGuide } from "@/lib/data/pismi-labs";
+import type { RegScheme } from "@/lib/algorithms/aks-schemes";
 
 /**
  * Работа-инструкция: лабораторная, которая делается в программе (Packet Tracer,
@@ -21,8 +22,12 @@ export interface GuideCode {
   note?: string;
 }
 
+/** Рисунок, який вимагає звіт (структурна схема, блок-схема тощо), — будується під варіант. */
+export type GuideFigure = { kind: "regs"; title: string; scheme: RegScheme; note?: string };
+
 export interface GuideComputed {
   tables?: GuideTable[];
+  figures?: GuideFigure[];
   code?: GuideCode[];
   notes?: string[];
 }
