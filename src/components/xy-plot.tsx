@@ -93,7 +93,20 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
   const xLabel = (t: number) => fig.xTicks?.find((x) => x.at === t)?.label ?? fmtNum(t, 4);
   const X = (v: number) => r2(PAD.left + ((v * ax.k - ax.min) / (ax.max - ax.min)) * PW);
   const Y = (v: number) => r2(PAD.top + PH - ((v * ay.k - ay.min) / (ay.max - ay.min)) * PH);
-  const vh = H + (fig.series.length > 1 ? 18 : 0);
+  // Легенда переносится на следующую строку, если не помещается по ширине
+  const legend: { x: number; y: number }[] = [];
+  let lx = PAD.left;
+  let ly = H + 6;
+  fig.series.forEach((s) => {
+    const wItem = 62 + s.label.length * 5.8;
+    if (lx > PAD.left && lx + wItem > W - 4) {
+      lx = PAD.left;
+      ly += 18;
+    }
+    legend.push({ x: lx, y: ly });
+    lx += wItem;
+  });
+  const vh = H + (fig.series.length > 1 ? ly - H + 12 : 0);
 
   return (
     <FigureFrame title={title}>
@@ -183,12 +196,12 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
         })}
         {fig.series.length > 1 &&
           fig.series.map((s, i) => {
-            const x = PAD.left + fig.series.slice(0, i).reduce((t, p) => t + 62 + p.label.length * 5.8, 0);
+            const { x, y: ry } = legend[i];
             return (
               <g key={`lg${s.label}`} fontSize={11} fill={INK}>
-                {s.line !== false && <line x1={x} x2={x + 30} y1={H + 6} y2={H + 6} stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />}
-                {s.markers !== false && <Marker x={x + 15} y={H + 6} kind={i} />}
-                <text x={x + 38} y={H + 10}>
+                {s.line !== false && <line x1={x} x2={x + 30} y1={ry} y2={ry} stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />}
+                {s.markers !== false && <Marker x={x + 15} y={ry} kind={i} />}
+                <text x={x + 38} y={ry + 4}>
                   <SubLabel text={s.label} />
                 </text>
               </g>
