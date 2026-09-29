@@ -11,6 +11,7 @@ const CATEGORY_ORDER: Category[] = [
   "it",
   "plis",
   "zikm",
+  "oop",
   "km",
   "lm",
   "pk",
