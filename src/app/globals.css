@@ -33,6 +33,8 @@
   --cat-it-soft: #94a3b81a;
   --cat-kfs: #60a5fa;
   --cat-kfs-soft: #60a5fa1a;
+  --cat-cisco: #f87171;
+  --cat-cisco-soft: #f871711a;
   --cat-plis: #a3e635;
   --cat-plis-soft: #a3e6351a;
   --cat-zikm: #fde047;
@@ -91,6 +93,8 @@
   --color-it-soft: var(--cat-it-soft);
   --color-kfs: var(--cat-kfs);
   --color-kfs-soft: var(--cat-kfs-soft);
+  --color-cisco: var(--cat-cisco);
+  --color-cisco-soft: var(--cat-cisco-soft);
   --color-plis: var(--cat-plis);
   --color-plis-soft: var(--cat-plis-soft);
   --color-zikm: var(--cat-zikm);

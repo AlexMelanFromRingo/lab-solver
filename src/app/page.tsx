@@ -10,6 +10,7 @@ const CATEGORY_ORDER: Category[] = [
   "ai",
   "it",
   "kfs",
+  "cisco",
   "plis",
   "zikm",
   "oop",
