@@ -1,3 +1,4 @@
+import type { Loc } from "@/lib/i18n";
 import type { GuideComputed, GuideModule, GuideTable } from "./types";
 import {
   T_HL,
@@ -71,7 +72,7 @@ const L4: [number, number, number][] = [
   [5.2, 6.5, 2.25], [5.3, 6.6, 2.15], [5.4, 6.7, 2.05], [5.5, 6.8, 1.95], [5.6, 6.9, 1.85], [5.7, 7, 1.75], [5.8, 7.1, 1.65],
 ];
 
-const v28 = (hint: string) => ({ label: "варианта", min: 1, max: 28, hint });
+const v28 = (hint: Loc) => ({ label: { uk: "варіанта", ru: "варианта" }, min: 1, max: 28, hint });
 
 /** Число с запятой, без хвостовых нулей. */
 const n = (v: number, d = 3) => Number(v.toFixed(d)).toString().replace(".", ",");

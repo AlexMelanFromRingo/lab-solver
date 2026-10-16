@@ -1,3 +1,4 @@
+import type { Loc } from "@/lib/i18n";
 import type { GuideComputed, GuideModule } from "./types";
 import {
   LAB1_TASKS,
@@ -28,7 +29,7 @@ const SRC = "Системне програмне забезпечення, ме�
 /** Номер в списке группы → строка таблицы: таблицы короче списка, дальше — по кругу (17 → 7 при 10 строках). */
 const wrap = (n: number, rows: number) => ((n - 1) % rows) + 1;
 
-const v30 = (hint: string) => ({ label: "варианта", min: 1, max: 30, hint });
+const v30 = (hint: Loc) => ({ label: { uk: "варіанта", ru: "варианта" }, min: 1, max: 30, hint });
 const WRAP_HINT = "Номер в списке группы. Строк в таблице меньше — дальше по кругу: так оформлены сданные отчёты (17 → 7 при 10 вариантах).";
 
 const TITLE_PAGE =

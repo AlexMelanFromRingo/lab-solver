@@ -1,13 +1,14 @@
+import type { Loc } from "@/lib/i18n";
 import type { GuideComputed, GuideModule } from "./types";
 import {
   LR2_T1, LR_BRANCH, LR_PHYS, ARRAY_OPS, LR6_SERIES, LR5_PIECE, LR4_MINMAX, LR8_GRADES, LR12_VARS, LR11_VARS,
   formulaProgram, physProgram, loopProgram, funcProgram, arrayOpProgram, seriesProgram, pieceProgram, wordProgram, gradesProgram, stdArrayProgram, stringProgram,
 } from "@/lib/algorithms/op-tasks";
 
-const V30 = (hint: string) => ({ label: "варіанта", min: 1, max: 30, hint });
-const V30b = (hint: string) => ({ label: "варіанта", min: 1, max: 20, hint });
-const V20d = (hint: string) => ({ label: "варіанта", min: 1, max: 20, hint });
-const V15 = (hint: string) => ({ label: "варіанта", min: 1, max: 15, hint });
+const V30 = (hint: Loc) => ({ label: "варіанта", min: 1, max: 30, hint });
+const V30b = (hint: Loc) => ({ label: "варіанта", min: 1, max: 20, hint });
+const V20d = (hint: Loc) => ({ label: "варіанта", min: 1, max: 20, hint });
+const V15 = (hint: Loc) => ({ label: "варіанта", min: 1, max: 15, hint });
 
 /**
  * «Основи програмування» (ст. викл. Тимошенко Л.С.) — методичні вказівки до

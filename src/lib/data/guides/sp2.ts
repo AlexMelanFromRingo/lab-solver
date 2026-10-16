@@ -1,3 +1,4 @@
+import type { Loc } from "@/lib/i18n";
 import type { GuideModule } from "./types";
 import { KERNELS, divisionSchemes, lab1Program, splitCode } from "@/lib/algorithms/sp-kernels";
 
@@ -11,7 +12,7 @@ import { KERNELS, divisionSchemes, lab1Program, splitCode } from "@/lib/algorith
  */
 
 const SRC = "Системне програмування, методичні рекомендації до лабораторних робіт (МЕТОДРЕК_СП, LIDER)";
-const V = (hint: string) => ({ label: "варіанта", min: 1, max: 20, hint });
+const V = (hint: Loc) => ({ label: "варіанта", min: 1, max: 20, hint });
 const kern = (v: number) => KERNELS[v - 1];
 
 // ЛР3, табл. 10
