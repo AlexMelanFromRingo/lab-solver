@@ -1,3 +1,4 @@
+import type { Loc } from "@/lib/i18n";
 export type Category =
   | "pismi"
   | "ai"
@@ -34,7 +35,7 @@ export type Category =
  */
 export const categories: Record<
   Category,
-  { title: string; short: string; stage: string; accent: string; accentSoft: string }
+  { title: Loc; short: Loc; stage: Loc; accent: string; accentSoft: string }
 > = {
   pismi: {
     title: "Проектування інформаційних систем в мережах Інтернет",
@@ -229,10 +230,10 @@ export const categories: Record<
 
 export interface LabModule {
   slug: string;
-  title: string;
+  title: Loc;
   category: Category;
-  tagline: string;
-  description: string;
+  tagline: Loc;
+  description: Loc;
   hasVariants: boolean;
   variantCount?: number;
   source: string;

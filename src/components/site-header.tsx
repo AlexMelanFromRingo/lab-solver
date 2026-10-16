@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { LogoMark } from "@/components/logo";
+import { L, LangToggle } from "@/components/lang";
+import { UI } from "@/lib/i18n";
 
 export function SiteHeader() {
   return (
@@ -11,16 +15,17 @@ export function SiteHeader() {
             lab-solver
           </span>
           <span className="hidden font-mono text-[0.6875rem] text-ink-faint sm:inline">
-            решатель лабораторных
+            <L v={UI.tagline} />
           </span>
         </Link>
         <nav className="flex items-center gap-6 text-sm text-ink-dim">
           <Link href="/#modules" className="transition-colors hover:text-ink">
-            Модули
+            <L v={UI.navModules} />
           </Link>
           <Link href="/#about" className="transition-colors hover:text-ink">
-            Как это устроено
+            <L v={UI.navAbout} />
           </Link>
+          <LangToggle />
         </nav>
       </div>
     </header>

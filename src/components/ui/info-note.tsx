@@ -1,9 +1,13 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
+import { ui } from "@/lib/i18n";
 
 export function InfoNote({
-  title = "Что и почему",
+  title,
   children,
   className,
 }: {
@@ -11,6 +15,8 @@ export function InfoNote({
   children: ReactNode;
   className?: string;
 }) {
+  const { lang } = useLang();
+  const heading = title ?? ui("infoTitle", lang);
   return (
     <div
       className={cn(
@@ -20,7 +26,7 @@ export function InfoNote({
     >
       <div className="flex items-center gap-2 mb-2 text-ink-dim">
         <BookOpen size={14} />
-        <span className="text-xs font-medium">{title}</span>
+        <span className="text-xs font-medium">{heading}</span>
       </div>
       <div className="text-sm leading-relaxed text-ink-dim [&_strong]:text-ink [&_code]:font-mono [&_code]:text-ink [&_code]:bg-white/5 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_a]:underline [&_a]:underline-offset-2">
         {children}

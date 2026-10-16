@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { categories, type LabModule } from "@/lib/modules";
+import { L, useLang } from "@/components/lang";
+import { ui } from "@/lib/i18n";
 
 /**
  * Шапка модуля.
@@ -11,6 +15,7 @@ import { categories, type LabModule } from "@/lib/modules";
  */
 export function ModuleHeader({ module }: { module: LabModule }) {
   const cat = categories[module.category];
+  const { lang } = useLang();
 
   return (
     <div className="border-b border-border">
@@ -20,32 +25,32 @@ export function ModuleHeader({ module }: { module: LabModule }) {
           className="mb-7 flex w-fit items-center gap-1.5 text-sm text-ink-faint transition-colors hover:text-ink-dim"
         >
           <ArrowLeft size={14} />
-          Все модули
+          {ui("backAll", lang)}
         </Link>
 
         <div className="rule pt-5" style={{ ["--tick" as string]: cat.accent }}>
           <h1 className="font-display text-[2.1rem] font-semibold leading-[1.05] tracking-[-0.03em] text-ink sm:text-[2.6rem]">
-            {module.title}
+            <L v={module.title} />
           </h1>
-          <p className="mt-3 max-w-2xl leading-relaxed text-ink-dim">{module.description}</p>
+          <p className="mt-3 max-w-2xl leading-relaxed text-ink-dim"><L v={module.description} /></p>
 
           <div className="mt-5 flex flex-wrap items-end gap-x-8 gap-y-3">
             <div>
-              <div className="text-[0.6875rem] leading-none text-ink-faint">раздел</div>
+              <div className="text-[0.6875rem] leading-none text-ink-faint">{ui("section", lang)}</div>
               <div className="mt-1 font-mono text-[0.8125rem] leading-none" style={{ color: cat.accent }}>
-                {cat.title}
+                <L v={cat.title} />
               </div>
             </div>
             {module.hasVariants && (
               <div>
-                <div className="text-[0.6875rem] leading-none text-ink-faint">вариантов</div>
+                <div className="text-[0.6875rem] leading-none text-ink-faint">{ui("variants", lang)}</div>
                 <div className="mt-1 font-mono text-[0.8125rem] leading-none text-ink-dim">
                   {module.variantCount}
                 </div>
               </div>
             )}
             <div className="min-w-0">
-              <div className="text-[0.6875rem] leading-none text-ink-faint">источник</div>
+              <div className="text-[0.6875rem] leading-none text-ink-faint">{ui("source", lang)}</div>
               <div className="mt-1 font-mono text-[0.8125rem] leading-none text-ink-dim">
                 {module.source}
               </div>

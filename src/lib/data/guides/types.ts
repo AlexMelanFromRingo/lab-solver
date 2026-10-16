@@ -1,3 +1,4 @@
+import type { Loc } from "@/lib/i18n";
 import type { LabGuide } from "@/lib/data/pismi-labs";
 import type { RegScheme } from "@/lib/algorithms/aks-schemes";
 import type { FlowChart } from "@/lib/algorithms/flowchart";
@@ -48,7 +49,7 @@ export interface GuideComputed {
 /** Дополнительное число, которое методичка оставляет на выбор студента (первый член, число элементов…). */
 export interface GuideParam {
   key: string;
-  label: string;
+  label: Loc;
   min: number;
   max: number;
   value: number;
@@ -56,11 +57,11 @@ export interface GuideParam {
 
 export interface GuideVariant {
   /** Как называется номер в методичке: «варіант», «x», «v». */
-  label: string;
+  label: Loc;
   min: number;
   max: number;
   /** Откуда берётся номер — пересказ методички. */
-  hint: string;
+  hint: Loc;
   params?: GuideParam[];
   compute: (v: number, p: Record<string, number>) => GuideComputed;
 }
@@ -74,7 +75,7 @@ export interface GuideFinding {
 export interface GuideModule {
   slug: string;
   /** Короткое вступление: что это за работа и что даёт страница. */
-  intro: string;
+  intro: Loc;
   guide: LabGuide;
   variant?: GuideVariant;
   /** Расчёт без варианта: задание одно на всех (как в ЛР 4_1 и 4_2 МОІБ). */

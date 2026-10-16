@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useLang } from "@/components/lang";
+import { errRange, tr, ui } from "@/lib/i18n";
 import { AclBuilder } from "@/components/acl-builder";
 import { MpsStructureCalc, PpiCalc } from "@/components/ppi-calc";
 import { AccessSqlCalc, ErCalc, NormalizerCalc } from "@/components/db-calc";
@@ -74,6 +76,7 @@ function codeBlocks(code: GuideCode[] | undefined) {
  * состав отчёта и то, что должно получиться.
  */
 export function GuideView({ slug }: { slug: string }) {
+  const { lang } = useLang();
   const mod = modules.find((m) => m.slug === slug)!;
   const g = guideBySlug(slug)!;
   const accent = categories[mod.category].accent;
@@ -84,18 +87,18 @@ export function GuideView({ slug }: { slug: string }) {
     if (!g.variant) return g.computed ? { data: g.computed() } : null;
     const v = Number(raw);
     if (!Number.isInteger(v) || v < g.variant.min || v > g.variant.max) {
-      return { error: `Номер — целое число от ${g.variant.min} до ${g.variant.max}` };
+      return { error: errRange(lang === "uk" ? "Номер" : "Номер", g.variant.min, g.variant.max, lang) };
     }
     const defs = g.variant.params ?? [];
     const params = Object.fromEntries(defs.map((p) => [p.key, Number(extra[p.key])]));
     const bad = defs.find((p) => !Number.isInteger(params[p.key]) || params[p.key] < p.min || params[p.key] > p.max);
-    if (bad) return { error: `${bad.label} — целое число от ${bad.min} до ${bad.max}` };
+    if (bad) return { error: errRange(tr(bad.label, lang), bad.min, bad.max, lang) };
     try {
       return { data: g.variant.compute(v, params) };
     } catch (e) {
       return { error: (e as Error).message };
     }
-  }, [g, raw, extra]);
+  }, [g, raw, extra, lang]);
 
   // номер варианта для калькуляторов, которые от него зависят (тема БД)
   const vNum = Number(raw);
@@ -147,7 +150,7 @@ export function GuideView({ slug }: { slug: string }) {
     <div>
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl space-y-8 px-6 py-10">
-        <InfoNote>{g.intro}</InfoNote>
+        <InfoNote>{tr(g.intro, lang)}</InfoNote>
 
         {!g.variant && widget}
 
@@ -157,19 +160,19 @@ export function GuideView({ slug }: { slug: string }) {
               {g.variant && (
                 <div className="grid gap-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:items-end">
                   <NumberField
-                    label={`Номер ${g.variant.label}`}
+                    label={`Номер ${tr(g.variant.label, lang)}`}
                     value={raw}
                     min={g.variant.min}
                     max={g.variant.max}
                     onChange={(e) => setRaw(e.target.value)}
                   />
-                  <p className="text-sm leading-relaxed text-ink-faint">{g.variant.hint}</p>
+                  <p className="text-sm leading-relaxed text-ink-faint">{tr(g.variant.hint, lang)}</p>
                   {g.variant.params && (
                     <div className="grid gap-4 sm:col-span-2 sm:grid-cols-[repeat(auto-fill,12rem)]">
                       {g.variant.params.map((p) => (
                         <NumberField
                           key={p.key}
-                          label={p.label}
+                          label={tr(p.label, lang)}
                           value={extra[p.key] ?? ""}
                           min={p.min}
                           max={p.max}
@@ -216,7 +219,7 @@ export function GuideView({ slug }: { slug: string }) {
         {g.errata && g.errata.length > 0 && (
           <Card>
             <CardBody className="space-y-3 pt-6">
-              <h2 className="font-display text-lg font-semibold text-ink">Где методичка расходится с программой</h2>
+              <h2 className="font-display text-lg font-semibold text-ink">{ui("errata", lang)}</h2>
               <ul className="space-y-2.5">
                 {g.errata.map((e) => (
                   <li key={e} className="flex gap-2 text-sm leading-relaxed text-ink-dim">
@@ -234,7 +237,7 @@ export function GuideView({ slug }: { slug: string }) {
         {g.findings && g.findings.length > 0 && (
           <Card>
             <CardBody className="space-y-4 pt-6">
-              <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Что должно получиться</h2>
+              <h2 className="font-display text-xl font-semibold tracking-tight text-ink">{ui("result", lang)}</h2>
               {g.findings.map((f) => (
                 <div key={f.title}>
                   <h3 className="text-sm font-medium text-ink">{f.title}</h3>

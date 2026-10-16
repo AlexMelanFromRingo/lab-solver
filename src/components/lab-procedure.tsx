@@ -3,6 +3,8 @@
 import { Card, CardBody } from "@/components/ui/card";
 import { Steps } from "@/components/lab-steps";
 import type { LabGuide } from "@/lib/data/pismi-labs";
+import { useLang } from "@/components/lang";
+import { ui } from "@/lib/i18n";
 
 /**
  * Ход работы, состав отчёта и перечень снимков экрана.
@@ -13,13 +15,14 @@ import type { LabGuide } from "@/lib/data/pismi-labs";
  * «как»: что должно попасть в кадр, чтобы снимок что-то доказывал.
  */
 export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: string }) {
+  const { lang } = useLang();
   return (
     <>
       <Card>
         <CardBody className="pt-6 space-y-6">
           <div>
             <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-              Что требуется сделать
+              {ui("procTask", lang)}
             </h2>
             <p className="mt-1 text-sm text-ink-faint">{guide.source}</p>
           </div>
@@ -39,7 +42,7 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
               style={{ borderColor: `${accent}44`, background: `${accent}0d` }}
             >
               <div className="text-xs text-ink-faint">
-                Индивидуальное задание
+                {ui("procIndiv", lang)}
               </div>
               <p className="mt-1.5 text-sm leading-relaxed text-ink">{guide.task}</p>
             </div>
@@ -50,7 +53,7 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
       <Card>
         <CardBody className="pt-6 space-y-5">
           <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-            Порядок выполнения
+            {ui("procOrder", lang)}
           </h2>
           <Steps steps={guide.steps} accent={accent} />
         </CardBody>
@@ -63,11 +66,10 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
               <>
                 <div>
                   <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                    Что снять на экран
+                    {ui("procShots", lang)}
                   </h2>
                   <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                    Перечень из методички. Это чаще всего и оказывается причиной, по которой работу
-                    возвращают на доработку.
+                    {ui("procShotsHint", lang)}
                   </p>
                 </div>
 
@@ -78,7 +80,7 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
                       className="grid gap-3 rounded-[4px] border border-border bg-black/20 px-4 py-3.5 sm:grid-cols-[4.5rem_minmax(0,1fr)]"
                     >
                       <div className="text-xs font-medium" style={{ color: accent }}>
-                        Кадр {i + 1}
+                        {ui("frame", lang)} {i + 1}
                       </div>
                       <div className="min-w-0">
                         <p className="text-sm leading-snug text-ink">{shot.what}</p>
@@ -93,7 +95,7 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
             {guide.report.length > 0 && (
               <div className={guide.screenshots.length > 0 ? "border-t border-border pt-5" : undefined}>
                 <h3 className="mb-2.5 font-display text-base font-semibold tracking-tight text-ink">
-                  Что должно быть в отчёте
+                  {ui("procReport", lang)}
                 </h3>
                 <ol className="space-y-1.5">
                   {guide.report.map((item, i) => (
@@ -114,7 +116,7 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
       {guide.questions.length > 0 && (
         <details className="rounded-[4px] border border-border bg-surface/60 backdrop-blur-xl">
           <summary className="cursor-pointer px-6 py-4 text-sm text-ink-dim">
-            Контрольные вопросы — {guide.questions.length}
+            {ui("questions", lang)} — {guide.questions.length}
           </summary>
           <ol className="space-y-2 border-t border-border px-6 py-5">
             {guide.questions.map((q, i) => (

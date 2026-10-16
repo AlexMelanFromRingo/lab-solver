@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
+import { ui } from "@/lib/i18n";
 
 export function CopyButton({ value, className }: { value: string; className?: string }) {
   const [copied, setCopied] = useState(false);
+  const { lang } = useLang();
 
   return (
     <button
@@ -25,7 +28,7 @@ export function CopyButton({ value, className }: { value: string; className?: st
       )}
     >
       {copied ? <Check size={13} /> : <Copy size={13} />}
-      {copied ? "Скопировано" : "Копировать"}
+      {copied ? ui("copied", lang) : ui("copy", lang)}
     </button>
   );
 }

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { categories, type LabModule } from "@/lib/modules";
 import { cn } from "@/lib/cn";
+import { L, useLang } from "@/components/lang";
+import { tr, ui } from "@/lib/i18n";
 
 /**
  * Модуль в перечне.
@@ -38,6 +40,7 @@ function Readout({ label, value, accent }: { label: string; value: string; accen
 
 export function ModuleCard({ module, index }: { module: LabModule; index: number }) {
   const cat = categories[module.category];
+  const { lang } = useLang();
   const big = module.size !== "sm";
 
   return (
@@ -67,21 +70,21 @@ export function ModuleCard({ module, index }: { module: LabModule; index: number
               big ? "text-[1.35rem] leading-[1.15]" : "text-[1.0625rem] leading-[1.2]"
             )}
           >
-            {module.title}
+            <L v={module.title} />
           </h3>
 
           {big && (
             <p className="mt-2.5 max-w-[46ch] text-sm leading-relaxed text-ink-dim">
-              {module.description}
+              <L v={module.description} />
             </p>
           )}
         </div>
 
         <div className="mt-5 flex flex-wrap items-end gap-x-7 gap-y-3">
-          <Readout label="что считает" value={module.tagline} />
+          <Readout label={ui("cardWhat", lang)} value={tr(module.tagline, lang)} />
           {module.hasVariants && (
             <Readout
-              label="вариантов"
+              label={ui("variants", lang)}
               value={String(module.variantCount)}
               accent={cat.accent}
             />

@@ -1,3 +1,6 @@
+"use client";
+import { L } from "@/components/lang";
+
 import type { Category } from "@/lib/modules";
 import { categories } from "@/lib/modules";
 import { cn } from "@/lib/cn";
@@ -27,7 +30,7 @@ export function CategoryBadge({
         style={{ background: cat.accent }}
         aria-hidden="true"
       />
-      {cat.title}
+      <L v={cat.title} />
     </span>
   );
 }
