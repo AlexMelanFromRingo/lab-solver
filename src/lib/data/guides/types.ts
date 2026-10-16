@@ -13,35 +13,35 @@ import type { Drawing } from "@/lib/drawing";
  */
 
 export interface GuideTable {
-  title: string;
-  columns: string[];
-  rows: (string | number)[][];
-  note?: string;
+  title: Loc;
+  columns: Loc[];
+  rows: (Loc | number)[][];
+  note?: Loc;
   /** Записи таблиці: не переносити значення в клітинках (телефони, суми), таблиця прокручується. */
   nowrap?: boolean;
 }
 
 export interface GuideCode {
-  title: string;
+  title: Loc;
   /** Команды или текст для копирования как есть. */
   code: string;
-  note?: string;
+  note?: Loc;
 }
 
 /** Рисунок, який вимагає звіт (структурна схема, блок-схема тощо), — будується під варіант. */
 export type GuideFigure =
-  | { kind: "regs"; title: string; scheme: RegScheme; note?: string }
-  | { kind: "flow"; title: string; chart: FlowChart; note?: string }
-  | { kind: "plot"; title: string; plot: PlotFigure; note?: string }
-  | { kind: "phasor"; title: string; phasor: PhasorFigure; note?: string }
-  | { kind: "drawing"; title: string; drawing: Drawing; note?: string }
-  | { kind: "timing"; title: string; timing: TimingFigure; note?: string };
+  | { kind: "regs"; title: Loc; scheme: RegScheme; note?: Loc }
+  | { kind: "flow"; title: Loc; chart: FlowChart; note?: Loc }
+  | { kind: "plot"; title: Loc; plot: PlotFigure; note?: Loc }
+  | { kind: "phasor"; title: Loc; phasor: PhasorFigure; note?: Loc }
+  | { kind: "drawing"; title: Loc; drawing: Drawing; note?: Loc }
+  | { kind: "timing"; title: Loc; timing: TimingFigure; note?: Loc };
 
 export interface GuideComputed {
   tables?: GuideTable[];
   figures?: GuideFigure[];
   code?: GuideCode[];
-  notes?: string[];
+  notes?: Loc[];
   /** Готовый текст программы важнее таблиц — показать блоки кода сразу после данных варианта. */
   codeFirst?: boolean;
 }
@@ -68,8 +68,8 @@ export interface GuideVariant {
 
 /** Ответ на «поясніть» из методички — то, что должно получиться. */
 export interface GuideFinding {
-  title: string;
-  body: string;
+  title: Loc;
+  body: Loc;
 }
 
 export interface GuideModule {
@@ -82,7 +82,7 @@ export interface GuideModule {
   computed?: () => GuideComputed;
   findings?: GuideFinding[];
   /** Опечатки и противоречия методички — с тем, как поступить. */
-  errata?: string[];
+  errata?: Loc[];
   /** Интерактивный расчёт сверх таблиц варианта (см. components/guide-view). */
   widget?: "acl" | "eth10" | "fast" | "slae" | "iter" | "roots" | "approx" | "cauchy" | "quad" | "graph" | "c-lab1" | "c-lab2" | "c-lab3" | "c-magnet" | "c-rgr" | "oop-light" | "ppi" | "biometrics" | "db-l3" | "db-l4" | "db-l5" | "db-l6" | "db-norm" | "mps-kr" | "kfs-l1" | "kfs-l2" | "kfs-l3" | "kfs-l4" | "kfs-l5" | "kfs-l6" | "kfs-l7";
 }

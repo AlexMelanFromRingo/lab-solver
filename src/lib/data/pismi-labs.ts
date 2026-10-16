@@ -11,28 +11,29 @@
  */
 
 import type { LabStep } from "@/components/lab-steps";
+import type { Loc } from "@/lib/i18n";
 
 export interface Screenshot {
   /** Что должно быть в кадре. */
-  what: string;
+  what: Loc;
   /** Как это получить. */
-  how: string;
+  how: Loc;
 }
 
 export interface LabGuide {
   /** Откуда взяты требования. */
-  source: string;
-  goals: string[];
+  source: Loc;
+  goals: Loc[];
   /** Порядок выполнения по методичке. */
   steps: LabStep[];
   /** Индивидуальное задание, если оно есть. */
-  task?: string;
+  task?: Loc;
   /** Что должно быть в отчёте (пусто — источник этого не задаёт). */
-  report: string[];
+  report: Loc[];
   /** Снимки экрана, которые требует методичка. */
   screenshots: Screenshot[];
   /** Контрольные вопросы; пусто — в источнике их нет. */
-  questions: string[];
+  questions: Loc[];
 }
 
 export const LAB_GUIDES: Record<string, LabGuide> = {

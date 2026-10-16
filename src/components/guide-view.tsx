@@ -30,16 +30,17 @@ import { guideBySlug } from "@/lib/data/guides";
 import type { GuideCode, GuideTable } from "@/lib/data/guides/types";
 
 function Table({ table }: { table: GuideTable }) {
+  const { lang } = useLang();
   return (
     <div>
-      <h3 className="mb-2 text-sm font-medium text-ink-dim">{table.title}</h3>
+      <h3 className="mb-2 text-sm font-medium text-ink-dim">{tr(table.title, lang)}</h3>
       <div className="overflow-x-auto rounded-[4px] border border-border">
         <table className="w-full font-mono text-sm">
           <thead className="border-b border-border text-xs text-ink-faint">
             <tr>
               {table.columns.map((c, i) => (
                 <th key={i} className="px-3 py-2 text-left align-bottom font-normal">
-                  {c}
+                  {tr(c, lang)}
                 </th>
               ))}
             </tr>
@@ -49,7 +50,7 @@ function Table({ table }: { table: GuideTable }) {
               <tr key={i} className="border-b border-border/50 last:border-0">
                 {row.map((cell, j) => (
                   <td key={j} className={`px-3 py-1.5 align-top${table.nowrap ? " whitespace-nowrap" : ""}`}>
-                    {cell}
+                    {typeof cell === "number" ? cell : tr(cell, lang)}
                   </td>
                 ))}
               </tr>
@@ -57,18 +58,23 @@ function Table({ table }: { table: GuideTable }) {
           </tbody>
         </table>
       </div>
-      {table.note && <p className="mt-2 text-xs leading-relaxed text-ink-faint">{table.note}</p>}
+      {table.note && <p className="mt-2 text-xs leading-relaxed text-ink-faint">{tr(table.note, lang)}</p>}
     </div>
   );
 }
 
-function codeBlocks(code: GuideCode[] | undefined) {
-  return code?.map((c) => (
-    <div key={c.title} className="space-y-1.5">
-      <OutputBlock label={c.title} value={c.code} wrap={false} />
-      {c.note && <p className="text-xs text-ink-faint">{c.note}</p>}
-    </div>
-  ));
+function CodeBlocks({ code }: { code: GuideCode[] | undefined }) {
+  const { lang } = useLang();
+  return (
+    <>
+      {code?.map((c, i) => (
+        <div key={i} className="space-y-1.5">
+          <OutputBlock label={tr(c.title, lang)} value={c.code} wrap={false} />
+          {c.note && <p className="text-xs text-ink-faint">{tr(c.note, lang)}</p>}
+        </div>
+      ))}
+    </>
+  );
 }
 
 /**
@@ -188,24 +194,24 @@ export function GuideView({ slug }: { slug: string }) {
                 <p className="text-sm text-codes">{computed.error}</p>
               ) : (
                 <>
-                  {computed.data.codeFirst && computed.data.tables?.slice(0, 1).map((t) => <Table key={t.title} table={t} />)}
-                  {computed.data.codeFirst && codeBlocks(computed.data.code)}
-                  {(computed.data.codeFirst ? computed.data.tables?.slice(1) : computed.data.tables)?.map((t) => <Table key={t.title} table={t} />)}
-                  {computed.data.figures?.map((f) => (
-                    <div key={f.title} className="space-y-1.5">
-                      {f.kind === "regs" && <RegSchemeView scheme={f.scheme} title={f.title} />}
-                      {f.kind === "flow" && <FlowChartView chart={f.chart} title={f.title} />}
-                      {f.kind === "plot" && <XYPlot fig={f.plot} title={f.title} />}
-                      {f.kind === "phasor" && <PhasorDiagram fig={f.phasor} title={f.title} />}
-                      {f.kind === "drawing" && <DrawingView drawing={f.drawing} title={f.title} />}
-                      {f.kind === "timing" && <TimingDiagram fig={f.timing} title={f.title} />}
-                      {f.note && <p className="text-xs text-ink-faint">{f.note}</p>}
+                  {computed.data.codeFirst && computed.data.tables?.slice(0, 1).map((t, ti) => <Table key={ti} table={t} />)}
+                  {computed.data.codeFirst && <CodeBlocks code={computed.data.code} />}
+                  {(computed.data.codeFirst ? computed.data.tables?.slice(1) : computed.data.tables)?.map((t, ti) => <Table key={ti} table={t} />)}
+                  {computed.data.figures?.map((f, fi) => (
+                    <div key={fi} className="space-y-1.5">
+                      {f.kind === "regs" && <RegSchemeView scheme={f.scheme} title={tr(f.title, lang)} />}
+                      {f.kind === "flow" && <FlowChartView chart={f.chart} title={tr(f.title, lang)} />}
+                      {f.kind === "plot" && <XYPlot fig={f.plot} title={tr(f.title, lang)} />}
+                      {f.kind === "phasor" && <PhasorDiagram fig={f.phasor} title={tr(f.title, lang)} />}
+                      {f.kind === "drawing" && <DrawingView drawing={f.drawing} title={tr(f.title, lang)} />}
+                      {f.kind === "timing" && <TimingDiagram fig={f.timing} title={tr(f.title, lang)} />}
+                      {f.note && <p className="text-xs text-ink-faint">{tr(f.note, lang)}</p>}
                     </div>
                   ))}
-                  {!computed.data.codeFirst && codeBlocks(computed.data.code)}
-                  {computed.data.notes?.map((n) => (
-                    <p key={n} className="text-sm leading-relaxed text-ink-dim">
-                      {n}
+                  {!computed.data.codeFirst && <CodeBlocks code={computed.data.code} />}
+                  {computed.data.notes?.map((n, ni) => (
+                    <p key={ni} className="text-sm leading-relaxed text-ink-dim">
+                      {tr(n, lang)}
                     </p>
                   ))}
                 </>
@@ -221,10 +227,10 @@ export function GuideView({ slug }: { slug: string }) {
             <CardBody className="space-y-3 pt-6">
               <h2 className="font-display text-lg font-semibold text-ink">{ui("errata", lang)}</h2>
               <ul className="space-y-2.5">
-                {g.errata.map((e) => (
-                  <li key={e} className="flex gap-2 text-sm leading-relaxed text-ink-dim">
+                {g.errata.map((e, ei) => (
+                  <li key={ei} className="flex gap-2 text-sm leading-relaxed text-ink-dim">
                     <span style={{ color: accent }}>·</span>
-                    <span>{e}</span>
+                    <span>{tr(e, lang)}</span>
                   </li>
                 ))}
               </ul>
@@ -238,10 +244,10 @@ export function GuideView({ slug }: { slug: string }) {
           <Card>
             <CardBody className="space-y-4 pt-6">
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">{ui("result", lang)}</h2>
-              {g.findings.map((f) => (
-                <div key={f.title}>
-                  <h3 className="text-sm font-medium text-ink">{f.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-ink-dim">{f.body}</p>
+              {g.findings.map((f, fi) => (
+                <div key={fi}>
+                  <h3 className="text-sm font-medium text-ink">{tr(f.title, lang)}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-ink-dim">{tr(f.body, lang)}</p>
                 </div>
               ))}
             </CardBody>

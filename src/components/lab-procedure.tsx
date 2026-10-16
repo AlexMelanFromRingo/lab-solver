@@ -4,7 +4,7 @@ import { Card, CardBody } from "@/components/ui/card";
 import { Steps } from "@/components/lab-steps";
 import type { LabGuide } from "@/lib/data/pismi-labs";
 import { useLang } from "@/components/lang";
-import { ui } from "@/lib/i18n";
+import { tr, ui } from "@/lib/i18n";
 
 /**
  * Ход работы, состав отчёта и перечень снимков экрана.
@@ -24,14 +24,14 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
             <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
               {ui("procTask", lang)}
             </h2>
-            <p className="mt-1 text-sm text-ink-faint">{guide.source}</p>
+            <p className="mt-1 text-sm text-ink-faint">{tr(guide.source, lang)}</p>
           </div>
 
           <ul className="space-y-1.5 text-sm text-ink-dim">
-            {guide.goals.map((goal) => (
-              <li key={goal} className="flex gap-2 leading-relaxed">
+            {guide.goals.map((goal, gi) => (
+              <li key={gi} className="flex gap-2 leading-relaxed">
                 <span style={{ color: accent }}>·</span>
-                {goal}
+                {tr(goal, lang)}
               </li>
             ))}
           </ul>
@@ -44,7 +44,7 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
               <div className="text-xs text-ink-faint">
                 {ui("procIndiv", lang)}
               </div>
-              <p className="mt-1.5 text-sm leading-relaxed text-ink">{guide.task}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-ink">{tr(guide.task, lang)}</p>
             </div>
           )}
         </CardBody>
@@ -76,15 +76,15 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
                 <div className="space-y-3">
                   {guide.screenshots.map((shot, i) => (
                     <div
-                      key={`${i}-${shot.what}`}
+                      key={i}
                       className="grid gap-3 rounded-[4px] border border-border bg-black/20 px-4 py-3.5 sm:grid-cols-[4.5rem_minmax(0,1fr)]"
                     >
                       <div className="text-xs font-medium" style={{ color: accent }}>
                         {ui("frame", lang)} {i + 1}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm leading-snug text-ink">{shot.what}</p>
-                        <p className="mt-1 text-xs leading-relaxed text-ink-faint">{shot.how}</p>
+                        <p className="text-sm leading-snug text-ink">{tr(shot.what, lang)}</p>
+                        <p className="mt-1 text-xs leading-relaxed text-ink-faint">{tr(shot.how, lang)}</p>
                       </div>
                     </div>
                   ))}
@@ -99,11 +99,11 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
                 </h3>
                 <ol className="space-y-1.5">
                   {guide.report.map((item, i) => (
-                    <li key={item} className="flex gap-3 text-sm leading-relaxed text-ink-dim">
+                    <li key={i} className="flex gap-3 text-sm leading-relaxed text-ink-dim">
                       <span className="font-mono text-xs tabular-nums text-ink-faint">
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      {item}
+                      {tr(item, lang)}
                     </li>
                   ))}
                 </ol>
@@ -120,9 +120,9 @@ export function LabProcedure({ guide, accent }: { guide: LabGuide; accent: strin
           </summary>
           <ol className="space-y-2 border-t border-border px-6 py-5">
             {guide.questions.map((q, i) => (
-              <li key={q} className="flex gap-3 text-sm leading-relaxed text-ink-dim">
+              <li key={i} className="flex gap-3 text-sm leading-relaxed text-ink-dim">
                 <span className="font-mono text-xs tabular-nums text-ink-faint">{i + 1}</span>
-                {q}
+                {tr(q, lang)}
               </li>
             ))}
           </ol>

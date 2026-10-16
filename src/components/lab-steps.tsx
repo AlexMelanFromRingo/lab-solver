@@ -1,4 +1,8 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { tr, type Loc } from "@/lib/i18n";
+import { useLang } from "@/components/lang";
 
 /**
  * Порядок запуска и грабли — разметка, общая для модулей лабораторных.
@@ -10,8 +14,8 @@ import type { ReactNode } from "react";
 
 export interface LabStep {
   /** Без заголовка шаг — одна фраза (так записаны шаги в manifest.json курса). */
-  title?: string;
-  body?: string;
+  title?: Loc;
+  body?: Loc;
   commands?: string[];
   /** Дерево каталогов: там, где шаг о структуре проекта, его и надо видеть. */
   tree?: string[];
@@ -27,18 +31,19 @@ export function Steps({
   /** Шаги-фразы без заголовков стоят плотнее. */
   compact?: boolean;
 }) {
+  const { lang } = useLang();
   return (
     <ol className={compact ? "space-y-3" : "space-y-6"}>
       {steps.map((step, i) => (
-        <li key={`${i}-${step.title ?? step.body}`} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
+        <li key={i} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
           <span className="font-mono text-sm tabular-nums" style={{ color: accent }}>
             {String(i + 1).padStart(2, "0")}
           </span>
           <div className="space-y-2">
-            {step.title && <h3 className="font-medium text-ink">{step.title}</h3>}
+            {step.title && <h3 className="font-medium text-ink">{tr(step.title, lang)}</h3>}
             {step.body && (
               <p className={step.title ? "text-sm leading-relaxed text-ink-dim" : "text-sm leading-relaxed text-ink"}>
-                {step.body}
+                {tr(step.body, lang)}
               </p>
             )}
             {step.tree && (
@@ -64,15 +69,18 @@ export function Steps({
 export function Pitfalls({
   items,
   accent,
-  title = "Где спотыкаются",
+  title,
 }: {
   items: ReactNode[];
   accent: string;
-  title?: string;
+  title?: Loc;
 }) {
+  const { lang } = useLang();
   return (
     <div>
-      <h3 className="mb-2 text-sm font-medium text-ink-dim">{title}</h3>
+      <h3 className="mb-2 text-sm font-medium text-ink-dim">
+        {tr(title ?? { uk: "Де спотикаються", ru: "Где спотыкаются" }, lang)}
+      </h3>
       <ul className="space-y-2 text-sm text-ink-dim">
         {items.map((item, i) => (
           <li key={typeof item === "string" ? item : i} className="flex gap-2 leading-relaxed">
