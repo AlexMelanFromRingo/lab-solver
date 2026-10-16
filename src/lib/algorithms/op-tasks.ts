@@ -235,3 +235,103 @@ export function loopProgram(t: PhysTask): string {
     "}",
   ].join("\n");
 }
+
+// ==================== ЛР7 / ЛР10 — операції над масивом (20) ====================
+export interface ArrayOp {
+  n: number;
+  text: string;
+  extra: string[];
+  /** Предикат над елементом a[i] (ціле). */
+  pred: string;
+  agg: "sum" | "count";
+}
+
+export const ARRAY_OPS: ArrayOp[] = [
+  { n: 1, text: "Сума елементів масиву, кратних K (K вводиться).", extra: ["K"], pred: "a[i] % K == 0", agg: "sum" },
+  { n: 2, text: "Сума елементів масиву, не кратних K (K вводиться).", extra: ["K"], pred: "a[i] % K != 0", agg: "sum" },
+  { n: 3, text: "Сума елементів масиву, більших за X (X вводиться).", extra: ["X"], pred: "a[i] > X", agg: "sum" },
+  { n: 4, text: "Кількість елементів масиву, менших за X (X вводиться).", extra: ["X"], pred: "a[i] < X", agg: "count" },
+  { n: 5, text: "Сума елементів масиву, не більших за X (X вводиться).", extra: ["X"], pred: "a[i] <= X", agg: "sum" },
+  { n: 6, text: "Сума елементів масиву, не менших за X (X вводиться).", extra: ["X"], pred: "a[i] >= X", agg: "sum" },
+  { n: 7, text: "Сума елементів масиву, що дорівнюють X (X вводиться).", extra: ["X"], pred: "a[i] == X", agg: "sum" },
+  { n: 8, text: "Сума елементів масиву, що не дорівнюють X (X вводиться).", extra: ["X"], pred: "a[i] != X", agg: "sum" },
+  { n: 9, text: "Сума елементів масиву зі значеннями в діапазоні [L; R].", extra: ["L", "R"], pred: "a[i] >= L && a[i] <= R", agg: "sum" },
+  { n: 10, text: "Сума елементів масиву зі значеннями в діапазоні (L; R].", extra: ["L", "R"], pred: "a[i] > L && a[i] <= R", agg: "sum" },
+  { n: 11, text: "Сума елементів масиву зі значеннями в діапазоні [L; R).", extra: ["L", "R"], pred: "a[i] >= L && a[i] < R", agg: "sum" },
+  { n: 12, text: "Сума елементів масиву зі значеннями в діапазоні (L; R).", extra: ["L", "R"], pred: "a[i] > L && a[i] < R", agg: "sum" },
+  { n: 13, text: "Сума елементів масиву, значення яких не належить до [L; R].", extra: ["L", "R"], pred: "a[i] < L || a[i] > R", agg: "sum" },
+  { n: 14, text: "Сума елементів масиву, значення яких не належить до (L; R].", extra: ["L", "R"], pred: "a[i] <= L || a[i] > R", agg: "sum" },
+  { n: 15, text: "Сума елементів масиву, значення яких не належить до [L; R).", extra: ["L", "R"], pred: "a[i] < L || a[i] >= R", agg: "sum" },
+  { n: 16, text: "Сума елементів масиву, значення яких не належить до (L; R).", extra: ["L", "R"], pred: "a[i] <= L || a[i] >= R", agg: "sum" },
+  { n: 17, text: "Кількість позитивних елементів масиву.", extra: [], pred: "a[i] > 0", agg: "count" },
+  { n: 18, text: "Кількість від'ємних елементів масиву.", extra: [], pred: "a[i] < 0", agg: "count" },
+  { n: 19, text: "Кількість парних за значенням елементів масиву.", extra: [], pred: "a[i] % 2 == 0", agg: "count" },
+  { n: 20, text: "Кількість непарних за значенням елементів масиву.", extra: [], pred: "a[i] % 2 != 0", agg: "count" },
+];
+
+/** Програма операції над масивом; variant: static | dynamic | std::array. */
+export function arrayOpProgram(op: ArrayOp, kind: "static" | "dynamic" | "std"): string {
+  const headers = ["#include <iostream>", "#include <cstdlib>"];
+  if (kind === "std") headers.push("#include <array>");
+  headers.push("using namespace std;");
+  const readExtra = op.extra.length ? [`    cout << "Введiть ${op.extra.join(", ")}: ";`, `    cin >> ${op.extra.join(" >> ")};`] : [];
+  const extraDecl = op.extra.length ? `    int ${op.extra.join(", ")};\n` : "";
+  const accInit = op.agg === "sum" ? "long long acc = 0;" : "int acc = 0;";
+  const add = op.agg === "sum" ? "acc += a[i];" : "++acc;";
+  const label = op.agg === "sum" ? "Сума" : "Кiлькiсть";
+  let decl: string;
+  let free = "";
+  if (kind === "dynamic") {
+    decl = "    int* a = new int[n];";
+    free = "    delete[] a;\n";
+  } else if (kind === "std") {
+    decl = "    const int N = 20;   // std::array — розмір фіксований на етапі компіляції\n    array<int, N> a;\n    n = N;";
+  } else {
+    decl = "    int a[1000];";
+  }
+  const nDecl = kind === "std" ? "    int n;" : "    int n;\n    cout << \"n = \";\n    cin >> n;";
+  return [
+    headers.join("\n"),
+    "",
+    `// Варіант ${op.n}. ${op.text}`,
+    "int main() {",
+    nDecl,
+    extraDecl + readExtra.join("\n"),
+    decl,
+    "    srand(12345);   // фіксований seed: результат відтворюваний",
+    `    ${accInit}`,
+    "    for (int i = 0; i < n; i++) {",
+    "        a[i] = rand() % 41 - 20;   // діапазон [-20, 20]",
+    "        cout << a[i] << ' ';",
+    `        if (${op.pred}) ${add}`,
+    "    }",
+    `    cout << "\\n${label}: " << acc << endl;`,
+    free + "    return 0;",
+    "}",
+  ].filter((l) => l !== "").join("\n");
+}
+
+/** Фізична задача, розв'язана з винесенням обчислення у функцію користувача (ЛР9). */
+export function funcProgram(t: PhysTask): string {
+  const headers = ["#include <iostream>"];
+  if (t.math) headers.push("#include <cmath>");
+  headers.push("using namespace std;");
+  const params = t.vars.map((v) => "double " + v).join(", ");
+  return [
+    headers.join("\n"),
+    "",
+    `// Варіант ${t.n}. ${t.text}`,
+    `// Обчислення винесено у функцію користувача solve().`,
+    `void solve(${params}) {`,
+    ...t.body.map((l) => "    " + l),
+    "}",
+    "",
+    "int main() {",
+    `    double ${t.vars.join(", ")};`,
+    `    cout << "Введiть ${t.vars.join(", ")}: ";`,
+    `    cin >> ${t.vars.join(" >> ")};`,
+    `    solve(${t.vars.join(", ")});`,
+    "    return 0;",
+    "}",
+  ].join("\n");
+}
