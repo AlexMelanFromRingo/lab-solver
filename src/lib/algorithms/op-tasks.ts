@@ -415,3 +415,112 @@ export function seriesProgram(s: SeriesVar): string {
   lines.push("    return 0;", "}");
   return lines.join("\n");
 }
+
+// ============ ЛР5 (switch) / ЛР4 завд.2 — кусково задані функції (30) ============
+export interface PieceVar {
+  n: number;
+  /** Три формули: вираз C++ і текстовий інтервал. */
+  f: { e: string; iv: string }[];
+}
+
+export const LR5_PIECE: PieceVar[] = [
+  { n: 1, f: [{ e: "pow(PI, x) - 1", iv: "−10 < x ≤ 0" }, { e: "sin(x) / x", iv: "0 < x ≤ 10" }, { e: "1 / log10(x * x - 1)", iv: "10 < x ≤ 1000" }] },
+  { n: 2, f: [{ e: "sin(PI * x / 2 - 1)", iv: "−3 < x ≤ 1" }, { e: "exp(cbrt(x + 3))", iv: "1 < x ≤ 3" }, { e: "pow(log10(sqrt(x) + 1), 2)", iv: "x > 3" }] },
+  { n: 3, f: [{ e: "tan(PI * x) - exp(x)", iv: "−π < x ≤ 0" }, { e: "2 * pow(cos(cbrt(PI * x)), 2)", iv: "0 < x ≤ π" }, { e: "1 - 2 * log10(x)", iv: "x > π" }] },
+  { n: 4, f: [{ e: "pow(PI / 2, fabs(atan(x)))", iv: "−π < x ≤ 0" }, { e: "4 * pow(cos(PI * x), 2) - 2", iv: "0 < x ≤ 2" }, { e: "exp(log10(x * x + 1))", iv: "x < 2" }] },
+  { n: 5, f: [{ e: "cbrt(fabs(atan(x)))", iv: "x ≤ 0" }, { e: "sqrt(1 - exp(-x))", iv: "0 < x ≤ 1,2" }, { e: "tan(x) / log10(x + 1)", iv: "1,2 < x ≤ π/2" }] },
+  { n: 6, f: [{ e: "cbrt(pow(tan(x), 2))", iv: "−π/2 < x ≤ 0" }, { e: "pow(log10(x * x + 2), 2)", iv: "0 < x ≤ π" }, { e: "1 - exp(-x * x / 2)", iv: "π < x ≤ 2π" }] },
+  { n: 7, f: [{ e: "cos(cbrt(x * x + 2))", iv: "−100 < x ≤ 0" }, { e: "pow(log10(sqrt(x) + 1), 2)", iv: "0 < x ≤ 10" }, { e: "exp(-sqrt(x + 1))", iv: "x > 10" }] },
+  { n: 8, f: [{ e: "tan(0.1 * pow(PI, x) - 3)", iv: "0 < x ≤ π" }, { e: "exp(-x - 1)", iv: "π < x ≤ 2π" }, { e: "2 * log2(4 * x)", iv: "x > 2π" }] },
+  { n: 9, f: [{ e: "tan(x + 1)", iv: "−2 < x ≤ 0" }, { e: "x / log10(x + 1)", iv: "0 < x ≤ 10" }, { e: "sin(2 * PI * cbrt(x) + 1)", iv: "10 < x ≤ 20" }] },
+  { n: 10, f: [{ e: "cbrt(pow(tan(x), 2))", iv: "−π/2 < x < π/2" }, { e: "log10(pow(2, x) + 256)", iv: "π/2 ≤ x ≤ 10" }, { e: "atan(x)", iv: "x > 10" }] },
+  { n: 11, f: [{ e: "fabs(pow(x, 3) - 1)", iv: "−100 < x ≤ 0" }, { e: "sin(2 * pow(PI, x) - 1)", iv: "0 < x ≤ 100" }, { e: "sqrt(log10(x * x - 2))", iv: "100 < x" }] },
+  { n: 12, f: [{ e: "cbrt(x * x + 1)", iv: "x ≤ 0" }, { e: "2 * pow(tan(x - 1), 2)", iv: "0 < x < π/2" }, { e: "2 * log2(x + 1)", iv: "π/2 ≤ x" }] },
+  { n: 13, f: [{ e: "sin(cbrt(x * x) + PI)", iv: "x ≤ 0" }, { e: "1 + log10(sqrt(x + 10))", iv: "0 < x ≤ 3" }, { e: "1 - exp(-x)", iv: "3 < x < 7" }] },
+  { n: 14, f: [{ e: "1 - exp(x)", iv: "x ≤ 0" }, { e: "1 + cbrt(2 * x + 1)", iv: "0 < x ≤ 10" }, { e: "1 - pow(log10(2 * x + 1), 2)", iv: "x > 10" }] },
+  { n: 15, f: [{ e: "pow(atan(x), 3)", iv: "−1000 < x ≤ 0" }, { e: "pow(x + 1, atan(PI))", iv: "0 < x ≤ 10" }, { e: "pow(x + 1, log10(PI))", iv: "x > 10" }] },
+  { n: 16, f: [{ e: "tan(x - 1)", iv: "0 < x < 1" }, { e: "cbrt(x * x + 2)", iv: "1 ≤ x ≤ e" }, { e: "log2(exp(x) + 2)", iv: "e < x < 10" }] },
+  { n: 17, f: [{ e: "cos(cbrt(x * x)) + 1", iv: "−1000 < x ≤ 0" }, { e: "pow(PI, x) + 1", iv: "0 < x ≤ π" }, { e: "log10(pow(PI, x) + 1)", iv: "π < x ≤ 2π" }] },
+  { n: 18, f: [{ e: "exp(2 * x * x - 1)", iv: "−5 < x ≤ 1" }, { e: "sin(pow(x, 5) - 1)", iv: "1 < x ≤ 5" }, { e: "log10(1024 * x - 2)", iv: "5 < x < 25" }] },
+  { n: 19, f: [{ e: "fabs(x - 7)", iv: "x ≤ 7" }, { e: "tan(2 * PI * x) - 2", iv: "7 < x ≤ 10" }, { e: "log2(1024 * x - 2)", iv: "3 < x ≤ 9" }] },
+  { n: 20, f: [{ e: "pow(pow(3 - x, 2), 1.0 / 5)", iv: "−1000 < x ≤ 0" }, { e: "exp(-x * x / 2)", iv: "0 < x ≤ 3" }, { e: "pow(log10(pow(x, 3) - 3), 2)", iv: "3 < x < 1024" }] },
+  { n: 21, f: [{ e: "cbrt(x * x + 1)", iv: "−1024 < x ≤ 0" }, { e: "x / tan(x + 1)", iv: "0 < x ≤ 0,5" }, { e: "pow(log10(x + 1), 2)", iv: "0,5 < x < 64" }] },
+  { n: 22, f: [{ e: "exp(x * x / 2)", iv: "−2 < x ≤ 0" }, { e: "tan(x + 1)", iv: "0 < x ≤ 1" }, { e: "sin(pow(x, PI)) / pow(log10(x), 2)", iv: "1 < x ≤ π" }] },
+  { n: 23, f: [{ e: "pow(x, 0.75) + 8", iv: "0 < x ≤ 8" }, { e: "atan(2 * PI * x + 1)", iv: "8 < x ≤ 256" }, { e: "2 / pow(log10(x), 2)", iv: "x > 256" }] },
+  { n: 24, f: [{ e: "1 - exp(x - 1)", iv: "−8 < x ≤ π" }, { e: "atan(cbrt(x * x - 9))", iv: "π < x ≤ 8" }, { e: "8 / log2(2 * x)", iv: "x > 8" }] },
+  { n: 25, f: [{ e: "pow(2 - x, sin(x))", iv: "−2 < x ≤ 0" }, { e: "2 / log10(pow(x, 3) + 4)", iv: "0 < x ≤ 8" }, { e: "4 / (x + 8)", iv: "x > 8" }] },
+  { n: 26, f: [{ e: "pow(PI, 2 * x) - 1", iv: "−9 < x ≤ 0" }, { e: "x / log10(x + 1)", iv: "0 < x ≤ 10" }, { e: "sin(2 * PI * cbrt(x) + 1)", iv: "10 < x ≤ 20" }] },
+  { n: 27, f: [{ e: "tan(PI * x) - exp(x)", iv: "−π < x ≤ 0" }, { e: "pow(log10(x * x + 2), 2)", iv: "0 < x ≤ π" }, { e: "1 - 3 * log10(x)", iv: "x > π" }] },
+  { n: 28, f: [{ e: "cbrt(pow(tan(x), 2))", iv: "−π/2 < x ≤ 0" }, { e: "x / log10(x + 1)", iv: "0 < x ≤ 10" }, { e: "exp(-sqrt(x + 1))", iv: "x > 10" }] },
+  { n: 29, f: [{ e: "fabs(x * x - 1)", iv: "−100 < x ≤ 0" }, { e: "exp(-x * x / 2)", iv: "0 < x ≤ 3" }, { e: "1 - exp(-x)", iv: "3 < x < 7" }] },
+  { n: 30, f: [{ e: "cbrt(x * x + 1)", iv: "x ≤ 0" }, { e: "2 / log10(x * x + 4)", iv: "0 < x ≤ 8" }, { e: "8 / log2(2 * x)", iv: "x > 8" }] },
+];
+
+/** Програма з оператором switch (ЛР5) або ланцюгом if/else (ЛР4 завд.2), що обирає формулу за номером n. */
+export function pieceProgram(p: PieceVar, useSwitch: boolean): string {
+  const branches = useSwitch
+    ? [
+        "    switch (n) {",
+        `        case 1: y = ${p.f[0].e}; break;`,
+        `        case 2: y = ${p.f[1].e}; break;`,
+        `        case 3: y = ${p.f[2].e}; break;`,
+        "        default: cout << \"Немає такої формули\\n\"; return 1;",
+        "    }",
+      ]
+    : [
+        `    if (n == 1) y = ${p.f[0].e};`,
+        `    else if (n == 2) y = ${p.f[1].e};`,
+        `    else if (n == 3) y = ${p.f[2].e};`,
+        "    else { cout << \"Немає такої формули\\n\"; return 1; }",
+      ];
+  return [
+    "#include <iostream>",
+    "#include <cmath>",
+    "using namespace std;",
+    "",
+    `// Варіант ${p.n}. y1: ${p.f[0].e} (${p.f[0].iv}); y2: ${p.f[1].e} (${p.f[1].iv}); y3: ${p.f[2].e} (${p.f[2].iv})`,
+    "int main() {",
+    "    const double PI = 3.14159265358979;",
+    "    int n; double x, y = 0;",
+    "    cout << \"Введiть номер формули n (1-3) i x: \";",
+    "    cin >> n >> x;",
+    ...branches,
+    "    cout << \"n=\" << n << \"  x=\" << x << \"  y=\" << y << endl;",
+    "    return 0;",
+    "}",
+  ].join("\n");
+}
+
+// ==================== ЛР4 завд.3 — вирази з МІН/МАКС (30) ====================
+export const LR4_MINMAX: WordTask[] = [
+  { n: 1, text: "A = (МІН(c·f, d) + 5)/МАКС(c, d·f/2)", vars: ["c", "f", "d"], result: { name: "A", expr: "(fmin(c * f, d) + 5) / fmax(c, d * f / 2)" }, label: "A", math: true },
+  { n: 2, text: "B = МАКС(x+y, y·z)/МІН(y+z, x)", vars: ["x", "y", "z"], result: { name: "B", expr: "fmax(x + y, y * z) / fmin(y + z, x)" }, label: "B", math: true },
+  { n: 3, text: "H = МІН(x−z, y)/(МАКС(x, z) + z)", vars: ["x", "y", "z"], result: { name: "H", expr: "fmin(x - z, y) / (fmax(x, z) + z)" }, label: "H", math: true },
+  { n: 4, text: "V = (МАКС(x−a, b) + МІН(a, b+x))/(2a)", vars: ["x", "a", "b"], result: { name: "V", expr: "(fmax(x - a, b) + fmin(a, b + x)) / (2 * a)" }, label: "V", math: true },
+  { n: 5, text: "F = МІН(x+y, y+z)/МАКС(x, y−z) + x·y", vars: ["x", "y", "z"], result: { name: "F", expr: "fmin(x + y, y + z) / fmax(x, y - z) + x * y" }, label: "F", math: true },
+  { n: 6, text: "W = МІН(x, a·b)/МАКС(a+b, x)", vars: ["x", "a", "b"], result: { name: "W", expr: "fmin(x, a * b) / fmax(a + b, x)" }, label: "W", math: true },
+  { n: 7, text: "P = МІН(x−y, y−z)·МАКС(x+y, z)/3", vars: ["x", "y", "z"], result: { name: "P", expr: "fmin(x - y, y - z) * fmax(x + y, z) / 3" }, label: "P", math: true },
+  { n: 8, text: "C = МІН(x, b·x) + 2·МАКС(a−x, b)", vars: ["x", "b", "a"], result: { name: "C", expr: "fmin(x, b * x) + 2 * fmax(a - x, b)" }, label: "C", math: true },
+  { n: 9, text: "Q = |МАКС(x−y, z) − МІН(3y, x)|/(4z + x)", vars: ["x", "y", "z"], result: { name: "Q", expr: "fabs(fmax(x - y, z) - fmin(3 * y, x)) / (4 * z + x)" }, label: "Q", math: true },
+  { n: 10, text: "F = МІН(5x, y + z/5)/МАКС(x, y−3) + x³", vars: ["x", "y", "z"], result: { name: "F", expr: "fmin(5 * x, y + z / 5) / fmax(x, y - 3) + pow(x, 3)" }, label: "F", math: true },
+  { n: 11, text: "Z = (МІН(x+b, y) − x)/МАКС(x², y·b)", vars: ["x", "b", "y"], result: { name: "Z", expr: "(fmin(x + b, y) - x) / fmax(x * x, y * b)" }, label: "Z", math: true },
+  { n: 12, text: "N = МАКС(x·z, y)/МІН(x+y+z, x·y·z)", vars: ["x", "y", "z"], result: { name: "N", expr: "fmax(x * z, y) / fmin(x + y + z, x * y * z)" }, label: "N", math: true },
+  { n: 13, text: "A = (МАКС(c³, d) + 7)/МІН(d+c, a²)", vars: ["c", "d", "a"], result: { name: "A", expr: "(fmax(pow(c, 3), d) + 7) / fmin(d + c, a * a)" }, label: "A", math: true },
+  { n: 14, text: "B = 5·МІН(a, b·c) − МАКС(a−c, b)", vars: ["a", "b", "c"], result: { name: "B", expr: "5 * fmin(a, b * c) - fmax(a - c, b)" }, label: "B", math: true },
+  { n: 15, text: "R = МІН(c·d, n) + МАКС(c, n·d)", vars: ["c", "d", "n"], result: { name: "R", expr: "fmin(c * d, n) + fmax(c, n * d)" }, label: "R", math: true },
+  { n: 16, text: "Z = (МАКС(3a, x) − МІН(a−x, y))/(x+y)", vars: ["a", "x", "y"], result: { name: "Z", expr: "(fmax(3 * a, x) - fmin(a - x, y)) / (x + y)" }, label: "Z", math: true },
+  { n: 17, text: "P = МАКС(x, y·z)/(x·y·z) + МІН(x−y, z)", vars: ["x", "y", "z"], result: { name: "P", expr: "fmax(x, y * z) / (x * y * z) + fmin(x - y, z)" }, label: "P", math: true },
+  { n: 18, text: "Q = (d − МІН(d, a))/МАКС(c·d, |a|)", vars: ["d", "a", "c"], result: { name: "Q", expr: "(d - fmin(d, a)) / fmax(c * d, fabs(a))" }, label: "Q", math: true },
+  { n: 19, text: "U = МАКС(a, b) + МІН(a, b·c)/2", vars: ["a", "b", "c"], result: { name: "U", expr: "fmax(a, b) + fmin(a, b * c) / 2" }, label: "U", math: true },
+  { n: 20, text: "T = МАКС(x³−y, z)/МІН(x+y+z, x·y·z/3)", vars: ["x", "y", "z"], result: { name: "T", expr: "fmax(pow(x, 3) - y, z) / fmin(x + y + z, x * y * z / 3)" }, label: "T", math: true },
+  { n: 21, text: "S = (МАКС(x−y, y) − МІН(x+y, z))/(10−y)", vars: ["x", "y", "z"], result: { name: "S", expr: "(fmax(x - y, y) - fmin(x + y, z)) / (10 - y)" }, label: "S", math: true },
+  { n: 22, text: "L = МІН(z, y+2)/(МАКС(x·y, z) − y)", vars: ["x", "y", "z"], result: { name: "L", expr: "fmin(z, y + 2) / (fmax(x * y, z) - y)" }, label: "L", math: true },
+  { n: 23, text: "J = МІН(a²·b, x³) − МАКС(a·x, b+x)", vars: ["a", "b", "x"], result: { name: "J", expr: "fmin(a * a * b, pow(x, 3)) - fmax(a * x, b + x)" }, label: "J", math: true },
+  { n: 24, text: "D = МІН(x−a, a−b)/(2·МАКС(x, a+b))", vars: ["x", "a", "b"], result: { name: "D", expr: "fmin(x - a, a - b) / (2 * fmax(x, a + b))" }, label: "D", math: true },
+  { n: 25, text: "I = (МАКС(x, z) − МІН(y, x−2))/(x + y⁴)", vars: ["x", "y", "z"], result: { name: "I", expr: "(fmax(x, z) - fmin(y, x - 2)) / (x + pow(y, 4))" }, label: "I", math: true },
+  { n: 26, text: "T = МІН(x+y, z)/(МАКС(x³, z²) + 5)", vars: ["x", "y", "z"], result: { name: "T", expr: "fmin(x + y, z) / (fmax(pow(x, 3), z * z) + 5)" }, label: "T", math: true },
+  { n: 27, text: "I = 10 − МАКС(x·z, y·z−8)/МІН(x + y/2, z)", vars: ["x", "y", "z"], result: { name: "I", expr: "10 - fmax(x * z, y * z - 8) / fmin(x + y / 2, z)" }, label: "I", math: true },
+  { n: 28, text: "P = МАКС(x·|y|, z) + 3·МІН(z, (x+y)/2)", vars: ["x", "y", "z"], result: { name: "P", expr: "fmax(x * fabs(y), z) + 3 * fmin(z, (x + y) / 2)" }, label: "P", math: true },
+  { n: 29, text: "J = (МІН(b·x+2, c) + МАКС(c−b, x))/5", vars: ["b", "x", "c"], result: { name: "J", expr: "(fmin(b * x + 2, c) + fmax(c - b, x)) / 5" }, label: "J", math: true },
+  { n: 30, text: "C = МАКС(a+n, m) − 3·МІН(m−n, a)", vars: ["a", "n", "m"], result: { name: "C", expr: "fmax(a + n, m) - 3 * fmin(m - n, a)" }, label: "C", math: true },
+];
