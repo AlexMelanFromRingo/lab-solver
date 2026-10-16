@@ -281,6 +281,14 @@ export function run(prog: Program, init: Partial<Pick<Cpu, "a" | "b" | "c" | "d"
     } else if (op === 0x32) {
       wr(w, cpu.a);
       cpu.pc += 3;
+    } else if (op === 0x02 || op === 0x12) {
+      // STAX B / STAX D
+      wr(getRP(op >> 4), cpu.a);
+      cpu.pc += 1;
+    } else if (op === 0x0a || op === 0x1a) {
+      // LDAX B / LDAX D
+      cpu.a = rd(getRP(op >> 4));
+      cpu.pc += 1;
     } else if (op === 0x2a) {
       cpu.l = rd(w);
       cpu.h = rd(w + 1);

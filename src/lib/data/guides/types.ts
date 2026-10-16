@@ -39,6 +39,17 @@ export interface GuideComputed {
   figures?: GuideFigure[];
   code?: GuideCode[];
   notes?: string[];
+  /** Готовый текст программы важнее таблиц — показать блоки кода сразу после данных варианта. */
+  codeFirst?: boolean;
+}
+
+/** Дополнительное число, которое методичка оставляет на выбор студента (первый член, число элементов…). */
+export interface GuideParam {
+  key: string;
+  label: string;
+  min: number;
+  max: number;
+  value: number;
 }
 
 export interface GuideVariant {
@@ -48,7 +59,8 @@ export interface GuideVariant {
   max: number;
   /** Откуда берётся номер — пересказ методички. */
   hint: string;
-  compute: (v: number) => GuideComputed;
+  params?: GuideParam[];
+  compute: (v: number, p: Record<string, number>) => GuideComputed;
 }
 
 /** Ответ на «поясніть» из методички — то, что должно получиться. */

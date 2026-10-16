@@ -21,16 +21,66 @@ function haltAddr(p: Program): number {
   return lastByte(p);
 }
 
+// ------------------------------------------------- два тексти програми
+
+/**
+ * Програма з даних і коду. Дані й переходи — через мітки, тож той самий текст
+ * збирається і з адресами методички (ORG — для стенда й asm80.com), і без ORG
+ * (симулятор Eli Bendersky його не знає: код стоїть з 0000h, дані — після нього).
+ */
+interface AsmSrc {
+  data?: { org: number; lines: string[] };
+  code: { org: number; lines: string[] };
+}
+
+const org = (x: number) => `        ORG ${hx(x, 4)}h`;
+/** Байт у тексті програми: шістнадцяткове число, що починається з літери, асемблери вимагають писати з 0 (0EDh). */
+const h8 = (x: number) => `${(x & 0xff) >= 0xa0 ? "0" : ""}${hx(x & 0xff)}h`;
+
+/** Останній рядок без коментаря і з переводом рядка: лексер симулятора Bendersky падає на коментарі в кінці тексту. */
+const text = (ls: string[]) => [...ls.slice(0, -1), ls[ls.length - 1].replace(/\s*;.*$/, "")].join("\n") + "\n";
+
+function sources(s: AsmSrc) {
+  const stand = text([...(s.data ? [org(s.data.org), ...s.data.lines] : []), org(s.code.org), ...s.code.lines]);
+  const sim = text([...s.code.lines, ...(s.data?.lines ?? [])]);
+  return { stand, sim, p: assemble(stand), q: assemble(sim) };
+}
+
+/** Директива П: коди комірок from..to підряд («_» — наступна комірка). */
+function enter(p: Program, from: number, to: number) {
+  const bytes: string[] = [];
+  for (let x = from; x <= to; x++) bytes.push(hx(p.mem.get(x) ?? 0));
+  return `П ${hx(from, 4)} ${bytes.join(" _ ")} ВП`;
+}
+
+const EMU = {
+  stand: "asm80.com: File → New, назва з розширенням .a80, вставити текст, Compile, далі Emulator; адреси й коди — як на стенді.",
+  sim: "Симулятор Eli Bendersky (eli.thegreenplace.net): вставити в поле, Run; регістри й пам'ять — праворуч, адреси міток — у таблиці Labels.",
+};
+
+function codeBlocks(src: ReturnType<typeof sources>) {
+  return [
+    { title: "Програма для стенда й asm80.com (адреси методички)", code: src.stand, note: EMU.stand },
+    { title: "Програма для симулятора Bendersky (без ORG)", code: src.sim, note: EMU.sim },
+  ];
+}
+
 // ---------------------------------------------------------------- ЛР 1
 
-function lab1Program(n: number, k: number) {
-  return assemble(`ORG 0805h
-RES DB 00h          ; комірка для результату
-MVI A,${hx(n)}h         ; A <- номер за журналом (${n})
-MVI B,${hx(k)}h         ; B <- номер курсу (${k})
-ADD B               ; A <- A + B
-STA 0805h           ; результат -> 0805h
-HLT`);
+function lab1Src(n: number, k: number) {
+  return sources({
+    data: { org: 0x805, lines: ["RES:    DB 00h          ; комірка для результату"] },
+    code: {
+      org: 0x806,
+      lines: [
+        `        MVI A,${h8(n)}       ; A <- номер за журналом (${n})`,
+        `        MVI B,${h8(k)}       ; B <- номер курсу (${k})`,
+        "        ADD B           ; A <- A + B",
+        "        STA RES         ; результат -> RES (0805h)",
+        "        HLT",
+      ],
+    },
+  });
 }
 
 // ---------------------------------------------------------------- ЛР 2
@@ -42,63 +92,152 @@ const LAB2: [number, number, number][] = [
   [0x39, 0x810, 0x817], [0x48, 0x811, 0x818], [0x57, 0x812, 0x819], [0x66, 0x813, 0x81a], [0x75, 0x814, 0x81b],
 ];
 
-function lab2Program(v: number) {
-  const [, b1, b2] = LAB2[v - 1];
-  const a = (x: number) => `${hx(x, 4)}h`;
-  return assemble(`ORG 0830h
-LXI H,${a(b1)}      ; HL -> перший блок
-MOV A,M             ; A <- (${a(b1)})
-INX H
-MOV B,M             ; B <- (${a(b1 + 1)})
-INX H
-MOV C,M             ; C <- (${a(b1 + 2)})
-INX H
-MOV D,M             ; D <- (${a(b1 + 3)})
-INX H
-MOV E,M             ; E <- (${a(b1 + 4)})
-LHLD ${a(b1 + 5)}     ; L <- (${a(b1 + 5)}), H <- (${a(b1 + 6)})
-STA ${a(b2)}         ; A -> другий блок
-MOV A,B
-STA ${a(b2 + 1)}
-MOV A,C
-STA ${a(b2 + 2)}
-MOV A,D
-STA ${a(b2 + 3)}
-MOV A,E
-STA ${a(b2 + 4)}
-SHLD ${a(b2 + 5)}     ; L -> ${a(b2 + 5)}, H -> ${a(b2 + 6)}
-HLT`);
+function lab2Src(v: number) {
+  const [c, b1] = LAB2[v - 1];
+  return sources({
+    // перший блок — константа (як ЗК), другий — нулі; другий блок у всіх варіантах іде одразу за першим
+    data: {
+      org: b1,
+      lines: [
+        ...Array.from({ length: 7 }, (_, i) => `S${i + 1}:     DB ${h8(c)}          ; перший блок`),
+        ...Array.from({ length: 7 }, (_, i) => `T${i + 1}:     DB 00h          ; другий блок`),
+      ],
+    },
+    // без LHLD/SHLD: у симуляторі Bendersky вони не асемблюються (беруть другий операнд замість першого)
+    code: {
+      org: 0x830,
+      lines: [
+        "        LXI H,S6        ; HL -> S6",
+        "        MOV E,M         ; E <- S6",
+        "        INX H",
+        "        MOV D,M         ; D <- S7",
+        "        XCHG            ; L <- S6, H <- S7 (HL завантажено першим)",
+        "        LDA S2",
+        "        MOV B,A         ; B <- S2",
+        "        LDA S3",
+        "        MOV C,A         ; C <- S3",
+        "        LDA S4",
+        "        MOV D,A         ; D <- S4",
+        "        LDA S5",
+        "        MOV E,A         ; E <- S5",
+        "        LDA S1          ; A <- S1 (останнім: A — проміжний регістр)",
+        "        STA T1          ; вивантаження в другий блок",
+        ...["B", "C", "D", "E", "L", "H"].flatMap((r, i) => [`        MOV A,${r}`, `        STA T${i + 2}`]),
+        "        HLT",
+      ],
+    },
+  });
 }
 
 // ---------------------------------------------------------------- ЛР 3
 
-const A1 = 1;
-const K = 5;
+function lab3Src(n: number, a1: number, k: number) {
+  return sources({
+    data: {
+      org: 0x800,
+      lines: [
+        `A1:     DB ${h8(a1)}          ; перший член a1 = ${a1}`,
+        `KK:     DB ${h8(k)}          ; кількість членів k = ${k}`,
+        "SUM:    DB 00h          ; результат Y",
+      ],
+    },
+    code: {
+      org: 0x810,
+      lines: [
+        "        LDA A1          ; A <- a1",
+        "        MOV D,A         ; D — поточний член a(i)",
+        "        LDA KK",
+        "        MOV B,A         ; B — лічильник циклу",
+        "        MVI C,00h       ; C — сума",
+        "LOOP:   CALL STEP       ; Y += a(i); a(i+1) = a(i) + N",
+        "        DCR B",
+        "        JNZ LOOP",
+        "        MOV A,C",
+        "        STA SUM         ; Y -> SUM",
+        "        HLT",
+        "STEP:   MOV A,C         ; підпрограма одного кроку",
+        "        ADD D",
+        "        MOV C,A",
+        "        MOV A,D",
+        `        ADI ${h8(n)}         ; + N = ${n}`,
+        "        MOV D,A",
+        "        RET",
+      ],
+    },
+  });
+}
 
-function lab3Program(n: number) {
-  return assemble(`ORG 0800h
-A1  DB ${hx(A1)}h           ; перший член a1
-KK  DB ${hx(K)}h           ; кількість членів k
-SUM DB 00h           ; результат Y
-ORG 0810h
-LDA 0800h            ; A <- a1
-MOV D,A              ; D — поточний член a(i)
-LDA 0801h
-MOV B,A              ; B — лічильник циклу
-MVI C,00h            ; C — сума
-LOOP: CALL STEP      ; Y += a(i); a(i+1) = a(i) + N
-DCR B
-JNZ LOOP
-MOV A,C
-STA 0802h            ; Y -> SUM
-HLT
-STEP: MOV A,C        ; підпрограма одного кроку
-ADD D
-MOV C,A
-MOV A,D
-ADI ${hx(n & 0xff)}h             ; + N = ${n}
-MOV D,A
-RET`);
+// ---------------------------------------------------------------- ЛР 4
+
+const THETA: { op: string; sign: string; f: (a: number, b: number) => number; name: string }[] = [
+  { op: "ADD", sign: "+", f: (a, b) => (a + b) & 0xff, name: "додавання" },
+  { op: "SUB", sign: "−", f: (a, b) => (a - b) & 0xff, name: "віднімання" },
+  { op: "ANA", sign: "AND", f: (a, b) => a & b, name: "логічне І" },
+  { op: "ORA", sign: "OR", f: (a, b) => a | b, name: "логічне АБО" },
+  { op: "XRA", sign: "XOR", f: (a, b) => a ^ b, name: "виключне АБО" },
+];
+
+/** «Довільні» значення масивів — від номера в журналі, щоб у сусідів не збігались. */
+function lab4Arrays(seed: number, n: number) {
+  const a = Array.from({ length: n }, (_, i) => (seed * 7 + 13 * i + 5) & 0xff);
+  const b = Array.from({ length: n }, (_, i) => (seed * 3 + 5 * i + 1) & 0xff);
+  return { a, b };
+}
+
+function lab4Src(t: number, n: number, seed: number) {
+  const th = THETA[t - 1];
+  const { a, b } = lab4Arrays(seed, n);
+  const db = (label: string, xs: number[], note: string) => `${label.padEnd(8)}DB ${xs.map(h8).join(",")}   ; ${note}`;
+  return sources({
+    data: {
+      org: 0x800,
+      lines: [
+        db("ARRA:", a, "масив A"),
+        db("ARRB:", b, "масив B"),
+        db("ARRC:", Array(n).fill(0), "масив C — нулі"),
+        `CNT:    DB ${h8(n)}          ; кількість елементів`,
+        "SUM:    DB 00h          ; сума C: молодший байт",
+        "SUMH:   DB 00h          ; старший байт",
+      ],
+    },
+    code: {
+      org: 0x840,
+      lines: [
+        "        LXI H,ARRA      ; HL -> A(i)",
+        "        LXI D,ARRB      ; DE -> B(i)",
+        "        LXI B,ARRC      ; BC -> C(i)",
+        "LOOP1:  MOV A,M         ; A <- A(i)",
+        "        XCHG            ; тепер M = B(i)",
+        `        ${th.op} M           ; A <- A(i) ${th.sign} B(i)`,
+        "        XCHG",
+        "        STAX B          ; C(i) <- A",
+        "        INX H",
+        "        INX D",
+        "        INX B",
+        "        LDA CNT",
+        "        DCR A",
+        "        STA CNT",
+        "        JNZ LOOP1",
+        "        LXI H,ARRC      ; сума масиву C — у DE (16 біт)",
+        "        LXI D,0000h",
+        `        MVI B,${h8(n)}       ; лічильник`,
+        "LOOP2:  MOV A,E",
+        "        ADD M",
+        "        MOV E,A",
+        "        MOV A,D",
+        "        ACI 00h         ; перенос — у старший байт",
+        "        MOV D,A",
+        "        INX H",
+        "        DCR B",
+        "        JNZ LOOP2",
+        "        MOV A,E",
+        "        STA SUM         ; молодший байт суми",
+        "        MOV A,D",
+        "        STA SUMH        ; старший байт суми",
+        "        HLT",
+      ],
+    },
+  });
 }
 
 // ------------------------------------------------------------- КР: UART
@@ -134,21 +273,25 @@ export const MPS_GUIDES: GuideModule[] = [
       label: "по журналу",
       min: 1,
       max: 40,
-      hint: "Номер студента по журналу — первое слагаемое; второе — номер курса (ниже — для 3-го и таблица для остальных).",
-      compute: (n) => {
-        const p = lab1Program(n, 3);
+      hint: "Номер студента по журналу — первое слагаемое; второе — номер курса (поле ниже, по умолчанию 3).",
+      params: [{ key: "k", label: "Номер курсу", min: 1, max: 6, value: 3 }],
+      compute: (n, { k }) => {
+        const src = lab1Src(n, k);
+        const p = src.p;
         const cpu = run(p);
-        const ks = checksum(p.mem, 0x806, 0x80d);
+        const end = haltAddr(p) - 1;
+        const ks = checksum(p.mem, 0x806, end);
         return {
+          codeFirst: true,
           tables: [
-            { title: "Програма (курс 3)", columns: LIST_COLS, rows: listing(p) },
+            { title: `Програма (номер ${n}, курс ${k})`, columns: LIST_COLS, rows: listing(p) },
             {
               title: "Інші курси — змінюється лише байт 0809h",
               columns: ["Курс", "0809h", "Результат (0805h, A)", "КС 0806h–080Dh"],
-              rows: [1, 2, 3, 4].map((k) => {
-                const q = lab1Program(n, k);
+              rows: [1, 2, 3, 4].map((kk) => {
+                const q = lab1Src(n, kk).p;
                 const c = checksum(q.mem, 0x806, 0x80d);
-                return [k, `${hx(k)}h`, `${hx((n + k) & 0xff)}h = ${(n + k) & 0xff}`, `${hx(c.s16, 4)}h (молодший байт ${hx(c.s8)}h)`];
+                return [kk, `${hx(kk)}h`, `${hx((n + kk) & 0xff)}h = ${(n + kk) & 0xff}`, `${hx(c.s16, 4)}h (молодший байт ${hx(c.s8)}h)`];
               }),
             },
           ],
@@ -157,17 +300,19 @@ export const MPS_GUIDES: GuideModule[] = [
               title: "Порядок роботи на стенді",
               code: [
                 "СБ                                  ; скидання стенда",
-                `П 0806 ${listing(p).slice(1).map((r) => r[1]).join(" _ ")} ВП   ; коди програми, «_» — наступна комірка`,
-                "КС 0806 _ 080D ВП                   ; контрольна сума коду",
+                `${enter(p, 0x806, haltAddr(p))}   ; коди програми, «_» — наступна комірка`,
+                `КС 0806 _ ${hx(end, 4)} ВП                   ; контрольна сума коду: ${hx(ks.s16, 4)}h`,
                 `СТ 0806 _ ${hx(haltAddr(p), 4)} ВП                   ; запуск до HLT`,
                 "РГ A ВП, РГ B ВП                    ; перевірити регістри",
                 "П 0805 ВП                           ; перевірити результат",
               ].join("\n"),
             },
+            ...codeBlocks(src),
           ],
           notes: [
-            `Числа вводяться в шістнадцятковому коді: номер ${n} — ${hx(n)}h. Після виконання A = ${hx(cpu.a)}h, B = 03h, у 0805h — ${hx(cpu.mem.get(0x805) ?? 0)}h (${cpu.a} у десятковій).`,
-            `Контрольна сума — сума байтів 0806h–080Dh «без урахування переповнення»: ${hx(ks.s16, 4)}h; якщо стенд показує один байт — ${hx(ks.s8)}h.`,
+            `Числа вводяться в шістнадцятковому коді: номер ${n} — ${hx(n)}h, курс ${k} — ${hx(k)}h. Після виконання A = ${hx(cpu.a)}h, B = ${hx(k)}h, у 0805h — ${hx(cpu.mem.get(0x805) ?? 0)}h (${cpu.a} у десятковій).`,
+            `Контрольна сума — сума байтів 0806h–${hx(end, 4)}h «без урахування переповнення»: ${hx(ks.s16, 4)}h; якщо стенд показує один байт — ${hx(ks.s8)}h.`,
+            `У симуляторі Bendersky той самий код стоїть з 0000h, а RES — одразу після HLT (${hx(src.q.labels.RES, 4)}h); результат ${hx(run(src.q).mem.get(src.q.labels.RES) ?? 0)}h.`,
           ],
         };
       },
@@ -208,19 +353,19 @@ export const MPS_GUIDES: GuideModule[] = [
       hint: "Вариант — строка таблицы 2.1 (константа и адреса двух блоков).",
       compute: (v) => {
         const [c, b1, b2] = LAB2[v - 1];
-        const p = lab2Program(v);
-        const init = new Map(p.mem);
-        for (let i = 0; i < 7; i++) {
-          init.set(b1 + i, c);
-          init.set(b2 + i, 0);
-        }
-        const cpu = run({ ...p, mem: init });
+        const src = lab2Src(v);
+        const p = src.p;
+        const cpu = run(p);
         const regs = { A: cpu.a, B: cpu.b, C: cpu.c, D: cpu.d, E: cpu.e, H: cpu.h, L: cpu.l };
         const a = (x: number) => hx(x, 4);
+        const end = lastByte(p);
+        const sim = run(src.q);
+        const t1 = src.q.labels.T1;
         return {
+          codeFirst: true,
           tables: [
             { title: "Варіант", columns: ["Константа", "Перший блок", "Другий блок"], rows: [[`${hx(c)}h`, `${a(b1)}h – ${a(b1 + 6)}h`, `${a(b2)}h – ${a(b2 + 6)}h`]] },
-            { title: "Програма (з 0830h — поза блоками даних)", columns: LIST_COLS, rows: listing(p) },
+            { title: "Програма (дані — блоки варіанта, код з 0830h — поза блоками)", columns: LIST_COLS, rows: listing(p) },
             {
               title: "Після виконання",
               columns: ["", ...Object.keys(regs), ...Array.from({ length: 7 }, (_, i) => `${a(b2 + i)}h`)],
@@ -234,16 +379,18 @@ export const MPS_GUIDES: GuideModule[] = [
                 `ЗК ${a(b1)} _ ${a(b1 + 6)} _ ${hx(c)} ВП      ; перший блок — константа`,
                 `ЗК ${a(b2)} _ ${a(b2 + 6)} _ 00 ВП      ; другий блок — нулі`,
                 "РГ A 00 ВП … РГ L 00 ВП             ; регістри — нулі",
-                `П 0830 ${listing(p).map((r) => r[1]).join(" _ ")} ВП`,
-                `КС 0830 _ ${a(lastByte(p))} ВП                   ; контрольна сума: ${hx(checksum(p.mem, 0x830, lastByte(p)).s16, 4)}h`,
+                enter(p, 0x830, end),
+                `КС 0830 _ ${a(end)} ВП                   ; контрольна сума: ${hx(checksum(p.mem, 0x830, end).s16, 4)}h`,
                 `СТ 0830 _ ${a(haltAddr(p))} ВП`,
                 "РГ …, П …                           ; перевірити регістри й другий блок",
               ].join("\n"),
             },
+            ...codeBlocks(src),
           ],
           notes: [
-            "Регістри H і L не можна завантажити через покажчик HL — він сам зайнятий адресою; тому A–E читаються через M, а H і L — однією командою LHLD, і так само вивантажуються SHLD.",
-            "Блоки даних варіантів лежать у 0801h–081Bh, тож програма розміщена з 0830h, щоб не перекритися з ними.",
+            "H і L завантажуються першими: через HL читаються S6 і S7 у DE, а XCHG переносить їх у HL. Решта регістрів — через LDA, A — останнім, бо через нього йдуть усі пересилання; вивантаження — MOV A,r і STA. LHLD/SHLD не використано: симулятор Bendersky їх не асемблює.",
+            "Блоки даних варіантів лежать у 0801h–081Bh, тож програма розміщена з 0830h, щоб не перекритися з ними. У тексті для емуляторів блоки задано рядками DB — на стенді те саме роблять директиви ЗК.",
+            `У симуляторі Bendersky другий блок починається з ${a(t1)}h (одразу після даних першого блоку); після Run там ${Array.from({ length: 7 }, (_, i) => hx(sim.mem.get(t1 + i) ?? 0) + "h").join(" ")}.`,
           ],
         };
       },
@@ -276,33 +423,63 @@ export const MPS_GUIDES: GuideModule[] = [
     slug: "mps-lab3",
     intro:
       "Циклическая программа суммы арифметической прогрессии Y = Σ aᵢ, aᵢ₊₁ = aᵢ + N, с шагом цикла в подпрограмме " +
-      "(CALL/RET). Листинг, трассировка первых циклов для пошагового режима и ожидаемый результат.",
+      "(CALL/RET): готовый текст для стенда, asm80.com и симулятора Bendersky, директивы ввода, листинг, трассировка " +
+      "циклов для пошагового режима и ожидаемый результат. a₁ и k методичка не задаёт — их можно поменять.",
     variant: {
       label: "варианта N",
       min: 1,
       max: 40,
-      hint: "N — номер варианта (шаг прогрессии). Первый член и число членов методичка не задаёт — здесь a₁ = 1, k = 5 (меняются в первых байтах программы).",
-      compute: (n) => {
-        const p = lab3Program(n);
+      hint: "N — номер варианта (шаг прогрессии). Первый член a₁ и число членов k методичка не задаёт — выберите их сами (поля ниже) и укажите в отчёте.",
+      params: [
+        { key: "a1", label: "Перший член a₁", min: 0, max: 255, value: 5 },
+        { key: "k", label: "Кількість членів k", min: 1, max: 40, value: 4 },
+      ],
+      compute: (n, { a1, k }) => {
+        const src = lab3Src(n, a1, k);
+        const p = src.p;
         const cpu = run(p);
-        const terms = Array.from({ length: K }, (_, i) => A1 + i * n);
-        const y = terms.reduce((s, x) => s + x, 0);
+        const terms = Array.from({ length: k }, (_, i) => a1 + i * n);
+        const y = terms.reduce((x, t) => x + t, 0);
+        const end = lastByte(p);
+        const sim = run(src.q);
         return {
+          codeFirst: true,
           tables: [
+            {
+              title: "Завдання",
+              columns: ["N", "a₁", "k", "Члени a(i)", "Y = Σ a(i)", "У байті SUM"],
+              rows: [[n, a1, k, terms.length > 8 ? `${terms.slice(0, 8).join(", ")}, …` : terms.join(", "), y, `${hx(y & 0xff)}h${y > 255 ? " (переповнення)" : ""}`]],
+            },
             { title: "Програма", columns: LIST_COLS, rows: listing(p) },
             {
               title: "Цикли (регістри після кожного CALL STEP)",
               columns: ["Цикл", "a(i)", "C = сума", "D = a(i+1)", "B до DCR"],
               rows: terms.map((t, i) => {
-                const sum = terms.slice(0, i + 1).reduce((s, x) => s + x, 0);
-                return [i + 1, `${t} (${hx(t & 0xff)}h)`, `${sum & 0xff} (${hx(sum & 0xff)}h)`, `${(t + n) & 0xff} (${hx((t + n) & 0xff)}h)`, K - i];
+                const sum = terms.slice(0, i + 1).reduce((x, z) => x + z, 0);
+                return [i + 1, `${t & 0xff} (${hx(t & 0xff)}h)`, `${sum & 0xff} (${hx(sum & 0xff)}h)`, `${(t + n) & 0xff} (${hx((t + n) & 0xff)}h)`, k - i];
               }),
             },
           ],
+          code: [
+            {
+              title: "Порядок роботи на стенді",
+              code: [
+                "СБ                                  ; скидання стенда",
+                `${enter(p, 0x800, 0x802)}            ; a1, k, SUM`,
+                `${enter(p, 0x810, end)}`,
+                `КС 0810 _ ${hx(end, 4)} ВП                   ; контрольна сума коду: ${hx(checksum(p.mem, 0x810, end).s16, 4)}h`,
+                `СТ 0810 _ ${hx(haltAddr(p), 4)} ВП                   ; запуск до HLT`,
+                "П 0802 ВП                           ; результат Y",
+                "; покроково (п. 3): РБ/ШГ — «ШГ», КМ/ЦК — «команда», СТ 0810, далі клавіша ШГ;",
+                "; два проходи циклу — від LOOP до JNZ двічі, після кожного CALL STEP дивитися РГ C, РГ D, РГ B",
+              ].join("\n"),
+            },
+            ...codeBlocks(src),
+          ],
           notes: [
-            `Y = k·a₁ + N·k(k−1)/2 = ${K}·${A1} + ${n}·10 = ${y}${y > 255 ? ` — більше за 255, у байті лишається ${y & 0xff}` : ""}; у 0802h буде ${hx(cpu.mem.get(0x802) ?? 0)}h.`,
-            "Підпрограма STEP використовує стек: на стенді покажчик стека встановлює монітор (останні комірки ОЗП), тому LXI SP у програмі не потрібна.",
-            "Покроковий режим (п. 3): перемикач РБ/ШГ — «ШГ», КМ/ЦК — «команда», СТ 0810 і клавіша ШГ; два проходи циклу — від LOOP до JNZ двічі.",
+            `Y = k·a₁ + N·k(k−1)/2 = ${k}·${a1} + ${n}·${(k * (k - 1)) / 2} = ${y}${y > 255 ? ` — більше за 255, у байті лишається ${y & 0xff}` : ""}; у 0802h буде ${hx(cpu.mem.get(0x802) ?? 0)}h.`,
+            `У симуляторі Bendersky SUM стоїть після коду (${hx(src.q.labels.SUM, 4)}h), після Run там ${hx(sim.mem.get(src.q.labels.SUM) ?? 0)}h.`,
+            "Підпрограма STEP використовує стек: на стенді покажчик стека встановлює монітор (останні комірки ОЗП), в емуляторах стек стоїть у кінці пам'яті, тому LXI SP у програмі не потрібна.",
           ],
         };
       },
@@ -324,7 +501,99 @@ export const MPS_GUIDES: GuideModule[] = [
       report: ["Остаточна версія програми на окремому аркуші А4 з темою роботи, номером, цілями, ПІБ студента і номером групи."],
       questions: ["Покрокове виконання програм на стенді.", "Створення підпрограми під мікропроцесор I8080."],
     },
-    errata: ["У постановці не задано a₁ і k (без них сума не визначена) — беруться довільні, їх варто вказати у звіті."],
+    errata: ["У постановці не задано a₁ і k (без них сума не визначена) — їх обирає студент і вказує у звіті."],
+  },
+
+  // ------------------------------------------------------------ ЛР 4
+  {
+    slug: "mps-lab4",
+    intro:
+      "Обработка массивов на i8080: C(i) = A(i) θ B(i) и сумма C. Операцию θ и число элементов задаёт преподаватель — " +
+      "выберите их ниже; значения массивов «произвольные» и зависят от номера в журнале. Программа для стенда и эмуляторов, " +
+      "директивы заполнения массивов и ожидаемый результат.",
+    variant: {
+      label: "операции θ",
+      min: 1,
+      max: THETA.length,
+      hint: `θ задаёт преподаватель: ${THETA.map((t, i) => `${i + 1} — ${t.sign} (${t.name})`).join(", ")}.`,
+      params: [
+        { key: "n", label: "Елементів у масивах", min: 2, max: 16, value: 5 },
+        { key: "s", label: "Номер у журналі", min: 1, max: 40, value: 1 },
+      ],
+      compute: (t, { n, s: seed }) => {
+        const th = THETA[t - 1];
+        const { a, b } = lab4Arrays(seed, n);
+        const c = a.map((x, i) => th.f(x, b[i]));
+        const sum = c.reduce((x, y) => x + y, 0);
+        const src = lab4Src(t, n, seed);
+        const p = src.p;
+        const cpu = run(p);
+        const L = p.labels;
+        const end = lastByte(p);
+        const got = (cpu.mem.get(L.SUM) ?? 0) | ((cpu.mem.get(L.SUMH) ?? 0) << 8);
+        const sim = run(src.q);
+        const gotSim = (sim.mem.get(src.q.labels.SUM) ?? 0) | ((sim.mem.get(src.q.labels.SUMH) ?? 0) << 8);
+        const at = (x: number) => `${hx(x, 4)}h`;
+        return {
+          codeFirst: true,
+          tables: [
+            {
+              title: `Масиви: C(i) = A(i) ${th.sign} B(i)`,
+              columns: ["i", `A (${at(L.ARRA)})`, `B (${at(L.ARRB)})`, `C (${at(L.ARRC)})`],
+              rows: [
+                ...a.map((x, i) => [i + 1, `${hx(x)}h = ${x}`, `${hx(b[i])}h = ${b[i]}`, `${hx(c[i])}h = ${c[i]}`]),
+                ["Σ", "", "", `${hx(sum, 4)}h = ${sum}`],
+              ],
+            },
+            { title: "Програма", columns: LIST_COLS, rows: listing(p) },
+          ],
+          code: [
+            {
+              title: "Порядок роботи на стенді",
+              code: [
+                "СБ                                  ; скидання стенда",
+                `${enter(p, L.ARRA, L.ARRA + n - 1)}   ; масив A — довільні значення`,
+                `${enter(p, L.ARRB, L.ARRB + n - 1)}   ; масив B`,
+                `ЗК ${hx(L.ARRC, 4)} _ ${hx(L.ARRC + n - 1, 4)} _ 00 ВП      ; масив C — нулі`,
+                `${enter(p, L.CNT, L.SUMH)}            ; лічильник і сума`,
+                enter(p, 0x840, end),
+                `КС 0840 _ ${hx(end, 4)} ВП                   ; контрольна сума коду: ${hx(checksum(p.mem, 0x840, end).s16, 4)}h`,
+                `СТ 0840 _ ${hx(haltAddr(p), 4)} ВП                   ; запуск до HLT`,
+                `П ${hx(L.ARRC, 4)} ВП …                       ; масив C`,
+                `П ${hx(L.SUM, 4)} ВП, П ${hx(L.SUMH, 4)} ВП            ; сума: молодший і старший байти`,
+              ].join("\n"),
+            },
+            ...codeBlocks(src),
+          ],
+          notes: [
+            `Сума елементів C = ${sum} = ${hx(sum, 4)}h: у ${at(L.SUM)} — ${hx(cpu.mem.get(L.SUM) ?? 0)}h, у ${at(L.SUMH)} — ${hx(cpu.mem.get(L.SUMH) ?? 0)}h (симулятор сайту дав ${got}, у тексті для Bendersky — ${gotSim}).`,
+            th.op === "SUB"
+              ? "Віднімання в байті: якщо B(i) > A(i), результат «загортається» (наприклад, 05h − 07h = FEh) — так і має бути на i8080; у звіті це варто пояснити."
+              : "Результат кожного C(i) — один байт; сума може бути більшою за 255, тому вона накопичується у парі DE і зберігається двома байтами.",
+            "Три вказівники зайняті: HL — A(i), DE — B(i), BC — C(i); операнд B(i) береться через XCHG (M тоді вказує на B), а лічильник циклу зберігається в пам'яті (CNT).",
+          ],
+        };
+      },
+    },
+    guide: {
+      source: `${SRC}, ЛР 4 «Реалізація програми обробки масивів»`,
+      goals: [
+        "Отримати навички по налагодженню програм з використанням масивів за допомогою навчального стенду.",
+        "Розробити програму з операціями над масивами даних.",
+      ],
+      steps: [
+        { title: "Програма", body: "Обчислити масив C(i) = A(i) θ B(i) з двох масивів A і B у пам'яті та суму C; функцію θ і кількість елементів задає викладач." },
+        { title: "Дані", body: "Директивами заповнити масиви A і B довільними значеннями, масив C — нулями." },
+        { title: "Запуск", body: "Завантажити, запустити, перевірити C і суму, показати результат викладачу." },
+      ],
+      task: "Розробити програму, що з двох довільних масивів A та B у пам'яті розраховує новий масив C, C(i) = A(i) θ B(i), та його суму; функцію θ та кількість значень задає викладач.",
+      screenshots: [],
+      report: ["Остаточна версія програми на окремому аркуші А4 з темою роботи, номером, цілями, ПІБ студента і номером групи."],
+      questions: ["Арифметичні можливості I8080.", "Адресація пам'яті у I8080, робота зі стеком."],
+    },
+    errata: [
+      "Варіантів у ЛР 4 немає: θ і кількість елементів задає викладач, значення масивів — довільні; на сторінці вони залежать від номера в журналі, щоб у сусідів не збігались.",
+    ],
   },
 
   // ------------------------------------------------------------ ЛР 5

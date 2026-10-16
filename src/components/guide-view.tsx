@@ -24,7 +24,7 @@ import { InfoNote } from "@/components/ui/info-note";
 import { OutputBlock } from "@/components/ui/output-block";
 import { categories, modules } from "@/lib/modules";
 import { guideBySlug } from "@/lib/data/guides";
-import type { GuideTable } from "@/lib/data/guides/types";
+import type { GuideCode, GuideTable } from "@/lib/data/guides/types";
 
 function Table({ table }: { table: GuideTable }) {
   return (
@@ -59,6 +59,15 @@ function Table({ table }: { table: GuideTable }) {
   );
 }
 
+function codeBlocks(code: GuideCode[] | undefined) {
+  return code?.map((c) => (
+    <div key={c.title} className="space-y-1.5">
+      <OutputBlock label={c.title} value={c.code} wrap={false} />
+      {c.note && <p className="text-xs text-ink-faint">{c.note}</p>}
+    </div>
+  ));
+}
+
 /**
  * Страница работы-инструкции: данные варианта, порядок по методичке, кадры,
  * состав отчёта и то, что должно получиться.
@@ -68,6 +77,7 @@ export function GuideView({ slug }: { slug: string }) {
   const g = guideBySlug(slug)!;
   const accent = categories[mod.category].accent;
   const [raw, setRaw] = useState(String(Math.max(1, g.variant?.min ?? 1)));
+  const [extra, setExtra] = useState<Record<string, string>>(() => Object.fromEntries((g.variant?.params ?? []).map((p) => [p.key, String(p.value)])));
 
   const computed = useMemo(() => {
     if (!g.variant) return g.computed ? { data: g.computed() } : null;
@@ -75,12 +85,16 @@ export function GuideView({ slug }: { slug: string }) {
     if (!Number.isInteger(v) || v < g.variant.min || v > g.variant.max) {
       return { error: `Номер — целое число от ${g.variant.min} до ${g.variant.max}` };
     }
+    const defs = g.variant.params ?? [];
+    const params = Object.fromEntries(defs.map((p) => [p.key, Number(extra[p.key])]));
+    const bad = defs.find((p) => !Number.isInteger(params[p.key]) || params[p.key] < p.min || params[p.key] > p.max);
+    if (bad) return { error: `${bad.label} — целое число от ${bad.min} до ${bad.max}` };
     try {
-      return { data: g.variant.compute(v) };
+      return { data: g.variant.compute(v, params) };
     } catch (e) {
       return { error: (e as Error).message };
     }
-  }, [g, raw]);
+  }, [g, raw, extra]);
 
   // калькулятор с вводом своих данных идёт первым, если у работы нет таблицы вариантов
   const widget = (
@@ -143,6 +157,20 @@ export function GuideView({ slug }: { slug: string }) {
                     onChange={(e) => setRaw(e.target.value)}
                   />
                   <p className="text-sm leading-relaxed text-ink-faint">{g.variant.hint}</p>
+                  {g.variant.params && (
+                    <div className="grid gap-4 sm:col-span-2 sm:grid-cols-[repeat(auto-fill,12rem)]">
+                      {g.variant.params.map((p) => (
+                        <NumberField
+                          key={p.key}
+                          label={p.label}
+                          value={extra[p.key] ?? ""}
+                          min={p.min}
+                          max={p.max}
+                          onChange={(e) => setExtra((x) => ({ ...x, [p.key]: e.target.value }))}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -150,7 +178,9 @@ export function GuideView({ slug }: { slug: string }) {
                 <p className="text-sm text-codes">{computed.error}</p>
               ) : (
                 <>
-                  {computed.data.tables?.map((t) => <Table key={t.title} table={t} />)}
+                  {computed.data.codeFirst && computed.data.tables?.slice(0, 1).map((t) => <Table key={t.title} table={t} />)}
+                  {computed.data.codeFirst && codeBlocks(computed.data.code)}
+                  {(computed.data.codeFirst ? computed.data.tables?.slice(1) : computed.data.tables)?.map((t) => <Table key={t.title} table={t} />)}
                   {computed.data.figures?.map((f) => (
                     <div key={f.title} className="space-y-1.5">
                       {f.kind === "regs" && <RegSchemeView scheme={f.scheme} title={f.title} />}
@@ -162,12 +192,7 @@ export function GuideView({ slug }: { slug: string }) {
                       {f.note && <p className="text-xs text-ink-faint">{f.note}</p>}
                     </div>
                   ))}
-                  {computed.data.code?.map((c) => (
-                    <div key={c.title} className="space-y-1.5">
-                      <OutputBlock label={c.title} value={c.code} wrap={false} />
-                      {c.note && <p className="text-xs text-ink-faint">{c.note}</p>}
-                    </div>
-                  ))}
+                  {!computed.data.codeFirst && codeBlocks(computed.data.code)}
                   {computed.data.notes?.map((n) => (
                     <p key={n} className="text-sm leading-relaxed text-ink-dim">
                       {n}
