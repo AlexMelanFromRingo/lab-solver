@@ -217,7 +217,7 @@ export function KfsCalc({ lab, accent }: { lab: 1 | 2 | 3 | 4; accent: string })
 
 // --- ЛР1 -----------------------------------------------------------------------------
 
-const WHY = { lt: "l_к < l_г", big: "l_к у рази більша за l_г", none: "немає даних" } as const; // в отчёт — по-украински
+const WHY = { lt: "кабель коротший за пряму", big: "кабель у рази довший за пряму", none: "немає даних" } as const; // в отчёт — по-украински
 
 function Lab1View({ v }: { v: KfsVariant }) {
   const [kText, setKText] = useState("");
@@ -282,7 +282,7 @@ function Lab1View({ v }: { v: KfsVariant }) {
         {l1.fixes.length ? (
           <Grid
             title="Таблиця 3. Уточнені кабельні відстані"
-            head={["Зв'язок", "l_к, км", "l_г, км", "l_к*, км", "Причина"]}
+            head={["Зв'язок", "кабельна lк, км", "геометрична lг, км", "уточнена lк*, км", "Причина"]}
             rows={l1.fixes.map((f) => [`${f.a} – ${f.b}`, f.lk == null ? "н/д" : fmt(f.lk), fmt(f.lg), c(fmt(f.fixed), "fix"), WHY[f.why]])}
           />
         ) : (
@@ -433,9 +433,10 @@ function Lab3View({ v }: { v: KfsVariant }) {
           <NumberField label="Месяц рождения m" min={1} max={12} value={m} onChange={(e) => setM(Number(e.target.value))} />
         </div>
         <p className="text-sm leading-relaxed text-ink-dim">
-          Кмон = ]d/m[ + i, Кприн = ]m/d[ + i. Расшифровки ]x[ в методичке нет; в её примере (d = 5, m = 6) ]5/6[ = 2 и ]6/5[ = 1,
-          то есть дробь переворачивается и округляется вверх — так и считаем: ]{d}/{m}[ = {Math.ceil(m / Math.max(1, d))},{" "}
-          ]{m}/{d}[ = {Math.ceil(d / Math.max(1, m))}.
+          По методичке Кмон = ]d/m[ + i и Кприн = ]m/d[ + i, где ]x[ — её обозначение, названное «остатком от деления». Но
+          в её же примере (d = 5, m = 6) ]5/6[ = 2 и ]6/5[ = 1: так выходит, если дробь перевернуть и округлить вверх — ⌈6/5⌉ = 2,
+          ⌈5/6⌉ = 1. Так и считаем: ]{d}/{m}[ = ⌈{m}/{d}⌉ = {Math.ceil(m / Math.max(1, d))}, ]{m}/{d}[ = ⌈{d}/{m}⌉ ={" "}
+          {Math.ceil(d / Math.max(1, m))}.
         </p>
         <Grid title="Склад периферійного обладнання на ДП" head={["ДП", "Монітори", "Принтери", "Табло"]} rows={eq.map((e) => [`ДП${e.i}`, String(e.mon), String(e.prn), "–"])} />
       </Section>
