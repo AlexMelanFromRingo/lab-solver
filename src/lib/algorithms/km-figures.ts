@@ -60,3 +60,41 @@ export function kmLab6Figure(x: number): Drawing {
   d.items.push({ k: "text", x: 290, y: 192, text: "консоль: RS232 → Console", size: 9.5, anchor: "middle", plain: true });
   return d;
 }
+
+/**
+ * ЛР5, рис. 5.2: полігон з трьох ВМ, кожна з двома адресами на одному інтерфейсі eth0 (eth0:0, eth0:1);
+ * мережі 10.x.3.0 — A — 10.x.1.0 — B — 10.x.2.0 — C — 10.x.4.0.
+ */
+export function kmLab5Polygon(x: number): Drawing {
+  const items: DrawItem[] = [];
+  const T = (px: number, py: number, text: string, anchor: "start" | "middle" | "end" = "middle", bold = false, size = 10) =>
+    items.push({ k: "text", x: px, y: py, text, anchor, bold, size, plain: true });
+  const y = 70;
+  const vms: [string, number, string, string][] = [
+    ["A", 190, `10.${x}.3.1/24`, `10.${x}.1.1/24`],
+    ["B", 430, `10.${x}.1.2/24`, `10.${x}.2.1/24`],
+    ["C", 670, `10.${x}.2.2/24`, `10.${x}.4.1/24`],
+  ];
+  const nets: [number, number, string][] = [
+    [20, 160, `10.${x}.3.0/24`],
+    [220, 400, `10.${x}.1.0/24`],
+    [460, 640, `10.${x}.2.0/24`],
+    [700, 840, `10.${x}.4.0/24`],
+  ];
+  for (const [a, b, name] of nets) {
+    items.push({ k: "line", pts: [[a, y], [b, y]] });
+    T((a + b) / 2, y - 14, name, "middle", true, 11);
+  }
+  for (const [name, cx, left, right] of vms) {
+    items.push({ k: "rect", x: cx - 30, y: y - 18, w: 60, h: 36, bold: true });
+    T(cx, y + 5, name, "middle", true, 14);
+    items.push({ k: "rect", x: cx - 34, y: y - 4, w: 8, h: 8, fill: true });
+    items.push({ k: "rect", x: cx + 26, y: y - 4, w: 8, h: 8, fill: true });
+    T(cx - 36, y + 26, "eth0:0", "end");
+    T(cx - 36, y + 39, left, "end");
+    T(cx + 36, y + 26, "eth0:1", "start");
+    T(cx + 36, y + 39, right, "start");
+  }
+  T(430, 140, "усі три ВМ — в одній віртуальній мережі VMware; адреси — псевдоінтерфейси одного eth0", "middle", false, 10);
+  return { w: 860, h: 156, items };
+}

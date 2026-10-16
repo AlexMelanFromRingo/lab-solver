@@ -1220,9 +1220,9 @@ export const modules: LabModule[] = [
     slug: "oop-lab5",
     title: "ЛР 5 · Вивчення будови сповіщувачів пожежної сигналізації установок водяного пожежогасіння",
     category: "oop",
-    tagline: "Теоретическая работа",
+    tagline: "сповіщувачі · спринклер · дренчер",
     description:
-      "Порядок изучения извещателей, спринклерных и дренчерных установок и контрольные вопросы.",
+      "Классификации, схемы сигнализации и установок пожаротушения и готовые ответы на контрольные вопросы.",
     hasVariants: false,
     source: "Основи охорони праці, методичні вказівки до лабораторних робіт",
     size: "md",
@@ -2017,6 +2017,17 @@ export const modules: LabModule[] = [
     size: "md",
   },
   {
+    slug: "km-lab3",
+    title: "ЛР 3 · Інсталяція та налаштування віртуальної машини Ubuntu",
+    category: "km",
+    tagline: "VMware · ifconfig · tcpdump",
+    description:
+      "Две ВМ Ubuntu: адреса через ifconfig по номеру x, ping и прослушивание tcpdump — команды, что должно быть в выводе, ответы на вопросы.",
+    hasVariants: false,
+    source: "Комп'ютерні мережі, ЛР3, л.р.3v3.pdf",
+    size: "md",
+  },
+  {
     slug: "ip-subnet",
     title: "ЛР 4 · Дослідження методу використання масок та префіксів для визначення IPv4-адрес мереж та хостів",
     category: "km",
@@ -2029,6 +2040,17 @@ export const modules: LabModule[] = [
     hasVariants: true,
     variantCount: 25,
     source: "Комп'ютерні мережі, ЛР4, л.р.4v6.pdf",
+    size: "md",
+  },
+  {
+    slug: "km-lab5",
+    title: "ЛР 5 · Дослідження механізмів статичної маршрутизації комп'ютерної мережі",
+    category: "km",
+    tagline: "route add · netstat -r",
+    description:
+      "Три ВМ Ubuntu и четыре подсети по номеру x: схема полигона, команды ifconfig и route для A, B и C, таблицы netstat -r до и после, пинги.",
+    hasVariants: false,
+    source: "Комп'ютерні мережі, ЛР5, л.р.5.v2.pdf",
     size: "md",
   },
   {
