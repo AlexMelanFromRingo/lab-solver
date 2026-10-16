@@ -1,0 +1,237 @@
+/**
+ * «Основи програмування»: генерація готового коду C++ під кожен варіант
+ * індивідуальних завдань (номер = номер у журналі). Для кожної роботи — свій
+ * набір варіантів; тут спільні генератори й дані завдань, де варіанти
+ * формульні або табличні. Увесь код складено так, щоб збиратися в MSVC
+ * (Visual Studio) і g++ -std=c++17.
+ */
+
+/** Обчислювальний вираз: вільні змінні, проміжне значення, формула Y. */
+export interface FormulaVar {
+  n: number;
+  /** Текст умови з математичними знаками (√, ², ·, грецькі літери). */
+  display: string;
+  /** Вільні змінні (вводяться). */
+  vars: string[];
+  /** Проміжне значення name = expr (C++), необов'язкове. */
+  inter?: { name: string; expr: string };
+  /** Формула Y (C++ вираз). */
+  y: string;
+  /** Чи потрібні <cmath> (sqrt, cbrt, pow). */
+  math?: boolean;
+  /** Чи є константа π. */
+  pi?: boolean;
+}
+
+/** Повна програма для формульного завдання. */
+export function formulaProgram(v: FormulaVar): string {
+  const headers = ["#include <iostream>"];
+  if (v.math || v.pi) headers.push("#include <cmath>");
+  headers.push("using namespace std;");
+  const vars = v.vars.join(", ");
+  const read = v.vars.join(" >> ");
+  const lines = [
+    headers.join("\n"),
+    "",
+    `// Варіант ${v.n}: обчислити Y = ${v.display}`,
+    "int main() {",
+    v.pi ? "    const double PI = 3.14159265358979;" : "",
+    `    double ${vars};`,
+    `    cout << "Введiть ${v.vars.join(", ")}: ";`,
+    `    cin >> ${read};`,
+    v.inter ? `    double ${v.inter.name} = ${v.inter.expr};` : "",
+    `    double Y = ${v.y};`,
+    `    cout << "Y = " << Y << endl;`,
+    "    return 0;",
+    "}",
+  ].filter((l) => l !== "");
+  return lines.join("\n");
+}
+
+/** Текстова задача з формулою результату: вводять дані, виводять одну величину. */
+export interface WordTask {
+  n: number;
+  /** Повний текст умови. */
+  text: string;
+  /** Вільні змінні (вводяться). */
+  vars: string[];
+  /** Назва й вираз результату (C++). */
+  result: { name: string; expr: string };
+  /** Підпис результату у виводі. */
+  label: string;
+  math?: boolean;
+}
+
+export function wordProgram(t: WordTask): string {
+  const headers = ["#include <iostream>"];
+  if (t.math) headers.push("#include <cmath>");
+  headers.push("using namespace std;");
+  return [
+    headers.join("\n"),
+    "",
+    `// Варіант ${t.n}. ${t.text}`,
+    "int main() {",
+    `    double ${t.vars.join(", ")};`,
+    `    cout << "Введiть ${t.vars.join(", ")}: ";`,
+    `    cin >> ${t.vars.join(" >> ")};`,
+    `    double ${t.result.name} = ${t.result.expr};`,
+    `    cout << "${t.label} = " << ${t.result.name} << endl;`,
+    "    return 0;",
+    "}",
+  ].join("\n");
+}
+
+// ========================= ЛР2, завдання 1 — 30 формул =========================
+export const LR2_T1: FormulaVar[] = [
+  { n: 1, display: "5·√c − K,  де K = b/(c+1)", vars: ["c", "b"], inter: { name: "K", expr: "b / (c + 1)" }, y: "5 * sqrt(c) - K", math: true },
+  { n: 2, display: "7·z − k·X,  де X = √z + 5·k", vars: ["z", "k"], inter: { name: "X", expr: "sqrt(z) + 5 * k" }, y: "7 * z - k * X", math: true },
+  { n: 3, display: "α + α·P/β,  де P = 3·β + λ", vars: ["alpha", "beta", "lambda"], inter: { name: "P", expr: "3 * beta + lambda" }, y: "alpha + alpha * P / beta" },
+  { n: 4, display: "f + 2·B,  де B = 3·f/(d+8)", vars: ["f", "d"], inter: { name: "B", expr: "3 * f / (d + 8)" }, y: "f + 2 * B" },
+  { n: 5, display: "a + h/(t−3),  де a = 5·h − 1", vars: ["h", "t"], inter: { name: "a", expr: "5 * h - 1" }, y: "a + h / (t - 3)" },
+  { n: 6, display: "V/a − 2·c,  де V = 4·c + m", vars: ["a", "c", "m"], inter: { name: "V", expr: "4 * c + m" }, y: "V / a - 2 * c" },
+  { n: 7, display: "4·λ + T,  де T = λ/(φ+5)", vars: ["lambda", "phi"], inter: { name: "T", expr: "lambda / (phi + 5)" }, y: "4 * lambda + T" },
+  { n: 8, display: "√c + 5·N,  де N = 2·x + 8·c", vars: ["c", "x"], inter: { name: "N", expr: "2 * x + 8 * c" }, y: "sqrt(c) + 5 * N", math: true },
+  { n: 9, display: "C − g/(h+9),  де g = C + 2·h + π", vars: ["C", "h"], inter: { name: "g", expr: "C + 2 * h + PI" }, y: "C - g / (h + 9)", pi: true },
+  { n: 10, display: "S + √f·N,  де N = S·d − 2", vars: ["S", "f", "d"], inter: { name: "N", expr: "S * d - 2" }, y: "S + sqrt(f) * N", math: true },
+  { n: 11, display: "5·U/(b+2),  де U = 3·x + 7·b", vars: ["x", "b"], inter: { name: "U", expr: "3 * x + 7 * b" }, y: "5 * U / (b + 2)" },
+  { n: 12, display: "c·√b + a,  де c = b² − a·d", vars: ["b", "a", "d"], inter: { name: "c", expr: "b * b - a * d" }, y: "c * sqrt(b) + a", math: true },
+  { n: 13, display: "S/(h+r) + R,  де S = r + 4·h", vars: ["h", "r", "R"], inter: { name: "S", expr: "r + 4 * h" }, y: "S / (h + r) + R" },
+  { n: 14, display: "λ·β + 5·x/c,  де x = β − λ²", vars: ["lambda", "beta", "c"], inter: { name: "x", expr: "beta - lambda * lambda" }, y: "lambda * beta + 5 * x / c" },
+  { n: 15, display: "b·c − d/2,  де d = b/c + a", vars: ["b", "c", "a"], inter: { name: "d", expr: "b / c + a" }, y: "b * c - d / 2" },
+  { n: 16, display: "s − 2·h³,  де s = a + b/(a−h)", vars: ["a", "b", "h"], inter: { name: "s", expr: "a + b / (a - h)" }, y: "s - 2 * h * h * h" },
+  { n: 17, display: "L/(δ+β) + 3,  де L = γ + 4·β", vars: ["delta", "beta", "gamma"], inter: { name: "L", expr: "gamma + 4 * beta" }, y: "L / (delta + beta) + 3" },
+  { n: 18, display: "4·t + n·x,  де t = √(x−2) + 5·z", vars: ["n", "x", "z"], inter: { name: "t", expr: "sqrt(x - 2) + 5 * z" }, y: "4 * t + n * x", math: true },
+  { n: 19, display: "v + b/(2+c),  де b = v² − c²", vars: ["v", "c"], inter: { name: "b", expr: "v * v - c * c" }, y: "v + b / (2 + c)" },
+  { n: 20, display: "(g+4)/2 + m,  де m = 3·√(a+4) − g", vars: ["g", "a"], inter: { name: "m", expr: "3 * sqrt(a + 4) - g" }, y: "(g + 4) / 2 + m", math: true },
+  { n: 21, display: "c·∛(4·a) + d,  де d = a² − c", vars: ["c", "a"], inter: { name: "d", expr: "a * a - c" }, y: "c * cbrt(4 * a) + d", math: true },
+  { n: 22, display: "λ + β − α,  де β = α³ − 7/λ²", vars: ["lambda", "alpha"], inter: { name: "beta", expr: "alpha * alpha * alpha - 7 / (lambda * lambda)" }, y: "lambda + beta - alpha" },
+  { n: 23, display: "R − 3·r + 5,  де R = s + k/(2·s)", vars: ["s", "k", "r"], inter: { name: "R", expr: "s + k / (2 * s)" }, y: "R - 3 * r + 5" },
+  { n: 24, display: "A − B/(2+C),  де B = C − 2·D", vars: ["A", "C", "D"], inter: { name: "B", expr: "C - 2 * D" }, y: "A - B / (2 + C)" },
+  { n: 25, display: "v·x + c·b,  де v = c² + x/(8−b)", vars: ["c", "x", "b"], inter: { name: "v", expr: "c * c + x / (8 - b)" }, y: "v * x + c * b" },
+  { n: 26, display: "c + 4·s/(5−d),  де c = d·(s−2) + t", vars: ["d", "s", "t"], inter: { name: "c", expr: "d * (s - 2) + t" }, y: "c + 4 * s / (5 - d)" },
+  { n: 27, display: "n·(m/k + 3),  де m = k + n·h", vars: ["n", "k", "h"], inter: { name: "m", expr: "k + n * h" }, y: "n * (m / k + 3)" },
+  { n: 28, display: "a + d/c + 3,  де d = a + 4·c³", vars: ["a", "c"], inter: { name: "d", expr: "a + 4 * c * c * c" }, y: "a + d / c + 3" },
+  { n: 29, display: "α·β·γ − 4,  де β = α/(2·γ) + z", vars: ["alpha", "gamma", "z"], inter: { name: "beta", expr: "alpha / (2 * gamma) + z" }, y: "alpha * beta * gamma - 4" },
+  { n: 30, display: "m·z·t/(9−f),  де t = 3·m + 2·z", vars: ["m", "z", "f"], inter: { name: "t", expr: "3 * m + 2 * z" }, y: "m * z * t / (9 - f)" },
+];
+
+// ============ Текстові (фізичні) задачі — спільні для ЛР1 (завд.1), ЛР2 (завд.2), ЛР9 ============
+export interface PhysTask {
+  n: number;
+  text: string;
+  vars: string[];
+  /** Тіло програми після зчитування vars (обчислення й виведення). */
+  body: string[];
+  math?: boolean;
+}
+
+export function physProgram(t: PhysTask): string {
+  const headers = ["#include <iostream>"];
+  if (t.math) headers.push("#include <cmath>");
+  headers.push("using namespace std;");
+  return [
+    headers.join("\n"),
+    "",
+    `// Варіант ${t.n}. ${t.text}`,
+    "int main() {",
+    `    double ${t.vars.join(", ")};`,
+    `    cout << "Введiть ${t.vars.join(", ")}: ";`,
+    `    cin >> ${t.vars.join(" >> ")};`,
+    ...t.body.map((l) => "    " + l),
+    "    return 0;",
+    "}",
+  ].join("\n");
+}
+
+export const LR_PHYS: PhysTask[] = [
+  { n: 1, text: "Залізничний вагон масою m1 (швидкість V1) зчіплюється з нерухомим вагоном маси m2. Швидкість після зчеплення V = m1/(m1+m2)·V1.", vars: ["m1", "V1", "m2"], body: ["double V = m1 / (m1 + m2) * V1;", `cout << "V = " << V << endl;`] },
+  { n: 2, text: "Два поїзди йдуть назустріч зі швидкостями V1 і V2 (км/год). Пасажир першого бачить, що другий проходить повз нього t секунд. Довжина другого поїзда S = (V1+V2)·t (швидкості — у м/с).", vars: ["V1", "V2", "t"], body: ["double S = (V1 + V2) * t;", `cout << "S = " << S << endl;`] },
+  { n: 3, text: "Основний питомий опір руху навантажених вантажних вагонів колії 1067 мм: w0 = 0,7 + (7 + 0,3V + 0,0075V²)/q0 (q0 > 6 т).", vars: ["V", "q0"], body: ["double w0 = 0.7 + (7 + 0.3 * V + 0.0075 * V * V) / q0;", `cout << "w0 = " << w0 << endl;`] },
+  { n: 4, text: "Основний питомий опір руху порожніх вантажних вагонів колії 1067 мм: w0 = 1,35 + 0,07V + 0,00045V².", vars: ["V"], body: ["double w0 = 1.35 + 0.07 * V + 0.00045 * V * V;", `cout << "w0 = " << w0 << endl;`] },
+  { n: 5, text: "Основний питомий опір руху локомотивів на безстиковому шляху: електровози w0 = 1,9 + 0,008V + 0,0025V²; тепловози wx = 2,4 + 0,009V + 0,00035V².", vars: ["V"], body: ["double w0 = 1.9 + 0.008 * V + 0.0025 * V * V;", "double wx = 2.4 + 0.009 * V + 0.00035 * V * V;", `cout << "w0(ел) = " << w0 << "   wx(тепл) = " << wx << endl;`] },
+  { n: 6, text: "Розрахунковий коефіцієнт зчеплення для тепловозів ТЕ10: Psi = 0,118 + 4/(22+V).", vars: ["V"], body: ["double Psi = 0.118 + 4 / (22 + V);", `cout << "Psi = " << Psi << endl;`] },
+  { n: 7, text: "Назустріч йдуть два поїзди (V1, V2). Після зустрічі рухаються без зупинки. Положення кожного через t хвилин і відстань: x1 = x01 + V1·t; x2 = x02 + V2·t; L = |x2 − x1|.", vars: ["x01", "V1", "x02", "V2", "t"], body: ["double x1 = x01 + V1 * t;", "double x2 = x02 + V2 * t;", "double L = fabs(x2 - x1);", `cout << "x1 = " << x1 << "   x2 = " << x2 << "   L = " << L << endl;`], math: true },
+  { n: 8, text: "Пасажирський поїзд за час t набуває швидкості V1. Визначити час t2 від початку руху, коли швидкість стане V2: a = V1/t; t2 = V2/a.", vars: ["V1", "t", "V2"], body: ["double a = V1 / t;", "double t2 = V2 / a;", `cout << "a = " << a << "   t2 = " << t2 << endl;`] },
+  { n: 9, text: "Поїзд масою m (швидкість V1) збільшив швидкість до V2 на ділянці S. Сила (рух рівноприскорений): A = m·V2²/2 − m·V1²/2; F = A/S.", vars: ["m", "V1", "V2", "S"], body: ["double A = m * V2 * V2 / 2 - m * V1 * V1 / 2;", "double F = A / S;", `cout << "A = " << A << "   F = " << F << endl;`] },
+  { n: 10, text: "Загальна вага складу з n порожніх і m навантажених вагонів. Маса порожнього N т, маса вантажу одного вагону M т.", vars: ["n", "m", "N", "M"], body: ["double W = n * N + m * (N + M);", `cout << "W = " << W << endl;`] },
+  { n: 11, text: "Коефіцієнт тертя гальмівних чавунних стандартних колодок об колесо: phi = 0,27·(V+100)/(5V+100).", vars: ["V"], body: ["double phi = 0.27 * (V + 100) / (5 * V + 100);", `cout << "phi = " << phi << endl;`] },
+  { n: 12, text: "Робота для зупинки поїзда (V2 = 0) масою m, що рухається зі швидкістю V1: A = m·V2²/2 − m·V1²/2 = −m·V1²/2 (за модулем m·V1²/2).", vars: ["m", "V1"], body: ["double V2 = 0;", "double A = m * V2 * V2 / 2 - m * V1 * V1 / 2;", `cout << "A = " << A << endl;`] },
+  { n: 13, text: "Коефіцієнт тертя гальмівного черевика об рейку: сухі рейки phi = 0,19·(10,8V+100)/(21,6V+100); мокрі phi = 0,19·(7,2V+100)/(18V+100).", vars: ["V"], body: ["double phiDry = 0.19 * (10.8 * V + 100) / (21.6 * V + 100);", "double phiWet = 0.19 * (7.2 * V + 100) / (18 * V + 100);", `cout << "phi(сух) = " << phiDry << "   phi(мокр) = " << phiWet << endl;`] },
+  { n: 14, text: "Основний питомий опір руху кривій (довжина поїзда більша за криву): Wr = 700/R − Skr/Lp.", vars: ["R", "Skr", "Lp"], body: ["double Wr = 700 / R - Skr / Lp;", `cout << "Wr = " << Wr << endl;`] },
+  { n: 15, text: "Розрахункова сила натягнення на гальмівні чавунні стандартні колодки: kr = 2,22·k·(16k+100)/(80k+10) (k = 2,7 тс).", vars: ["k"], body: ["double kr = 2.22 * k * (16 * k + 100) / (80 * k + 10);", `cout << "kr = " << kr << endl;`] },
+  { n: 16, text: "Поїзд їхав t1 год зі швидкістю V1; t2 год — V2; t3 год — V3 (км/год). Обчислити пройдені шляхи.", vars: ["t1", "V1", "t2", "V2", "t3", "V3"], body: ["double S1 = V1 * t1, S2 = V2 * t2, S3 = V3 * t3;", `cout << "S1 = " << S1 << "   S2 = " << S2 << "   S3 = " << S3 << endl;`] },
+  { n: 17, text: "Ціна на проїзд у купейних вагонах виросла на p відсотків, у плацкартних — на k відсотків. Обчислити нові ціни (ck — купе, cp — плацкарт).", vars: ["ck", "p", "cp", "k"], body: ["double newK = ck * (1 + p / 100);", "double newP = cp * (1 + k / 100);", `cout << "купе = " << newK << "   плацкарт = " << newP << endl;`] },
+  { n: 18, text: "Загальна кількість вагонів у складі вантажного поїзда за кількостями цистерн a, критих вагонів b і платформ c.", vars: ["a", "b", "c"], body: ["double total = a + b + c;", `cout << "Всього вагонiв = " << total << endl;`] },
+  { n: 19, text: "Загальна протяжність залізниць України за заданими довжинами шести доріг.", vars: ["d1", "d2", "d3", "d4", "d5", "d6"], body: ["double total = d1 + d2 + d3 + d4 + d5 + d6;", `cout << "Загальна протяжнiсть = " << total << endl;`] },
+  { n: 20, text: "Периметр і площа рівнобічної трапеції S = (a+b)/2·h за основами a, b і висотою h (бічна сторона — з висоти і різниці основ).", vars: ["a", "b", "h"], body: ["double S = (a + b) / 2 * h;", "double side = sqrt(h * h + (a - b) / 2 * (a - b) / 2);", "double P = a + b + 2 * side;", `cout << "S = " << S << "   P = " << P << endl;`], math: true },
+  { n: 21, text: "Кінетична E = m·v²/2 і потенційна P = m·g·h енергії тіла маси m, що рухається на висоті h зі швидкістю v (g = 9,81).", vars: ["m", "v", "h"], body: ["const double g = 9.81;", "double E = m * v * v / 2;", "double P = m * g * h;", `cout << "E = " << E << "   P = " << P << endl;`] },
+  { n: 22, text: "Площа трикутника S (Герон) зі сторонами a, b, c і радіус описаного кола r = abc/(4S).", vars: ["a", "b", "c"], body: ["double p = (a + b + c) / 2;", "double S = sqrt(p * (p - a) * (p - b) * (p - c));", "double r = a * b * c / (4 * S);", `cout << "S = " << S << "   r = " << r << endl;`], math: true },
+  { n: 23, text: "Відстань між точками (x1,y1) і (x2,y2) та координати середини відрізка: d = sqrt((x1−x2)²+(y1−y2)²); xc=(x1+x2)/2; yc=(y1+y2)/2.", vars: ["x1", "y1", "x2", "y2"], body: ["double d = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));", "double xc = (x1 + x2) / 2, yc = (y1 + y2) / 2;", `cout << "d = " << d << "   середина (" << xc << ", " << yc << ")" << endl;`], math: true },
+  { n: 24, text: "Площа бічної поверхні S = 2πrh і об'єм V = πr²h бочки за висотою h і радіусом основи r.", vars: ["h", "r"], body: ["const double PI = 3.14159265358979;", "double S = 2 * PI * r * h;", "double V = PI * r * r * h;", `cout << "S = " << S << "   V = " << V << endl;`] },
+  { n: 25, text: "Радіус вписаного r = sqrt((p−a)(p−b)(p−c)/p) і радіус описаного R = abc/(4·sqrt(p(p−a)(p−b)(p−c))) кола трикутника a, b, c.", vars: ["a", "b", "c"], body: ["double p = (a + b + c) / 2;", "double S = sqrt(p * (p - a) * (p - b) * (p - c));", "double r = S / p;", "double R = a * b * c / (4 * S);", `cout << "r(вписане) = " << r << "   R(описане) = " << R << endl;`], math: true },
+  { n: 26, text: "Периметр і площа рівнобічного трикутника S = (a/2)·sqrt(b²−a²/4), де a — основа, b — бічна сторона.", vars: ["a", "b"], body: ["double S = a / 2 * sqrt(b * b - a * a / 4);", "double P = a + 2 * b;", `cout << "S = " << S << "   P = " << P << endl;`], math: true },
+  { n: 27, text: "Бісектриса трикутника Wa = 2/(b+c)·sqrt(b·c·p·(p−a)) зі сторонами a, b, c.", vars: ["a", "b", "c"], body: ["double p = (a + b + c) / 2;", "double Wa = 2 / (b + c) * sqrt(b * c * p * (p - a));", `cout << "Wa = " << Wa << endl;`], math: true },
+  { n: 28, text: "Площа круга з радіусом R і площа сектора Ssekt = πR²·alpha/360, де alpha — кут у градусах.", vars: ["R", "alpha"], body: ["const double PI = 3.14159265358979;", "double Scircle = PI * R * R;", "double Ssekt = PI * R * R * alpha / 360;", `cout << "S круга = " << Scircle << "   S сектора = " << Ssekt << endl;`] },
+  { n: 29, text: "Тіло падає з прискоренням g. Обчислити шлях h = g·t²/2, пройдений після першої і другої секунд падіння.", vars: ["g"], body: ["double h1 = g * 1 * 1 / 2;", "double h2 = g * 2 * 2 / 2;", `cout << "h(1с) = " << h1 << "   h(2с) = " << h2 << endl;`] },
+  { n: 30, text: "Висота hb = 2S/b і медіана mb = (1/2)·sqrt(2(a²+c²)−b²) трикутника a, b, c (S — площа за Героном).", vars: ["a", "b", "c"], body: ["double p = (a + b + c) / 2;", "double S = sqrt(p * (p - a) * (p - b) * (p - c));", "double hb = 2 * S / b;", "double mb = 0.5 * sqrt(2 * (a * a + c * c) - b * b);", `cout << "hb = " << hb << "   mb = " << mb << endl;`], math: true },
+];
+
+// ==================== ЛР1, завдання 2 — розгалуження (30) ====================
+export const LR_BRANCH: PhysTask[] = [
+  { n: 1, text: "Ввести два нерівні числа X і Y. Якщо менше з них X, то збільшити його двічі, інакше вивести «X більше Y».", vars: ["X", "Y"], body: ["if (X < Y) { X = X * 2; cout << \"X = \" << X << endl; }", "else cout << \"X бiльше Y\" << endl;"] },
+  { n: 2, text: "Ввести два нерівні числа A і B. Якщо A більше B, то обчислити √|A−B|, інакше вивести «A менше B».", vars: ["A", "B"], body: ["if (A > B) cout << \"result = \" << sqrt(fabs(A - B)) << endl;", "else cout << \"A менше B\" << endl;"], math: true },
+  { n: 3, text: "Ввести три числа a, b і c. Якщо c не дорівнює нулю, то обчислити (a+b)/c, інакше вивести «c дорівнює 0».", vars: ["a", "b", "c"], body: ["if (c != 0) cout << \"result = \" << (a + b) / c << endl;", "else cout << \"c дорiвнює 0\" << endl;"] },
+  { n: 4, text: "Ввести два довільні числа b і c. Обчислити їх добуток, якщо b більше або дорівнює c, інакше вивести «b менше c».", vars: ["b", "c"], body: ["if (b >= c) cout << \"b*c = \" << b * c << endl;", "else cout << \"b менше c\" << endl;"] },
+  { n: 5, text: "Ввести два нерівні числа Z і X. Якщо менше з них Z, то піднести його в куб, інакше вивести «X більше Z».", vars: ["Z", "X"], body: ["if (Z < X) cout << \"Z^3 = \" << Z * Z * Z << endl;", "else cout << \"X бiльше Z\" << endl;"] },
+  { n: 6, text: "Ввести одне ціле число B. Вивести «Число парне», якщо воно кратне двом, інакше «Число непарне».", vars: ["B"], body: ["int b = (int)B;", "if (b % 2 == 0) cout << \"Число парне\" << endl;", "else cout << \"Число непарне\" << endl;"] },
+  { n: 7, text: "Ввести два нерівні числа y і z. У меншого з цих чисел змінити знак на протилежний.", vars: ["y", "z"], body: ["if (y < z) y = -y; else z = -z;", "cout << \"y = \" << y << \"   z = \" << z << endl;"] },
+  { n: 8, text: "Ввести два довільні числа y і z. Якщо рівні, то p = 1, інакше вивести «числа не рівні».", vars: ["y", "z"], body: ["if (y == z) { double p = 1; cout << \"p = \" << p << endl; }", "else cout << \"числа не рiвнi\" << endl;"] },
+  { n: 9, text: "Ввести ціле число n. Змінній f присвоїти 1, якщо n кратно трьом, інакше 0.", vars: ["n"], body: ["int f = ((int)n % 3 == 0) ? 1 : 0;", "cout << \"f = \" << f << endl;"] },
+  { n: 10, text: "Ввести два числа x і y. Визначити, чи належить точка (x, y) внутрішній області кола x²+y² < 50.", vars: ["x", "y"], body: ["if (x * x + y * y < 50) cout << \"крапка усерединi кола\" << endl;", "else cout << \"крапка поза колом або лежить на колу\" << endl;"] },
+  { n: 11, text: "Ввести два нерівні числа x і z. Змінній N присвоїти більше, M — менше.", vars: ["x", "z"], body: ["double N = (x > z) ? x : z, M = (x > z) ? z : x;", "cout << \"N = \" << N << \"   M = \" << M << endl;"] },
+  { n: 12, text: "Ввести два числа b і c. Якщо рівні — вивести повідомлення, інакше обчислити c²+b.", vars: ["b", "c"], body: ["if (b == c) cout << \"числа рiвнi\" << endl;", "else cout << \"result = \" << c * c + b << endl;"] },
+  { n: 13, text: "Ввести два нерівні числа x і y. Менше з них розділити на більше.", vars: ["x", "y"], body: ["double res = (x < y) ? x / y : y / x;", "cout << \"result = \" << res << endl;"] },
+  { n: 14, text: "Ввести число z, нерівне нулю. Вивести «Число додатне» або «Число від'ємне».", vars: ["z"], body: ["if (z > 0) cout << \"Число додатне\" << endl;", "else cout << \"Число вiд'ємне\" << endl;"] },
+  { n: 15, text: "Ввести довільне число a. Присвоїти P = 1, якщо a ≤ 25, інакше вивести «a більше 25».", vars: ["a"], body: ["if (a <= 25) { double P = 1; cout << \"P = \" << P << endl; }", "else cout << \"a бiльше 25\" << endl;"] },
+  { n: 16, text: "Ввести довільне число a. Якщо воно від'ємне, обчислити √|a|, інакше a².", vars: ["a"], body: ["if (a < 0) cout << \"result = \" << sqrt(fabs(a)) << endl;", "else cout << \"result = \" << a * a << endl;"], math: true },
+  { n: 17, text: "Ввести два нерівні числа x і z. Менше з них замінити більшим.", vars: ["x", "z"], body: ["if (x < z) x = z; else z = x;", "cout << \"x = \" << x << \"   z = \" << z << endl;"] },
+  { n: 18, text: "Обчислити площу кола з радіусом R. Якщо площа більше 25 — «велике коло», інакше «мале коло».", vars: ["R"], body: ["const double PI = 3.14159265358979;", "double S = PI * R * R;", "cout << \"S = \" << S << \"  -> \" << (S > 25 ? \"велике коло\" : \"мале коло\") << endl;"] },
+  { n: 19, text: "Ввести два числа. Вивести «Числа рівні» або «Числа нерівні».", vars: ["a", "b"], body: ["cout << (a == b ? \"Числа рiвнi\" : \"Числа нерiвнi\") << endl;"] },
+  { n: 20, text: "Ввести два нерівні числа. Обчислити квадрат меншого з них.", vars: ["a", "b"], body: ["double mn = (a < b) ? a : b;", "cout << \"result = \" << mn * mn << endl;"] },
+  { n: 21, text: "Ввести два цілі числа. Якщо взаємно протилежні — повідомлення, інакше обчислити їх суму.", vars: ["a", "b"], body: ["if (a == -b) cout << \"числа взаємно протилежнi\" << endl;", "else cout << \"сума = \" << a + b << endl;"] },
+  { n: 22, text: "Ввести a, b, c, d. Якщо a більше суми b, c, d — повідомлення, інакше середнє арифметичне чотирьох.", vars: ["a", "b", "c", "d"], body: ["if (a > b + c + d) cout << \"a бiльше суми b, c, d\" << endl;", "else cout << \"середнє = \" << (a + b + c + d) / 4 << endl;"] },
+  { n: 23, text: "Ввести два числа. Обчислити різницю, якщо не рівні, інакше «Числа рівні».", vars: ["a", "b"], body: ["if (a != b) cout << \"рiзниця = \" << a - b << endl;", "else cout << \"Числа рiвнi\" << endl;"] },
+  { n: 24, text: "Ввести два числа. Обчислити різницю та вивести «Різниця менше 0» або «Різниця не менше 0».", vars: ["a", "b"], body: ["double d = a - b;", "cout << \"рiзниця = \" << d << \"  -> \" << (d < 0 ? \"Рiзниця менше 0\" : \"Рiзниця не менше 0\") << endl;"] },
+  { n: 25, text: "Обчислити площу квадрата зі стороною a та площу прямокутника зі сторонами b і c; порівняти.", vars: ["a", "b", "c"], body: ["double sq = a * a, rect = b * c;", "cout << (rect > sq ? \"площа прямокутника бiльше площi квадрата\" : \"площа прямокутника менше або дорiвнює площi квадрата\") << endl;"] },
+  { n: 26, text: "Ввести два нерівні числа. Вивести, яке число найбільше: перше або друге.", vars: ["a", "b"], body: ["cout << (a > b ? \"найбiльше перше\" : \"найбiльше друге\") << endl;"] },
+  { n: 27, text: "Ввести масу на вісь колісної пари q0 і швидкість V. Якщо q0 ≤ 6 — «Невірно введена маса», інакше w0 = 0,7 + (7+0,3V+0,0075V²)/q0.", vars: ["q0", "V"], body: ["if (q0 <= 6) cout << \"Невiрно введена маса\" << endl;", "else cout << \"w0 = \" << 0.7 + (7 + 0.3 * V + 0.0075 * V * V) / q0 << endl;"] },
+  { n: 28, text: "Ввести швидкість поїзда V. Якщо V > 0 — w0 = 1,35 + 0,07V + 0,00045V², інакше «Невірно введена швидкість».", vars: ["V"], body: ["if (V > 0) cout << \"w0 = \" << 1.35 + 0.07 * V + 0.00045 * V * V << endl;", "else cout << \"Невiрно введена швидкiсть\" << endl;"] },
+  { n: 29, text: "Визначити кількість вільних місць у купейному вагоні (36 місць) за кількістю проданих квитків k. Якщо всі продані — «немає вільних місць».", vars: ["k"], body: ["int free = 36 - (int)k;", "if (free <= 0) cout << \"У вагонi немає вiльних мiсць\" << endl;", "else cout << \"Вiльних мiсць: \" << free << endl;"] },
+  { n: 30, text: "Ввести силу натягнення на одну гальмівну колодку k. Якщо k = 1,6 — kr = 1,22·k·(k+20)/(4k+20), інакше «Невірне вхідне k».", vars: ["k"], body: ["if (k == 1.6) cout << \"kr = \" << 1.22 * k * (k + 20) / (4 * k + 20) << endl;", "else cout << \"Невiрне вхiдне k\" << endl;"] },
+];
+
+/** Загорнути обчислення фізичної задачі в цикл по першій змінній (ЛР1 завд.3, циклічна структура). */
+export function loopProgram(t: PhysTask): string {
+  const loopVar = t.vars[0];
+  const rest = t.vars.slice(1);
+  const headers = ["#include <iostream>"];
+  if (t.math || /sqrt|fabs|pow|cbrt/.test(t.body.join(""))) headers.push("#include <cmath>");
+  headers.push("using namespace std;");
+  const readRest = rest.length ? [`    cout << "Введiть ${rest.join(", ")}: ";`, `    cin >> ${rest.join(" >> ")};`] : [];
+  return [
+    headers.join("\n"),
+    "",
+    `// Варіант ${t.n} (циклічна структура). ${t.text}`,
+    `// Розрахунок для ${loopVar} від ${loopVar}_poch до ${loopVar}_kin з кроком d${loopVar}.`,
+    "int main() {",
+    `    double ${rest.length ? rest.join(", ") + ", " : ""}${loopVar}_poch, ${loopVar}_kin, d${loopVar};`,
+    ...readRest,
+    `    cout << "Введiть ${loopVar}_poch, ${loopVar}_kin, крок: ";`,
+    `    cin >> ${loopVar}_poch >> ${loopVar}_kin >> d${loopVar};`,
+    `    for (double ${loopVar} = ${loopVar}_poch; ${loopVar} <= ${loopVar}_kin; ${loopVar} += d${loopVar}) {`,
+    ...t.body.map((l) => "        " + l),
+    "    }",
+    "    return 0;",
+    "}",
+  ].join("\n");
+}
