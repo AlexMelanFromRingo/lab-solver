@@ -335,3 +335,83 @@ export function funcProgram(t: PhysTask): string {
     "}",
   ].join("\n");
 }
+
+// ==================== ЛР6 — числові ряди (30) ====================
+export interface SeriesVar {
+  n: number;
+  display: string;
+  /** Вільні змінні, крім i (вводяться). */
+  vars: string[];
+  /** Вираз члена ряду (C++) у змінних i та vars. */
+  term: string;
+  pi?: boolean;
+  /** Замість циклу i=1..n — цикл по x у заданому діапазоні (варіанти 29, 30). */
+  overX?: { from: number; to: number };
+}
+
+export const LR6_SERIES: SeriesVar[] = [
+  { n: 1, display: "Z = cos(i·x)/i", vars: ["x"], term: "cos(i * x) / i" },
+  { n: 2, display: "y = sin(xⁱ)/i", vars: ["x"], term: "sin(pow(x, i)) / i" },
+  { n: 3, display: "U = 0,21·cos²(i·t)/(i + 1,5t)", vars: ["t"], term: "0.21 * cos(i * t) * cos(i * t) / (i + 1.5 * t)" },
+  { n: 4, display: "y = 0,3x/(5i + 3)", vars: ["x"], term: "0.3 * x / (5 * i + 3)" },
+  { n: 5, display: "z = √(0,25x)/(7i + 1)", vars: ["x"], term: "sqrt(0.25 * x) / (7 * i + 1)" },
+  { n: 6, display: "Z = sin(i·x²)/√(5i + 2)", vars: ["x"], term: "sin(i * x * x) / sqrt(5 * i + 2)" },
+  { n: 7, display: "m = −0,25·sin(i·x)/√(i² + 4)", vars: ["x"], term: "-0.25 * sin(i * x) / sqrt(i * i + 4)" },
+  { n: 8, display: "f = (i² − 3i + a)/√(2i² + 1)", vars: ["a"], term: "(i * i - 3 * i + a) / sqrt(2 * i * i + 1)" },
+  { n: 9, display: "v = cos(i·x)/√(5i + 1)", vars: ["x"], term: "cos(i * x) / sqrt(5 * i + 1)" },
+  { n: 10, display: "z = √(0,25x)/(7i + 1)", vars: ["x"], term: "sqrt(0.25 * x) / (7 * i + 1)" },
+  { n: 11, display: "w = −0,25·cos(5·x)/√(i² + 4)", vars: ["x"], term: "-0.25 * cos(5 * x) / sqrt(i * i + 4)" },
+  { n: 12, display: "M = 0,21·cos(i·a)/(3i + 1,5)", vars: ["a"], term: "0.21 * cos(i * a) / (3 * i + 1.5)" },
+  { n: 13, display: "R = (cos(x) + i·h)/((i + 1)·h)", vars: ["x", "h"], term: "(cos(x) + i * h) / ((i + 1) * h)" },
+  { n: 14, display: "Y = (x + i·h)/(2·i + 1)", vars: ["x", "h"], term: "(x + i * h) / (2 * i + 1)" },
+  { n: 15, display: "z = (cos(i·x) + sin(i·x))/2", vars: ["x"], term: "(cos(i * x) + sin(i * x)) / 2" },
+  { n: 16, display: "T = 0,25·sin(2·x)/√(i² + 2)", vars: ["x"], term: "0.25 * sin(2 * x) / sqrt(i * i + 2)" },
+  { n: 17, display: "y = sin(xⁱ)/i", vars: ["x"], term: "sin(pow(x, i)) / i" },
+  { n: 18, display: "D = 0,3x/(5i + 3)", vars: ["x"], term: "0.3 * x / (5 * i + 3)" },
+  { n: 19, display: "H = cos(xⁱ⁺¹)/(i + 1)", vars: ["x"], term: "cos(pow(x, i + 1)) / (i + 1)" },
+  { n: 20, display: "G = cos(2ix)/(4i² + 1)", vars: ["x"], term: "cos(2 * i * x) / (4 * i * i + 1)" },
+  { n: 21, display: "w = sin(i²·x)/√(i² + 2)", vars: ["x"], term: "sin(i * i * x) / sqrt(i * i + 2)" },
+  { n: 22, display: "V = tg(2·i·x)/(4i² + 1)", vars: ["x"], term: "tan(2 * i * x) / (4 * i * i + 1)" },
+  { n: 23, display: "b = 0,21·cos(i·a)/i", vars: ["a"], term: "0.21 * cos(i * a) / i" },
+  { n: 24, display: "V = (4/3)·π·(i·R)³ — об'єми куль", vars: ["R"], term: "(4.0 / 3) * PI * pow(i * R, 3)", pi: true },
+  { n: 25, display: "s = cos(x³)/i", vars: ["x"], term: "cos(pow(x, 3)) / i" },
+  { n: 26, display: "z = 3·sin(√(2x² + π))/i", vars: ["x"], term: "3 * sin(sqrt(2 * x * x + PI)) / i", pi: true },
+  { n: 27, display: "F = (i·x + 3·cos(x))/(sin(x) + i)", vars: ["x"], term: "(i * x + 3 * cos(x)) / (sin(x) + i)" },
+  { n: 28, display: "q = sin(xⁱ)/i", vars: ["x"], term: "sin(pow(x, i)) / i" },
+  { n: 29, display: "y = sin(3x)/(π + x) при x = −3, −2, …5", vars: [], term: "sin(3 * x) / (PI + x)", pi: true, overX: { from: -3, to: 5 } },
+  { n: 30, display: "t = cos(3x)/(2π) при x = −6, −5, …6", vars: [], term: "cos(3 * x) / (2 * PI)", pi: true, overX: { from: -6, to: 6 } },
+];
+
+export function seriesProgram(s: SeriesVar): string {
+  const lines = ["#include <iostream>", "#include <cmath>", "using namespace std;", "", `// Варіант ${s.n}. Обчислити ${s.display}`, "int main() {"];
+  if (s.pi) lines.push("    const double PI = 3.14159265358979;");
+  if (s.overX) {
+    lines.push(
+      "    double sum = 0;",
+      "    int pos = 0, cnt = 0;",
+      `    for (int x = ${s.overX.from}; x <= ${s.overX.to}; x++) {`,
+      `        double q = ${s.term};`,
+      `        cout << "x=" << x << "  q = " << q << endl;`,
+      "        sum += q; cnt++; if (q > 0) pos++;",
+      "    }",
+      `    cout << "Сума = " << sum << "   Середнє = " << sum / cnt << "   Додатних: " << pos << endl;`,
+    );
+  } else {
+    const read = ["n", ...s.vars];
+    lines.push(
+      `    int n; double ${s.vars.length ? s.vars.join(", ") + ";" : "dummy;"}`.replace(" double dummy;", ";"),
+      `    cout << "Введiть n${s.vars.length ? ", " + s.vars.join(", ") : ""}: ";`,
+      `    cin >> ${read.join(" >> ")};`,
+      "    double sum = 0;",
+      "    int pos = 0;",
+      "    for (int i = 1; i <= n; i++) {",
+      `        double q = ${s.term};`,
+      `        cout << "q" << i << " = " << q << endl;`,
+      "        sum += q; if (q > 0) pos++;",
+      "    }",
+      `    cout << "Сума = " << sum << "   Середнє = " << sum / n << "   Додатних членiв: " << pos << endl;`,
+    );
+  }
+  lines.push("    return 0;", "}");
+  return lines.join("\n");
+}
