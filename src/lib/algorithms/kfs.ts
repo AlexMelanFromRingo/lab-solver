@@ -1,7 +1,8 @@
 /**
- * «Теорія проектування кіберфізичних систем» (методички КС ЛР1–ЛР4):
+ * «Теорія проектування кіберфізичних систем» (методички КС ЛР1–ЛР7):
  * технологические объекты, минимальные остовные деревья, классификация
- * системы, время выполнения ФПБ и заявок.
+ * системы, время выполнения ФПБ и заявок, быстродействие МКП, информационные
+ * потоки и техническая структура (КОК, МКП, центральная БД).
  *
  * Данные варианта приходят из файла Excel преподавателя (листы «Координати»,
  * «Ділянки», «ФПБ») или из примеров методичек. Вычисления — те же, что в
@@ -27,6 +28,21 @@ export interface KfsRequest {
   /** Тгр, мс і адресат, якщо є у файлі. */
   tgr?: number;
   to?: string;
+  /** Інтенсивність заявки з файлу (у варіантах задана лише для заявок ДП), 1/с. */
+  lam?: number;
+  /** «Зміна бази даних», «Видача кер. впливу» («ТАК», «НІ», «ТАК(ТП2)»), обсяг повідомлення, байт. */
+  dbChange?: string;
+  ctrl?: string;
+  vol?: number;
+  kgot?: number;
+}
+
+export interface KfsDbArray {
+  name: string;
+  /** Обсяг масиву, Мбайт. */
+  size: number;
+  /** Частка масиву, яку використовує ФПБ: [ФПБ 0..]. */
+  frac: number[];
 }
 
 export interface KfsVariant {
@@ -44,6 +60,8 @@ export interface KfsVariant {
   fpbK: number[][];
   mkp: { n: number; name: string; f: number }[];
   requests: KfsRequest[];
+  /** Масиви БД (аркуш «ФПБ»); у файлах, збережених до ЛР5–ЛР7, відсутні. */
+  db?: KfsDbArray[];
 }
 
 export const CMD = ["складення", "множення", "ділення", "пересилання"] as const;
@@ -139,9 +157,24 @@ export function parseVariant(sheets: Record<string, Sheet>, source: string): Kfs
   let nf = 0;
   while (str(fp.get(addr(3 + nf, 2))).startsWith("Ф")) nf++;
   const fpbK = [0, 1, 2, 3].map((c) => Array.from({ length: nf }, (_, b) => num(fp.get(addr(3 + b, 3 + c))) ?? 0));
+  // таблиця МКП: «Номер МКП», «Назва», «Тактова частота» у рядку 2 (у варіантах стоїть у різних стовпцях)
+  const headCol = (re: RegExp, dflt: number) => {
+    for (let c = 3; c < 40; c++) if (re.test(str(fp.get(addr(c, 2))))) return c;
+    return dflt;
+  };
+  const cN = headCol(/^Номер МКП/, 15);
+  const cName = headCol(/^Назва/, cN + 1);
+  const cF = headCol(/^Тактова/, cN + 3);
   const mkp = [4, 5, 6]
-    .map((r) => ({ n: num(fp.get(addr(15, r))) ?? r - 3, name: str(fp.get(addr(16, r))), f: num(fp.get(addr(18, r))) ?? 0 }))
+    .map((r) => ({ n: num(fp.get(addr(cN, r))) ?? r - 3, name: str(fp.get(addr(cName, r))), f: num(fp.get(addr(cF, r))) ?? 0 }))
     .filter((m) => m.f > 0);
+  // масиви БД: «М3(128Мбайт)» і частки масиву за ФПБ
+  const db: KfsDbArray[] = [];
+  for (let r = 3; r < 20; r++) {
+    const m = /^М(\d+)\s*\(\s*([\d.,]+)\s*Мбайт\s*\)/.exec(str(fp.get(addr(2, r))).replace(/\s+/g, ""));
+    if (m) db.push({ name: `М${m[1]}`, size: Number(m[2].replace(",", ".")), frac: Array.from({ length: nf }, (_, b) => num(fp.get(addr(3 + b, r))) ?? 0) });
+  }
+  const numText = (v: CellValue | undefined) => (typeof v === "number" ? v : v != null && /^[\d.,]+$/.test(String(v).trim()) ? Number(String(v).replace(",", ".")) : undefined);
   const requests: KfsRequest[] = [];
   const lastRow = Math.max(17, ...[...fp.keys()].map((a) => Number(/\d+$/.exec(a)?.[0] ?? 0)));
   let obj = "";
@@ -151,12 +184,23 @@ export function parseVariant(sheets: Record<string, Sheet>, source: string): Kfs
     const nm = str(fp.get(addr(2, r)));
     const row = Array.from({ length: 10 }, (_, k) => str(fp.get(addr(4 + k, r))) || null);
     if (nm) {
-      cur = { obj, name: nm, rows: [], tgr: num(fp.get(addr(18, r))) ?? undefined, to: str(fp.get(addr(16, r))) || undefined };
+      cur = {
+        obj,
+        name: nm,
+        rows: [],
+        lam: num(fp.get(addr(3, r))) ?? undefined,
+        dbChange: str(fp.get(addr(14, r))) || undefined,
+        ctrl: str(fp.get(addr(15, r))) || undefined,
+        to: str(fp.get(addr(16, r))).replace(/\s+/g, "") || undefined,
+        vol: numText(fp.get(addr(17, r))),
+        tgr: num(fp.get(addr(18, r))) ?? undefined,
+        kgot: numText(fp.get(addr(19, r))),
+      };
       requests.push(cur);
     }
     if (cur && row.some(Boolean)) cur.rows.push(row);
   }
-  return { source, names, xy, cable, sections, struct, structCells, signals, fpbK, mkp, requests };
+  return { source, names, xy, cable, sections, struct, structCells, signals, fpbK, mkp, requests, db };
 }
 
 // ------------------------------------------------------------------ ЛР1
@@ -406,6 +450,274 @@ export function lab4(v: KfsVariant, tacts: number[][] = DEFAULT_TACTS) {
   return { t, T, cmds, Q, Qs: Q.reduce((a, b) => a + b, 0), reqs };
 }
 
+// ------------------------------------------------------------------ інтенсивності заявок
+
+const SIG = /^(ДІ|ЧІ|АІ|ІН)(\d)(\d+)$/;
+
+/**
+ * λ заявок, 1/с. У варіантах інтенсивність задана лише для заявок ДП; заявка ТП
+ * ДІ11 — це сигнал ДІ1 у ТП1, її λ — інтенсивність сигналу в ТП з ЛР3.
+ * null — інтенсивність не знайдено.
+ */
+export function intensities(v: KfsVariant, l3: ReturnType<typeof lab3>): Record<string, number | null> {
+  const bySig = new Map(l3.rows.map((r) => [r.name.replace(/\s+/g, ""), r]));
+  return Object.fromEntries(
+    v.requests.map((q) => {
+      if (q.lam != null) return [q.name, q.lam];
+      const m = SIG.exec(q.name);
+      const sig = m ? bySig.get(`${m[1]}${m[3]}`) : undefined;
+      const lam = m && sig?.lam ? sig.lam[`ТП${m[2]}`] : undefined;
+      return [q.name, lam ?? null];
+    }),
+  );
+}
+
+// ------------------------------------------------------------------ ЛР5
+
+/** Суміш Гібсон-3 (табл. 1 методички ЛР5) — лише для ознайомлення. */
+export const GIBSON3: [string, number][] = [
+  ["Завантаження регістру без індексації", 31.0],
+  ["Завантаження регістру з індексацією", 18.0],
+  ["Перевірка умови та переходу", 17.0],
+  ["Порівняння", 4.0],
+  ["Зсув на 3 розряди", 4.0],
+  ["Логічна операція «ТА»", 2.0],
+  ["Команди з мінімальним часом виконання", 5.0],
+  ["Складення з фіксованою комою", 6.0],
+  ["Множення з фіксованою комою", 0.6],
+  ["Ділення з фіксованою комою", 0.2],
+  ["Складення з плаваючою комою", 7.0],
+  ["Множення з плаваючою комою", 4.0],
+  ["Ділення з плаваючою комою", 1.5],
+];
+
+export function lab5(v: KfsVariant, l4: ReturnType<typeof lab4>, lam: Record<string, number | null>) {
+  const M = v.mkp.length;
+  const vnom = l4.t.map((row) => row.map((t) => (t > 0 ? 1 / t : 0))); // млн оп/с
+  const rows = l4.reqs.map((q) => {
+    // кількість команд кожного виду за ланцюгом (альтернативи — з імовірностями)
+    const k = CMD.map((_, c) => q.steps.reduce((s, st) => s + st.terms.reduce((a, [p, f]) => a + p * (v.fpbK[c][f - 1] ?? 0), 0), 0));
+    const sum = k.reduce((a, b) => a + b, 0) || 1;
+    const p = k.map((x) => x / sum);
+    const vcom = Array.from({ length: M }, (_, m) => 1 / CMD.reduce((s, _c, c) => s + p[c] * l4.t[m][c], 0));
+    const l = lam[q.name] ?? 0;
+    const lt = q.time.map((t) => l * t * 1e-6);
+    return { obj: q.obj, name: q.name, k, p, vcom, lam: l, time: q.time, lt };
+  });
+  const vavg = Array.from({ length: M }, (_, m) => rows.reduce((a, r) => a + r.vcom[m], 0) / Math.max(1, rows.length));
+  const sumLam = rows.reduce((a, r) => a + r.lam, 0);
+  const sumLt = Array.from({ length: M }, (_, m) => rows.reduce((a, r) => a + r.lt[m], 0));
+  const vtr = sumLt.map((x) => (x > 0 ? sumLam / x : 0)); // заявок/с
+  return { vnom, rows, vavg, sumLam, sumLt, vtr };
+}
+
+// ------------------------------------------------------------------ ЛР6
+
+/** Керуючий вплив кодується 2 байтами (методичка ЛР6). */
+export const CTRL_BYTES = 2;
+
+export function lab6(v: KfsVariant, l4: ReturnType<typeof lab4>, lam: Record<string, number | null>) {
+  const ctrl: Record<string, number> = {}; // «від→до»
+  const msg: Record<string, number> = {};
+  const dbReq: Record<string, number> = {};
+  const dbObj: Record<string, number> = {};
+  const dbArr: Record<string, number> = {}; // «об'єкт→масив»
+  const dbDetail: Record<string, Record<string, number>> = {};
+  const add = (o: Record<string, number>, key: string, x: number) => (o[key] = (o[key] ?? 0) + x);
+  for (const q of l4.reqs) {
+    const lz = lam[q.name] ?? 0;
+    const give = (q.ctrl ?? "").trim();
+    if (give.startsWith("ТАК")) {
+      // для ТП вплив іде на той ТП, звідки сигнал; для ДП адресу вказано в дужках
+      const dst = /\((ТП\d+)\)/.exec(give)?.[1] ?? q.obj;
+      add(ctrl, `${q.obj}→${dst}`, lz * CTRL_BYTES * 8);
+    }
+    for (const dst of (q.to ?? "").split(",").map((x) => x.trim()).filter(Boolean)) add(msg, `${q.obj}→${dst}`, lz * (q.vol ?? 0) * 8);
+    // звертання ФПБ ланцюга до масивів: частка × λ × обсяг (рис. 1 методички ЛР6)
+    const arr: Record<string, number> = {};
+    for (const st of q.steps)
+      for (const [coef, f] of st.terms)
+        for (const a of v.db ?? []) {
+          const fr = a.frac[f - 1] ?? 0;
+          if (fr) add(arr, a.name, coef * fr * lz * a.size);
+        }
+    dbDetail[q.name] = arr;
+    dbReq[q.name] = Object.values(arr).reduce((x, y) => x + y, 0);
+    add(dbObj, q.obj, dbReq[q.name]);
+    for (const [a, x] of Object.entries(arr)) add(dbArr, `${q.obj}→${a}`, x);
+  }
+  // узагальнена структура: повідомлення й керуючі впливи між парами, без петель
+  const gen: Record<string, number> = {};
+  for (const flows of [ctrl, msg])
+    for (const [key, x] of Object.entries(flows)) {
+      const [a, b] = key.split("→");
+      if (a !== b) add(gen, pairKey(a, b), x);
+    }
+  return { ctrl, msg, dbReq, dbObj, dbArr, dbDetail, gen };
+}
+
+// ------------------------------------------------------------------ ЛР7
+
+/** ТО ближче за 10 м — в одній будівлі, їх обслуговує один КОК (методичка ЛР7). */
+export const KOK_DIST = 0.01;
+
+function treePath(edges: [string, string][], a: string, b: string): string[] {
+  const adj = new Map<string, string[]>();
+  for (const [x, y] of edges) {
+    adj.set(x, [...(adj.get(x) ?? []), y]);
+    adj.set(y, [...(adj.get(y) ?? []), x]);
+  }
+  const prev = new Map<string, string | null>([[a, null]]);
+  const stack = [a];
+  while (stack.length) {
+    const u = stack.pop()!;
+    for (const w of adj.get(u) ?? [])
+      if (!prev.has(w)) {
+        prev.set(w, u);
+        stack.push(w);
+      }
+  }
+  const path: string[] = [];
+  for (let u = b; prev.get(u) != null; u = prev.get(u)!) path.push(pairKey(u, prev.get(u)!));
+  return path;
+}
+
+/** Вершины пути по дереву от a до b. */
+function pathNodes(edges: [string, string][], a: string, b: string): string[] {
+  const nodes = [b];
+  for (const e of treePath(edges, a, b)) {
+    const [x, y] = e.split("|");
+    nodes.push(nodes[nodes.length - 1] === x ? y : x);
+  }
+  return nodes.reverse();
+}
+
+function component(edges: [string, string][], start: string): Set<string> {
+  const seen = new Set([start]);
+  const stack = [start];
+  while (stack.length) {
+    const u = stack.pop()!;
+    for (const [x, y] of edges)
+      for (const [p, q] of [[x, y], [y, x]])
+        if (p === u && !seen.has(q)) {
+          seen.add(q);
+          stack.push(q);
+        }
+  }
+  return seen;
+}
+
+function route(edges: [string, string][], flows: Record<string, number>) {
+  const load: Record<string, number> = Object.fromEntries(edges.map((e) => [pairKey(...e), 0]));
+  for (const [p, x] of Object.entries(flows)) {
+    const [a, b] = p.split("|");
+    for (const e of treePath(edges, a, b)) load[e] += x;
+  }
+  return load;
+}
+
+export interface Kok {
+  name: string;
+  id: string;
+  /** ТО у складі КОК. */
+  to: string[];
+  mkp: KfsVariant["mkp"][number];
+  /** МКП за правилом частоти до перевірки завантаження. */
+  rule: KfsVariant["mkp"][number];
+  reqs: string[];
+  rho: Record<string, number>;
+  R: number;
+  db: number;
+}
+
+export function lab7(v: KfsVariant, l1: Lab1, trees: Tree[], l4: ReturnType<typeof lab4>, l6: ReturnType<typeof lab6>, lam: Record<string, number | null>, kokDist = KOK_DIST) {
+  // вершини ЛР1 (складні ТО — через «_») групуються в КОК за відстанню
+  const left = [...l1.names];
+  const groups: string[][] = [];
+  while (left.length) {
+    const a = left.shift()!;
+    const g = [a, ...left.filter((b) => Math.hypot(l1.xy[a][0] - l1.xy[b][0], l1.xy[a][1] - l1.xy[b][1]) <= kokDist + 1e-12)];
+    for (const n of g.slice(1)) left.splice(left.indexOf(n), 1);
+    groups.push(g);
+  }
+  const ids = groups.map((g) => g.join("_"));
+  const kokOf = (obj: string) => ids.find((id) => id.split("_").includes(obj)) ?? obj;
+  const members = (id: string) => groups[ids.indexOf(id)];
+  // узагальнені потоки між КОК (потоки всередині КОК відкидаються)
+  const flows: Record<string, number> = {};
+  for (const [p, x] of Object.entries(l6.gen)) {
+    const [a, b] = p.split("|").map(kokOf);
+    if (a !== b) flows[pairKey(a, b)] = (flows[pairKey(a, b)] ?? 0) + x;
+  }
+  // МаксКД: Краскал за спаданням потоку
+  const order: [string, string][] = [];
+  ids.forEach((a, i) => ids.slice(i + 1).forEach((b) => order.push([a, b])));
+  order.sort((p, q) => (flows[pairKey(...q)] ?? 0) - (flows[pairKey(...p)] ?? 0));
+  const parent: Record<string, string> = Object.fromEntries(ids.map((n) => [n, n]));
+  const find = (x: string): string => (parent[x] === x ? x : (parent[x] = find(parent[x])));
+  const maxst: [string, string][] = [];
+  const rows: { a: string; b: string; w: number; mark: "МаксКД" | "-" | "" }[] = [];
+  for (const [a, b] of order) {
+    const w = flows[pairKey(a, b)] ?? 0;
+    if (maxst.length === ids.length - 1) {
+      rows.push({ a, b, w, mark: "" });
+      continue;
+    }
+    const ra = find(a);
+    const rb = find(b);
+    if (ra === rb) rows.push({ a, b, w, mark: "-" });
+    else {
+      parent[ra] = rb;
+      maxst.push([a, b]);
+      rows.push({ a, b, w, mark: "МаксКД" });
+    }
+  }
+  const loadMax = route(maxst, flows);
+  // структура комунікацій — МКДке; ребра всередині КОК відпадають
+  const tke = trees.find((t) => t.key === "МКДке")!;
+  const mkdke: [string, string][] = tke.edges.map(([a, b]) => [kokOf(a), kokOf(b)] as [string, string]).filter(([a, b]) => a !== b);
+  const loadCab = route(mkdke, flows);
+  const cableLen = (a: string, b: string) => Math.min(...members(a).flatMap((x) => members(b).map((y) => l1.cableFixed[pairKey(x, y)] ?? Infinity)));
+  const sum = (o: Record<string, number>) => Object.values(o).reduce((x, y) => x + y, 0);
+  const cmp = {
+    maxst: { len: maxst.reduce((s, e) => s + cableLen(...e), 0), flow: sum(loadMax) },
+    mkdke: { len: mkdke.reduce((s, e) => s + cableLen(...e), 0), flow: sum(loadCab) },
+  };
+  // МКП: лише ДП — мінімальна частота, один ТП — середня, ТП з ДП — максимальна; далі за завантаженням:
+  // ρ заявки або R КОК понад 0,6 — потужніший, R КОК до 0,1 — слабший (як у прикладі методички, за R КОК)
+  const ms = [...v.mkp].sort((a, b) => a.f - b.f);
+  const reqT = new Map(l4.reqs.map((q) => [q.name, q]));
+  const koks: Kok[] = ids.map((id, i) => {
+    const to = id.split("_");
+    const tps = to.filter((n) => n.startsWith("ТП"));
+    const dps = to.filter((n) => n.startsWith("ДП"));
+    const rule = !tps.length ? 0 : tps.length === 1 && !dps.length ? Math.min(1, ms.length - 1) : ms.length - 1;
+    const reqs = l4.reqs.filter((q) => to.includes(q.obj)).map((q) => q.name);
+    const loadAt = (lv: number) => {
+      const mi = v.mkp.indexOf(ms[lv]);
+      const rho = Object.fromEntries(reqs.map((z) => [z, (lam[z] ?? 0) * reqT.get(z)!.time[mi] * 1e-6]));
+      return { rho, R: sum(rho) };
+    };
+    const over = (x: { rho: Record<string, number>; R: number }) => Math.max(0, ...Object.values(x.rho)) > 0.6 || x.R > 0.6;
+    let lv = rule;
+    let cur = loadAt(lv);
+    while (over(cur) && lv < ms.length - 1) cur = loadAt(++lv);
+    while (cur.R < 0.1 && lv > 0 && !over(loadAt(lv - 1))) cur = loadAt(--lv);
+    return { name: `КОК-${i + 1}`, id, to, mkp: ms[lv], rule: ms[rule], reqs, rho: cur.rho, R: cur.R, db: to.reduce((s, n) => s + (l6.dbObj[n] ?? 0), 0) };
+  });
+  // центральна БД — у КОК з найбільшим потоком до БД; навантаження мережі — потоки решти КОК (рис. 8 ЛР7)
+  const totalDb = koks.reduce((s, k) => s + k.db, 0);
+  const place = Object.fromEntries(koks.map((k) => [k.name, totalDb - k.db]));
+  const central = koks.reduce((m, k) => (place[k.name] < place[m.name] ? k : m), koks[0]);
+  const final = mkdke.map(([a, b]) => {
+    const rest = mkdke.filter((e) => pairKey(...e) !== pairKey(a, b));
+    let side = component(rest, a);
+    if (side.has(central.id)) side = component(rest, b);
+    return { a, b, work: loadCab[pairKey(a, b)], len: cableLen(a, b), db: koks.filter((k) => side.has(k.id)).reduce((s, k) => s + k.db, 0) };
+  });
+  return { ids, flows, rows, maxst, loadMax, mkdke, loadCab, cmp, koks, place, central, final, cableLen, pathNodes };
+}
+
 // ------------------------------------------------------------------ приклад з методичок
 
 /**
@@ -487,3 +799,5 @@ export function demoVariant(): KfsVariant {
 
 /** Число з комою. */
 export const fmt = (x: number, d = 3) => x.toFixed(d).replace(".", ",");
+/** Частка з файлу як записана (0,007, а не 0,006999…): шість значущих цифр, з комою. */
+export const share = (x: number) => String(Number(x.toPrecision(6))).replace(".", ",");

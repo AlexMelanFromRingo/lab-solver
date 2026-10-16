@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { Card, CardBody } from "@/components/ui/card";
 import { NumberField } from "@/components/ui/field";
 import { InfoNote } from "@/components/ui/info-note";
 import { Segmented } from "@/components/ui/segmented";
 import { DrawingView } from "@/components/drawing-view";
+import { c, Grid, Section, type Tint } from "@/components/kfs-ui";
+import { Lab5View, Lab6View, Lab7View } from "@/components/kfs-calc-57";
 import { readXlsx } from "@/lib/algorithms/xlsx-read";
 import {
   CMD,
@@ -72,69 +74,18 @@ function save(next: Stored | null) {
 
 const DEMO = demoVariant();
 
-// --- таблица с подсветкой ячеек ---------------------------------------------------
-
-type Tint = "diag" | "eq" | "fix" | "tree" | "elite";
-const TINT: Record<Tint, string> = {
-  diag: "rgba(250, 204, 21, 0.10)",
-  eq: "rgba(74, 222, 128, 0.14)",
-  fix: "rgba(251, 146, 60, 0.20)",
-  tree: "rgba(96, 165, 250, 0.16)",
-  elite: "rgba(244, 114, 182, 0.20)",
-};
-
-interface Cell {
-  v: ReactNode;
-  tint?: Tint;
-  bold?: boolean;
-}
-const c = (v: ReactNode, tint?: Tint, bold?: boolean): Cell => ({ v, tint, bold });
-
-function Grid({ title, head, rows, note }: { title: string; head: string[]; rows: (Cell | ReactNode)[][]; note?: ReactNode }) {
-  return (
-    <div>
-      <h3 className="mb-2 text-sm font-medium text-ink-dim">{title}</h3>
-      <div className="overflow-x-auto rounded-[4px] border border-border">
-        <table className="w-full font-mono text-sm">
-          <thead className="border-b border-border text-xs text-ink-faint">
-            <tr>
-              {head.map((h, i) => (
-                <th key={i} className="px-3 py-2 text-left align-bottom font-normal">
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="text-ink-dim">
-            {rows.map((row, i) => (
-              <tr key={i} className="border-b border-border/50 last:border-0">
-                {row.map((cell, j) => {
-                  const cc = cell && typeof cell === "object" && "v" in (cell as object) ? (cell as Cell) : { v: cell as ReactNode };
-                  return (
-                    <td key={j} className={`px-3 py-1.5 align-top ${cc.bold ? "text-ink" : ""}`} style={cc.tint ? { background: TINT[cc.tint] } : undefined}>
-                      {cc.v}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {note && <p className="mt-2 text-xs leading-relaxed text-ink-faint">{note}</p>}
-    </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <Card>
-      <CardBody className="space-y-5">
-        <h2 className="text-base font-medium text-ink">{title}</h2>
-        {children}
-      </CardBody>
-    </Card>
-  );
+// ЛР5–ЛР7 требуют полного файла варианта (λ, результаты заявок, массивы БД) — в
+// методичках таких данных нет, поэтому пример для них — вариант 1 из файлов
+// преподавателя (только значения ячеек, без метаданных файла)
+let example: Promise<KfsVariant> | null = null;
+function loadExample(): Promise<KfsVariant> {
+  example ??= fetch("../../kfs/variant-1.json")
+    .then((r) => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json() as Promise<Record<string, Record<string, string | number>>>;
+    })
+    .then((raw) => parseVariant(Object.fromEntries(Object.entries(raw).map(([k, cells]) => [k, new Map(Object.entries(cells))])), "Вариант 1"));
+  return example;
 }
 
 /** Матрица: под диагональю lower, над диагональю upper. */
@@ -154,13 +105,18 @@ function matrix(names: string[], xy: Record<string, [number, number]>, upper: Re
 
 // --- виджет --------------------------------------------------------------------
 
-export function KfsCalc({ lab, accent }: { lab: 1 | 2 | 3 | 4; accent: string }) {
+export function KfsCalc({ lab, accent }: { lab: 1 | 2 | 3 | 4 | 5 | 6 | 7; accent: string }) {
   const stored = useSyncExternalStore(subscribe, snapshot, () => null);
-  // «auto»: есть сохранённый файл — показываем его; иначе пример методички
+  // «auto»: есть сохранённый файл — показываем его; иначе пример
   const [choice, setMode] = useState<"auto" | "demo" | "file">("auto");
   const mode = choice === "auto" ? (stored ? "file" : "demo") : choice;
   const [error, setError] = useState<string | null>(null);
-  const v = mode === "file" && stored ? stored.variant : DEMO;
+  const full = lab >= 5;
+  const [ex, setEx] = useState<KfsVariant | null>(null);
+  useEffect(() => {
+    if (full && mode === "demo" && !ex) loadExample().then(setEx, (e: Error) => setError(`Пример не загрузился: ${e.message}`));
+  }, [full, mode, ex]);
+  const v = mode === "file" && stored ? stored.variant : full ? ex : DEMO;
 
   async function onFile(f: File | undefined) {
     if (!f) return;
@@ -183,7 +139,7 @@ export function KfsCalc({ lab, accent }: { lab: 1 | 2 | 3 | 4; accent: string })
               label="Дані"
               value={mode === "file" && stored ? "file" : "demo"}
               options={[
-                { value: "demo", label: "Пример из методичек" },
+                { value: "demo", label: full ? "Пример: вариант 1" : "Пример из методичек" },
                 { value: "file", label: stored ? `Свой вариант (${stored.fileName})` : "Свой вариант" },
               ]}
               onChange={(m) => (m === "file" && !stored ? document.getElementById("kfs-file")?.click() : setMode(m))}
@@ -201,16 +157,22 @@ export function KfsCalc({ lab, accent }: { lab: 1 | 2 | 3 | 4; accent: string })
           </div>
           <p className="text-sm leading-relaxed text-ink-faint">
             Файл варианта — тот, что выдаёт преподаватель (листы «Координати», «Ділянки», «ФПБ»). Он читается в браузере и
-            никуда не отправляется; сайт запоминает его для всех четырёх работ. Без файла показаны примеры из методичек —
-            на них видно, что расчёт совпадает с таблицами методичек.
+            никуда не отправляется; сайт запоминает его для всех семи работ.{" "}
+            {full
+              ? "Без файла показан вариант 1 из файлов преподавателя: для ЛР5–ЛР7 в методичках нет полных данных примера."
+              : "Без файла показаны примеры из методичек — на них видно, что расчёт совпадает с таблицами методичек."}
           </p>
           {error && <InfoNote title="Файл не прочитан">{error}</InfoNote>}
         </CardBody>
       </Card>
-      {lab === 1 && <Lab1View v={v} />}
-      {lab === 2 && <Lab2View v={v} />}
-      {lab === 3 && <Lab3View v={v} />}
-      {lab === 4 && <Lab4View v={v} accent={accent} />}
+      {!v && <p className="text-sm text-ink-faint">Загружается пример…</p>}
+      {v && lab === 1 && <Lab1View v={v} />}
+      {v && lab === 2 && <Lab2View v={v} />}
+      {v && lab === 3 && <Lab3View v={v} />}
+      {v && lab === 4 && <Lab4View v={v} accent={accent} />}
+      {v && lab === 5 && <Lab5View v={v} />}
+      {v && lab === 6 && <Lab6View v={v} />}
+      {v && lab === 7 && <Lab7View v={v} />}
     </div>
   );
 }

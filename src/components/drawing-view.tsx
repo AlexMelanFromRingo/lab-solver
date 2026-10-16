@@ -1,9 +1,9 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useLayoutEffect, useRef, type ReactNode } from "react";
 import { FigureFrame } from "@/components/figure-frame";
 import { SubLabel } from "@/components/phasor-diagram";
-import type { Drawing } from "@/lib/drawing";
+import type { Drawing, DrawItem } from "@/lib/drawing";
 
 const INK = "var(--ink)";
 const DIM = "var(--ink-dim)";
@@ -50,7 +50,8 @@ export function DrawingView({ drawing, title }: { drawing: Drawing; title: strin
                   y={it.y}
                   width={it.w}
                   height={it.h}
-                  fill={it.fill ? DIM : "var(--background)"}
+                  fill={it.fill ? DIM : it.soft ? "var(--surface, var(--background))" : "var(--background)"}
+                  fillOpacity={it.soft ? 0.9 : undefined}
                   stroke={INK}
                   strokeWidth={it.bold ? 2 : 1.2}
                   strokeDasharray={it.dashed ? "6 4" : undefined}
@@ -61,6 +62,7 @@ export function DrawingView({ drawing, title }: { drawing: Drawing; title: strin
             case "dot":
               return <circle key={i} cx={it.x} cy={it.y} r={2.6} fill={INK} />;
             case "text":
+              if (it.bg) return <Backed key={i} it={it} />;
               return (
                 <text
                   key={i}
@@ -100,5 +102,49 @@ export function DrawingView({ drawing, title }: { drawing: Drawing; title: strin
         })}
       </svg>
     </FigureFrame>
+  );
+}
+
+type TextItem = Extract<DrawItem, { k: "text" }>;
+
+/**
+ * Надпись с подложкой цвета фона: прямоугольник подгоняется под фактические
+ * размеры текста (getBBox) после отрисовки, до этого стоит оценка по длине
+ * строки. Подложка — обычный rect, поэтому попадает и в выгрузку SVG/PNG.
+ */
+function Backed({ it }: { it: TextItem }) {
+  const text = useRef<SVGTextElement>(null);
+  const rect = useRef<SVGRectElement>(null);
+  const size = it.size ?? 12;
+  const w = it.text.length * size * 0.56;
+  const x0 = it.anchor === "middle" ? it.x - w / 2 : it.anchor === "end" ? it.x - w : it.x;
+  useLayoutEffect(() => {
+    const t = text.current;
+    const r = rect.current;
+    if (!t || !r) return;
+    const b = t.getBBox();
+    r.setAttribute("x", String(b.x - 3));
+    r.setAttribute("y", String(b.y - 1));
+    r.setAttribute("width", String(b.width + 6));
+    r.setAttribute("height", String(b.height + 2));
+  });
+  const body: ReactNode = it.plain ? it.text : <SubLabel text={it.text} />;
+  return (
+    <g>
+      <rect ref={rect} x={x0 - 3} y={it.y - size * 0.85} width={w + 6} height={size * 1.2} rx={2} fill="var(--background)" />
+      <text
+        ref={text}
+        x={it.x}
+        y={it.y}
+        fontSize={size}
+        fill={INK}
+        textAnchor={it.anchor ?? "start"}
+        fontStyle={it.italic ? "italic" : undefined}
+        fontWeight={it.bold ? 700 : undefined}
+        textDecoration={it.underline ? "underline" : undefined}
+      >
+        {body}
+      </text>
+    </g>
   );
 }

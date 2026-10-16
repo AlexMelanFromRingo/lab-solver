@@ -106,6 +106,9 @@ export function GuideView({ slug }: { slug: string }) {
       {g.widget === "kfs-l2" && <KfsCalc lab={2} accent={accent} />}
       {g.widget === "kfs-l3" && <KfsCalc lab={3} accent={accent} />}
       {g.widget === "kfs-l4" && <KfsCalc lab={4} accent={accent} />}
+      {g.widget === "kfs-l5" && <KfsCalc lab={5} accent={accent} />}
+      {g.widget === "kfs-l6" && <KfsCalc lab={6} accent={accent} />}
+      {g.widget === "kfs-l7" && <KfsCalc lab={7} accent={accent} />}
       {g.widget === "db-l3" && <AccessSqlCalc lab={3} />}
       {g.widget === "db-l4" && <AccessSqlCalc lab={4} />}
       {g.widget === "db-l5" && <AccessSqlCalc lab={5} />}
