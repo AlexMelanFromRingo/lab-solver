@@ -7,6 +7,7 @@ import { OutputBlock } from "@/components/ui/output-block";
 import { XYPlot } from "@/components/xy-plot";
 import type { PlotFigure } from "@/lib/figures";
 import { d1, d2, fn1, fn2 } from "@/lib/math/expr";
+import { useMounted } from "@/lib/use-mounted";
 import {
   cauchy,
   chords,
@@ -23,6 +24,9 @@ import {
   newton,
   normInf,
   normalSystem,
+  quadrature,
+  refineIntegral,
+  diffTable,
   simpleIteration,
   toIterForm,
   type Matrix,
@@ -380,6 +384,75 @@ export function CauchyCalc() {
       ) : (
         <p className="text-sm text-codes">{r.error}</p>
       )}
+    </Shell>
+  );
+}
+
+export function QuadCalc() {
+  const mounted = useMounted();
+  const [src, setSrc] = useState("sqrt(x)*ln(x)");
+  const [a, setA] = useState("1");
+  const [b, setB] = useState("3");
+  const [nn, setNn] = useState("100");
+  const [step, setStep] = useState("0.5");
+  const r = run(() => {
+    const f = fn1(src);
+    const A = Number(a);
+    const B = Number(b);
+    const n = Number(nn);
+    if (!(B > A)) throw new Error("Потрібно b > a");
+    if (!Number.isInteger(n) || n < 2 || n > 100000) throw new Error("n — ціле від 2 до 100000");
+    const exact = refineIntegral(f, A, B);
+    const dt = Number(step);
+    if (!(dt > 0) || (B - A) / dt > 200) throw new Error("Крок таблиці похідних — додатний, не надто малий");
+    return { rows: quadrature(f, A, B, n, exact), exact, diff: diffTable(f, A, B, dt) };
+  });
+  return (
+    <Shell title="Чисельне інтегрування та диференціювання">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField label="f(x)" value={src} onChange={(e) => setSrc(e.target.value)} />
+        <div className="grid grid-cols-4 gap-3">
+          <TextField label="a" value={a} onChange={(e) => setA(e.target.value)} />
+          <TextField label="b" value={b} onChange={(e) => setB(e.target.value)} />
+          <TextField label="n" value={nn} onChange={(e) => setNn(e.target.value)} />
+          <TextField label="крок таблиці" value={step} onChange={(e) => setStep(e.target.value)} />
+        </div>
+      </div>
+      {!r.ok ? (
+        <p className="text-sm text-codes">{r.error}</p>
+      ) : mounted ? (
+        <>
+          <OutputBlock
+            label={`Інтеграл: методи пакета student (n = ${nn})`}
+            value={[
+              `${"Метод".padEnd(32)}${"Значення".padStart(16)}${"Похибка".padStart(18)}`,
+              ...r.v.rows.map((row) => `${row.name.padEnd(32)}${f6(row.value).padStart(16)}${(Number.isFinite(row.error) ? row.error.toExponential(3) : String(row.error)).padStart(18)}`),
+              "",
+              `Точне значення (int): ${f6(r.v.exact)}`,
+            ].join("\n")}
+            wrap={false}
+          />
+          <OutputBlock
+            label="Похідні f′ і f″ на вузлах (diff)"
+            value={[
+              `${"x".padStart(8)}${"f(x)".padStart(16)}${"f'(x)".padStart(16)}${"f''(x)".padStart(16)}`,
+              ...r.v.diff.map((row) => `${f6(row.x).padStart(8)}${f6(row.f).padStart(16)}${f6(row.d1).padStart(16)}${f6(row.d2).padStart(16)}`),
+            ].join("\n")}
+            wrap={false}
+          />
+          <XYPlot
+            fig={{
+              x: { label: "x", unit: "", zero: false },
+              y: { label: "", unit: "", zero: false },
+              series: [
+                { label: "f(x)", points: r.v.diff.map((row) => [row.x, row.f] as [number, number]) },
+                { label: "f'(x)", points: r.v.diff.map((row) => [row.x, row.d1] as [number, number]), dashed: true },
+              ],
+            }}
+            title={`f(x) = ${src} і її похідна на [${a}, ${b}]`}
+          />
+        </>
+      ) : null}
     </Shell>
   );
 }

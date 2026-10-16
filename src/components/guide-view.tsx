@@ -12,7 +12,7 @@ import { TimingDiagram } from "@/components/timing-diagram";
 import { PhasorDiagram } from "@/components/phasor-diagram";
 import { LightCalc } from "@/components/oop-calc";
 import { Lab1Calc, Lab2Calc, Lab3Calc, MagnetCalc, RgrCalc } from "@/components/circuits-calc";
-import { ApproxCalc, CauchyCalc, IterationCalc, RootsCalc, SlaeCalc } from "@/components/amo-calc";
+import { ApproxCalc, CauchyCalc, IterationCalc, QuadCalc, RootsCalc, SlaeCalc } from "@/components/amo-calc";
 import { Ethernet10Calc, FastEthernetCalc } from "@/components/lan-calc";
 import { ModuleHeader } from "@/components/module-header";
 import { RegSchemeView } from "@/components/reg-scheme";
@@ -111,6 +111,7 @@ export function GuideView({ slug }: { slug: string }) {
       {g.widget === "roots" && <RootsCalc />}
       {g.widget === "approx" && <ApproxCalc />}
       {g.widget === "cauchy" && <CauchyCalc />}
+      {g.widget === "quad" && <QuadCalc />}
       {g.widget === "graph" && <GraphCalc accent={accent} />}
       {g.widget === "c-lab1" && <Lab1Calc />}
       {g.widget === "c-lab2" && <Lab2Calc />}

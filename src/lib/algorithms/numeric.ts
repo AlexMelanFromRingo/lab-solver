@@ -364,3 +364,93 @@ export function waveExplicit(phi1: (x: number) => number, phi2: (x: number) => n
   }
   return { lambda2, x, t, u };
 }
+
+/**
+ * АМО ЛР6: чисельне інтегрування функції f на [a, b] за n частинами методами
+ * пакета student Maple — лівих (leftsum), правих (rightsum) прямокутників,
+ * трапецій (trapezoid) і Сімпсона (simpson), з похибкою відносно точного
+ * значення. Точне значення передають окремо (int(...) з Maple або прямий підрахунок).
+ */
+export interface QuadRow {
+  name: string;
+  formula: string;
+  value: number;
+  error: number;
+}
+
+export function quadrature(f: (x: number) => number, a: number, b: number, n: number, exact: number): QuadRow[] {
+  const h = (b - a) / n;
+  const x = (i: number) => a + i * h;
+  let left = 0;
+  let right = 0;
+  for (let i = 0; i < n; i++) {
+    left += f(x(i));
+    right += f(x(i + 1));
+  }
+  left *= h;
+  right *= h;
+  const trap = (left + right) / 2;
+  // Сімпсон потребує парного числа відрізків
+  const ns = n % 2 ? n + 1 : n;
+  const hs = (b - a) / ns;
+  let odd = 0;
+  let even = 0;
+  for (let i = 1; i < ns; i++) {
+    const v = f(a + i * hs);
+    if (i % 2) odd += v;
+    else even += v;
+  }
+  const simp = (hs / 3) * (f(a) + f(b) + 4 * odd + 2 * even);
+  const row = (name: string, formula: string, value: number): QuadRow => ({ name, formula, value, error: value - exact });
+  return [
+    row("Ліві прямокутники (leftsum)", `h·Σ f(xᵢ), i = 0…${n - 1}`, left),
+    row("Праві прямокутники (rightsum)", `h·Σ f(xᵢ), i = 1…${n}`, right),
+    row("Трапеції (trapezoid)", "h·(f₀/2 + f₁ + … + f_{n−1} + f_n/2)", trap),
+    row("Сімпсон (simpson)", `h/3·(f₀ + f_n + 4·Σ непарні + 2·Σ парні)${n % 2 ? `, n → ${ns}` : ""}`, simp),
+  ];
+}
+
+/** Складена формула трапецій/Сімпсона для адаптивного точного значення (коли аналітичного немає). */
+export function refineIntegral(f: (x: number) => number, a: number, b: number): number {
+  const simpson = (n: number) => {
+    const h = (b - a) / n;
+    let odd = 0;
+    let even = 0;
+    for (let i = 1; i < n; i++) {
+      if (i % 2) odd += f(a + i * h);
+      else even += f(a + i * h);
+    }
+    return (h / 3) * (f(a) + f(b) + 4 * odd + 2 * even);
+  };
+  let prev = simpson(2);
+  for (let n = 4; n <= 1 << 20; n *= 2) {
+    const cur = simpson(n);
+    if (Math.abs(cur - prev) < 1e-12 * (1 + Math.abs(cur))) return cur;
+    prev = cur;
+  }
+  return prev;
+}
+
+/** Чисельна похідна f у точці x центральною різницею (ЛР6, diff у Maple). */
+export function derivative(f: (x: number) => number, x: number, h = 1e-5): number {
+  return (f(x + h) - f(x - h)) / (2 * h);
+}
+
+/** Таблиця першої й другої похідних на вузлах a…b з кроком step. */
+export interface DiffRow {
+  x: number;
+  f: number;
+  d1: number;
+  d2: number;
+}
+
+export function diffTable(f: (x: number) => number, a: number, b: number, step: number): DiffRow[] {
+  const rows: DiffRow[] = [];
+  const h = 1e-4;
+  for (let x = a; x <= b + step / 2; x += step) {
+    const d1 = (f(x + h) - f(x - h)) / (2 * h);
+    const d2 = (f(x + h) - 2 * f(x) + f(x - h)) / (h * h);
+    rows.push({ x, f: f(x), d1, d2 });
+  }
+  return rows;
+}

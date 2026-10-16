@@ -109,6 +109,23 @@ const PDE: PdeVariant[] = [
   { phi: "(2 + x)(0.5x + 1)", phi2: "(x - 1)^3", psi1: "2 + t", psi2: "4.5 - 3t^2" },
 ];
 
+const MAPLE_QUAD = `restart;
+with(student);
+# чисельне інтегрування f(x) = sqrt(x)*ln(x) на [1, 3], n = 100
+zn  := rightsum(sqrt(x)*ln(x), x = 1..3, 100):  evalf(zn);
+znr := leftsum (sqrt(x)*ln(x), x = 1..3, 100):  evalf(znr);
+ztr := trapezoid(sqrt(x)*ln(x), x = 1..3, 100): evalf(ztr);
+zs  := simpson (sqrt(x)*ln(x), x = 1..3, 100):  evalf(zs);
+# точне значення
+Int(sqrt(x)*ln(x), x = 1..3) = evalf(int(sqrt(x)*ln(x), x = 1..3));
+# невласні інтеграли
+Int(exp(-x^2), x = -infinity..infinity): value(%);
+Int(1/(x^2 - 6*x + 12), x = -infinity..infinity): value(%);
+# чисельне диференціювання
+pr  := x -> diff(x^4/sqrt(x^2+1), x):  pr(x);
+pr2 := x -> diff(pr(x), x):            pr2(x);
+`;
+
 const MAPLE_FN = new Set(["sin", "cos", "tan", "exp", "ln", "log", "log10", "sqrt", "abs", "arctan"]);
 
 /** Запись для Maple: явное умножение (2x → 2*x, x(…) → x*(…)) и Pi. */
@@ -230,6 +247,31 @@ export const AMO_GUIDES: GuideModule[] = [
       report: ["Лист Maple (.mw) с таблицами обоих методов."],
       questions: [],
     },
+  },
+  {
+    slug: "amo-lab6",
+    intro:
+      "Численное интегрирование и дифференцирование в Maple (пакет student): для функции на отрезке — левые и правые " +
+      "прямоугольники, трапеции и Симпсон с погрешностью относительно точного значения, таблица первой и второй " +
+      "производной. По умолчанию — пример методички √x·ln(x) на [1, 3], n = 100.",
+    widget: "quad",
+    computed: () => ({ code: [{ title: "Команды Maple по примеру методички", code: MAPLE_QUAD }] }),
+    guide: {
+      source: `${SRC}, практичне заняття № 6 (Лаб. раб 6 Чисельне інтегрування та дифференціювання)`,
+      goals: ["Освоить численное интегрирование (прямоугольники, трапеции, Симпсон) и дифференцирование средствами пакета student в Maple."],
+      steps: [
+        { title: "Интегрирование", body: "rightsum, leftsum, trapezoid, simpson для f на [a, b] с n частей; evalf — значения; сравнить с точным int(...)." },
+        { title: "Несобственные интегралы", body: "Int(...) с пределами ±infinity и value(%) — методичка берёт exp(−x²) и 1/(x²−6x+12)." },
+        { title: "Дифференцирование", body: "diff(f, x) — первая производная, diff(..., x) ещё раз или pr2 := x -> diff(pr(x), x) — вторая; evalf(int(pr2(x), x = a..b))." },
+      ],
+      screenshots: [],
+      report: ["Лист Maple (.mw) с суммами, точным значением и производными."],
+      questions: [],
+    },
+    errata: [
+      "Simpson в Maple требует чётного числа отрезков; при нечётном n на странице берётся n + 1 — результат совпадает с simpson(..., n+1).",
+      "Это пример практического занятия № 6, отдельного сданного задания по нему нет — работа добавлена как решатель того же типа.",
+    ],
   },
   {
     slug: "amo-exam",
