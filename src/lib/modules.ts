@@ -1394,6 +1394,17 @@ export const modules: LabModule[] = [
     size: "md",
   },
   {
+    slug: "ks-lab5",
+    title: "ЛР 5 · Тригери",
+    category: "ks",
+    tagline: "RS · D · JK · T",
+    description:
+      "RS на 2І-НІ и 2АБО-НІ, синхронный RS, D и DFF, JK и T в OrCAD: соединения, стимулы, ожидаемые диаграммы, tmin и tзд по формулам методички.",
+    hasVariants: false,
+    source: "Комп'ютерна схемотехніка, LIDER",
+    size: "md",
+  },
+  {
     slug: "ks-lab6",
     title: "ЛР 6 · Дослідження лічильників, дешифраторів і регістрів в САПР OrCAD",
     category: "ks",
@@ -1402,6 +1413,17 @@ export const modules: LabModule[] = [
       "Счётчик вверх и вниз, регистр и дешифратор 2 на 4: состояния по фронтам за 9 периодов и ложные коды с задержками 7474.",
     hasVariants: true,
     variantCount: 28,
+    source: "Комп'ютерна схемотехніка, LIDER",
+    size: "md",
+  },
+  {
+    slug: "ks-lab11",
+    title: "ЛР 11 · Дослідження паралельного програмованого адаптера ППА з використанням учбового мікропроцесорного комплекту УМК",
+    category: "ks",
+    tagline: "КР580ВВ55А · осцилограми",
+    description:
+      "Три программы методички с кодами для ввода в УМК, разбор управляющих слов 80H, 81H, 82H и ожидаемые осциллограммы CS, WR/RD, A0, A1, D0, PA0, PB0.",
+    hasVariants: false,
     source: "Комп'ютерна схемотехніка, LIDER",
     size: "md",
   },

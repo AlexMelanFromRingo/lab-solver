@@ -62,12 +62,22 @@ export function TimingDiagram({ fig, title }: { fig: TimingFigure; title: string
               </g>
             ));
           } else {
+            // «X» — невизначений стан, як у PSpice: смуга між рівнями 0 і 1
             const pts: string[] = [];
             segs.forEach((g) => {
-              const y = Number(g.v) ? hi : lo;
+              const y = g.v === "X" ? mid : Number(g.v) ? hi : lo;
               pts.push(`${g.a},${y}`, `${g.b},${y}`);
             });
-            body = <polyline points={pts.join(" ")} fill="none" stroke={INK} strokeWidth={1.3} />;
+            body = (
+              <>
+                {segs
+                  .filter((g) => g.v === "X")
+                  .map((g, i) => (
+                    <rect key={i} x={g.a} y={hi} width={g.b - g.a} height={lo - hi} fill={DIM} fillOpacity={0.35} stroke={INK} strokeWidth={1} />
+                  ))}
+                <polyline points={pts.join(" ")} fill="none" stroke={INK} strokeWidth={1.3} />
+              </>
+            );
           }
           return (
             <g key={s.name}>
