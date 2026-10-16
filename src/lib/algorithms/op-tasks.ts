@@ -524,3 +524,213 @@ export const LR4_MINMAX: WordTask[] = [
   { n: 29, text: "J = (МІН(b·x+2, c) + МАКС(c−b, x))/5", vars: ["b", "x", "c"], result: { name: "J", expr: "(fmin(b * x + 2, c) + fmax(c - b, x)) / 5" }, label: "J", math: true },
   { n: 30, text: "C = МАКС(a+n, m) − 3·МІН(m−n, a)", vars: ["a", "n", "m"], result: { name: "C", expr: "fmax(a + n, m) - 3 * fmin(m - n, a)" }, label: "C", math: true },
 ];
+
+// ==================== ЛР8 — матриця оцінок (студенти × дисципліни), 20 ====================
+export interface GradeVar {
+  n: number;
+  text: string;
+  axis: "disc" | "stud";
+  op: "count5" | "count2" | "avg" | "quality" | "success" | "listTwo" | "listOnly45";
+  extreme?: "max" | "min";
+}
+
+export const LR8_GRADES: GradeVar[] = [
+  { n: 1, text: "Дисципліни з максимальною кількістю 5-ок.", axis: "disc", op: "count5", extreme: "max" },
+  { n: 2, text: "Студенти з максимальною кількістю 5-ок.", axis: "stud", op: "count5", extreme: "max" },
+  { n: 3, text: "Дисципліни з максимальною кількістю 2-ок.", axis: "disc", op: "count2", extreme: "max" },
+  { n: 4, text: "Студенти з максимальною кількістю 5-ок.", axis: "stud", op: "count5", extreme: "max" },
+  { n: 5, text: "Дисципліни з максимальним середнім балом.", axis: "disc", op: "avg", extreme: "max" },
+  { n: 6, text: "Студенти з максимальним середнім балом.", axis: "stud", op: "avg", extreme: "max" },
+  { n: 7, text: "Середній бал кожного зі студентів, що мають хоча б одну 2-ку.", axis: "stud", op: "listTwo" },
+  { n: 8, text: "Середній бал з кожної дисципліни, з якої студенти отримали хоча б одну 2-ку.", axis: "disc", op: "listTwo" },
+  { n: 9, text: "Дисципліни з мінімальною кількістю 5-ок.", axis: "disc", op: "count5", extreme: "min" },
+  { n: 10, text: "Студенти з мінімальною кількістю 5-ок.", axis: "stud", op: "count5", extreme: "min" },
+  { n: 11, text: "Дисципліни з мінімальною кількістю 2-ок.", axis: "disc", op: "count2", extreme: "min" },
+  { n: 12, text: "Студенти з мінімальною кількістю 5-ок.", axis: "stud", op: "count5", extreme: "min" },
+  { n: 13, text: "Дисципліни з мінімальним середнім балом.", axis: "disc", op: "avg", extreme: "min" },
+  { n: 14, text: "Студенти з мінімальним середнім балом.", axis: "stud", op: "avg", extreme: "min" },
+  { n: 15, text: "Середній бал кожного зі студентів, що мають лише 4 та 5.", axis: "stud", op: "listOnly45" },
+  { n: 16, text: "Середній бал з кожної дисципліни, з якої студенти отримали лише 4 та 5.", axis: "disc", op: "listOnly45" },
+  { n: 17, text: "Дисципліни з максимальною якістю навчання (позитивні / усі оцінки).", axis: "disc", op: "quality", extreme: "max" },
+  { n: 18, text: "Дисципліни з мінімальною якістю навчання (позитивні / усі оцінки).", axis: "disc", op: "quality", extreme: "min" },
+  { n: 19, text: "Дисципліни з максимальною успішністю (4-ки та 5-ки / усі оцінки).", axis: "disc", op: "success", extreme: "max" },
+  { n: 20, text: "Дисципліни з мінімальною успішністю (4-ки та 5-ки / усі оцінки).", axis: "disc", op: "success", extreme: "min" },
+];
+
+export function gradesProgram(g: GradeVar): string {
+  const outer = g.axis === "disc" ? "j" : "i";
+  const inner = g.axis === "disc" ? "i" : "j";
+  const outerN = g.axis === "disc" ? "M" : "N";
+  const innerN = g.axis === "disc" ? "N" : "M";
+  const elem = "G[i][j]";
+  const kind = g.axis === "disc" ? "Дисциплiна" : "Студент";
+  const lines: string[] = [
+    "#include <iostream>",
+    "#include <cstdlib>",
+    "using namespace std;",
+    "",
+    `// Варіант ${g.n}. ${g.text}`,
+    "int main() {",
+    "    const int N = 5, M = 5;   // N студентів, M дисциплін",
+    "    int G[N][M];",
+    "    srand(12345);",
+    "    for (int i = 0; i < N; i++) {",
+    "        for (int j = 0; j < M; j++) { G[i][j] = rand() % 4 + 2; cout << G[i][j] << ' '; }   // оцінки 2..5",
+    "        cout << endl;",
+    "    }",
+  ];
+  if (g.op === "listTwo" || g.op === "listOnly45") {
+    const cond =
+      g.op === "listTwo"
+        ? `${elem} == 2`
+        : `(${elem} == 4 || ${elem} == 5)`;
+    const want = g.op === "listTwo" ? "hasTwo" : "all45";
+    const init = g.op === "listTwo" ? "false" : "true";
+    const upd = g.op === "listTwo" ? `if (${cond}) ${want} = true;` : `if (!(${cond})) ${want} = false;`;
+    lines.push(
+      `    for (int ${outer} = 0; ${outer} < ${outerN}; ${outer}++) {`,
+      `        bool ${want} = ${init};`,
+      "        double sum = 0;",
+      `        for (int ${inner} = 0; ${inner} < ${innerN}; ${inner}++) { sum += ${elem}; ${upd} }`,
+      `        if (${want}) cout << "${kind} " << ${outer} + 1 << ": середнiй бал " << sum / ${innerN} << endl;`,
+      "    }",
+    );
+  } else {
+    // метрика по індексу outer
+    let metric: string;
+    if (g.op === "count5") metric = `if (${elem} == 5) val++;`;
+    else if (g.op === "count2") metric = `if (${elem} == 2) val++;`;
+    else if (g.op === "avg") metric = `val += ${elem};`;
+    else if (g.op === "quality") metric = `if (${elem} >= 3) val++;`;
+    else metric = `if (${elem} >= 4) val++;`;
+    const finalize = g.op === "avg" || g.op === "quality" || g.op === "success" ? ` / ${innerN}` : "";
+    const cmp = g.extreme === "max" ? ">" : "<";
+    lines.push(
+      "    int best = 0;",
+      "    double bestVal = -1e9;",
+      g.extreme === "min" ? "    bestVal = 1e9;" : "",
+      `    for (int ${outer} = 0; ${outer} < ${outerN}; ${outer}++) {`,
+      "        double val = 0;",
+      `        for (int ${inner} = 0; ${inner} < ${innerN}; ${inner}++) ${metric}`,
+      `        double m = val${finalize};`,
+      `        if (m ${cmp} bestVal) { bestVal = m; best = ${outer}; }`,
+      "    }",
+      `    cout << "${kind} " << best + 1 << " (значення " << bestVal << ")" << endl;`,
+    );
+  }
+  lines.push("    return 0;", "}");
+  return lines.filter((l) => l !== "").join("\n");
+}
+
+// ==================== ЛР12 — std::array, елементи на парних/непарних місцях (15) ====================
+export interface StdArrVar {
+  n: number;
+  text: string;
+  /** Тіло після заповнення масиву a (std::array<int,N>, N=10, значення [-5,5]). */
+  body: string[];
+}
+
+// місця 1-based: непарні → індекси 0,2,4… (start 0); парні → 1,3,5… (start 1)
+const whileOdd = (inner: string[]) => ["    int i = 0;", "    while (i < N) {", "        int e = a[i];", ...inner.map((l) => "        " + l), "        i += 2;", "    }"];
+const whileEven = (inner: string[]) => ["    int i = 1;", "    while (i < N) {", "        int e = a[i];", ...inner.map((l) => "        " + l), "        i += 2;", "    }"];
+const doOdd = (inner: string[]) => ["    int i = 0;", "    do {", "        int e = a[i];", ...inner.map((l) => "        " + l), "        i += 2;", "    } while (i < N);"];
+
+export const LR12_VARS: StdArrVar[] = [
+  { n: 1, text: "Кількість і сума позитивних елементів на парних місцях (while, без %).", body: ["int cnt = 0; double sum = 0;", ...whileEven(["if (e > 0) { cnt++; sum += e; }"]), `cout << "Кiлькiсть: " << cnt << "   Сума: " << sum << endl;`] },
+  { n: 2, text: "Номери, кількість і сума негативних елементів на непарних місцях (while, без %).", body: ["int cnt = 0; double sum = 0;", ...whileOdd(["if (e < 0) { cnt++; sum += e; cout << \"номер \" << i + 1 << \" \"; }"]), `cout << "\\nКiлькiсть: " << cnt << "   Сума: " << sum << endl;`] },
+  { n: 3, text: "Середнє арифметичне і кількість негативних елементів на непарних місцях (while, без %).", body: ["int cnt = 0; double sum = 0;", ...whileOdd(["if (e < 0) { cnt++; sum += e; }"]), `cout << "Кiлькiсть: " << cnt << "   Середнє: " << (cnt ? sum / cnt : 0) << endl;`] },
+  { n: 4, text: "Сума, номери і кількість позитивних елементів на непарних місцях (while, без %).", body: ["int cnt = 0; double sum = 0;", ...whileOdd(["if (e > 0) { cnt++; sum += e; cout << \"номер \" << i + 1 << \" \"; }"]), `cout << "\\nКiлькiсть: " << cnt << "   Сума: " << sum << endl;`] },
+  { n: 5, text: "Кількість і середнє арифметичне елементів на непарних місцях (while, без %).", body: ["int cnt = 0; double sum = 0;", ...whileOdd(["cnt++; sum += e;"]), `cout << "Кiлькiсть: " << cnt << "   Середнє: " << (cnt ? sum / cnt : 0) << endl;`] },
+  { n: 6, text: "Добуток і сума негативних елементів на непарних місцях (while, без %).", body: ["long long prod = 1; double sum = 0; bool any = false;", ...whileOdd(["if (e < 0) { prod *= e; sum += e; any = true; }"]), `cout << "Добуток: " << (any ? prod : 0) << "   Сума: " << sum << endl;`] },
+  { n: 7, text: "Елементи на парних місцях звести в квадрат і знайти їх суму (while, без %).", body: ["long long sum = 0;", ...whileEven(["sum += (long long)e * e;"]), `cout << "Сума квадратiв: " << sum << endl;`] },
+  { n: 8, text: "Сума та добуток позитивних елементів на непарних місцях (do…while, без %).", body: ["double sum = 0; long long prod = 1; bool any = false;", ...doOdd(["if (e > 0) { sum += e; prod *= e; any = true; }"]), `cout << "Сума: " << sum << "   Добуток: " << (any ? prod : 0) << endl;`] },
+  { n: 9, text: "Елементи на непарних місцях помножити на 5; знайти суму всього масиву; вивести номери позитивних елементів (do…while, без %).", body: [...doOdd(["a[i] = e * 5;"]), "double sum = 0;", "for (int k = 0; k < N; k++) { sum += a[k]; if (a[k] > 0) cout << \"номер \" << k + 1 << \" \"; }", `cout << "\\nСума масиву: " << sum << endl;`] },
+  { n: 10, text: "Сума негативних елементів на непарних місцях; вивести номери елементів, що дорівнюють 1 (do…while, без %).", body: ["double sum = 0;", ...doOdd(["if (e < 0) sum += e;"]), "for (int k = 0; k < N; k++) if (a[k] == 1) cout << \"номер \" << k + 1 << \" \";", `cout << "\\nСума негативних: " << sum << endl;`] },
+  { n: 11, text: "Вдвічі збільшити елементи на непарних місцях; вивести номери нульових елементів (do…while, без %).", body: [...doOdd(["a[i] = e * 2;"]), "for (int k = 0; k < N; k++) if (a[k] == 0) cout << \"номер \" << k + 1 << \" \";", `cout << "\\n(елементи на непарних мiсцях подвоєно)" << endl;`] },
+  { n: 12, text: "Сума та кількість позитивних елементів на непарних місцях (do…while, без %).", body: ["int cnt = 0; double sum = 0;", ...doOdd(["if (e > 0) { cnt++; sum += e; }"]), `cout << "Кiлькiсть: " << cnt << "   Сума: " << sum << endl;`] },
+  { n: 13, text: "Змінити знак елементів на парних місцях; сума отриманого масиву і кількість нульових елементів (do…while, без %).", body: ["int i = 1;", "do { a[i] = -a[i]; i += 2; } while (i < N);", "double sum = 0; int zeros = 0;", "for (int k = 0; k < N; k++) { sum += a[k]; if (a[k] == 0) zeros++; }", `cout << "Сума: " << sum << "   Нульових: " << zeros << endl;`] },
+  { n: 14, text: "Сума та добуток позитивних елементів на непарних місцях (do…while, без %).", body: ["double sum = 0; long long prod = 1; bool any = false;", ...doOdd(["if (e > 0) { sum += e; prod *= e; any = true; }"]), `cout << "Сума: " << sum << "   Добуток: " << (any ? prod : 0) << endl;`] },
+  { n: 15, text: "Добуток позитивних елементів (зведених у квадрат) на непарних місцях; кількість нульових елементів; номери позитивних (do…while, без %).", body: ["long long prod = 1; bool any = false;", ...doOdd(["if (e > 0) { prod *= (long long)e * e; any = true; cout << \"номер \" << i + 1 << \" \"; }"]), "int zeros = 0;", "for (int k = 0; k < N; k++) if (a[k] == 0) zeros++;", `cout << "\\nДобуток квадратiв: " << (any ? prod : 0) << "   Нульових: " << zeros << endl;`] },
+];
+
+export function stdArrayProgram(v: StdArrVar): string {
+  return [
+    "#include <iostream>",
+    "#include <array>",
+    "#include <cstdlib>",
+    "using namespace std;",
+    "",
+    `// Варіант ${v.n}. ${v.text}`,
+    "int main() {",
+    "    const int N = 10;",
+    "    array<int, N> a;",
+    "    srand(12345);",
+    "    for (int k = 0; k < N; k++) { a[k] = rand() % 11 - 5; cout << a[k] << ' '; }   // значення [-5, 5]",
+    "    cout << endl;",
+    ...v.body.map((l) => "    " + l),
+    "    return 0;",
+    "}",
+  ].join("\n");
+}
+
+// ==================== ЛР11 — обробка символьних даних (15) ====================
+export interface StrVar {
+  n: number;
+  statText: string;
+  /** Рядки коду статистики (працюють з рядком s). */
+  stat: string[];
+  makeText: string;
+  /** Рядки коду створення нового рядка r. */
+  make: string[];
+}
+
+const U = "(c >= 'A' && c <= 'Z')";
+const L = "(c >= 'a' && c <= 'z')";
+const Dg = "(c >= '0' && c <= '9')";
+const LAT = `(${U} || ${L})`;
+const countStat = (pred: string, label: string) => [`int cnt = 0;`, `for (char c : s) if (${pred}) cnt++;`, `cout << "${label}: " << cnt << endl;`];
+const allStat = (pred: string, label: string) => [`bool all = !s.empty();`, `for (char c : s) if (!(${pred})) all = false;`, `cout << "${label}: " << (all ? "так" : "нi") << endl;`];
+const whichStat = (p1: string, p2: string, n1: string, n2: string) => [`int c1 = 0, c2 = 0;`, `for (char c : s) { if (${p1}) c1++; if (${p2}) c2++; }`, `cout << (c1 > c2 ? "бiльше: ${n1}" : c1 < c2 ? "бiльше: ${n2}" : "порівну") << endl;`];
+const hasStat = (pred: string, label: string) => [`bool has = false;`, `for (char c : s) if (${pred}) has = true;`, `cout << "${label}: " << (has ? "так" : "нi") << endl;`];
+const keep = (pred: string) => [`for (char c : s) if (${pred}) r += c;`];
+const reorder = (p1: string, p2: string) => [`for (char c : s) if (${p1}) r += c;`, `for (char c : s) if (${p2}) r += c;`];
+
+export const LR11_VARS: StrVar[] = [
+  { n: 1, statText: "кількість великих латинських букв", stat: countStat(U, "Великих латинських"), makeText: "рядок з малих латинських букв", make: keep(L) },
+  { n: 2, statText: "кількість малих латинських букв", stat: countStat(L, "Малих латинських"), makeText: "рядок з великих латинських букв", make: keep(U) },
+  { n: 3, statText: "кількість цифр", stat: countStat(Dg, "Цифр"), makeText: "рядок з цифр", make: keep(Dg) },
+  { n: 4, statText: "кількість латинських букв та цифр", stat: countStat(`${LAT} || ${Dg}`, "Латинських букв i цифр"), makeText: "рядок з латинських букв", make: keep(LAT) },
+  { n: 5, statText: "кількість латинських букв", stat: countStat(LAT, "Латинських букв"), makeText: "рядок з цифр та латинських букв", make: keep(`${Dg} || ${LAT}`) },
+  { n: 6, statText: "чи всі символи — великі латинські букви", stat: allStat(U, "Усі великі латинські"), makeText: "рядок із символів, крім цифр і латинських букв", make: keep(`!(${Dg} || ${LAT})`) },
+  { n: 7, statText: "чи всі символи — малі латинські букви", stat: allStat(L, "Усі малі латинські"), makeText: "рядок із символів, крім цифр", make: keep(`!${Dg}`) },
+  { n: 8, statText: "чи всі символи — латинські букви", stat: allStat(LAT, "Усі латинські"), makeText: "рядок із символів, крім латинських букв", make: keep(`!${LAT}`) },
+  { n: 9, statText: "чи всі символи — цифри", stat: allStat(Dg, "Усі цифри"), makeText: "рядок із символів, крім малих латинських букв", make: keep(`!${L}`) },
+  { n: 10, statText: "чи всі символи — цифри або латинські букви", stat: allStat(`${Dg} || ${LAT}`, "Усі цифри або латинські"), makeText: "рядок із символів, крім великих латинських букв", make: keep(`!${U}`) },
+  { n: 11, statText: "яких латинських букв більше (великих чи малих)", stat: whichStat(U, L, "великих", "малих"), makeText: "рядок із символів, крім пробілу та табуляції", make: keep("!(c == ' ' || c == '\\t')") },
+  { n: 12, statText: "яких символів більше: цифр чи латинських букв", stat: whichStat(Dg, LAT, "цифр", "латинських букв"), makeText: "рядок з цифр та латинських букв (спершу цифри, потім букви)", make: reorder(Dg, LAT) },
+  { n: 13, statText: "яких символів більше: цифр чи великих латинських букв", stat: whichStat(Dg, U, "цифр", "великих латинських"), makeText: "рядок з цифр та латинських букв (спершу букви, потім цифри)", make: reorder(LAT, Dg) },
+  { n: 14, statText: "яких символів більше: цифр чи малих латинських букв", stat: whichStat(Dg, L, "цифр", "малих латинських"), makeText: "рядок з латинських букв (спершу малі, потім великі)", make: reorder(L, U) },
+  { n: 15, statText: "чи є в рядку пробіл або символ табуляції", stat: hasStat("c == ' ' || c == '\\t'", "Є пробiл або табуляцiя"), makeText: "рядок з латинських букв (спершу великі, потім малі)", make: reorder(U, L) },
+];
+
+export function stringProgram(v: StrVar): string {
+  return [
+    "#include <iostream>",
+    "#include <string>",
+    "using namespace std;",
+    "",
+    `// Варіант ${v.n}. Статистика: ${v.statText}. Новий рядок: ${v.makeText}.`,
+    "int main() {",
+    "    string s;",
+    "    cout << \"Введiть рядок: \";",
+    "    getline(cin, s);",
+    "    // статистична обробка",
+    ...v.stat.map((l) => "    " + l),
+    "    // створення нового рядка",
+    "    string r;",
+    ...v.make.map((l) => "    " + l),
+    "    cout << \"Новий рядок: \" << r << endl;",
+    "    return 0;",
+    "}",
+  ].join("\n");
+}
