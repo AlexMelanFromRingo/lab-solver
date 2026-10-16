@@ -30,7 +30,8 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Вариант — решатель лабораторных",
+  title: { default: "lab-solver — решатель лабораторных", template: "%s — lab-solver" },
+  applicationName: "lab-solver",
   description:
     "Детерминированные части лабораторных по криптографии, теории информации, помехоустойчивому кодированию и архитектуре ЭВМ — посчитано, а не переписано.",
 };
