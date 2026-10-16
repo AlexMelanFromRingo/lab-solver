@@ -5,6 +5,7 @@ import { AclBuilder } from "@/components/acl-builder";
 import { MpsStructureCalc, PpiCalc } from "@/components/ppi-calc";
 import { AccessSqlCalc, ErCalc, NormalizerCalc } from "@/components/db-calc";
 import { GraphCalc } from "@/components/graph-calc";
+import { KfsCalc } from "@/components/kfs-calc";
 import { XYPlot } from "@/components/xy-plot";
 import { DrawingView } from "@/components/drawing-view";
 import { TimingDiagram } from "@/components/timing-diagram";
@@ -101,6 +102,10 @@ export function GuideView({ slug }: { slug: string }) {
       {g.widget === "oop-light" && <LightCalc />}
       {g.widget === "ppi" && <PpiCalc />}
       {g.widget === "mps-kr" && <MpsStructureCalc />}
+      {g.widget === "kfs-l1" && <KfsCalc lab={1} accent={accent} />}
+      {g.widget === "kfs-l2" && <KfsCalc lab={2} accent={accent} />}
+      {g.widget === "kfs-l3" && <KfsCalc lab={3} accent={accent} />}
+      {g.widget === "kfs-l4" && <KfsCalc lab={4} accent={accent} />}
       {g.widget === "db-l3" && <AccessSqlCalc lab={3} />}
       {g.widget === "db-l4" && <AccessSqlCalc lab={4} />}
       {g.widget === "db-l5" && <AccessSqlCalc lab={5} />}
