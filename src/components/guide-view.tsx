@@ -11,6 +11,7 @@ import { DrawingView } from "@/components/drawing-view";
 import { TimingDiagram } from "@/components/timing-diagram";
 import { PhasorDiagram } from "@/components/phasor-diagram";
 import { LightCalc } from "@/components/oop-calc";
+import { BiometricsCalc } from "@/components/biometrics-calc";
 import { Lab1Calc, Lab2Calc, Lab3Calc, MagnetCalc, RgrCalc } from "@/components/circuits-calc";
 import { ApproxCalc, CauchyCalc, IterationCalc, QuadCalc, RootsCalc, SlaeCalc } from "@/components/amo-calc";
 import { Ethernet10Calc, FastEthernetCalc } from "@/components/lan-calc";
@@ -120,6 +121,7 @@ export function GuideView({ slug }: { slug: string }) {
       {g.widget === "c-rgr" && <RgrCalc />}
       {g.widget === "oop-light" && <LightCalc />}
       {g.widget === "ppi" && <PpiCalc />}
+      {g.widget === "biometrics" && <BiometricsCalc />}
       {g.widget === "mps-kr" && <MpsStructureCalc />}
       {g.widget === "kfs-l1" && <KfsCalc lab={1} accent={accent} />}
       {g.widget === "kfs-l2" && <KfsCalc lab={2} accent={accent} />}
