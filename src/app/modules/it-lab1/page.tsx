@@ -11,12 +11,15 @@ import { ComboChart, PieChart, ScatterChart } from "@/components/it-charts";
 import { categories, modules } from "@/lib/modules";
 import { IT_GUIDES, CHART_RULES } from "@/lib/data/it-labs";
 import { PRESETS, parseTable, ru, totalOf } from "@/lib/algorithms/it-table";
+import { useLang } from "@/components/lang";
+import { tr } from "@/lib/i18n";
 
 const mod = modules.find((m) => m.slug === "it-lab1")!;
 const accent = categories.it.accent;
 const procedure = IT_GUIDES["it-lab1"];
 
 export default function ItLab1Page() {
+  const { lang } = useLang();
   const [presetId, setPresetId] = useState(PRESETS[0].id);
   const preset = PRESETS.find((p) => p.id === presetId)!;
   const [edited, setEdited] = useState<Record<string, string>>({});
@@ -186,7 +189,7 @@ export default function ItLab1Page() {
                   <span className="font-mono text-xs tabular-nums" style={{ color: accent }}>
                     {rule.number}
                   </span>
-                  {rule.text}
+                  {tr(rule.text, lang)}
                 </li>
               ))}
             </ol>

@@ -9,6 +9,8 @@ import { NumberField, SelectField, TextField } from "@/components/ui/field";
 import { OutputBlock } from "@/components/ui/output-block";
 import { categories, modules } from "@/lib/modules";
 import { IT_GUIDES, IMPORT_WAYS, MATHCAD_MAP, READFILE_ARGS } from "@/lib/data/it-labs";
+import { useLang } from "@/components/lang";
+import { tr } from "@/lib/i18n";
 import {
   EXAMPLE_ARRAY,
   FUNCTIONS,
@@ -136,6 +138,7 @@ function ArrayPlot({ data }: { data: number[] }) {
 }
 
 export default function ItLab2Page() {
+  const { lang } = useLang();
   const [funcId, setFuncId] = useState(FUNCTIONS[0].id);
   const [from, setFrom] = useState(-10);
   const [to, setTo] = useState(10);
@@ -273,12 +276,12 @@ export default function ItLab2Page() {
                   </tr>
                 </thead>
                 <tbody>
-                  {READFILE_ARGS.map((a) => (
-                    <tr key={a.arg} className="border-b border-border/50 last:border-b-0">
+                  {READFILE_ARGS.map((a, ai) => (
+                    <tr key={ai} className="border-b border-border/50 last:border-b-0">
                       <td className="px-3 py-2 font-mono text-xs" style={{ color: accent }}>
-                        {a.arg}
+                        {tr(a.arg, lang)}
                       </td>
-                      <td className="px-3 py-2 text-ink-dim">{a.meaning}</td>
+                      <td className="px-3 py-2 text-ink-dim">{tr(a.meaning, lang)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -288,12 +291,12 @@ export default function ItLab2Page() {
             <div>
               <h3 className="mb-2 text-sm font-medium text-ink">Чем способы импорта различаются</h3>
               <ul className="space-y-1.5 text-sm text-ink-dim">
-                {IMPORT_WAYS.map((w) => (
-                  <li key={w.way} className="flex gap-2 leading-relaxed">
+                {IMPORT_WAYS.map((w, wi) => (
+                  <li key={wi} className="flex gap-2 leading-relaxed">
                     <span className="font-mono text-xs" style={{ color: accent }}>
                       {w.way}
                     </span>
-                    <span>— {w.note}</span>
+                    <span>— {tr(w.note, lang)}</span>
                   </li>
                 ))}
               </ul>
@@ -339,9 +342,9 @@ export default function ItLab2Page() {
                   </tr>
                 </thead>
                 <tbody>
-                  {MATHCAD_MAP.map((row) => (
-                    <tr key={row.action} className="border-b border-border/50 last:border-b-0">
-                      <td className="px-3 py-2 text-ink-dim">{row.action}</td>
+                  {MATHCAD_MAP.map((row, ri) => (
+                    <tr key={ri} className="border-b border-border/50 last:border-b-0">
+                      <td className="px-3 py-2 text-ink-dim">{tr(row.action, lang)}</td>
                       <td className="whitespace-pre-line px-3 py-2 font-mono text-xs text-ink-faint">
                         {row.mathcad}
                       </td>
