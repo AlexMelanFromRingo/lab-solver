@@ -19,6 +19,7 @@ export type Category =
   | "spz"
   | "sp2"
   | "mzzi"
+  | "op"
   | "ks"
   | "pzzk"
   | "pp"
@@ -160,6 +161,13 @@ export const categories: Record<
     stage: "Бакалавриат · 3 курс",
     accent: "var(--cat-sp2)",
     accentSoft: "var(--cat-sp2-soft)",
+  },
+  op: {
+    title: "Основи програмування",
+    short: "Вступ до C++: формалізація і блок-схеми, розгалуження і цикли, масиви, функції, динамічна пам'ять, рядки, std::array",
+    stage: "Бакалавриат · 1 курс",
+    accent: "var(--cat-op)",
+    accentSoft: "var(--cat-op-soft)",
   },
   mzzi: {
     title: "Методи та засоби захисту інформації",
@@ -1613,6 +1621,138 @@ export const modules: LabModule[] = [
       "Реле КШ1-280 через интерфейсы с явной реализацией: релейная характеристика с гистерезисом.",
     hasVariants: false,
     source: "Проектний практикум, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab1",
+    title: "ЛР 1 · Формалізація задач",
+    category: "op",
+    tagline: "формалізація · блок-схеми",
+    description:
+      "Постановка задачи (дано, зависимости, ограничения, найти) и блок-схемы трёх структур — линейной, разветвлённой, циклической.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab2",
+    title: "ЛР 2 · Лінійний обчислювальний процес",
+    category: "op",
+    tagline: "лінійний алгоритм",
+    description:
+      "Линейный алгоритм в C++ с готовым примером (поверхность цилиндра).",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab3",
+    title: "ЛР 3 · Організація та форматування введення-виведення",
+    category: "op",
+    tagline: "cin/cout · маніпулятори",
+    description:
+      "Потоки и форматирование вывода (setw, setprecision, fixed, hex) с примером.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab4",
+    title: "ЛР 4 · Програмування задач розгалуженого алгоритму",
+    category: "op",
+    tagline: "if/else · вкладені умови",
+    description:
+      "Ветвление и вложенные условия с готовым примером по интервалам x.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab5",
+    title: "ЛР 5 · Багатозначне розгалуження. Оператор switch",
+    category: "op",
+    tagline: "switch · case",
+    description:
+      "Множественный выбор switch по номеру формулы с примером.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab6",
+    title: "ЛР 6 · Програмування циклічних алгоритмів",
+    category: "op",
+    tagline: "цикли · числовий ряд",
+    description:
+      "Циклы: сумма числового ряда (экспонента) с готовым примером.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab7",
+    title: "ЛР 7 · Одновимірні масиви",
+    category: "op",
+    tagline: "масив · парні/непарні",
+    description:
+      "Одномерный массив: пример подсчёта чётных и суммы нечётных.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab8",
+    title: "ЛР 8 · Двовимірні масиви",
+    category: "op",
+    tagline: "матриця n×m",
+    description:
+      "Двумерный массив (матрица) с готовым примером.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab9",
+    title: "ЛР 9 · Робота з функціями користувача",
+    category: "op",
+    tagline: "функції користувача",
+    description:
+      "Вынос обработки массива в функции пользователя с примером.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab10",
+    title: "ЛР 10 · Динамічні масиви",
+    category: "op",
+    tagline: "new/delete · вказівники",
+    description:
+      "Динамический массив через new/delete с готовым примером.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab11",
+    title: "ЛР 11 · Обробка символьних даних",
+    category: "op",
+    tagline: "рядки · символи",
+    description:
+      "Строки: подсчёт слов, гласных и заглавных с примером.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "op-lab12",
+    title: "ЛР 12 · Обробка масивів з використанням std::array",
+    category: "op",
+    tagline: "std::array",
+    description:
+      "Контейнер std::array с готовым примером.",
+    hasVariants: false,
+    source: "Основи програмування, LIDER",
     size: "md",
   },
   {

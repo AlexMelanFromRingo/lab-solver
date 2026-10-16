@@ -10,6 +10,7 @@ import { OOP_GUIDES } from "./oop";
 import { SPZ_GUIDES } from "./spz";
 import { SP2_GUIDES } from "./sp2";
 import { MZZI_GUIDES } from "./mzzi";
+import { OP_GUIDES } from "./op";
 import { KS_GUIDES } from "./ks";
 import { PZZK_GUIDES } from "./pzzk";
 import { PP_GUIDES } from "./pp";
@@ -24,7 +25,7 @@ import { CISCO_M4 } from "./cisco-m4";
 import { CISCO_M5 } from "./cisco-m5";
 
 /** Все работы-инструкции; страница /modules/<slug> строится по этим данным. */
-export const GUIDES: GuideModule[] = [...KM_GUIDES, ...ZIKM_GUIDES, ...LM_GUIDES, ...MOIB_GUIDES, ...AMO_GUIDES, ...KDM_GUIDES, ...TEMK_GUIDES, ...OOP_GUIDES, ...SPZ_GUIDES, ...SP2_GUIDES, ...MZZI_GUIDES, ...KS_GUIDES, ...PZZK_GUIDES, ...PP_GUIDES, ...PLIS_GUIDES, ...MPS_GUIDES, ...DB_GUIDES, ...AKS_GUIDES, ...KFS_GUIDES, ...CISCO_M1, ...CISCO_M3, ...CISCO_M4, ...CISCO_M5];
+export const GUIDES: GuideModule[] = [...KM_GUIDES, ...ZIKM_GUIDES, ...LM_GUIDES, ...MOIB_GUIDES, ...AMO_GUIDES, ...KDM_GUIDES, ...TEMK_GUIDES, ...OOP_GUIDES, ...SPZ_GUIDES, ...SP2_GUIDES, ...MZZI_GUIDES, ...OP_GUIDES, ...KS_GUIDES, ...PZZK_GUIDES, ...PP_GUIDES, ...PLIS_GUIDES, ...MPS_GUIDES, ...DB_GUIDES, ...AKS_GUIDES, ...KFS_GUIDES, ...CISCO_M1, ...CISCO_M3, ...CISCO_M4, ...CISCO_M5];
 
 export function guideBySlug(slug: string): GuideModule | undefined {
   return GUIDES.find((g) => g.slug === slug);

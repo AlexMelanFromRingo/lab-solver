@@ -55,6 +55,8 @@
   --cat-sp2-soft: #7dd3fc1a;
   --cat-mzzi: #c4b5fd;
   --cat-mzzi-soft: #c4b5fd1a;
+  --cat-op: #fcd34d;
+  --cat-op-soft: #fcd34d1a;
   --cat-ks: #fca5a5;
   --cat-ks-soft: #fca5a51a;
   --cat-pzzk: #99f6e4;
@@ -119,6 +121,8 @@
   --color-sp2-soft: var(--cat-sp2-soft);
   --color-mzzi: var(--cat-mzzi);
   --color-mzzi-soft: var(--cat-mzzi-soft);
+  --color-op: var(--cat-op);
+  --color-op-soft: var(--cat-op-soft);
   --color-ks: var(--cat-ks);
   --color-ks-soft: var(--cat-ks-soft);
   --color-pzzk: var(--cat-pzzk);
