@@ -17,6 +17,7 @@ export type Category =
   | "temk"
   | "oop"
   | "spz"
+  | "sp2"
   | "ks"
   | "pzzk"
   | "pp"
@@ -151,6 +152,13 @@ export const categories: Record<
     stage: "Бакалавриат · 4 курс",
     accent: "var(--cat-oop)",
     accentSoft: "var(--cat-oop-soft)",
+  },
+  sp2: {
+    title: "Системне програмування",
+    short: "Windows API на C++: вычислительное ядро, потоки и дочерние процессы, гонки данных и синхронизация, виртуальная память и права доступа",
+    stage: "Бакалавриат · 3 курс",
+    accent: "var(--cat-sp2)",
+    accentSoft: "var(--cat-sp2-soft)",
   },
   spz: {
     title: "Системне програмне забезпечення",
@@ -1597,6 +1605,54 @@ export const modules: LabModule[] = [
       "Реле КШ1-280 через интерфейсы с явной реализацией: релейная характеристика с гистерезисом.",
     hasVariants: false,
     source: "Проектний практикум, LIDER",
+    size: "md",
+  },
+  {
+    slug: "sp2-lab1",
+    title: "ЛР 1 · Збирання консольної програми, виклик функцій WinAPI та спостереження за власним процесом",
+    category: "sp2",
+    tagline: "C++ · WinAPI · QueryPerformanceCounter",
+    description:
+      "Готовое вычислительное ядро compute(from, to) под вариант (20 вариантов), замер времени Debug/Release, вызовы WinAPI и неудачный вызов с кодом ошибки.",
+    hasVariants: true,
+    variantCount: 20,
+    source: "Системне програмування, LIDER",
+    size: "lg",
+  },
+  {
+    slug: "sp2-lab2",
+    title: "ЛР 2 · Розподіл обчислення між потоками та запуск дочірнього процесу",
+    category: "sp2",
+    tagline: "CreateThread · схема поділу · прискорення",
+    description:
+      "Деление того же ядра между потоками по схеме варианта, код распределения диапазона, серия потоков и таблица ускорения.",
+    hasVariants: true,
+    variantCount: 20,
+    source: "Системне програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "sp2-lab3",
+    title: "ЛР 3 · Гонка даних та обмін даними між процесами",
+    category: "sp2",
+    tagline: "InterlockedIncrement · Mutex · канал",
+    description:
+      "Что накапливает общий счётчик и что передаётся через канал в варианте, код гонки и трёх средств синхронизации с их сравнением.",
+    hasVariants: true,
+    variantCount: 20,
+    source: "Системне програмування, LIDER",
+    size: "md",
+  },
+  {
+    slug: "sp2-lab4",
+    title: "ЛР 4 · Віртуальна пам'ять та розмежування доступу",
+    category: "sp2",
+    tagline: "VirtualAlloc · відображення файлу · DACL",
+    description:
+      "Объём области, доля для MEM_COMMIT и запрещаемое право в варианте; код VirtualAlloc, карты адресного пространства, отображения файла и запрета в DACL.",
+    hasVariants: true,
+    variantCount: 20,
+    source: "Системне програмування, LIDER",
     size: "md",
   },
   {
