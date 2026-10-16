@@ -7,6 +7,7 @@ import { DrawingView } from "@/components/drawing-view";
 import { erDiagram, fdGraph } from "@/lib/algorithms/db-figures";
 import { OutputBlock } from "@/components/ui/output-block";
 import { DEFAULT_SCHEMA, lab3Ddl, lab4Dml, lab5Dql, lab6Complex, parseFields, type Schema } from "@/lib/algorithms/access-sql";
+import { buildModel, schemaText, sqlSchema } from "@/lib/algorithms/db-model";
 import { erRule, normalize, parseFds, type Cls, type Degree } from "@/lib/algorithms/normalize";
 
 function run<T>(fn: () => T): { ok: true; v: T } | { ok: false; error: string } {
@@ -118,12 +119,23 @@ export function ErCalc() {
   );
 }
 
-/** SQL програми Access для ЛР 3–6 за власною схемою «ІМЕННИК1 — ДІЄСЛОВО — ІМЕННИК2». */
-export function AccessSqlCalc({ lab }: { lab: 3 | 4 | 5 | 6 }) {
-  const [s, setS] = useState(DEFAULT_SCHEMA);
+/** SQL програми Access для ЛР 3–6: схема й значення — з бази за темою (topic), поля можна змінити. */
+export function AccessSqlCalc({ lab, topic }: { lab: 3 | 4 | 5 | 6; topic?: number }) {
+  const [model] = useState(() => (topic ? buildModel(topic) : null));
+  const [s, setS] = useState(() => (model ? schemaText(model) : DEFAULT_SCHEMA));
   const set = (k: keyof typeof s, v: string) => setS((x) => ({ ...x, [k]: v }));
   const r = run(() => {
-    const schema: Schema = { e1: s.e1.trim(), verb: s.verb.trim(), e2: s.e2.trim(), f1: parseFields(s.f1), f2: parseFields(s.f2), fr: parseFields(s.fr || "") };
+    const known = model ? sqlSchema(model) : null;
+    const schema: Schema = {
+      e1: s.e1.trim(),
+      verb: s.verb.trim(),
+      e2: s.e2.trim(),
+      f1: parseFields(s.f1),
+      f2: parseFields(s.f2),
+      fr: parseFields(s.fr || ""),
+      data: known?.data,
+      fresh: known && s.e2.trim() === known.e2 ? known.fresh : undefined,
+    };
     if (!schema.f1.some((f) => f.key) || !schema.f2.some((f) => f.key)) throw new Error("Позначте ключове поле кожної сутності зірочкою *");
     return lab === 3 ? lab3Ddl(schema) : lab === 4 ? lab4Dml(schema) : lab === 5 ? lab5Dql(schema) : lab6Complex(schema);
   });

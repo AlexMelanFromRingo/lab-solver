@@ -16,6 +16,8 @@ export interface GuideTable {
   columns: string[];
   rows: (string | number)[][];
   note?: string;
+  /** Записи таблиці: не переносити значення в клітинках (телефони, суми), таблиця прокручується. */
+  nowrap?: boolean;
 }
 
 export interface GuideCode {

@@ -45,7 +45,7 @@ function Table({ table }: { table: GuideTable }) {
             {table.rows.map((row, i) => (
               <tr key={i} className="border-b border-border/50 last:border-0">
                 {row.map((cell, j) => (
-                  <td key={j} className="px-3 py-1.5 align-top">
+                  <td key={j} className={`px-3 py-1.5 align-top${table.nowrap ? " whitespace-nowrap" : ""}`}>
                     {cell}
                   </td>
                 ))}
@@ -96,6 +96,10 @@ export function GuideView({ slug }: { slug: string }) {
     }
   }, [g, raw, extra]);
 
+  // номер варианта для калькуляторов, которые от него зависят (тема БД)
+  const vNum = Number(raw);
+  const topic = g.variant && Number.isInteger(vNum) && vNum >= g.variant.min && vNum <= g.variant.max ? vNum : undefined;
+
   // калькулятор с вводом своих данных идёт первым, если у работы нет таблицы вариантов
   const widget = (
     <>
@@ -123,10 +127,10 @@ export function GuideView({ slug }: { slug: string }) {
       {g.widget === "kfs-l5" && <KfsCalc lab={5} accent={accent} />}
       {g.widget === "kfs-l6" && <KfsCalc lab={6} accent={accent} />}
       {g.widget === "kfs-l7" && <KfsCalc lab={7} accent={accent} />}
-      {g.widget === "db-l3" && <AccessSqlCalc lab={3} />}
-      {g.widget === "db-l4" && <AccessSqlCalc lab={4} />}
-      {g.widget === "db-l5" && <AccessSqlCalc lab={5} />}
-      {g.widget === "db-l6" && <AccessSqlCalc lab={6} />}
+      {g.widget === "db-l3" && <AccessSqlCalc key={topic} lab={3} topic={topic} />}
+      {g.widget === "db-l4" && <AccessSqlCalc key={topic} lab={4} topic={topic} />}
+      {g.widget === "db-l5" && <AccessSqlCalc key={topic} lab={5} topic={topic} />}
+      {g.widget === "db-l6" && <AccessSqlCalc key={topic} lab={6} topic={topic} />}
       {g.widget === "db-norm" && (
         <>
           <NormalizerCalc />

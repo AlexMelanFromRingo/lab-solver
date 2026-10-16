@@ -145,3 +145,46 @@ export function erDiagram(deg: Degree, e1: { name: string; key: string; cls: Cls
   keyLine(b.x + S + 4, e2.key);
   return { w: W, h: 120, items };
 }
+
+/**
+ * Схема даних Access (ЛР 1, п. 2.5): таблиці зі списками полів у ряд, ключові поля — жирним,
+ * зв'язки з забезпеченням цілісності — лінія від ключа «1» до поля таблиці зв'язку «∞».
+ */
+export function relSchema(
+  tables: { name: string; fields: { name: string; key?: boolean }[] }[],
+  links: { from: [number, string]; to: [number, string] }[],
+): Drawing {
+  const items: DrawItem[] = [];
+  const RH = 19;
+  const HEAD = 24;
+  const GAP = 96;
+  const top = 16;
+  const boxes: { x: number; w: number; rows: string[] }[] = [];
+  let x = 16;
+  for (const t of tables) {
+    const w = Math.max(130, Math.ceil(Math.max(t.name.length * 7.4, ...t.fields.map((f) => f.name.length * 6.7)) + 28));
+    const h = HEAD + t.fields.length * RH + 8;
+    items.push({ k: "rect", x, y: top, w, h, soft: true });
+    items.push({ k: "line", pts: [[x, top + HEAD], [x + w, top + HEAD]] });
+    items.push({ k: "text", x: x + w / 2, y: top + 16, text: t.name, anchor: "middle", bold: true, size: 12, plain: true });
+    t.fields.forEach((f, i) => items.push({ k: "text", x: x + 10, y: top + HEAD + 16 + i * RH, text: f.name, size: 11, bold: f.key, plain: true }));
+    boxes.push({ x, w, rows: t.fields.map((f) => f.name) });
+    x += w + GAP;
+  }
+  const rowY = (b: number, field: string) => top + HEAD + 12 + boxes[b].rows.indexOf(field) * RH;
+  for (const l of links) {
+    const [a, fa] = l.from;
+    const [b, fb] = l.to;
+    const ya = rowY(a, fa);
+    const yb = rowY(b, fb);
+    const right = boxes[a].x < boxes[b].x;
+    const xa = right ? boxes[a].x + boxes[a].w : boxes[a].x;
+    const xb = right ? boxes[b].x : boxes[b].x + boxes[b].w;
+    const mid = (xa + xb) / 2;
+    items.push({ k: "line", pts: [[xa, ya], [mid, ya], [mid, yb], [xb, yb]], bold: true });
+    items.push({ k: "text", x: xa + (right ? 6 : -6), y: ya - 5, text: "1", anchor: right ? "start" : "end", bold: true, size: 12, plain: true });
+    items.push({ k: "text", x: xb + (right ? -6 : 6), y: yb - 5, text: "∞", anchor: right ? "end" : "start", bold: true, size: 14, plain: true });
+  }
+  const h = Math.max(...tables.map((t) => HEAD + t.fields.length * RH + 8)) + top * 2;
+  return { w: x - GAP + 16, h, items };
+}
