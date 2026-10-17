@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useLang } from "@/components/lang";
+import { tr, type Loc } from "@/lib/i18n";
 import { Card, CardBody } from "@/components/ui/card";
 import { NumberField, TextAreaField, TextField } from "@/components/ui/field";
 import { OutputBlock } from "@/components/ui/output-block";
@@ -48,15 +50,22 @@ function parseNums(s: string): number[] {
     });
 }
 
-function Shell({ title, children }: { title: string; children: React.ReactNode }) {
+function Shell({ title, children }: { title: Loc; children: React.ReactNode }) {
+  const { lang } = useLang();
   return (
     <Card>
       <CardBody className="space-y-5 pt-6">
-        <h2 className="font-display text-lg font-semibold text-ink">{title}</h2>
+        <h2 className="font-display text-lg font-semibold text-ink">{tr(title, lang)}</h2>
         {children}
       </CardBody>
     </Card>
   );
+}
+
+/** Коротка двомовна підписка: t(uk, ru) за поточною мовою. */
+function useT() {
+  const { lang } = useLang();
+  return (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
 }
 
 /** График функции для отделения корня: отрезок [a; b] с запасом по обе стороны, корень — точкой. */
@@ -92,6 +101,7 @@ function run<T>(fn: () => T): { ok: true; v: T } | { ok: false; error: string } 
 // ------------------------------------------------------------------- ЛР1
 
 export function SlaeCalc() {
+  const t = useT();
   const [aText, setA] = useState("1.5 2.3 -3.7\n2.8 3.4 5.8\n1.2 7.3 -2.3");
   const [bText, setB] = useState("4.5 -3.2 5.6");
   const [eps, setEps] = useState("0.0001");
@@ -99,7 +109,7 @@ export function SlaeCalc() {
     const rows = aText.trim().split("\n").map(parseNums);
     const b = parseNums(bText);
     const n = rows.length;
-    if (rows.some((x) => x.length !== n) || b.length !== n) throw new Error("Нужна квадратная матрица n×n и вектор из n чисел");
+    if (rows.some((x) => x.length !== n) || b.length !== n) throw new Error(t("Потрібна квадратна матриця n×n і вектор із n чисел","Нужна квадратная матрица n×n и вектор из n чисел"));
     const d = det(rows);
     const inv = inverse(rows);
     const g = gauss(rows, b);
@@ -124,31 +134,31 @@ export function SlaeCalc() {
   });
 
   return (
-    <Shell title="Решение системы">
+    <Shell title={{ uk: "Розв’язання системи", ru: "Решение системы" }}>
       <div className="grid gap-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <TextAreaField label="Матрица A — строки через Enter" value={aText} onChange={(e) => setA(e.target.value)} />
+        <TextAreaField label={t("Матриця A — рядки через Enter","Матрица A — строки через Enter")} value={aText} onChange={(e) => setA(e.target.value)} />
         <div className="space-y-4">
           <TextField label="Вектор B" value={bText} onChange={(e) => setB(e.target.value)} />
-          <TextField label="Точность итераций ε" value={eps} onChange={(e) => setEps(e.target.value)} />
+          <TextField label={t("Точність ітерацій ε","Точность итераций ε")} value={eps} onChange={(e) => setEps(e.target.value)} />
         </div>
       </div>
       {r.ok ? (
         <div className="space-y-4">
-          <OutputBlock label={`Обратная матрица A⁻¹ (det A = ${f6(r.v.d)})`} value={fmtMat(r.v.inv)} wrap={false} />
-          <OutputBlock label="Проверка A·A⁻¹ = E" value={fmtMat(r.v.check)} wrap={false} />
+          <OutputBlock label={t(`Обернена матриця A⁻¹ (det A = ${f6(r.v.d)})`,`Обратная матрица A⁻¹ (det A = ${f6(r.v.d)})`)} value={fmtMat(r.v.inv)} wrap={false} />
+          <OutputBlock label={t("Перевірка A·A⁻¹ = E","Проверка A·A⁻¹ = E")} value={fmtMat(r.v.check)} wrap={false} />
           <OutputBlock label="X = A⁻¹·B" value={fmtRow(r.v.xInv)} wrap={false} />
           <OutputBlock
-            label="Метод Гаусса: расширенная матрица после каждого шага прямого хода"
-            value={r.v.g.steps.map((m, i) => `шаг ${i}\n${fmtMat(m)}`).join("\n\n") + `\n\nобратный ход: X =${fmtRow(r.v.g.x)}`}
+            label={t("Метод Гаусса: розширена матриця після кожного кроку прямого ходу","Метод Гаусса: расширенная матрица после каждого шага прямого хода")}
+            value={r.v.g.steps.map((m, i) => `${t("крок","шаг")} ${i}\n${fmtMat(m)}`).join("\n\n") + `\n\n${t("зворотний хід","обратный ход")}: X =${fmtRow(r.v.g.x)}`}
             wrap={false}
           />
           <OutputBlock
-            label="Итерационные методы"
+            label={t("Ітераційні методи","Итерационные методы")}
             value={[
               r.v.dom
-                ? `Диагональное преобладание: уравнения в порядке ${r.v.dom.rows.map((i) => i + 1).join(", ")}, неизвестные в порядке ${r.v.dom.cols.map((i) => `x${i + 1}`).join(", ")}`
-                : "Диагонального преобладания нет ни при какой перестановке. Для Зейделя система заменена нормальной AᵀA·x = Aᵀb (она симметрична и положительно определена — Зейдель сходится); простые итерации сходимость не гарантируют.",
-              `Вид x = C·x + d, ‖C‖ = ${f6(r.v.norm)}${r.v.norm < 1 ? " < 1 — итерации сходятся" : " ≥ 1 — достаточное условие не выполнено"}`,
+                ? t(`Діагональне переважання: рівняння в порядку ${r.v.dom.rows.map((i) => i + 1).join(", ")}, невідомі в порядку ${r.v.dom.cols.map((i) => `x${i + 1}`).join(", ")}`, `Диагональное преобладание: уравнения в порядке ${r.v.dom.rows.map((i) => i + 1).join(", ")}, неизвестные в порядке ${r.v.dom.cols.map((i) => `x${i + 1}`).join(", ")}`)
+                : t("Діагонального переважання немає за жодної перестановки. Для Зейделя систему замінено нормальною AᵀA·x = Aᵀb (вона симетрична і додатно визначена — Зейдель збігається); прості ітерації збіжність не гарантують.","Диагонального преобладания нет ни при какой перестановке. Для Зейделя система заменена нормальной AᵀA·x = Aᵀb (она симметрична и положительно определена — Зейдель сходится); простые итерации сходимость не гарантируют."),
+              t(`Вигляд x = C·x + d, ‖C‖ = ${f6(r.v.norm)}${r.v.norm < 1 ? " < 1 — ітерації збігаються" : " ≥ 1 — достатня умова не виконана"}`,`Вид x = C·x + d, ‖C‖ = ${f6(r.v.norm)}${r.v.norm < 1 ? " < 1 — итерации сходятся" : " ≥ 1 — достаточное условие не выполнено"}`),
               "C =",
               fmtMat(r.v.form.c),
               `d =${fmtRow(r.v.form.d)}`,
@@ -157,13 +167,13 @@ export function SlaeCalc() {
           />
           {r.v.jacobi && (
             <OutputBlock
-              label={`Простые итерации, шагов: ${r.v.jacobi.length - 1}`}
+              label={t(`Прості ітерації, кроків: ${r.v.jacobi.length - 1}`,`Простые итерации, шагов: ${r.v.jacobi.length - 1}`)}
               value={r.v.jacobi.map((s) => `k=${String(s.k).padStart(3)}${fmtRow(s.x)}   Δ=${Number.isNaN(s.delta) ? "—" : s.delta.toExponential(3)}`).join("\n")}
               wrap={false}
             />
           )}
           <OutputBlock
-            label={`Зейдель, шагов: ${r.v.seidel.length - 1}${r.v.dom?.cols.some((c, i) => c !== i) ? " (x — в переставленном порядке неизвестных)" : ""}`}
+            label={t(`Зейдель, кроків: ${r.v.seidel.length - 1}${r.v.dom?.cols.some((c, i) => c !== i) ? " (x — у переставленому порядку невідомих)" : ""}`,`Зейдель, шагов: ${r.v.seidel.length - 1}${r.v.dom?.cols.some((c, i) => c !== i) ? " (x — в переставленном порядке неизвестных)" : ""}`)}
             value={r.v.seidel.map((s) => `k=${String(s.k).padStart(3)}${fmtRow(s.x)}   Δ=${Number.isNaN(s.delta) ? "—" : s.delta.toExponential(3)}`).join("\n")}
             wrap={false}
           />
@@ -178,6 +188,7 @@ export function SlaeCalc() {
 // ------------------------------------------------------------------- ЛР2
 
 export function IterationCalc() {
+  const t = useT();
   const [src, setSrc] = useState("1.8x^2 - sin(10x)");
   const [a, setA] = useState("-0.6");
   const [b, setB] = useState("-0.5");
@@ -188,19 +199,19 @@ export function IterationCalc() {
     return { ...simpleIteration(f, (x) => d1(f, x), Number(a), Number(b), Number(x0), Number(eps)), f };
   });
   return (
-    <Shell title="Простая итерация: g(x) = x − f(x)/k">
+    <Shell title={{ uk: "Проста ітерація: g(x) = x − f(x)/k", ru: "Простая итерация: g(x) = x − f(x)/k" }}>
       <div className="grid gap-4 sm:grid-cols-2">
-        <TextField label="f(x)" hint="ln — натуральный, log10 — десятичный" value={src} onChange={(e) => setSrc(e.target.value)} />
+        <TextField label="f(x)" hint={t("ln — натуральний, log10 — десятковий","ln — натуральный, log10 — десятичный")} value={src} onChange={(e) => setSrc(e.target.value)} />
         <div className="grid grid-cols-2 gap-3">
-          <TextField label="Отрезок: a" value={a} onChange={(e) => setA(e.target.value)} />
+          <TextField label={t("Відрізок: a","Отрезок: a")} value={a} onChange={(e) => setA(e.target.value)} />
           <TextField label="b" value={b} onChange={(e) => setB(e.target.value)} />
           <TextField label="x₀" value={x0} onChange={(e) => setX0(e.target.value)} />
-          <TextField label="ε (относительная)" value={eps} onChange={(e) => setEps(e.target.value)} />
+          <TextField label={t("ε (відносна)","ε (относительная)")} value={eps} onChange={(e) => setEps(e.target.value)} />
         </div>
       </div>
       {r.ok ? (
         <OutputBlock
-          label={`k = round(max f′/2) = ${r.v.k}; ${r.v.converged ? `корень ${f6(r.v.root)}, шагов: ${r.v.steps.length}` : "итерации не сошлись — уточните отрезок и x₀"}`}
+          label={t(`k = round(max f′/2) = ${r.v.k}; ${r.v.converged ? `корінь ${f6(r.v.root)}, кроків: ${r.v.steps.length}` : "ітерації не збіглися — уточніть відрізок і x₀"}`,`k = round(max f′/2) = ${r.v.k}; ${r.v.converged ? `корень ${f6(r.v.root)}, шагов: ${r.v.steps.length}` : "итерации не сошлись — уточните отрезок и x₀"}`)}
           value={r.v.steps.map((s) => `${String(s.i).padStart(3)}  x = ${f6(s.x).padEnd(16)} x₁ = ${f6(s.next).padEnd(16)} |x₁−x|/|x| = ${s.delta.toExponential(3)}`).join("\n")}
           wrap={false}
         />
@@ -217,6 +228,7 @@ export function IterationCalc() {
 // ------------------------------------------------------------------- МК1
 
 export function RootsCalc() {
+  const t = useT();
   const [src, setSrc] = useState("x^3 - 0.7x^2 + 0.75");
   const [a, setA] = useState("-0.8");
   const [b, setB] = useState("-0.7");
@@ -226,7 +238,7 @@ export function RootsCalc() {
     const fp = (x: number) => d1(f, x);
     const fpp = (x: number) => d2(f, x);
     const [A, B, e] = [Number(a), Number(b), Number(eps)];
-    if (f(A) * f(B) > 0) throw new Error(`На [${A}; ${B}] нет смены знака: F(a)·F(b) > 0`);
+    if (f(A) * f(B) > 0) throw new Error(t(`На [${A}; ${B}] немає зміни знака: F(a)·F(b) > 0`,`На [${A}; ${B}] нет смены знака: F(a)·F(b) > 0`));
     return {
       fa: f(A),
       fb: f(B),
@@ -239,7 +251,7 @@ export function RootsCalc() {
     };
   });
   return (
-    <Shell title="Ньютон, хорды, комбинированный метод">
+    <Shell title={{ uk: "Ньютон, хорди, комбінований метод", ru: "Ньютон, хорды, комбинированный метод" }}>
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField label="F(x)" value={src} onChange={(e) => setSrc(e.target.value)} />
         <div className="grid grid-cols-3 gap-3">
@@ -251,8 +263,8 @@ export function RootsCalc() {
       {r.ok ? (
         <div className="space-y-4">
           <OutputBlock
-            label="Выбор начальной точки"
-            value={`F(a) = ${f6(r.v.fa)}, F(b) = ${f6(r.v.fb)}; F″(a) = ${f6(r.v.fppa)}, F″(b) = ${f6(r.v.fppb)}\nНьютон стартует из конца, где F·F″ > 0: x₀ = ${f6(r.v.n.x0)}; у хорд этот конец неподвижен.`}
+            label={t("Вибір початкової точки","Выбор начальной точки")}
+            value={t(`F(a) = ${f6(r.v.fa)}, F(b) = ${f6(r.v.fb)}; F″(a) = ${f6(r.v.fppa)}, F″(b) = ${f6(r.v.fppb)}\nНьютон стартує з кінця, де F·F″ > 0: x₀ = ${f6(r.v.n.x0)}; у хорд цей кінець нерухомий.`,`F(a) = ${f6(r.v.fa)}, F(b) = ${f6(r.v.fb)}; F″(a) = ${f6(r.v.fppa)}, F″(b) = ${f6(r.v.fppb)}\nНьютон стартует из конца, где F·F″ > 0: x₀ = ${f6(r.v.n.x0)}; у хорд этот конец неподвижен.`)}
           />
           <OutputBlock
             label={`Ньютон: x = ${f6(r.v.n.root)}`}
@@ -260,13 +272,13 @@ export function RootsCalc() {
             wrap={false}
           />
           <OutputBlock
-            label={`Хорды (неподвижный конец ${f6(r.v.c.fixed)}): x = ${f6(r.v.c.root)}`}
+            label={t(`Хорди (нерухомий кінець ${f6(r.v.c.fixed)}): x = ${f6(r.v.c.root)}`,`Хорды (неподвижный конец ${f6(r.v.c.fixed)}): x = ${f6(r.v.c.root)}`)}
             value={r.v.c.steps.map((s) => `x${s.i} = ${f6(s.next).padEnd(16)} Δ = ${s.delta.toExponential(4)}`).join("\n")}
             wrap={false}
           />
           <OutputBlock
-            label={`Комбинированный: x ≈ ${f6(r.v.k.root)}`}
-            value={r.v.k.steps.map((s) => `${s.i}: [${f6(s.a)}; ${f6(s.b)}], длина ${s.len.toExponential(4)}`).join("\n")}
+            label={t(`Комбінований: x ≈ ${f6(r.v.k.root)}`,`Комбинированный: x ≈ ${f6(r.v.k.root)}`)}
+            value={r.v.k.steps.map((s) => t(`${s.i}: [${f6(s.a)}; ${f6(s.b)}], довжина ${s.len.toExponential(4)}`,`${s.i}: [${f6(s.a)}; ${f6(s.b)}], длина ${s.len.toExponential(4)}`)).join("\n")}
             wrap={false}
           />
           <XYPlot fig={rootPlot(r.v.f, Number(a), Number(b), r.v.n.root, "F")} title={`Графік F(x) = ${src} і корінь на [${a}; ${b}]`} />
@@ -281,6 +293,7 @@ export function RootsCalc() {
 // ---------------------------------------------------------------- ЛР3–4
 
 export function ApproxCalc() {
+  const t = useT();
   const [xs, setXs] = useState("1000 1010 1020 1030 1040 1050");
   const [ys, setYs] = useState("3.0 3.0 3.01 3.012 3.017 3.021");
   const [x0, setX0] = useState("1025");
@@ -288,7 +301,7 @@ export function ApproxCalc() {
   const r = run(() => {
     const X = parseNums(xs);
     const Y = parseNums(ys);
-    if (X.length !== Y.length || X.length < 2) throw new Error("Узлов x и значений y должно быть поровну, не меньше двух");
+    if (X.length !== Y.length || X.length < 2) throw new Error(t("Вузлів x і значень y має бути порівну, не менше двох","Узлов x и значений y должно быть поровну, не меньше двух"));
     const L = lagrange(X, Y);
     const q = leastSquares(X, Y, Math.min(deg, X.length - 1));
     const poly = (c: number[]) => c.map((v, i) => `${v >= 0 && i ? "+ " : v < 0 ? "− " : ""}${f6(Math.abs(v))}${i ? `·x${i > 1 ? `^${i}` : ""}` : ""}`).join(" ");
@@ -308,25 +321,24 @@ export function ApproxCalc() {
     return { L, at: L.at(Number(x0)), lp: poly(L.coef), q, qp: poly(q.coef), qAt: qf(Number(x0)), plot };
   });
   return (
-    <Shell title="Интерполяция Лагранжа и метод наименьших квадратов">
+    <Shell title={{ uk: "Інтерполяція Лагранжа і метод найменших квадратів", ru: "Интерполяция Лагранжа и метод наименьших квадратов" }}>
       <div className="grid gap-4 sm:grid-cols-2">
-        <TextField label="Узлы x" value={xs} onChange={(e) => setXs(e.target.value)} />
-        <TextField label="Значения y" value={ys} onChange={(e) => setYs(e.target.value)} />
-        <TextField label="Точка x₀" value={x0} onChange={(e) => setX0(e.target.value)} />
-        <NumberField label="Степень многочлена МНК" min={1} max={5} value={deg} onChange={(e) => setDeg(Number(e.target.value))} />
+        <TextField label={t("Вузли x","Узлы x")} value={xs} onChange={(e) => setXs(e.target.value)} />
+        <TextField label={t("Значення y","Значения y")} value={ys} onChange={(e) => setYs(e.target.value)} />
+        <TextField label={t("Точка x₀","Точка x₀")} value={x0} onChange={(e) => setX0(e.target.value)} />
+        <NumberField label={t("Степінь многочлена МНК","Степень многочлена МНК")} min={1} max={5} value={deg} onChange={(e) => setDeg(Number(e.target.value))} />
       </div>
       {r.ok ? (
         <div className="space-y-4">
-          <OutputBlock label={`Многочлен Лагранжа, L(${x0}) = ${f6(r.v.at)}`} value={`L(x) = ${r.v.lp}`} />
-          <OutputBlock label={`МНК, степень ${deg}: сумма квадратов отклонений ${f6(r.v.q.residual)}, значение в x₀ = ${f6(r.v.qAt)}`} value={`P(x) = ${r.v.qp}`} />
+          <OutputBlock label={t(`Многочлен Лагранжа, L(${x0}) = ${f6(r.v.at)}`,`Многочлен Лагранжа, L(${x0}) = ${f6(r.v.at)}`)} value={`L(x) = ${r.v.lp}`} />
+          <OutputBlock label={t(`МНК, степінь ${deg}: сума квадратів відхилень ${f6(r.v.q.residual)}, значення в x₀ = ${f6(r.v.qAt)}`,`МНК, степень ${deg}: сумма квадратов отклонений ${f6(r.v.q.residual)}, значение в x₀ = ${f6(r.v.qAt)}`)} value={`P(x) = ${r.v.qp}`} />
           <XYPlot fig={r.v.plot} title="Вузли інтерполяції, многочлен Лагранжа і наближення МНК" />
         </div>
       ) : (
         <p className="text-sm text-codes">{r.error}</p>
       )}
       <p className="text-xs text-ink-faint">
-        При узлах около 1000 коэффициенты развёрнутого многочлена огромны (как у Maple с Digits = 20), а значение
-        считается по базисным многочленам — без потери точности.
+        {t("При вузлах близько 1000 коефіцієнти розгорнутого многочлена величезні (як у Maple з Digits = 20), а значення рахується за базисними многочленами — без втрати точності.","При узлах около 1000 коэффициенты развёрнутого многочлена огромны (как у Maple с Digits = 20), а значение считается по базисным многочленам — без потери точности.")}
       </p>
     </Shell>
   );
@@ -335,6 +347,7 @@ export function ApproxCalc() {
 // ------------------------------------------------------------------- ЛР5
 
 export function CauchyCalc() {
+  const t = useT();
   const [src, setSrc] = useState("x*y + x*cos(y)");
   const [a, setA] = useState("0");
   const [b, setB] = useState("1");
@@ -343,11 +356,11 @@ export function CauchyCalc() {
   const [eps, setEps] = useState("0.0001");
   const r = run(() => {
     const f = fn2(src);
-    if (Number(h) <= 0 || (Number(b) - Number(a)) / Number(h) > 2000) throw new Error("Шаг h слишком мал или не положителен");
+    if (Number(h) <= 0 || (Number(b) - Number(a)) / Number(h) > 2000) throw new Error(t("Крок h надто малий або не додатний","Шаг h слишком мал или не положителен"));
     return cauchy(f, Number(a), Number(b), Number(h), Number(y0), Number(eps));
   });
   return (
-    <Shell title="Задача Коши y′ = f(x, y), y(a) = y₀">
+    <Shell title={{ uk: "Задача Коші y′ = f(x, y), y(a) = y₀", ru: "Задача Коши y′ = f(x, y), y(a) = y₀" }}>
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField label="f(x, y)" value={src} onChange={(e) => setSrc(e.target.value)} />
         <div className="grid grid-cols-3 gap-3">
@@ -355,14 +368,14 @@ export function CauchyCalc() {
           <TextField label="b" value={b} onChange={(e) => setB(e.target.value)} />
           <TextField label="h" value={h} onChange={(e) => setH(e.target.value)} />
           <TextField label="y₀" value={y0} onChange={(e) => setY0(e.target.value)} />
-          <TextField label="ε уточнения" value={eps} onChange={(e) => setEps(e.target.value)} />
+          <TextField label={t("ε уточнення","ε уточнения")} value={eps} onChange={(e) => setEps(e.target.value)} />
         </div>
       </div>
       {r.ok ? (
         <OutputBlock
-          label="Эйлер · Эйлер–Коши с уточнением · Рунге–Кутта 4-го порядка"
+          label={t("Ейлер · Ейлер–Коші з уточненням · Рунге–Кутта 4-го порядку","Эйлер · Эйлер–Коши с уточнением · Рунге–Кутта 4-го порядка")}
           value={[
-            `${"x".padStart(8)}${"Эйлер".padStart(16)}${"Эйлер–Коши".padStart(16)}${"Рунге–Кутта".padStart(16)}`,
+            t(`${"x".padStart(8)}${"Ейлер".padStart(16)}${"Ейлер–Коші".padStart(16)}${"Рунге–Кутта".padStart(16)}`,`${"x".padStart(8)}${"Эйлер".padStart(16)}${"Эйлер–Коши".padStart(16)}${"Рунге–Кутта".padStart(16)}`),
             ...r.v.map((row) => `${f6(row.x).padStart(8)}${f6(row.euler).padStart(16)}${f6(row.eulerCauchy).padStart(16)}${f6(row.rk4).padStart(16)}`),
           ].join("\n")}
           wrap={false}
