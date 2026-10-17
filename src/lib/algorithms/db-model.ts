@@ -9,7 +9,7 @@
 import { DB_TOPICS, type DbEntity, type DbTopic } from "@/lib/data/db-topics";
 import type { Schema } from "@/lib/algorithms/access-sql";
 
-export type AccessType = "Счетчик" | "Текстовый" | "Числовой" | "Денежный" | "Дата/время" | "Логический";
+export type AccessType = "Лічильник" | "Текстовий" | "Числовий" | "Грошовий" | "Дата/час" | "Логічний";
 
 export interface DbField {
   name: string;
@@ -134,11 +134,11 @@ export function fmtMoney(x: number) {
 }
 const fmtPhone = (p: string) => `${p.slice(0, 3)}-${p.slice(3, 6)}-${p.slice(6, 8)}-${p.slice(8)}`;
 
-/** Як значення виглядає в Режиме таблицы. */
+/** Як значення виглядає в Режимі таблиці. */
 export function show(f: DbField, v: Cell): string {
-  if (f.type === "Дата/время") return fmtDate(String(v));
-  if (f.type === "Денежный") return fmtMoney(Number(v));
-  if (f.type === "Логический") return v ? "☑" : "☐";
+  if (f.type === "Дата/час") return fmtDate(String(v));
+  if (f.type === "Грошовий") return fmtMoney(Number(v));
+  if (f.type === "Логічний") return v ? "☑" : "☐";
   if (f.mask?.startsWith("000\\-000")) return fmtPhone(String(v));
   return String(v);
 }
@@ -192,30 +192,30 @@ export function buildModel(n: number): DbModel {
   const facts = pairs.map(([a, b], i) => ({ a, b, date: new Date(base + [...days][i] * 86400000).toISOString().slice(0, 10) }));
 
   const f = {
-    k1: { name: `Код_${E1d.gen}`, type: "Счетчик", key: true, size: "Длинное целое", sql: "INTEGER" } as DbField,
-    n1: { name: nameField(E1d), type: "Текстовый", size: "40", sql: "TEXT(40)" } as DbField,
-    city: E1d.kind === "thing" ? undefined : ({ name: "Місто", type: "Текстовый", size: "20", sql: "TEXT(20)" } as DbField),
+    k1: { name: `Код_${E1d.gen}`, type: "Лічильник", key: true, size: "Довге ціле", sql: "INTEGER" } as DbField,
+    n1: { name: nameField(E1d), type: "Текстовий", size: "40", sql: "TEXT(40)" } as DbField,
+    city: E1d.kind === "thing" ? undefined : ({ name: "Місто", type: "Текстовий", size: "20", sql: "TEXT(20)" } as DbField),
     phone:
       E1d.kind === "thing"
         ? undefined
-        : ({ name: "Телефон", type: "Текстовый", size: "10", mask: "000\\-000\\-00\\-00;;_", sql: "TEXT(10)" } as DbField),
-    reg: E1d.kind === "thing" ? ({ name: "Код_реєстру", type: "Текстовый", size: "7", mask: ">LL\\-0000;0;_", sql: "TEXT(7)" } as DbField) : undefined,
+        : ({ name: "Телефон", type: "Текстовий", size: "10", mask: "000\\-000\\-00\\-00;;_", sql: "TEXT(10)" } as DbField),
+    reg: E1d.kind === "thing" ? ({ name: "Код_реєстру", type: "Текстовий", size: "7", mask: ">LL\\-0000;0;_", sql: "TEXT(7)" } as DbField) : undefined,
     num: {
       name: E1d.num?.[0] ?? "Рейтинг",
-      type: "Числовой",
-      size: "Длинное целое",
+      type: "Числовий",
+      size: "Довге ціле",
       rule: `Between ${lo} And ${hi}`,
       msg: `${(E1d.num?.[0] ?? "Рейтинг").replace(/_/g, " ")}: від ${lo} до ${hi}`,
       sql: "INTEGER",
     } as DbField,
-    k2: { name: `Код_${E2d.gen}`, type: "Счетчик", key: true, size: "Длинное целое", sql: "INTEGER" } as DbField,
-    n2: { name: nameField(E2d), type: "Текстовый", size: "40", sql: "TEXT(40)" } as DbField,
-    money: { name: E2d.money, type: "Денежный", size: "Денежный", rule: ">0", msg: "Сума має бути більшою за нуль", sql: "CURRENCY" } as DbField,
-    flag: { name: E2d.flag, type: "Логический", size: "Да/Нет", sql: "YESNO" } as DbField,
+    k2: { name: `Код_${E2d.gen}`, type: "Лічильник", key: true, size: "Довге ціле", sql: "INTEGER" } as DbField,
+    n2: { name: nameField(E2d), type: "Текстовий", size: "40", sql: "TEXT(40)" } as DbField,
+    money: { name: E2d.money, type: "Грошовий", size: "Грошовий", rule: ">0", msg: "Сума має бути більшою за нуль", sql: "CURRENCY" } as DbField,
+    flag: { name: E2d.flag, type: "Логічний", size: "Так/Ні", sql: "YESNO" } as DbField,
     date: {
       name: `Дата_${topic.act}`,
-      type: "Дата/время",
-      size: "Краткий формат даты",
+      type: "Дата/час",
+      size: "Короткий формат дати",
       mask: "00.00.0000;0;_",
       rule: "<=Date()",
       msg: "Дата не може бути пізнішою за сьогоднішню",
@@ -230,12 +230,12 @@ export function buildModel(n: number): DbModel {
 
   const t0: DbTable = {
     name: `${E1d.name}_${topic.verb}_${E2d.name}`,
-    fields: [{ name: "Код", type: "Счетчик", key: true, size: "Длинное целое", sql: "COUNTER" }, ...e1Fields, ...e2Fields, f.date],
+    fields: [{ name: "Код", type: "Лічильник", key: true, size: "Довге ціле", sql: "COUNTER" }, ...e1Fields, ...e2Fields, f.date],
     rows: facts.map((x, i) => [i + 1, ...e1Vals(e1[x.a]), ...e2Vals(e2[x.b]), x.date]),
   };
   const t1: DbTable = { name: E1d.name, fields: [f.k1, ...e1Fields], rows: e1.map((x, i) => [i + 1, ...e1Vals(x)]) };
   const t2: DbTable = { name: E2d.name, fields: [f.k2, ...e2Fields], rows: e2.map((x, i) => [i + 1, ...e2Vals(x)]) };
-  const fk = (k: DbField): DbField => ({ ...k, type: "Числовой", key: true });
+  const fk = (k: DbField): DbField => ({ ...k, type: "Числовий", key: true });
   const t3: DbTable = {
     name: topic.verb,
     fields: [fk(f.k1), fk(f.k2), f.date],

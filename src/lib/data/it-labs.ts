@@ -46,7 +46,7 @@ export const CHART_RULES: { number: number; text: Loc }[] = [
 /** Аргументы функции READFILE — из пояснения к примеру 3. */
 export const READFILE_ARGS: { arg: Loc; meaning: Loc }[] = [
   { arg: { uk: "перший", ru: "первый" }, meaning: { uk: "шлях до файлу з даними", ru: "путь к файлу с данными" } },
-  { arg: { uk: "другий", ru: "второй" }, meaning: 'тип импортируемых данных — в этом случае "Excel"' },
+  { arg: { uk: "другий", ru: "второй" }, meaning: { uk: 'тип даних, що імпортуються — у цьому разі "Excel"', ru: 'тип импортируемых данных — в этом случае "Excel"' } },
   {
     arg: { uk: "третій", ru: "третий" },
     meaning:

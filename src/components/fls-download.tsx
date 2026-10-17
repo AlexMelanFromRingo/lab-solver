@@ -3,6 +3,7 @@
 import { buildFlsFile, encodeCp1251 } from "@/lib/algorithms/fls-file";
 import { OutputBlock } from "@/components/ui/output-block";
 import type { FuzzySystem, Methods } from "@/lib/algorithms/fuzzy-mamdani";
+import { useLang } from "@/components/lang";
 
 /**
  * Готовая система файлом .fls.
@@ -24,6 +25,8 @@ export function FlsDownload({
   filename: string;
   accent: string;
 }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const text = buildFlsFile(system, values, methods);
 
   const download = () => {
@@ -45,16 +48,19 @@ export function FlsDownload({
           className="rounded-[3px] px-4 py-2 text-sm font-medium transition-colors"
           style={{ color: accent, background: `${accent}14`, border: `1px solid ${accent}44` }}
         >
-          Скачать {filename}
+          {tx("Завантажити", "Скачать")} {filename}
         </button>
         <span className="text-xs text-ink-faint">
-          кодировка CP1251, концы строк CRLF — как ждёт программа
+          {tx(
+            "кодування CP1251, кінці рядків CRLF — як очікує програма",
+            "кодировка CP1251, концы строк CRLF — как ждёт программа",
+          )}
         </span>
       </div>
 
       <details className="rounded-[4px] border border-border bg-black/20">
         <summary className="cursor-pointer px-4 py-2.5 text-sm text-ink-dim">
-          Посмотреть содержимое файла
+          {tx("Переглянути вміст файлу", "Посмотреть содержимое файла")}
         </summary>
         <div className="border-t border-border p-4">
           <OutputBlock label={filename} value={text.replace(/\r\n/g, "\n")} wrap={false} />

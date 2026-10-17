@@ -69,8 +69,10 @@ function VariableCard({ variable, output }: { variable: Variable; output?: boole
             </span>
             {term.formula && (
               <div className="mt-0.5 pl-3 font-mono text-[0.6875rem] text-ink-faint">
-                приближение по {term.points.length} узлам: {formatTerm(term)} · наибольшее
-                расхождение {approximationError(term).toFixed(3).replace(".", ",")}
+                {lang === "uk" ? "наближення по" : "приближение по"} {term.points.length}{" "}
+                {lang === "uk" ? "вузлах" : "узлам"}: {formatTerm(term)} ·{" "}
+                {lang === "uk" ? "найбільше розходження" : "наибольшее расхождение"}{" "}
+                {approximationError(term).toFixed(3).replace(".", ",")}
               </div>
             )}
           </li>
@@ -90,6 +92,7 @@ function VariableCard({ variable, output }: { variable: Variable; output?: boole
 
 export default function AiLab2Page() {
   const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [variantNum, setVariantNum] = useState(1);
   const task = FUZZY_VARIANTS.find((t) => t.variant === variantNum)!;
 
@@ -192,7 +195,7 @@ export default function AiLab2Page() {
             <div className="border-t border-border pt-5">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <h3 className="font-display text-base font-semibold tracking-tight text-ink">
-                  Способы построения операций
+                  {tx("Способи побудови операцій", "Способы построения операций")}
                 </h3>
                 {!initial && (
                   <button
@@ -200,13 +203,15 @@ export default function AiLab2Page() {
                     onClick={() => setMethods(INITIAL_METHODS)}
                     className="text-xs text-ink-faint underline decoration-dotted underline-offset-2 hover:text-ink-dim"
                   >
-                    вернуть исходный набор
+                    {tx("повернути початковий набір", "вернуть исходный набор")}
                   </button>
                 )}
               </div>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Сравнение результатов при разных методах — обязательная часть отчёта, а не
-                дополнение. Исходный набор — тот, с которого методичка предлагает начать.
+                {tx(
+                  "Порівняння результатів за різних методів — обов'язкова частина звіту, а не доповнення. Початковий набір — той, з якого методичка пропонує почати.",
+                  "Сравнение результатов при разных методах — обязательная часть отчёта, а не дополнение. Исходный набор — тот, с которого методичка предлагает начать.",
+                )}
               </p>
 
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -248,12 +253,13 @@ export default function AiLab2Page() {
           <CardBody className="pt-6 space-y-4">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Система файлом .fls
+                {tx("Система файлом .fls", "Система файлом .fls")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Собирается с выбранными выше значениями и методами. Дизъюнктивная связка
-                посылок при загрузке не восстанавливается — если она нужна, переключать
-                придётся в редакторе каждого правила.
+                {tx(
+                  "Збирається з вибраними вище значеннями і методами. Диз'юнктивна зв'язка посилок під час завантаження не відновлюється — якщо вона потрібна, перемикати доведеться в редакторі кожного правила.",
+                  "Собирается с выбранными выше значениями и методами. Дизъюнктивная связка посылок при загрузке не восстанавливается — если она нужна, переключать придётся в редакторе каждого правила.",
+                )}
               </p>
             </div>
             <FlsDownload
@@ -272,11 +278,13 @@ export default function AiLab2Page() {
             <CardBody className="pt-6 space-y-4">
               <div>
                 <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                  Что расходится в тексте задания
+                  {tx("Що розходиться в тексті завдання", "Что расходится в тексте задания")}
                 </h2>
                 <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                  Ничего не исправлено молча: система собрана так, как напечатано, а
-                  расхождения выписаны здесь вместе с принятым чтением.
+                  {tx(
+                    "Нічого не виправлено мовчки: система зібрана так, як надруковано, а розходження виписані тут разом з прийнятим прочитанням.",
+                    "Ничего не исправлено молча: система собрана так, как напечатано, а расхождения выписаны здесь вместе с принятым чтением.",
+                  )}
                 </p>
               </div>
               <ul className="space-y-2.5 text-sm text-ink-dim">
