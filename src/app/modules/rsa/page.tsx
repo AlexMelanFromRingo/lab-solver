@@ -115,7 +115,7 @@ export default function RsaPage() {
 
             {mode === "auto" ? (
               <div className="grid gap-4 sm:grid-cols-3">
-                <NumberField label="Битность каждого простого" value={bits} onChange={(e) => setBits(Number(e.target.value))} min={4} max={64} />
+                <NumberField label={tx("Бітність кожного простого", "Битность каждого простого")} value={bits} onChange={(e) => setBits(Number(e.target.value))} min={4} max={64} />
                 <TextField label="Seed для p" value={seedP} onChange={(e) => setSeedP(e.target.value)} />
                 <TextField label="Seed для q" value={seedQ} onChange={(e) => setSeedQ(e.target.value)} />
               </div>

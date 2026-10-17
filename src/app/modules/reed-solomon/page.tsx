@@ -113,7 +113,7 @@ export default function ReedSolomonPage() {
                     <StepList steps={result.steps.map((s) => `${s.title}: ${s.description}${s.data ? " — " + s.data : ""}`)} />
                   </CardBody>
                 </Card>
-                {result.success && <OutputBlock label="Восстановленное сообщение" value={decoded} />}
+                {result.success && <OutputBlock label={tx("Відновлене повідомлення", "Восстановленное сообщение")} value={decoded} />}
               </>
             )}
           </CardBody>

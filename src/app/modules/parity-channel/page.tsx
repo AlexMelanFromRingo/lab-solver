@@ -182,7 +182,7 @@ export default function ParityChannelPage() {
 
         <Card>
           <CardBody className="pt-6 space-y-5">
-            <h2 className="font-display text-lg font-semibold text-ink">Пропускная способность канала</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Пропускна здатність каналу","Пропускная способность канала")}</h2>
             <p className="text-xs text-ink-faint">
               {tx("Довжина повідомлення","Длина сообщения")} {variant.lengthMB} {tx("МБ, технічна швидкість","МБ, техническая скорость")} {variant.speedSymPerSec} {tx("симв/с","симв/с")}.
               {tx(" p1/p2/p3 — три окремі сценарії (не усереднюються), порівнюються з безпомилковим каналом (p=0)."," p1/p2/p3 — три отдельных сценария (не усредняются), сравниваются с безошибочным каналом (p=0).")}
@@ -195,7 +195,7 @@ export default function ParityChannelPage() {
                     <th className="text-left px-3 py-2">p</th>
                     <th className="text-left px-3 py-2">H(p)</th>
                     <th className="text-left px-3 py-2">C=1−H(p)</th>
-                    <th className="text-left px-3 py-2">Длительность</th>
+                    <th className="text-left px-3 py-2">{tx("Тривалість","Длительность")}</th>
                     <th className="text-left px-3 py-2">Во сколько раз дольше</th>
                   </tr>
                 </thead>

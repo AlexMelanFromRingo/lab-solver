@@ -104,16 +104,18 @@ function TraceTable({ run }: { run: BpeRun }) {
 }
 
 function SplitTable({ vocab }: { vocab: VocabEntry[] }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   return (
     <div className="overflow-x-auto rounded-[4px] border border-border">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border text-xs text-ink-faint">
-            <th className="px-3 py-2 text-left font-medium">Слово</th>
-            <th className="px-3 py-2 text-right font-medium">Раз в тексте</th>
-            <th className="px-3 py-2 text-left font-medium">Разбиение</th>
-            <th className="px-3 py-2 text-right font-medium">Символов</th>
-            <th className="px-3 py-2 text-right font-medium">Токенов</th>
+            <th className="px-3 py-2 text-left font-medium">{tx("Слово", "Слово")}</th>
+            <th className="px-3 py-2 text-right font-medium">{tx("Разів у тексті", "Раз в тексте")}</th>
+            <th className="px-3 py-2 text-left font-medium">{tx("Розбиття", "Разбиение")}</th>
+            <th className="px-3 py-2 text-right font-medium">{tx("Символів", "Символов")}</th>
+            <th className="px-3 py-2 text-right font-medium">{tx("Токенів", "Токенов")}</th>
           </tr>
         </thead>
         <tbody>
