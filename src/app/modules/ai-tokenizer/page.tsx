@@ -9,6 +9,7 @@ import { OutputBlock } from "@/components/ui/output-block";
 import { VariantDial } from "@/components/ui/variant-dial";
 import { categories, modules } from "@/lib/modules";
 import { AI_GUIDES } from "@/lib/data/ai-labs";
+import { useLang } from "@/components/lang";
 import {
   BASE_TOKENIZER,
   PROBE_TEXTS,
@@ -85,6 +86,8 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 export default function AiTokenizerPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [variantNum, setVariantNum] = useState(1);
   const tok = useMemo(() => tokenizerFor(variantNum), [variantNum]);
   const normalised = ((variantNum - 1) % TOKENIZER_VARIANTS.length) + 1;
@@ -100,10 +103,7 @@ export default function AiTokenizerPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Все числа на этой странице измерены запуском: каждый токенизатор загружен и прогнан
-          на одном и том же наборе строк. Браузер такие модели не запускает — словари весят
-          мегабайты, — поэтому здесь измеренное и готовая ячейка зошита, а сам расчёт
-          выполняется там, где и должен: в Colab или на своей машине.
+          {lang === "uk" ? "Усі числа на цій сторінці виміряні запуском: кожен токенізатор завантажений і прогнаний на одному й тому самому наборі рядків. Браузер такі моделі не запускає — словники важать мегабайти, — тому тут виміряне і готова комірка зошита, а сам розрахунок виконується там, де й має: у Colab або на своїй машині." : "Все числа на этой странице измерены запуском: каждый токенизатор загружен и прогнан на одном и том же наборе строк. Браузер такие модели не запускает — словари весят мегабайты, — поэтому здесь измеренное и готовая ячейка зошита, а сам расчёт выполняется там, где и должен: в Colab или на своей машине."}
         </InfoNote>
 
         <LabProcedure guide={procedure} accent={accent} />
@@ -112,8 +112,8 @@ export default function AiTokenizerPage() {
 
         {variantNum > TOKENIZER_VARIANTS.length && (
           <p className="text-sm text-ink-dim">
-            Вариант {variantNum} сводится остатком от деления на десять к строке{" "}
-            <span style={{ color: accent }}>{normalised}</span> таблицы.
+            {tx("Варіант","Вариант")} {variantNum} {tx("зводиться остачею від ділення на десять до рядка","сводится остатком от деления на десять к строке")}{" "}
+            <span style={{ color: accent }}>{normalised}</span> {tx("таблиці.","таблицы.")}
           </p>
         )}
 
@@ -122,7 +122,7 @@ export default function AiTokenizerPage() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <p className="text-xs text-ink-faint">
-                Вариант {normalised}
+                {tx("Варіант","Вариант")} {normalised}
               </p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
                 {tok.model}
@@ -131,17 +131,17 @@ export default function AiTokenizerPage() {
             </div>
 
             <div className="grid gap-x-8 gap-y-0 sm:grid-cols-2">
-              <Row label="Класс" value={tok.cls} />
-              <Row label="Устройство" value={tok.family} />
-              <Row label="Размер словаря" value={nf(tok.vocab)} />
+              <Row label={tx("Клас","Класс")} value={tok.cls} />
+              <Row label={tx("Пристрій","Устройство")} value={tok.family} />
+              <Row label={tx("Розмір словника","Размер словаря")} value={nf(tok.vocab)} />
               <Row
-                label="Длина с добавленными"
-                value={tok.length === tok.vocab ? "та же" : nf(tok.length)}
+                label={tx("Довжина з доданими","Длина с добавленными")}
+                value={tok.length === tok.vocab ? tx("та сама","та же") : nf(tok.length)}
               />
-              <Row label="Токен неизвестного" value={tok.unkToken ?? "нет"} />
+              <Row label={tx("Токен невідомого","Токен неизвестного")} value={tok.unkToken ?? tx("немає","нет")} />
               <Row
-                label="Токенов на наборе"
-                value={`${totals.variant} против ${totals.base} у GPT-2`}
+                label={tx("Токенів на наборі","Токенов на наборе")}
+                value={tx(`${totals.variant} проти ${totals.base} у GPT-2`,`${totals.variant} против ${totals.base} у GPT-2`)}
               />
             </div>
           </CardBody>
@@ -152,12 +152,10 @@ export default function AiTokenizerPage() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Что показал запуск
+                {tx("Що показав запуск","Что показал запуск")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Один и тот же набор строк на обоих токенизаторах. Колонка «с/т» — символов на
-                токен: в отличие от байтов, она не зависит от кодировки и годится для
-                сравнения языков.
+                {lang === "uk" ? "Один і той самий набір рядків на обох токенізаторах. Колонка «с/т» — символів на токен: на відміну від байтів, вона не залежить від кодування і годиться для порівняння мов." : "Один и тот же набор строк на обоих токенизаторах. Колонка «с/т» — символов на токен: в отличие от байтов, она не зависит от кодировки и годится для сравнения языков."}
               </p>
             </div>
 
@@ -219,7 +217,7 @@ export default function AiTokenizerPage() {
               </div>
               <div className="rounded-[4px] border border-border bg-black/20 px-4 py-3">
                 <div className="text-xs text-ink-faint">
-                  Пробелы: world · ␣world · ␣␣world
+                  {tx("Пробіли","Пробелы")}: world · ␣world · ␣␣world
                 </div>
                 <div className="mt-1 font-mono text-sm text-ink">
                   {tok.spaceTokens.join(" · ")}
@@ -229,8 +227,7 @@ export default function AiTokenizerPage() {
                 </div>
                 {tok.spaceTokens[0] === tok.spaceTokens[2] && (
                   <p className="mt-1.5 text-xs leading-relaxed text-ink-faint">
-                    Кратные пробелы нормализуются, поэтому влияние пробела на этом
-                    токенизаторе показать нельзя — берите регистр.
+                    {tx("Кратні пробіли нормалізуються, тому вплив пробіла на цьому токенізаторі показати не можна — беріть регістр.","Кратные пробелы нормализуются, поэтому влияние пробела на этом токенизаторе показать нельзя — берите регистр.")}
                   </p>
                 )}
               </div>
@@ -243,12 +240,11 @@ export default function AiTokenizerPage() {
           <CardBody className="pt-6 space-y-4">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Готовая ячейка зошита
+                {tx("Готова комірка зошита","Готовая ячейка зошита")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Вставляется после ячейки, где объявлен собственный набор строк{" "}
-                <code>MY_TEXTS</code>. Считает метрики обоими токенизаторами и складывает в
-                одну таблицу.
+                {tx("Вставляється після комірки, де оголошено власний набір рядків","Вставляется после ячейки, где объявлен собственный набор строк")}{" "}
+                <code>MY_TEXTS</code>. {tx("Рахує метрики обома токенізаторами і складає в одну таблицю.","Считает метрики обоими токенизаторами и складывает в одну таблицу.")}
               </p>
             </div>
             <OutputBlock label="cell.py" value={notebookCell(tok)} wrap={false} />
@@ -260,11 +256,10 @@ export default function AiTokenizerPage() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Все десять, рядом
+                {tx("Усі десять, поряд","Все десять, рядом")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Столбцы «укр» и «англ» — число токенов на двух предложениях одинакового
-                смысла. Сразу видно, какой словарь на какой язык рассчитан.
+                {lang === "uk" ? "Стовпці «укр» і «англ» — число токенів на двох реченнях однакового змісту. Одразу видно, який словник на яку мову розрахований." : "Столбцы «укр» и «англ» — число токенов на двух предложениях одинакового смысла. Сразу видно, какой словарь на какой язык рассчитан."}
               </p>
             </div>
 
@@ -325,11 +320,7 @@ export default function AiTokenizerPage() {
             </div>
 
             <p className="text-sm leading-relaxed text-ink-dim">
-              Два наблюдения, которых в описаниях моделей нет. Первое: токен неизвестного
-              возникает только у двух токенизаторов — один теряет кириллицу целиком, другой
-              не знает emoji. Второе: там, где обратная сборка ломается без единого
-              неизвестного токена, дело не в символах, а в нормализации — схлопываются
-              кратные пробелы либо пропадает невидимый соединитель внутри составного emoji.
+              {lang === "uk" ? "Два спостереження, яких в описах моделей немає. Перше: токен невідомого виникає тільки у двох токенізаторів — один втрачає кирилицю цілком, інший не знає emoji. Друге: там, де зворотне збирання ламається без жодного невідомого токена, справа не в символах, а в нормалізації — схлопуються кратні пробіли або зникає невидимий з’єднувач усередині складеного emoji." : "Два наблюдения, которых в описаниях моделей нет. Первое: токен неизвестного возникает только у двух токенизаторов — один теряет кириллицу целиком, другой не знает emoji. Второе: там, где обратная сборка ломается без единого неизвестного токена, дело не в символах, а в нормализации — схлопываются кратные пробелы либо пропадает невидимый соединитель внутри составного emoji."}
             </p>
           </CardBody>
         </Card>

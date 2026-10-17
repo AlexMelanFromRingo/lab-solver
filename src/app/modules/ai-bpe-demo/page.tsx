@@ -10,6 +10,7 @@ import { OutputBlock } from "@/components/ui/output-block";
 import { categories, modules } from "@/lib/modules";
 import { AI_GUIDES } from "@/lib/data/ai-labs";
 import { runBpe, type BpeRun, type PairCount, type VocabEntry } from "@/lib/algorithms/bpe";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "ai-bpe-demo")!;
 const accent = categories.ai.accent;
@@ -68,16 +69,18 @@ function placement(token: string, vocab: VocabEntry[]): string[] {
 }
 
 function TraceTable({ run }: { run: BpeRun }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   return (
     <div className="overflow-x-auto rounded-[4px] border border-border">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border text-xs text-ink-faint">
-            <th className="px-3 py-2 text-left font-medium">Проход</th>
-            <th className="px-3 py-2 text-left font-medium">Пара</th>
-            <th className="px-3 py-2 text-right font-medium">Частота</th>
-            <th className="px-3 py-2 text-left font-medium">Новый токен</th>
-            <th className="px-3 py-2 text-left font-medium">С той же частотой</th>
+            <th className="px-3 py-2 text-left font-medium">{tx("Прохід","Проход")}</th>
+            <th className="px-3 py-2 text-left font-medium">{tx("Пара","Пара")}</th>
+            <th className="px-3 py-2 text-right font-medium">{tx("Частота","Частота")}</th>
+            <th className="px-3 py-2 text-left font-medium">{tx("Новий токен","Новый токен")}</th>
+            <th className="px-3 py-2 text-left font-medium">{tx("З тією ж частотою","С той же частотой")}</th>
           </tr>
         </thead>
         <tbody>
@@ -143,6 +146,8 @@ function SplitTable({ vocab }: { vocab: VocabEntry[] }) {
 
 /** То, что зошит печатает на каждом проходе: все пары и разбиение после объединения. */
 function PassLog({ run }: { run: BpeRun }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   return (
     <div className="space-y-2">
       {run.steps.map((s) => (
@@ -156,13 +161,13 @@ function PassLog({ run }: { run: BpeRun }) {
           </summary>
           <div className="grid gap-4 border-t border-border px-4 py-3 sm:grid-cols-2">
             <div>
-              <div className="mb-1 text-xs text-ink-faint">Частоты пар до объединения</div>
+              <div className="mb-1 text-xs text-ink-faint">{tx("Частоти пар до об’єднання","Частоты пар до объединения")}</div>
               <pre className="font-mono text-xs leading-relaxed text-ink-dim">
                 {s.stats.map((p) => `${pairLabel(p)} -> ${p.freq}`).join("\n")}
               </pre>
             </div>
             <div>
-              <div className="mb-1 text-xs text-ink-faint">Разбиение после объединения</div>
+              <div className="mb-1 text-xs text-ink-faint">{tx("Розбиття після об’єднання","Разбиение после объединения")}</div>
               <pre className="font-mono text-xs leading-relaxed text-ink-dim">
                 {s.after.map((e) => `${e.word.padEnd(10)} -> ${e.tokens.join(" ")}`).join("\n")}
               </pre>
@@ -175,17 +180,17 @@ function PassLog({ run }: { run: BpeRun }) {
 }
 
 function RunWarnings({ run }: { run: BpeRun }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const notes: string[] = [];
-  if (run.initial.length === 0) notes.push("Текст пуст.");
+  if (run.initial.length === 0) notes.push(tx("Текст порожній.","Текст пуст."));
   else if (run.steps.length > 0 && run.steps[0].pair.freq === 1)
     notes.push(
-      "Ни одна пара не встречается дважды: в тексте нет повторов, и объединения выбираются " +
-        "просто по порядку букв. Для опыта нужны повторяющиеся слова или их части.",
+      tx("Жодна пара не трапляється двічі: у тексті немає повторів, і об’єднання вибираються просто за порядком літер. Для досліду потрібні повторювані слова або їх частини.","Ни одна пара не встречается дважды: в тексте нет повторов, и объединения выбираются просто по порядку букв. Для опыта нужны повторяющиеся слова или их части."),
     );
   if (run.exhaustedAt !== null)
     notes.push(
-      `На проходе ${run.exhaustedAt} пар не осталось — каждое слово уже один токен. Зошит в ` +
-        "этом месте упадёт с IndexError на most_common(1)[0]: нужен текст длиннее.",
+      tx(`На проході ${run.exhaustedAt} пар не лишилося — кожне слово вже один токен. Зошит у цьому місці впаде з IndexError на most_common(1)[0]: потрібен текст довший.`,`На проходе ${run.exhaustedAt} пар не осталось — каждое слово уже один токен. Зошит в этом месте упадёт с IndexError на most_common(1)[0]: нужен текст длиннее.`),
     );
   if (notes.length === 0) return null;
   return (
@@ -219,6 +224,8 @@ function Order({ label, run }: { label: string; run: BpeRun }) {
 }
 
 export default function AiBpeDemoPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [ownText, setOwnText] = useState(STUDENT_PLACEHOLDER);
   const [merges, setMerges] = useState(5);
   const n = Math.max(1, Math.min(30, Number.isFinite(merges) ? merges : 5));
@@ -234,10 +241,7 @@ export default function AiBpeDemoPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Расчёт повторяет функции get_pair_stats и merge_pair из зошита вместе с порядком,
-          в котором Python перебирает пары. Это важно при равных частотах: most_common отдаёт
-          такие пары в порядке первого появления — слова по порядку в тексте, пары слева
-          направо, — и выбирает первую. Поэтому выбор здесь тот же, что напечатает зошит.
+          {lang === "uk" ? "Розрахунок повторює функції get_pair_stats і merge_pair із зошита разом з порядком, у якому Python перебирає пари. Це важливо при рівних частотах: most_common віддає такі пари в порядку першої появи — слова по порядку в тексті, пари зліва направо, — і вибирає першу. Тому вибір тут той самий, що надрукує зошит." : "Расчёт повторяет функции get_pair_stats и merge_pair из зошита вместе с порядком, в котором Python перебирает пары. Это важно при равных частотах: most_common отдаёт такие пары в порядке первого появления — слова по порядку в тексте, пары слева направо, — и выбирает первую. Поэтому выбор здесь тот же, что напечатает зошит."}
         </InfoNote>
 
         <LabProcedure guide={procedure} accent={accent} />
@@ -248,13 +252,13 @@ export default function AiBpeDemoPage() {
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                  Начальный текст зошита
+                  {tx("Початковий текст зошита","Начальный текст зошита")}
                 </h2>
                 <p className="mt-1 font-mono text-sm text-ink-dim">{BASE_TEXT}</p>
               </div>
               <div className="w-36">
                 <NumberField
-                  label="Проходов"
+                  label={tx("Проходів","Проходов")}
                   min={1}
                   max={30}
                   value={merges}
@@ -265,9 +269,7 @@ export default function AiBpeDemoPage() {
             <TraceTable run={base} />
             {n >= 5 && (
               <p className="text-sm leading-relaxed text-ink-dim">
-                Первые два прохода собирают «low» — целое слово и общее начало трёх слов. На
-                первом, третьем и пятом проходах лучшую частоту делят несколько пар; в пятом от
-                правила выбора зависит, какой токен попадёт в словарь.
+                {lang === "uk" ? "Перші два проходи збирають «low» — ціле слово і спільний початок трьох слів. На першому, третьому і п’ятому проходах найкращу частоту ділять кілька пар; у п’ятому від правила вибору залежить, який токен потрапить у словник." : "Первые два прохода собирают «low» — целое слово и общее начало трёх слов. На первом, третьем и пятом проходах лучшую частоту делят несколько пар; в пятом от правила выбора зависит, какой токен попадёт в словарь."}
               </p>
             )}
             <SplitTable vocab={baseFinal} />
@@ -278,15 +280,14 @@ export default function AiBpeDemoPage() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Свой текст</h2>
+              <h2 className="font-display text-xl font-semibold tracking-tight text-ink">{tx("Свій текст","Свой текст")}</h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Строка для student_text в п. 5. В поле — заготовка из зошита; её нужно заменить
-                своей.
+                {tx("Рядок для student_text у п. 5. У полі — заготовка із зошита; її потрібно замінити своєю.","Строка для student_text в п. 5. В поле — заготовка из зошита; её нужно заменить своей.")}
               </p>
             </div>
             <TextAreaField
               label="student_text"
-              hint={`${own.words} слов, разных ${own.initial.length}`}
+              hint={tx(`${own.words} слів, різних ${own.initial.length}`,`${own.words} слов, разных ${own.initial.length}`)}
               value={ownText}
               onChange={(e) => setOwnText(e.target.value)}
               spellCheck={false}
@@ -298,13 +299,12 @@ export default function AiBpeDemoPage() {
                 <TraceTable run={own} />
                 {ownTies > 0 && (
                   <p className="text-sm leading-relaxed text-ink-dim">
-                    На {ownTies} из {own.steps.length} проходов лучшую частоту делят несколько пар —
-                    их стоит записать в отчёт вместе с выбранной.
+                    {tx("На","На")} {ownTies} {tx("з","из")} {own.steps.length} {tx("проходів найкращу частоту ділять кілька пар — їх варто записати у звіт разом з вибраною.","проходов лучшую частоту делят несколько пар — их стоит записать в отчёт вместе с выбранной.")}
                   </p>
                 )}
                 <SplitTable vocab={ownFinal} />
                 <div>
-                  <div className="mb-2 text-xs text-ink-faint">Что печатает зошит на каждом проходе</div>
+                  <div className="mb-2 text-xs text-ink-faint">{tx("Що друкує зошит на кожному проході","Что печатает зошит на каждом проходе")}</div>
                   <PassLog run={own} />
                 </div>
               </>
@@ -318,17 +318,15 @@ export default function AiBpeDemoPage() {
             <CardBody className="pt-6 space-y-5">
               <div>
                 <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                  Порядок образования токенов
+                  {tx("Порядок утворення токенів","Порядок образования токенов")}
                 </h2>
                 <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                  Рядом с токеном — где он стоит в словах после своего прохода. По этому видно,
-                  что алгоритм собирает раньше: начало слова или его конец. Морфологии он не
-                  знает, решает только число вхождений пары.
+                  {lang === "uk" ? "Поряд із токеном — де він стоїть у словах після свого проходу. За цим видно, що алгоритм збирає раніше: початок слова чи його кінець. Морфології він не знає, вирішує лише число входжень пари." : "Рядом с токеном — где он стоит в словах после своего прохода. По этому видно, что алгоритм собирает раньше: начало слова или его конец. Морфологии он не знает, решает только число вхождений пары."}
                 </p>
               </div>
               <div className="grid gap-6 sm:grid-cols-2">
-                <Order label="Начальный текст" run={base} />
-                <Order label="Свой текст" run={own} />
+                <Order label={tx("Початковий текст","Начальный текст")} run={base} />
+                <Order label={tx("Свій текст","Свой текст")} run={own} />
               </div>
             </CardBody>
           </Card>
@@ -339,12 +337,10 @@ export default function AiBpeDemoPage() {
           <CardBody className="pt-6 space-y-4">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Ячейка для сводной таблицы
+                {tx("Комірка для зведеної таблиці","Ячейка для сводной таблицы")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Вставляется в конец зошита. Зошит печатает проходы длинным логом; эта ячейка
-                собирает их в таблицу — пара, частота, новый токен, пары с той же частотой — для
-                обоих текстов. Использует функции из ячеек выше, ничего не меняет в расчёте.
+                {tx("Вставляється в кінець зошита. Зошит друкує проходи довгим логом; ця комірка збирає їх у таблицю — пара, частота, новий токен, пари з тією ж частотою — для обох текстів. Використовує функції з комірок вище, нічого не змінює в розрахунку.","Вставляется в конец зошита. Зошит печатает проходы длинным логом; эта ячейка собирает их в таблицу — пара, частота, новый токен, пары с той же частотой — для обоих текстов. Использует функции из ячеек выше, ничего не меняет в расчёте.")}
               </p>
             </div>
             <OutputBlock label="cell.py" value={TRACE_CELL} wrap={false} />
