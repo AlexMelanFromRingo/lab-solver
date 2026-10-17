@@ -57,7 +57,7 @@ export interface EuclidResult {
 }
 
 export function euclid(a: number, b: number): EuclidResult {
-  if (!Number.isInteger(a) || !Number.isInteger(b) || a <= 0 || b <= 0) throw new Error("a и b — натуральные числа");
+  if (!Number.isInteger(a) || !Number.isInteger(b) || a <= 0 || b <= 0) throw new Error("a і b — натуральні числа");
   const rows: EuclidRow[] = [];
   let [x, y] = [a, b];
   while (y !== 0) {
@@ -117,7 +117,7 @@ export interface ExtResult {
 
 /** Таблица «Залишки — Часткові — x — y»: r_i = a·x_i + b·y_i. */
 export function extendedEuclid(a: number, b: number): ExtResult {
-  if (!Number.isInteger(a) || !Number.isInteger(b) || a <= 0 || b <= 0) throw new Error("a и b — натуральные числа");
+  if (!Number.isInteger(a) || !Number.isInteger(b) || a <= 0 || b <= 0) throw new Error("a і b — натуральні числа");
   const rows: ExtRow[] = [
     { r: a, q: null, x: 1, y: 0, xExpr: "1", yExpr: "0" },
     { r: b, q: null, x: 0, y: 1, xExpr: "0", yExpr: "1" },
@@ -155,7 +155,7 @@ export interface Factorization {
 
 /** Деление методом проб: наименьший простой делитель, затем то же для частного. */
 export function trialFactor(n: number): Factorization {
-  if (!Number.isInteger(n) || n < 2) throw new Error("n — натуральное число больше 1");
+  if (!Number.isInteger(n) || n < 2) throw new Error("n — натуральне число більше 1");
   const steps: { n: number; f: number; tried: number }[] = [];
   const counts = new Map<number, number>();
   let m = n;
@@ -232,7 +232,7 @@ function isqrt(n: bigint): bigint {
 /** Алгоритм Ферма для нечётного n: x = ⌈√n⌉, ищем x² − n = y². */
 export function fermatFactor(nIn: number | bigint, limit = 100000): FermatResult {
   const n = BigInt(nIn);
-  if (n < 3n || n % 2n === 0n) throw new Error("Алгоритм Ферма — для нечётного n > 1");
+  if (n < 3n || n % 2n === 0n) throw new Error("Алгоритм Ферма — для непарного n > 1");
   const s = isqrt(n);
   if (s * s === n) return { n, start: s, steps: [], x: s, y: 0n, prime: false, exactSquare: true };
   let x = s + 1n;
@@ -303,7 +303,7 @@ export interface CongruenceSolution {
 
 /** ax ≡ b (mod m) через расширенный алгоритм Евклида (для m и a/d). */
 export function solveCongruence(a: number, b: number, m: number): CongruenceSolution {
-  if (m < 2) throw new Error("Модуль m — не меньше 2");
+  if (m < 2) throw new Error("Модуль m — не менше 2");
   const d = gcd(a, m);
   const none = mod(b, d) !== 0;
   const ra = mod(a / (none ? 1 : d), m / (none ? 1 : d));
@@ -329,7 +329,7 @@ export interface MillerResult {
 }
 
 export function millerTest(n: number, b: number): MillerResult {
-  if (n < 3 || n % 2 === 0) throw new Error("n — нечётное число больше 2");
+  if (n < 3 || n % 2 === 0) throw new Error("n — непарне число більше 2");
   let q = n - 1;
   let k = 0;
   while (q % 2 === 0) {
@@ -354,7 +354,7 @@ export function millerTest(n: number, b: number): MillerResult {
 
 /** Символ Якоби с шагами вычисления. */
 export function jacobi(aIn: number, nIn: number): { value: number; steps: string[] } {
-  if (nIn <= 0 || nIn % 2 === 0) throw new Error("n — нечётное положительное");
+  if (nIn <= 0 || nIn % 2 === 0) throw new Error("n — непарне додатне");
   let a = mod(aIn, nIn);
   let n = nIn;
   let s = 1;

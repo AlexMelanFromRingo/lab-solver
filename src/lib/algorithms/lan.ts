@@ -50,7 +50,7 @@ const TRAFFIC: Omit<Traffic, "type">[] = [
 
 /** Таблица 1.1: варианты идут по 8 типов инфраструктуры на каждый тип трафика. */
 export function lanVariant(n: number): { infra: Infrastructure; traffic: Traffic } {
-  if (!Number.isInteger(n) || n < 1 || n > 80) throw new Error("Вариант — от 1 до 80");
+  if (!Number.isInteger(n) || n < 1 || n > 80) throw new Error("Варіант — від 1 до 80");
   const it = ((n - 1) % 8) + 1;
   const tt = Math.floor((n - 1) / 8) + 1;
   return { infra: { type: it, ...INFRA[it - 1] }, traffic: { type: tt, ...TRAFFIC[tt - 1] } };
@@ -77,7 +77,7 @@ export interface Segment10 {
 
 export interface PathTerm {
   segment: number;
-  role: "левый" | "промежуточный" | "правый" | "передающий";
+  role: "лівий" | "проміжний" | "правий" | "передавальний";
   expr: string;
   value: number;
 }
@@ -87,8 +87,8 @@ const r3 = (x: number) => Math.round(x * 1000) / 1000;
 function pdvOneWay(path: Segment10[]): { terms: PathTerm[]; total: number } {
   const terms = path.map((s, i): PathTerm => {
     const t = SEG10[s.type];
-    const role = i === 0 ? "левый" : i === path.length - 1 ? "правый" : "промежуточный";
-    const base = role === "левый" ? t.left : role === "правый" ? t.right : t.mid;
+    const role = i === 0 ? "лівий" : i === path.length - 1 ? "правий" : "проміжний";
+    const base = role === "лівий" ? t.left : role === "правий" ? t.right : t.mid;
     if (base === null) throw new Error(`${s.type} может быть только промежуточным сегментом`);
     const value = r3(base + s.length * t.perM);
     return { segment: i + 1, role, expr: `${base} + ${s.length}·${t.perM}`, value };
@@ -100,8 +100,8 @@ function pvvOneWay(path: Segment10[]): { terms: PathTerm[]; total: number } {
   // приёмный (последний) сегмент в PVV не входит
   const terms = path.slice(0, -1).map((s, i): PathTerm => {
     const t = SEG10[s.type];
-    const role = i === 0 ? "передающий" : "промежуточный";
-    const value = role === "передающий" ? t.pvvTx : t.pvvMid;
+    const role = i === 0 ? "передавальний" : "проміжний";
+    const value = role === "передавальний" ? t.pvvTx : t.pvvMid;
     if (value === null) throw new Error(`${s.type} не может быть передающим сегментом`);
     return { segment: i + 1, role, expr: String(value), value };
   });
@@ -120,7 +120,7 @@ export interface Ethernet10Check {
  * Если крайние сегменты разного типа, считается в обе стороны и берётся большее.
  */
 export function checkEthernet10(path: Segment10[]): Ethernet10Check {
-  if (path.length < 2) throw new Error("В пути хотя бы два сегмента: левый и правый");
+  if (path.length < 2) throw new Error("У шляху хоча б два сегменти: лівий і правий");
   const lengthProblems = path
     .filter((s) => s.length > SEG10[s.type].max)
     .map((s) => `${s.type}: ${s.length} м больше предельных ${SEG10[s.type].max} м`);
@@ -163,10 +163,10 @@ export const FE_DIAMETER: Record<FeRule, Record<FeMedia, number | null>> = {
 };
 
 export const FE_RULE_LABEL: Record<FeRule, string> = {
-  none: "без повторителя (станция — станция)",
-  class1: "один повторитель I класса",
-  class2: "один повторитель II класса",
-  class2x2: "два повторителя II класса",
+  none: "без повторювача (станція — станція)",
+  class1: "один повторювач I класу",
+  class2: "один повторювач II класу",
+  class2x2: "два повторювачі II класу",
 };
 
 export interface FeSegment {

@@ -22,7 +22,7 @@ export function parseEdges(text: string): { n: number; edges: Edge[] } {
     }
     edges.push({ from: p[0], to: p[1], w: p[2] });
   }
-  if (!edges.length) throw new Error("Нет ни одного ребра");
+  if (!edges.length) throw new Error("Немає жодного ребра");
   return { n: Math.max(...edges.flatMap((e) => [e.from, e.to])), edges };
 }
 
@@ -128,7 +128,7 @@ export function predPath(pred: number[], to: number): number[] {
 
 export function dijkstra(w: number[][], source: number): { steps: { fixed: number; labels: number[] }[]; dist: number[]; pred: number[] } {
   const n = w.length;
-  if (w.some((r) => r.some((v) => v < 0))) throw new Error("Дейкстра не работает с отрицательными весами — нужен Форд или Флойд");
+  if (w.some((r) => r.some((v) => v < 0))) throw new Error("Дейкстра не працює з від'ємними вагами — потрібен Форд або Флойд");
   const dist = Array(n).fill(Infinity);
   const pred = Array(n).fill(-1);
   const done = Array(n).fill(false);

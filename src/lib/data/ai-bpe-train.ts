@@ -55,7 +55,7 @@ export const SAMPLE_TOKENS =
 export const TASK_CELLS: { item: number; title: string; code: string }[] = [
   {
     item: 1,
-    title: "Не меньше двух размеров словаря",
+    title: "Не менше двох розмірів словника",
     code: `# Третій розмір більший за кількість об'єднань, які корпус узагалі може дати.
 tokenizer_2000 = train_hf_bpe(corpus_lines, vocab_size=2000)
 pd.set_option("display.max_colwidth", None)
@@ -74,7 +74,7 @@ for name, tok in TOKENIZERS:
   },
   {
     item: 2,
-    title: "Английский и украинский текст",
+    title: "Англійський і український текст",
     code: `# Пари речень ОДНАКОВОГО змісту – інакше різницю не можна віднести до мови.
 # Замініть на свої; одну пару варто взяти зі словами, яких у корпусі немає.
 PAIRS = [
@@ -99,7 +99,7 @@ lang_df.groupby(["tokenizer", "мова"], as_index=False)[["tokens", "utf8_byte
   },
   {
     item: 3,
-    title: "Слова, которые токенизаторы режут по-разному",
+    title: "Слова, які токенізатори ріжуть по-різному",
     code: `def bytes_to_unicode():
     """Таблиця byte-level BPE (як у GPT-2): кожен байт – окремий символ."""
     bs = list(range(ord("!"), ord("~") + 1)) + list(range(ord("¡"), ord("¬") + 1)) + list(range(ord("®"), ord("ÿ") + 1))
@@ -128,14 +128,14 @@ pd.DataFrame([{"слово": w, **{name: " | ".join(pieces(tok, w)) for name, to
   },
   {
     item: 4,
-    title: "Больший словарь — меньше токенов",
+    title: "Більший словник — менше токенів",
     code: `pd.DataFrame([{"tokenizer": name, "vocab": tok.get_vocab_size(),
                "tokens_on_pairs": sum(len(tok.encode(t).ids) for pair in PAIRS for t in pair)}
               for name, tok in TOKENIZERS])`,
   },
   {
     item: 5,
-    title: "Цена большого словаря",
+    title: "Ціна великого словника",
     code: `# Матриця вкладень і вихідний шар: по V x d параметрів кожен.
 D_MODEL = 768   # прихований розмір GPT-2 small
 vocabs = [(name, tok.get_vocab_size()) for name, tok in TOKENIZERS] + [("GPT-2", 50257)]
@@ -149,7 +149,7 @@ pd.DataFrame([{
   },
   {
     item: 6,
-    title: "Свои специальные токены",
+    title: "Свої спеціальні токени",
     code: `MY_SPECIAL = ["<user>", "<assistant>", "<sep>"]
 print("Додано:", tokenizer_800.add_special_tokens(MY_SPECIAL))
 for t in SPECIAL_TOKENS + MY_SPECIAL:
@@ -163,7 +163,7 @@ print("Назад: ", tokenizer_800.decode(enc.ids, skip_special_tokens=False))`
   },
   {
     item: 7,
-    title: "Сохранить в JSON и загрузить обратно",
+    title: "Зберегти в JSON і завантажити назад",
     code: `path = save_dir / "bpe_800_special.json"
 tokenizer_800.save(str(path))
 reloaded = Tokenizer.from_file(str(path))
@@ -176,7 +176,7 @@ print("Кодування збігається:",
   },
   {
     item: 8,
-    title: "Состав корпуса против размера словаря",
+    title: "Склад корпусу проти розміру словника",
     code: `# Той самий розмір 800, але корпус лише з англійської половини.
 english_lines = [l for l in corpus_lines if l.isascii()]
 tokenizer_en_800 = train_hf_bpe(english_lines, vocab_size=800)

@@ -67,7 +67,7 @@ const dotted = (prefix: number) => intToIp(maskFromPrefix(prefix));
 
 export function routingPlan(v: number): RoutingPlan {
   if (!Number.isInteger(v) || v < 0 || v > 255) {
-    throw new Error("Номер варианта входит в адрес сети, поэтому он от 0 до 255");
+    throw new Error("Номер варіанта входить в адресу мережі, тому він від 0 до 255");
   }
   const odd = v % 2 === 1;
   const net1: Net = { name: "Net-1", network: `132.16.${v}.0`, prefix: 24, kind: "FastEthernet" };

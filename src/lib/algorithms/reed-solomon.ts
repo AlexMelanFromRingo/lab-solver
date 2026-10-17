@@ -28,7 +28,7 @@ function gfMul(a: number, b: number): number {
 }
 
 function gfDiv(a: number, b: number): number {
-  if (b === 0) throw new Error("Деление на 0 в GF(2⁸)");
+  if (b === 0) throw new Error("Ділення на 0 в GF(2⁸)");
   if (a === 0) return 0;
   return gfExp[(gfLog[a] - gfLog[b] + 255) % 255];
 }
@@ -103,7 +103,7 @@ export function rsFindErrorLocator(synd: number[], nsym: number): number[] {
   while (errLoc.length > 0 && errLoc[0] === 0) errLoc.shift();
 
   const errs = errLoc.length - 1;
-  if (errs * 2 > nsym) throw new Error("Слишком много ошибок для исправления");
+  if (errs * 2 > nsym) throw new Error("Забагато помилок для виправлення");
   return errLoc;
 }
 
@@ -113,7 +113,7 @@ export function rsFindErrors(errLoc: number[], msgLen: number): number[] {
   for (let i = 0; i < msgLen; i++) {
     if (polyEval(errLoc, gfExp[255 - i]) === 0) errPos.push(msgLen - 1 - i);
   }
-  if (errPos.length !== errs) throw new Error("Не удалось найти позиции ошибок");
+  if (errPos.length !== errs) throw new Error("Не вдалося знайти позиції помилок");
   return errPos;
 }
 
@@ -165,28 +165,28 @@ export function rsDecodeAndCorrect(received: number[], nsym: number): RsCorrecti
   const synd = rsCalcSyndromes(received, nsym);
 
   if (rsCheckSyndromes(synd)) {
-    steps.push({ title: "Проверка синдромов", description: "Все синдромы равны 0 — ошибок нет" });
-    return { success: true, corrected: received, errorPositions: [], errorMagnitudes: [], message: "Ошибок не обнаружено", steps };
+    steps.push({ title: "Перевірка синдромів", description: "Усі синдроми дорівнюють 0 — помилок немає" });
+    return { success: true, corrected: received, errorPositions: [], errorMagnitudes: [], message: "Помилок не виявлено", steps };
   }
 
   steps.push({
-    title: "Синдромы ≠ 0",
-    description: "Обнаружены ненулевые синдромы — есть ошибки",
+    title: "Синдроми ≠ 0",
+    description: "Виявлено ненульові синдроми — є помилки",
     data: synd.slice(1).map((s) => s.toString(16).padStart(2, "0").toUpperCase()).join(" "),
   });
 
   try {
     const errLoc = rsFindErrorLocator(synd, nsym);
     steps.push({
-      title: "Полином-локатор ошибок (Берлекэмпа-Мэсси)",
+      title: "Поліном-локатор помилок (Берлекемпа-Мессі)",
       description: `Коэффициенты: [${errLoc.map((c) => c.toString(16).toUpperCase()).join(", ")}]`,
       data: `Степень: ${errLoc.length - 1} → ${errLoc.length - 1} ошибок`,
     });
 
     const errPos = rsFindErrors(errLoc, received.length);
     steps.push({
-      title: "Позиции ошибок (поиск Ченя)",
-      description: "Найдены корни полинома-локатора",
+      title: "Позиції помилок (пошук Ченя)",
+      description: "Знайдено корені полінома-локатора",
       data: `Позиции: [${errPos.join(", ")}]`,
     });
 
@@ -195,14 +195,14 @@ export function rsDecodeAndCorrect(received: number[], nsym: number): RsCorrecti
     for (const pos of errPos) corrected[pos] ^= errMag[pos];
 
     steps.push({
-      title: "Величины ошибок (алгоритм Форни)",
+      title: "Величини помилок (алгоритм Форні)",
       description: errPos.map((p) => `Позиция ${p}: величина 0x${errMag[p].toString(16).toUpperCase().padStart(2, "0")}`).join("; "),
     });
 
     return { success: true, corrected, errorPositions: errPos, errorMagnitudes: errMag, message: `Исправлено ${errPos.length} ошибок`, steps };
   } catch (e) {
-    const msg = (e as Error).message || "Не удалось исправить";
-    steps.push({ title: "Ошибка декодирования", description: msg });
+    const msg = (e as Error).message || "Не вдалося виправити";
+    steps.push({ title: "Помилка декодування", description: msg });
     return { success: false, corrected: received, errorPositions: [], errorMagnitudes: [], message: msg, steps };
   }
 }
