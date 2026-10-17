@@ -18,17 +18,17 @@ export interface KeywordInfo {
 
 /** Микрокоманды с синонимами — в порядке, в каком их предлагает автодополнение. */
 export const KEYWORDS: KeywordInfo[] = [
-  { words: ["var", "объявить", "обьявить", "задать", "создать", "def", "dim", "define"], syntax: "var рег(разрядность), пам(ячеек)(разрядность)", doc: "Объявление регистров и памяти, разрядность 1…64." },
-  { words: ["read", "ввести", "ввод", "scan", "input"], syntax: "read оп1, оп2", doc: "Ввод значений по порядку: десятичное, $hex или #bin. Отрицательное (-5) — только при вводе." },
-  { words: ["print", "печать", "вывести", "write", "echo"], syntax: 'print "текст", оп, …', doc: "Печать. Одна переменная — с именем: a(00000101 05 5); несколько элементов — без имён. Массив памяти целиком не печатается." },
-  { words: ["if", "если"], syntax: "if A отношение B then микрокоманда", doc: "Отношения = == <> != ~= < > <= >= (сравнение беззнаковое). Действие — любая микрокоманда, кроме if." },
-  { words: ["then", "то", "тогда"], syntax: "if … then действие", doc: "Необязательное слово между условием и действием." },
-  { words: ["goto", "идти_к", "идти", "jump", "go_to"], syntax: "goto метка", doc: "Безусловный переход на метку." },
-  { words: ["call", "вызов", "вызвать"], syntax: "call метка", doc: "Вызов подпрограммы: адрес возврата — в стек (до 65535)." },
-  { words: ["return", "возврат", "вернуться", "ret"], syntax: "return", doc: "Возврат из подпрограммы." },
-  { words: ["end", "конец"], syntax: 'end "сообщение"', doc: "Конец программы; сообщение печатается." },
-  { words: ["op", "операция", "оп", "do", "operation"], syntax: "op приёмник операция операнд", doc: "Необязательное слово перед операцией." },
-  { words: ["delay", "задержка", "ждать", "sleep"], syntax: "delay мс", doc: "Пауза (в интерпретаторе — пустая команда)." },
+  { words: ["var", "объявить", "обьявить", "задать", "создать", "def", "dim", "define"], syntax: "var рег(розрядність), пам(комірок)(розрядність)", doc: "Оголошення регістрів і пам'яті, розрядність 1…64." },
+  { words: ["read", "ввести", "ввод", "scan", "input"], syntax: "read оп1, оп2", doc: "Введення значень за порядком: десяткове, $hex або #bin. Від'ємне (-5) — лише під час введення." },
+  { words: ["print", "печать", "вывести", "write", "echo"], syntax: 'print "текст", оп, …', doc: "Друк. Одна змінна — з іменем: a(00000101 05 5); кілька елементів — без імен. Масив пам'яті цілком не друкується." },
+  { words: ["if", "если"], syntax: "if A відношення B then мікрокоманда", doc: "Відношення = == <> != ~= < > <= >= (порівняння беззнакове). Дія — будь-яка мікрокоманда, крім if." },
+  { words: ["then", "то", "тогда"], syntax: "if … then дія", doc: "Необов'язкове слово між умовою і дією." },
+  { words: ["goto", "идти_к", "идти", "jump", "go_to"], syntax: "goto мітка", doc: "Безумовний перехід на мітку." },
+  { words: ["call", "вызов", "вызвать"], syntax: "call мітка", doc: "Виклик підпрограми: адреса повернення — у стек (до 65535)." },
+  { words: ["return", "возврат", "вернуться", "ret"], syntax: "return", doc: "Повернення з підпрограми." },
+  { words: ["end", "конец"], syntax: 'end "повідомлення"', doc: "Кінець програми; повідомлення друкується." },
+  { words: ["op", "операция", "оп", "do", "operation"], syntax: "op приймач операція операнд", doc: "Необов'язкове слово перед операцією." },
+  { words: ["delay", "задержка", "ждать", "sleep"], syntax: "delay мс", doc: "Пауза (в інтерпретаторі — порожня команда)." },
 ];
 
 const KW_INDEX = new Map<string, KeywordInfo>();
@@ -41,21 +41,21 @@ export interface OperatorInfo {
 
 /** Операции IDE: приёмник := приёмник ⊕ операнд, результат по модулю 2^разрядности приёмника. */
 export const OPERATORS: OperatorInfo[] = [
-  { op: "=", doc: "присваивание" },
-  { op: "+", doc: "сложение (перенос из старшего разряда теряется)" },
-  { op: "+!", doc: "сложение с циклическим переносом — для обратного кода" },
-  { op: "-", doc: "вычитание" },
-  { op: "&", doc: "логическое И" },
-  { op: "|", doc: "логическое ИЛИ" },
-  { op: "^", doc: "сложение по модулю 2" },
-  { op: "<<", doc: "логический сдвиг влево (вдвигаются нули)" },
-  { op: ">>", doc: "логический сдвиг вправо" },
-  { op: "|<", doc: "циклический сдвиг влево (то же <<<)" },
-  { op: ">|", doc: "циклический сдвиг вправо (то же >>>)" },
-  { op: "<->", doc: "обмен значениями двух переменных" },
-  { op: "~", doc: "инверсия приёмника (одноместная; внутри операции инверсии операнда нет)" },
-  { op: "++", doc: "+1 (одноместная)" },
-  { op: "--", doc: "−1 (одноместная)" },
+  { op: "=", doc: "присвоєння" },
+  { op: "+", doc: "додавання (перенесення зі старшого розряду втрачається)" },
+  { op: "+!", doc: "додавання з циклічним перенесенням — для оберненого коду" },
+  { op: "-", doc: "віднімання" },
+  { op: "&", doc: "логічне І" },
+  { op: "|", doc: "логічне АБО" },
+  { op: "^", doc: "додавання за модулем 2" },
+  { op: "<<", doc: "логічний зсув ліворуч (вдвигаються нулі)" },
+  { op: ">>", doc: "логічний зсув праворуч" },
+  { op: "|<", doc: "циклічний зсув ліворуч (те саме <<<)" },
+  { op: ">|", doc: "циклічний зсув праворуч (те саме >>>)" },
+  { op: "<->", doc: "обмін значеннями двох змінних" },
+  { op: "~", doc: "інверсія приймача (одномісна; усередині операції інверсії операнда немає)" },
+  { op: "++", doc: "+1 (одномісна)" },
+  { op: "--", doc: "−1 (одномісна)" },
 ];
 
 export interface Symbol {
@@ -142,16 +142,16 @@ export interface Completion {
 
 /** Шаблоны: конструкции, из которых собираются программы практических работ. */
 export const SNIPPETS: Completion[] = [
-  { label: "цикл по счётчику", type: "snippet", snippet: true, detail: "метка + if … goto", apply: "${1:cnt}=${2:8}\n${3:loop}: ${4:тело}\n${1:cnt}-1\nif ${1:cnt}<>0 then goto ${3:loop}", info: "Счётчик тактов, как ЛчТ в структурах методички." },
-  { label: "если … иначе", type: "snippet", snippet: true, detail: "через метки", apply: "if ${1:a}=${2:b} then goto ${3:yes}\n${4:иначе}\ngoto ${5:done}\n${3:yes}: ${6:то}\n${5:done}:", info: "Ветвление: переход на ветку «то», иначе — следующая строка." },
-  { label: "обратный код отрицательного", type: "snippet", snippet: true, detail: "ПК → ЗК", apply: "if ${1:r}(${2:7})=1 then ${1:r}(${3:6}:0)~", info: "Знак 1 — инвертировать значащие разряды." },
-  { label: "дополнительный код отрицательного", type: "snippet", snippet: true, detail: "ПК → ДК", apply: "if ${1:r}(${2:7})=1 then ${1:r}(${3:6}:0)~\nif ${1:r}(${2:7})=1 then ${1:r}+1", info: "Инверсия значащих разрядов и +1 ко всему регистру (−0 превращается в +0)." },
-  { label: "модифицированный код", type: "snippet", snippet: true, detail: "копия знака", apply: "${1:r}(${2:8})=${1:r}(${3:7})", info: "Второй знаковый разряд для обнаружения переполнения." },
-  { label: "проверка переполнения", type: "snippet", snippet: true, detail: "знаковые разряды", apply: "if ${1:sm}(${2:8})<>${1:sm}(${3:7}) then goto ${4:ovf}", info: "В модифицированном коде разные знаковые разряды — переполнение." },
-  { label: "арифметический сдвиг вправо", type: "snippet", snippet: true, detail: "с сохранением знака", apply: "${1:s}=${2:r}(${3:7})\n${2:r}>>1\nif ${1:s}=1 then ${2:r}(${3:7})=1", info: ">> логический; знак восстанавливается вручную (s — 1-битный регистр)." },
-  { label: "дополнительный код регистра", type: "snippet", snippet: true, detail: "−x в ДК", apply: "${1:neg}=${2:x}\n${1:neg}~\n${1:neg}+1", info: "Для вычитания сложением: neg := −x." },
-  { label: "подпрограмма", type: "snippet", snippet: true, detail: "call / return", apply: "call ${1:sub}\nend\n${1:sub}: ${2:тело}\nreturn", info: "Адрес возврата — в стек вызовов." },
-  { label: "обмен", type: "snippet", snippet: true, detail: "<->", apply: "${1:a}<->${2:b}", info: "Обмен значениями двух переменных." },
+  { label: "цикл за лічильником", type: "snippet", snippet: true, detail: "мітка + if … goto", apply: "${1:cnt}=${2:8}\n${3:loop}: ${4:тіло}\n${1:cnt}-1\nif ${1:cnt}<>0 then goto ${3:loop}", info: "Лічильник тактів, як ЛчТ у структурах методички." },
+  { label: "якщо … інакше", type: "snippet", snippet: true, detail: "через мітки", apply: "if ${1:a}=${2:b} then goto ${3:yes}\n${4:інакше}\ngoto ${5:done}\n${3:yes}: ${6:то}\n${5:done}:", info: "Розгалуження: перехід на гілку «то», інакше — наступний рядок." },
+  { label: "обернений код від'ємного", type: "snippet", snippet: true, detail: "ПК → ЗК", apply: "if ${1:r}(${2:7})=1 then ${1:r}(${3:6}:0)~", info: "Знак 1 — інвертувати значущі розряди." },
+  { label: "доповняльний код від'ємного", type: "snippet", snippet: true, detail: "ПК → ДК", apply: "if ${1:r}(${2:7})=1 then ${1:r}(${3:6}:0)~\nif ${1:r}(${2:7})=1 then ${1:r}+1", info: "Інверсія значущих розрядів і +1 до всього регістра (−0 перетворюється на +0)." },
+  { label: "модифікований код", type: "snippet", snippet: true, detail: "копія знака", apply: "${1:r}(${2:8})=${1:r}(${3:7})", info: "Другий знаковий розряд для виявлення переповнення." },
+  { label: "перевірка переповнення", type: "snippet", snippet: true, detail: "знакові розряди", apply: "if ${1:sm}(${2:8})<>${1:sm}(${3:7}) then goto ${4:ovf}", info: "У модифікованому коді різні знакові розряди — переповнення." },
+  { label: "арифметичний зсув праворуч", type: "snippet", snippet: true, detail: "зі збереженням знака", apply: "${1:s}=${2:r}(${3:7})\n${2:r}>>1\nif ${1:s}=1 then ${2:r}(${3:7})=1", info: ">> логічний; знак відновлюється вручну (s — 1-бітний регістр)." },
+  { label: "доповняльний код регістра", type: "snippet", snippet: true, detail: "−x у ДК", apply: "${1:neg}=${2:x}\n${1:neg}~\n${1:neg}+1", info: "Для віднімання додаванням: neg := −x." },
+  { label: "підпрограма", type: "snippet", snippet: true, detail: "call / return", apply: "call ${1:sub}\nend\n${1:sub}: ${2:тіло}\nreturn", info: "Адреса повернення — у стек викликів." },
+  { label: "обмін", type: "snippet", snippet: true, detail: "<->", apply: "${1:a}<->${2:b}", info: "Обмін значеннями двох змінних." },
 ];
 
 const lc = (s: string) => s.toLowerCase();
@@ -178,15 +178,15 @@ export function complete(code: string, pos: number): { from: number; options: Co
   if (call) {
     const s = regs.find((r) => r.name === call[1]);
     if (!s || !s.width) return null;
-    if (s.kind === "mem") return { from: pos, options: [{ label: `0…${s.count! - 1}`, apply: "0)", type: "field", detail: `ячейка из ${s.count}` }] };
+    if (s.kind === "mem") return { from: pos, options: [{ label: `0…${s.count! - 1}`, apply: "0)", type: "field", detail: `комірка з ${s.count}` }] };
     const w = s.width;
     const opts: Completion[] = [
-      { label: `${w - 1}:0)`, type: "field", detail: "все разряды" },
-      { label: `${w - 1})`, type: "field", detail: "старший (знаковый) разряд" },
-      { label: `0)`, type: "field", detail: "младший разряд" },
+      { label: `${w - 1}:0)`, type: "field", detail: "усі розряди" },
+      { label: `${w - 1})`, type: "field", detail: "старший (знаковий) розряд" },
+      { label: `0)`, type: "field", detail: "молодший розряд" },
     ];
-    if (w > 2) opts.splice(1, 0, { label: `${w - 2}:0)`, type: "field", detail: "без старшего разряда" });
-    if (w >= 8) opts.push({ label: `${Math.floor(w / 2) - 1}:0)`, type: "field", detail: "младшая половина" });
+    if (w > 2) opts.splice(1, 0, { label: `${w - 2}:0)`, type: "field", detail: "без старшого розряду" });
+    if (w >= 8) opts.push({ label: `${Math.floor(w / 2) - 1}:0)`, type: "field", detail: "молодша половина" });
     return { from: pos, options: opts.map((o, i) => ({ ...o, boost: 10 - i })) };
   }
 
@@ -194,10 +194,10 @@ export function complete(code: string, pos: number): { from: number; options: Co
     regs.map((r) => ({
       label: r.name,
       type: "variable",
-      detail: r.kind === "mem" ? `память ${r.count}×${r.width}` : `${r.width} бит`,
+      detail: r.kind === "mem" ? `пам'ять ${r.count}×${r.width}` : `${r.width} біт`,
       boost,
     }));
-  const labelOptions = labels.map((l): Completion => ({ label: l.name, type: "label", detail: `метка, строка ${l.line}` }));
+  const labelOptions = labels.map((l): Completion => ({ label: l.name, type: "label", detail: `мітка, рядок ${l.line}` }));
   const kwOptions = (list: KeywordInfo[]): Completion[] =>
     list.flatMap((k) => k.words.map((w, i): Completion => ({ label: w, type: "keyword", detail: k.syntax, info: k.doc, boost: i === 0 ? 1 : 0 })));
 
@@ -226,9 +226,9 @@ export function hoverInfo(code: string, word: string): string | null {
   const k = KW_INDEX.get(lc(word));
   if (k) return `${k.syntax}\n${k.doc}`;
   const s = symbols(code).find((x) => x.name === word);
-  if (s?.kind === "reg") return `${s.name}: регистр ${s.width} бит, разряды ${s.width! - 1}…0 (объявлен в строке ${s.line})`;
-  if (s?.kind === "mem") return `${s.name}: память ${s.count} ячеек по ${s.width} бит, индекс 0…${s.count! - 1} (строка ${s.line})`;
-  if (s?.kind === "label") return `${s.name}: метка, строка ${s.line}`;
+  if (s?.kind === "reg") return `${s.name}: регістр ${s.width} біт, розряди ${s.width! - 1}…0 (оголошений у рядку ${s.line})`;
+  if (s?.kind === "mem") return `${s.name}: пам'ять ${s.count} комірок по ${s.width} біт, індекс 0…${s.count! - 1} (рядок ${s.line})`;
+  if (s?.kind === "label") return `${s.name}: мітка, рядок ${s.line}`;
   return null;
 }
 
@@ -246,10 +246,10 @@ export interface Diagnostic {
 /** Проверка без запуска (validate интерпретатора): ошибки и предупреждения по строкам. */
 export function diagnose(code: string): Diagnostic[] {
   return validate(code).map((s) => {
-    const m = s.match(/^(ОШИБКА|ПРЕДУПРЕЖДЕНИЕ)[^(]*(?:\(строка (\d+)\))?:\s*(.*)$/);
+    const m = s.match(/^(ПОМИЛКА|ПОПЕРЕДЖЕННЯ)[^(]*(?:\(рядок (\d+)\))?:\s*(.*)$/);
     return {
       line: m?.[2] ? +m[2] : 1,
-      severity: m?.[1] === "ПРЕДУПРЕЖДЕНИЕ" ? "warning" : "error",
+      severity: m?.[1] === "ПОПЕРЕДЖЕННЯ" ? "warning" : "error",
       message: m?.[3] ?? s,
     };
   });

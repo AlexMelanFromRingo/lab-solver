@@ -37,12 +37,12 @@ end`,
 read mem(0), mem(1), mem(2), mem(3)
 acc = 0
 i = 0
-метка: if i = 4 goto итог
+мітка: if i = 4 goto підсумок
 acc + mem(i)
 i + 1
-goto метка
-итог: print acc
-end "сумма посчитана"`,
+goto мітка
+підсумок: print acc
+end "сума порахована"`,
 };
 
 function VarTable({ vars }: { vars: VarSnapshot[] }) {
@@ -53,9 +53,9 @@ function VarTable({ vars }: { vars: VarSnapshot[] }) {
       <table className="w-full text-sm font-mono">
         <thead>
           <tr className="border-b border-border text-ink-faint text-xs">
-            <th className="text-left px-3 py-2">Имя</th>
-            <th className="text-left px-3 py-2">Разряд.</th>
-            <th className="text-left px-3 py-2">Значение</th>
+            <th className="text-left px-3 py-2">{lang === "uk" ? "Ім'я" : "Имя"}</th>
+            <th className="text-left px-3 py-2">{lang === "uk" ? "Розряд." : "Разряд."}</th>
+            <th className="text-left px-3 py-2">{lang === "uk" ? "Значення" : "Значение"}</th>
           </tr>
         </thead>
         <tbody>
@@ -77,10 +77,7 @@ function VarTable({ vars }: { vars: VarSnapshot[] }) {
 const JOLSM_EXAMPLE_UK: Record<string, string> = {
   "Сложение двух регистров": "Додавання двох регістрів",
   "Переполнение при сложении (15 бит, оригинальный пример лабы 1)": "Переповнення при додаванні (15 біт, оригінальний приклад лаби 1)",
-  "Умножение (сдвиг и сложение)": "Множення (зсув і додавання)",
-  "Обратный и дополнительный код": "Обернений і додатковий код",
-  "Цикл по счётчику": "Цикл за лічильником",
-  "Косвенная адресация памяти": "Непряма адресація пам’яті",
+  "Цикл: сумма ячеек памяти": "Цикл: сума комірок пам’яті",
 };
 
 export default function JolsmPage() {
@@ -127,13 +124,13 @@ export default function JolsmPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           <Card>
             <CardBody className="pt-6 space-y-4">
-              <h2 className="font-display text-lg font-semibold text-ink">Микропрограмма</h2>
+              <h2 className="font-display text-lg font-semibold text-ink">{tx("Мікропрограма", "Микропрограмма")}</h2>
               <JolsmEditor value={code} onChange={setCode} />
               <p className="text-xs text-ink-faint">
                 {tx("Ctrl+Пробіл — підказки: команди, оголошені регістри і мітки, поля біт після «ім’я(», шаблони (цикл за лічильником, обернений і додатковий код, перевірка переповнення…). Наведіть на команду, регістр або знак операції — довідка. Помилки підкреслюються так, як їх видасть IDE.","Ctrl+Пробел — подсказки: команды, объявленные регистры и метки, поля бит после «имя(», шаблоны (цикл по счётчику, обратный и дополнительный код, проверка переполнения…). Наведите на команду, регистр или знак операции — справка. Ошибки подчёркиваются так, как их выдаст IDE.")}
               </p>
               <TextField
-                label="Значения для read/ввести (по порядку, через запятую)"
+                label={tx("Значення для read/ввести (за порядком, через кому)", "Значения для read/ввести (по порядку, через запятую)")}
                 value={inputsStr}
                 onChange={(e) => setInputsStr(e.target.value)}
               />
@@ -152,7 +149,7 @@ export default function JolsmPage() {
               )}
               {result.ended && (
                 <div className="rounded-[3px] border border-theory/30 bg-theory-soft px-4 py-3 text-sm text-theory">
-                  END: {result.ended || "(без сообщения)"}
+                  END: {result.ended || tx("(без повідомлення)", "(без сообщения)")}
                 </div>
               )}
               {result.output.length > 0 && (

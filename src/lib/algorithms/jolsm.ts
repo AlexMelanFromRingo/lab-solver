@@ -147,7 +147,7 @@ function parseNumber(tokIn: string): bigint {
   if (/^-?\d+$/.test(tok)) return BigInt(tok);
   if (/^\$[0-9A-Fa-f]+$/.test(tok)) return BigInt("0x" + tok.slice(1));
   if (/^#[01]+$/.test(tok)) return BigInt("0b" + tok.slice(1));
-  throw new JolsmError(`некорректное число: '${tok}'`);
+  throw new JolsmError(`некоректне число: '${tok}'`);
 }
 
 // ── machine state ────────────────────────────────────────────────────────
@@ -176,14 +176,14 @@ class Machine {
   vars = new Map<string, Var>();
 
   declare(name: string, width: number, isMem = false, count = 0) {
-    if (this.vars.has(name)) throw new JolsmError(`переменная '${name}' уже объявлена`);
-    if (width < 1 || width > 64) throw new JolsmError(`недопустимая разрядность ${width} (1..64)`);
+    if (this.vars.has(name)) throw new JolsmError(`змінна '${name}' вже оголошена`);
+    if (width < 1 || width > 64) throw new JolsmError(`неприпустима розрядність ${width} (1..64)`);
     this.vars.set(name, new Var(name, width, isMem, count));
   }
 
   getVar(name: string): Var {
     const v = this.vars.get(name);
-    if (!v) throw new JolsmError(`необъявленная переменная '${name}'`);
+    if (!v) throw new JolsmError(`неоголошена змінна '${name}'`);
     return v;
   }
 }
@@ -220,10 +220,10 @@ function checkOperandSyntax(textIn: string, line?: number) {
   const t = textIn.trim();
   if (t.endsWith("~") || t.startsWith("~"))
     throw new JolsmError(
-      `инверсия операнда внутри операции ('${t}') в IDE yal.cc не поддерживается — инвертируйте отдельной командой '${t.replace(/^~+|~+$/g, "")}~'`,
+      `інверсія операнда всередині операції ('${t}') в IDE yal.cc не підтримується — інвертуйте окремою командою '${t.replace(/^~+|~+$/g, "")}~'`,
       line,
     );
-  if (/^-\d+$/.test(t)) throw new JolsmError(`отрицательная константа '${t}' в тексте программы недопустима (IDE читает '-' как знак операции)`, line);
+  if (/^-\d+$/.test(t)) throw new JolsmError(`від'ємна константа '${t}' у тексті програми неприпустима (IDE читає '-' як знак операції)`, line);
 }
 
 function parseOperand(textIn: string, machine: Machine): Operand {
@@ -246,7 +246,7 @@ function parseOperand(textIn: string, machine: Machine): Operand {
       } else if (new RegExp(`^${IDENT}$`).test(inside)) {
         idx = { kind: "var", const: 0n, name: inside, hi: 0, lo: 0, index: null, invert: false };
       } else {
-        throw new JolsmError(`некорректный индекс памяти: '${inside}'`);
+        throw new JolsmError(`некоректний індекс пам'яті: '${inside}'`);
       }
       return { kind: "cell", const: 0n, name: base, hi: 0, lo: 0, index: idx, invert: inv };
     }
@@ -254,7 +254,7 @@ function parseOperand(textIn: string, machine: Machine): Operand {
     if (bf) {
       const hi = parseInt(bf[1], 10);
       const lo = parseInt(bf[2], 10);
-      if (hi < lo) throw new JolsmError(`в поле (${inside}) старший бит < младшего`);
+      if (hi < lo) throw new JolsmError(`у полі (${inside}) старший біт < молодшого`);
       return { kind: "bits", const: 0n, name: base, hi, lo, index: null, invert: inv };
     }
     if (/^\d+$/.test(inside)) {
@@ -266,12 +266,12 @@ function parseOperand(textIn: string, machine: Machine): Operand {
       const idx: Operand = { kind: "var", const: 0n, name: inside, hi: 0, lo: 0, index: null, invert: false };
       return { kind: "bits", const: 0n, name: base, hi: 0, lo: 0, index: idx, invert: inv };
     }
-    throw new JolsmError(`некорректный операнд: '${text}'`);
+    throw new JolsmError(`некоректний операнд: '${text}'`);
   }
   if (new RegExp(`^${IDENT}$`).test(text)) {
     return { kind: "var", const: 0n, name: text, hi: 0, lo: 0, index: null, invert: inv };
   }
-  throw new JolsmError(`некорректный операнд: '${text}'`);
+  throw new JolsmError(`некоректний операнд: '${text}'`);
 }
 
 // ── read / write ──────────────────────────────────────────────────────────
@@ -279,7 +279,7 @@ function cellIndex(op: Operand, m: Machine): number {
   const idx = op.index!;
   if (idx.kind === "const") return Number(idx.const);
   const v = m.getVar(idx.name);
-  if (v.isMem) throw new JolsmError(`индексом памяти не может быть массив '${idx.name}'`);
+  if (v.isMem) throw new JolsmError(`індексом пам'яті не може бути масив '${idx.name}'`);
   return Number(v.value);
 }
 
@@ -297,13 +297,13 @@ function readOp(opIn: Operand, m: Machine): bigint {
   }
   if (op.kind === "var") {
     const v = m.getVar(op.name);
-    if (v.isMem) throw new JolsmError(`'${op.name}' — массив, нужен индекс`);
+    if (v.isMem) throw new JolsmError(`'${op.name}' — масив, потрібен індекс`);
     const val = v.value & v.mask();
     return op.invert ? ~val & v.mask() : val;
   }
   if (op.kind === "bits") {
     const v = m.getVar(op.name);
-    if (op.hi >= v.width) throw new JolsmError(`бит ${op.hi} вне разрядности '${op.name}'(0..${v.width - 1})`);
+    if (op.hi >= v.width) throw new JolsmError(`біт ${op.hi} поза розрядністю '${op.name}'(0..${v.width - 1})`);
     const span = op.hi - op.lo + 1;
     const fmask = (1n << BigInt(span)) - 1n;
     const val = (v.value >> BigInt(op.lo)) & fmask;
@@ -312,23 +312,23 @@ function readOp(opIn: Operand, m: Machine): bigint {
   if (op.kind === "cell") {
     const v = m.getVar(op.name);
     const ci = cellIndex(op, m);
-    if (ci < 0 || ci >= v.count) throw new JolsmError(`индекс ${ci} вне памяти '${op.name}'(0..${v.count - 1})`);
+    if (ci < 0 || ci >= v.count) throw new JolsmError(`індекс ${ci} поза пам'яттю '${op.name}'(0..${v.count - 1})`);
     const val = v.cells[ci] & v.mask();
     return op.invert ? ~val & v.mask() : val;
   }
-  throw new JolsmError("внутренняя ошибка: неизвестный операнд");
+  throw new JolsmError("внутрішня помилка: невідомий операнд");
 }
 
 function writeOp(opIn: Operand, value: bigint, m: Machine) {
   const op = bindBit(opIn, m);
-  if (op.kind === "const") throw new JolsmError("нельзя присваивать константе");
+  if (op.kind === "const") throw new JolsmError("не можна присвоювати константі");
   if (op.kind === "var") {
     const v = m.getVar(op.name);
-    if (v.isMem) throw new JolsmError(`'${op.name}' — массив, нужен индекс`);
+    if (v.isMem) throw new JolsmError(`'${op.name}' — масив, потрібен індекс`);
     v.value = value & v.mask();
   } else if (op.kind === "bits") {
     const v = m.getVar(op.name);
-    if (op.hi >= v.width) throw new JolsmError(`бит ${op.hi} вне разрядности '${op.name}'(0..${v.width - 1})`);
+    if (op.hi >= v.width) throw new JolsmError(`біт ${op.hi} поза розрядністю '${op.name}'(0..${v.width - 1})`);
     const span = op.hi - op.lo + 1;
     const fmask = ((1n << BigInt(span)) - 1n) << BigInt(op.lo);
     v.value = (v.value & ~fmask) | ((value << BigInt(op.lo)) & fmask);
@@ -336,17 +336,17 @@ function writeOp(opIn: Operand, value: bigint, m: Machine) {
   } else if (op.kind === "cell") {
     const v = m.getVar(op.name);
     const ci = cellIndex(op, m);
-    if (ci < 0 || ci >= v.count) throw new JolsmError(`индекс ${ci} вне памяти '${op.name}'(0..${v.count - 1})`);
+    if (ci < 0 || ci >= v.count) throw new JolsmError(`індекс ${ci} поза пам'яттю '${op.name}'(0..${v.count - 1})`);
     v.cells[ci] = value & v.mask();
   } else {
-    throw new JolsmError("внутренняя ошибка: некорректная цель записи");
+    throw new JolsmError("внутрішня помилка: некоректна ціль запису");
   }
 }
 
 function destWidth(op: Operand, m: Machine): number {
   if (op.kind === "bits") return op.hi - op.lo + 1;
   if (op.kind === "var" || op.kind === "cell") return m.getVar(op.name).width;
-  throw new JolsmError("цель операции не имеет разрядности");
+  throw new JolsmError("ціль операції не має розрядності");
 }
 
 // ── operation evaluation ─────────────────────────────────────────────────
@@ -387,7 +387,7 @@ function applyOp(destVal: bigint, opcodeIn: string, rhs: bigint, width: number):
       return r & mask;
     }
     default:
-      throw new JolsmError(`неизвестная операция '${opcodeIn}'`);
+      throw new JolsmError(`невідома операція '${opcodeIn}'`);
   }
 }
 
@@ -470,14 +470,14 @@ function opRun(s: string): [number, string] {
 function parseOpStatement(t: string): OpData {
   const s = t.trim();
   const [i, op] = opRun(s);
-  if (i < 0) throw new JolsmError(`не распознана операция: '${t}'`);
+  if (i < 0) throw new JolsmError(`не розпізнана операція: '${t}'`);
   const dest = s.slice(0, i).trim();
   const rhs = s.slice(i + op.length).trim();
   if (!rhs) {
-    if (!(op in UNARY)) throw new JolsmError(`неизвестная одноместная операция '${op}' в '${t}'`);
+    if (!(op in UNARY)) throw new JolsmError(`невідома одномісна операція '${op}' у '${t}'`);
     return { dest, opcode: UNARY[op], rhs: null };
   }
-  if (!(op in OPS)) throw new JolsmError(`неизвестный оператор '${op}' в '${t}'`);
+  if (!(op in OPS)) throw new JolsmError(`невідомий оператор '${op}' у '${t}'`);
   return { dest, opcode: OPS[op], rhs };
 }
 
@@ -499,7 +499,7 @@ function parseStatement(no: number, t: string): Stmt {
         decls.push({ name: m[1], isMem: false, count: 0, width: parseInt(m[2], 10) });
         continue;
       }
-      throw new JolsmError(`некорректное объявление: '${part}'`, no);
+      throw new JolsmError(`некоректне оголошення: '${part}'`, no);
     }
     return { no, kind: "DECL", raw: t, data: { decls } };
   }
@@ -526,8 +526,8 @@ function parseStatement(no: number, t: string): Stmt {
   if (kw === "IF") {
     const body = rest;
     const [relpos, relraw] = opRun(body);
-    if (relpos < 0) throw new JolsmError(`в 'если' нет операции сравнения: '${t}'`, no);
-    if (!(relraw in COMPARATORS)) throw new JolsmError(`неизвестное сравнение '${relraw}' в '${t}'`, no);
+    if (relpos < 0) throw new JolsmError(`в умові if немає операції порівняння: '${t}'`, no);
+    if (!(relraw in COMPARATORS)) throw new JolsmError(`невідоме порівняння '${relraw}' у '${t}'`, no);
     const reltok = COMPARATORS[relraw];
     const left = body.slice(0, relpos).trim();
     const after = body.slice(relpos + relraw.length).trim();
@@ -536,9 +536,9 @@ function parseStatement(no: number, t: string): Stmt {
     let action = spaceIdx === -1 ? "" : after.slice(spaceIdx + 1).trim();
     const [aw] = firstWord(action);
     if (aw && KW[aw.toLowerCase()] === "THEN") action = action.slice(aw.length).trim();
-    if (!action) throw new JolsmError(`в 'если' нет действия: '${t}'`, no);
+    if (!action) throw new JolsmError(`в умові if немає дії: '${t}'`, no);
     const inner = parseStatement(no, action);
-    if (inner.kind === "IF") throw new JolsmError("'если' нельзя вкладывать в 'если'", no);
+    if (inner.kind === "IF") throw new JolsmError("if не можна вкладати в if", no);
     return { no, kind: "IF", raw: t, data: { left, rel: reltok, right, inner } };
   }
 
@@ -558,8 +558,8 @@ function compileProgram(code: string): Program {
   for (const ln of lines) {
     const idx = stmts.length;
     if (ln.label) {
-      if (KW[ln.label.toLowerCase()]) throw new JolsmError(`метка '${ln.label}' совпадает с ключевым словом — в IDE это ошибка`, ln.no);
-      if (labels.has(ln.label)) throw new JolsmError(`метка '${ln.label}' уже определена`, ln.no);
+      if (KW[ln.label.toLowerCase()]) throw new JolsmError(`мітка '${ln.label}' збігається з ключовим словом — в IDE це помилка`, ln.no);
+      if (labels.has(ln.label)) throw new JolsmError(`мітка '${ln.label}' вже визначена`, ln.no);
       labels.set(ln.label, idx);
     }
     try {
@@ -594,7 +594,7 @@ function checkSyntax(stmts: Stmt[]) {
         const it = raw.trim();
         if (/^".*"$|^'.*'$/.test(it)) continue;
         checkOperandSyntax(it, st.no);
-        if (mems.has(it)) throw new JolsmError(`массив памяти '${it}' целиком печатать нельзя (в IDE — ошибка) — печатайте ячейки: ${it}(0)…`, st.no);
+        if (mems.has(it)) throw new JolsmError(`масив пам'яті '${it}' цілком друкувати не можна (в IDE — помилка) — друкуйте комірки: ${it}(0)…`, st.no);
       }
     }
   };
@@ -664,7 +664,7 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
   } catch (e) {
     const err = e as JolsmError;
     res.ok = false;
-    res.errors.push(`Ошибка компиляции${err.line ? ` (строка ${err.line})` : ""}: ${err.message}`);
+    res.errors.push(`Помилка компіляції${err.line ? ` (рядок ${err.line})` : ""}: ${err.message}`);
     return res;
   }
 
@@ -685,7 +685,7 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
       const key = readOp(parseOperand(lbl, m), m).toString();
       if (prog.labels.has(key)) return prog.labels.get(key)!;
     }
-    throw new JolsmError(`метка '${lbl}' не найдена`, line);
+    throw new JolsmError(`мітка '${lbl}' не знайдена`, line);
   }
 
   function execStmt(s: Stmt): number | null {
@@ -707,7 +707,7 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
             val = typeof raw === "number" ? BigInt(raw) : parseNumber(String(raw).trim());
           } else {
             val = 0n;
-            res.trace.push({ line: s.no, text: `[ввод '${tg}' = 0 — нет данных]`, vars: [] });
+            res.trace.push({ line: s.no, text: `[ввід '${tg}' = 0 — немає даних]`, vars: [] });
           }
           writeOp(op, val, m);
         }
@@ -726,7 +726,7 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
           }
           const op = parseOperand(it, m);
           if (op.kind === "var" && m.getVar(op.name).isMem)
-            throw new JolsmError(`массив памяти '${op.name}' целиком печатать нельзя — печатайте ячейки: ${op.name}(0)…`);
+            throw new JolsmError(`масив пам'яті '${op.name}' цілком друкувати не можна — друкуйте комірки: ${op.name}(0)…`);
           const val = readOp(op, m);
           const w = op.kind === "bits" ? (op.index ? 1 : op.hi - op.lo + 1) : op.kind === "const" ? op.cwidth ?? 8 : m.getVar(op.name).width;
           parts.push(items.length === 1 && op.kind !== "const" ? op.name + fmtVal(val, w) : fmtVal(val, w) + " ");
@@ -737,13 +737,13 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
       case "GOTO":
         return resolveLabel(s.data.label as string, s.no);
       case "CALL": {
-        if (callstack.length >= STACK_LIMIT) throw new JolsmError("переполнение стека вызовов", s.no);
+        if (callstack.length >= STACK_LIMIT) throw new JolsmError("переповнення стека викликів", s.no);
         callstack.push(pc + 1);
         return resolveLabel(s.data.label as string, s.no);
       }
       case "RETURN": {
         if (callstack.length === 0) {
-          throw new JolsmError("возврат при пустом стеке — нет соответствующего вызова", s.no);
+          throw new JolsmError("повернення за порожнього стека — немає відповідного виклику", s.no);
         }
         return callstack.pop()!;
       }
@@ -785,7 +785,7 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
           writeOp(dest, cur + (data.opcode === "inc" ? 1n : -1n), m);
         } else if (data.opcode === "<->") {
           const other = parseOperand(data.rhs!, m);
-          if (other.kind === "const") throw new JolsmError("обмен '<->' возможен только с переменной");
+          if (other.kind === "const") throw new JolsmError("обмін '<->' можливий лише зі змінною");
           const ov = readOp(other, m);
           writeOp(other, cur, m);
           writeOp(dest, ov, m);
@@ -796,7 +796,7 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
         return null;
       }
       default:
-        throw new JolsmError(`неизвестная команда '${s.kind}'`, s.no);
+        throw new JolsmError(`невідома команда '${s.kind}'`, s.no);
     }
   }
 
@@ -804,7 +804,7 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
     while (pc >= 0 && pc < n) {
       steps += 1;
       if (steps > maxSteps) {
-        throw new JolsmError(`превышен лимит шагов (${maxSteps}) — вероятен бесконечный цикл`);
+        throw new JolsmError(`перевищено ліміт кроків (${maxSteps}) — ймовірний нескінченний цикл`);
       }
       const s = prog.stmts[pc];
       const outputBefore = res.output.length;
@@ -825,8 +825,8 @@ export function run(code: string, inputs: (string | number)[] = [], maxSteps = 2
     const err = e as JolsmError;
     res.ok = false;
     const s = pc >= 0 && pc < n ? prog.stmts[pc] : null;
-    const loc = err.line ? ` (строка ${err.line})` : s ? ` (строка ${s.no})` : "";
-    res.errors.push(`Ошибка выполнения${loc}: ${err.message}`);
+    const loc = err.line ? ` (рядок ${err.line})` : s ? ` (рядок ${s.no})` : "";
+    res.errors.push(`Помилка виконання${loc}: ${err.message}`);
   }
 
   res.final = snapshotVars(m);
@@ -842,7 +842,7 @@ export function validate(code: string): string[] {
     prog = compileProgram(code);
   } catch (e) {
     const err = e as JolsmError;
-    return [`ОШИБКА компиляции${err.line ? ` (строка ${err.line})` : ""}: ${err.message}`];
+    return [`ПОМИЛКА компіляції${err.line ? ` (рядок ${err.line})` : ""}: ${err.message}`];
   }
 
   const m = new Machine();
@@ -853,7 +853,7 @@ export function validate(code: string): string[] {
         try {
           m.declare(d.name, d.width, d.isMem, d.count);
         } catch (e) {
-          out.push(`ОШИБКА (строка ${s.no}): ${(e as Error).message}`);
+          out.push(`ПОМИЛКА (рядок ${s.no}): ${(e as Error).message}`);
         }
       }
     }
@@ -871,25 +871,25 @@ export function validate(code: string): string[] {
     try {
       op = parseOperand(opstr, m);
     } catch (e) {
-      out.push(`ОШИБКА (строка ${no}): ${(e as Error).message}`);
+      out.push(`ПОМИЛКА (рядок ${no}): ${(e as Error).message}`);
       return null;
     }
     if (op.kind === "const") return op;
     if (!m.vars.has(op.name)) {
-      out.push(`ОШИБКА (строка ${no}): необъявленная переменная '${op.name}'`);
+      out.push(`ПОМИЛКА (рядок ${no}): неоголошена змінна '${op.name}'`);
       return op;
     }
     const v = m.vars.get(op.name)!;
     if (op.kind === "bits") {
-      if (v.isMem) out.push(`ОШИБКА (строка ${no}): '${op.name}' — массив памяти, битовое поле недопустимо`);
+      if (v.isMem) out.push(`ПОМИЛКА (рядок ${no}): '${op.name}' — масив пам'яті, бітове поле неприпустиме`);
       else if (op.hi >= v.width)
         out.push(
-          `ОШИБКА (строка ${no}): бит ${op.hi} вне разрядности '${op.name}' — допустимо 0..${v.width - 1}; увеличьте разрядность`
+          `ПОМИЛКА (рядок ${no}): біт ${op.hi} поза розрядністю '${op.name}' — допустимо 0..${v.width - 1}; збільште розрядність`
         );
     } else if (op.kind === "cell") {
-      if (!v.isMem) out.push(`ОШИБКА (строка ${no}): '${op.name}' — не массив памяти, индексация недопустима`);
+      if (!v.isMem) out.push(`ПОМИЛКА (рядок ${no}): '${op.name}' — не масив пам'яті, індексація неприпустима`);
       else if (op.index!.kind === "const" && !(op.index!.const >= 0n && op.index!.const < BigInt(v.count)))
-        out.push(`ОШИБКА (строка ${no}): индекс ${op.index!.const} вне памяти '${op.name}' (0..${v.count - 1})`);
+        out.push(`ПОМИЛКА (рядок ${no}): індекс ${op.index!.const} поза пам'яттю '${op.name}' (0..${v.count - 1})`);
     }
     return op;
   }
@@ -901,7 +901,7 @@ export function validate(code: string): string[] {
     const hi = (1n << BigInt(w)) - 1n;
     if (!(lo <= cval && cval <= hi)) {
       out.push(
-        `ПРЕДУПРЕЖДЕНИЕ (строка ${no}): константа ${cval} не помещается в ${w}-битный приёмник — будет усечена по модулю 2^${w}; увеличьте разрядность приёмника`
+        `ПОПЕРЕДЖЕННЯ (рядок ${no}): константа ${cval} не вміщується в ${w}-бітний приймач — буде усічена за модулем 2^${w}; збільште розрядність приймача`
       );
     }
   }
@@ -910,14 +910,14 @@ export function validate(code: string): string[] {
     const tgt = tgtIn.trim();
     if (CONST_RE.test(tgt)) {
       if (!prog.labels.has(parseNumber(tgt).toString())) {
-        out.push(`ОШИБКА (строка ${no}): метка '${tgt}' не определена`);
+        out.push(`ПОМИЛКА (рядок ${no}): мітка '${tgt}' не визначена`);
       }
     } else if (new RegExp(`^${IDENT}$`).test(tgt)) {
       if (!prog.labels.has(tgt) && !m.vars.has(tgt)) {
-        out.push(`ОШИБКА (строка ${no}): метка/переменная '${tgt}' не определена`);
+        out.push(`ПОМИЛКА (рядок ${no}): мітка/змінна '${tgt}' не визначена`);
       }
     } else {
-      out.push(`ОШИБКА (строка ${no}): некорректная цель перехода '${tgt}'`);
+      out.push(`ПОМИЛКА (рядок ${no}): некоректна ціль переходу '${tgt}'`);
     }
   }
 
@@ -951,7 +951,7 @@ export function validate(code: string): string[] {
       const rhs = chkOperand(data.rhs!, s.no);
       if (rhs === null || dest === null) return;
       if (data.opcode === "<->") {
-        if (rhs.kind === "const") out.push(`ОШИБКА (строка ${s.no}): обмен '<->' возможен только с переменной`);
+        if (rhs.kind === "const") out.push(`ПОМИЛКА (рядок ${s.no}): обмін '<->' можливий лише зі змінною`);
         return;
       }
       if (rhs.kind === "const") {
@@ -961,7 +961,7 @@ export function validate(code: string): string[] {
         const rw = widthOf(rhs);
         if (dw !== null && rw !== null && rw > dw) {
           out.push(
-            `ПРЕДУПРЕЖДЕНИЕ (строка ${s.no}): операнд '${data.rhs}' (${rw} бит) шире приёмника '${data.dest}' (${dw} бит) — возможна потеря старших разрядов`
+            `ПОПЕРЕДЖЕННЯ (рядок ${s.no}): операнд '${data.rhs}' (${rw} біт) ширший за приймач '${data.dest}' (${dw} біт) — можлива втрата старших розрядів`
           );
         }
       }
