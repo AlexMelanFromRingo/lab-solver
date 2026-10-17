@@ -253,7 +253,7 @@ export default function ItLab3Page() {
                 <p className="text-xs leading-relaxed text-ink-faint">
                   PyTorch: {lab.results.pytorch.framework}. TensorFlow:{" "}
                   {lab.results.tensorflow.framework}. Видеокарта {lab.results.pytorch.device}, по{" "}
-                  {lab.results.pytorch.epochs} эпох на этап
+                  {lab.results.pytorch.epochs} {tx("епох на етап","эпох на этап")}
                 </p>
               </>
             ) : (

@@ -282,8 +282,8 @@ export function RgrCalc() {
         value={[
           `Z1 = ${cstr(r.z1)} Ом`,
           `Z2 = ${cstr(r.z2)} Ом`,
-          `Zэкв = Z1·Z2/(Z1 + Z2) = ${cstr(r.z)} Ом`,
-          `I = U/Zэкв = ${cstr(r.I)} А  → I = ${f(abs(r.I))} А`,
+          `Zекв = Z1·Z2/(Z1 + Z2) = ${cstr(r.z)} Ом`,
+          `I = U/Zекв = ${cstr(r.I)} А  → I = ${f(abs(r.I))} А`,
           `I1 = U/Z1 = ${cstr(r.I1)} А  → I1 = ${f(abs(r.I1))} А`,
           `I2 = U/Z2 = ${cstr(r.I2)} А  → I2 = ${f(abs(r.I2))} А`,
           `S = U·I* = ${f(r.S.re)} ${r.S.im < 0 ? "−" : "+"} j${f(Math.abs(r.S.im))} ВА (P = ${f(r.S.re)} Вт, Q = ${f(r.S.im)} вар)`,
