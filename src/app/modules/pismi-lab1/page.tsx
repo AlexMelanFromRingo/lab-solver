@@ -12,6 +12,7 @@ import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { INSTALL_GUIDES } from "@/lib/data/pismi-install";
 import { usePismiIndex } from "@/lib/pismi-files";
 import { useLang } from "@/components/lang";
+import { tr } from "@/lib/i18n";
 
 const mod = modules.find((m) => m.slug === "pismi-lab1")!;
 const accent = categories.pismi.accent;
@@ -48,21 +49,21 @@ export default function PismiLab1Page() {
               >
                 {INSTALL_GUIDES.map((g) => (
                   <option key={g.id} value={g.id}>
-                    {g.system}
+                    {tr(g.system, lang)}
                   </option>
                 ))}
               </SelectField>
             </div>
 
-            <p className="text-sm leading-relaxed text-ink-dim">{guide.summary}</p>
+            <p className="text-sm leading-relaxed text-ink-dim">{tr(guide.summary, lang)}</p>
 
             <div>
-              <h3 className="mb-2 text-sm font-medium text-ink-dim">Что нужно заранее</h3>
+              <h3 className="mb-2 text-sm font-medium text-ink-dim">{tx("Що потрібно заздалегідь","Что нужно заранее")}</h3>
               <ul className="space-y-1.5 text-sm text-ink-faint">
-                {guide.requirements.map((r) => (
-                  <li key={r} className="flex gap-2">
+                {guide.requirements.map((req, ri) => (
+                  <li key={ri} className="flex gap-2">
                     <span style={{ color: accent }}>·</span>
-                    {r}
+                    {tr(req, lang)}
                   </li>
                 ))}
               </ul>
@@ -70,14 +71,14 @@ export default function PismiLab1Page() {
 
             <ol className="space-y-6">
               {guide.steps.map((step, i) => (
-                <li key={step.title} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
+                <li key={i} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
                   <span className="font-mono text-sm tabular-nums" style={{ color: accent }}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div className="space-y-2">
-                    <h4 className="font-medium text-ink">{step.title}</h4>
+                    <h4 className="font-medium text-ink">{tr(step.title, lang)}</h4>
                     {step.body && (
-                      <p className="text-sm leading-relaxed text-ink-dim">{step.body}</p>
+                      <p className="text-sm leading-relaxed text-ink-dim">{tr(step.body, lang)}</p>
                     )}
                     {step.commands && (
                       <pre className="overflow-x-auto rounded-[4px] border border-border bg-black/40 px-4 py-3 font-mono text-xs leading-relaxed text-ink">
@@ -92,10 +93,10 @@ export default function PismiLab1Page() {
             <div>
               <h3 className="mb-2 text-sm font-medium text-ink-dim">{tx("Де спотикаються","Где спотыкаются")}</h3>
               <ul className="space-y-2 text-sm text-ink-dim">
-                {guide.pitfalls.map((p) => (
-                  <li key={p} className="flex gap-2 leading-relaxed">
+                {guide.pitfalls.map((pit, pi) => (
+                  <li key={pi} className="flex gap-2 leading-relaxed">
                     <span style={{ color: accent }}>·</span>
-                    {p}
+                    {tr(pit, lang)}
                   </li>
                 ))}
               </ul>
