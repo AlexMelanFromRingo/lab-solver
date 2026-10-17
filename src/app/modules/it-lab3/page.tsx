@@ -11,6 +11,8 @@ import { FileSet } from "@/components/ui/file-set";
 import { categories, modules } from "@/lib/modules";
 import { IT_GUIDES } from "@/lib/data/it-labs";
 import { DATASET, GUIDES } from "@/lib/data/it-lobe";
+import { useLang } from "@/components/lang";
+import { tr } from "@/lib/i18n";
 import { useItIndex, type CodeRun } from "@/lib/it-files";
 
 const mod = modules.find((m) => m.slug === "it-lab3")!;
@@ -62,6 +64,7 @@ function mb(bytes: number): string {
 
 export default function ItLab3Page() {
   const index = useItIndex();
+  const { lang } = useLang();
   const [guideId, setGuideId] = useState(GUIDES[0].id);
   const guide = GUIDES.find((g) => g.id === guideId)!;
 
@@ -105,13 +108,10 @@ export default function ItLab3Page() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Набор изображений
+                {tr({ uk: "Набір зображень", ru: "Набор изображений" }, lang)}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                {DATASET.source}. Четыре класса: {DATASET.classes.join(", ")}. Картинки лежат в
-                подпапках с названиями классов — Lobe размечает их по этим названиям сам.
-                Скрипт make_dataset.py скачивает архив и раскладывает ровно те 360 файлов, на
-                которых сделана работа.
+                {tr(DATASET.source, lang)}. {tr({ uk: "Чотири класи", ru: "Четыре класса" }, lang)}: {DATASET.classes.join(", ")}. {tr({ uk: "Картинки лежать у підпапках з назвами класів — Lobe розмічає їх за цими назвами сам. Скрипт make_dataset.py завантажує архів і розкладає рівно ті 360 файлів, на яких зроблено роботу.", ru: "Картинки лежат в подпапках с названиями классов — Lobe размечает их по этим названиям сам. Скрипт make_dataset.py скачивает архив и раскладывает ровно те 360 файлов, на которых сделана работа." }, lang)}
               </p>
             </div>
 
@@ -121,9 +121,9 @@ export default function ItLab3Page() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border text-xs text-ink-faint">
-                    <th className="px-3 py-2 text-left font-medium">Папка</th>
-                    <th className="px-3 py-2 text-right font-medium">На класс</th>
-                    <th className="px-3 py-2 text-right font-medium">Всего</th>
+                    <th className="px-3 py-2 text-left font-medium">{tr({ uk: "Папка", ru: "Папка" }, lang)}</th>
+                    <th className="px-3 py-2 text-right font-medium">{tr({ uk: "На клас", ru: "На класс" }, lang)}</th>
+                    <th className="px-3 py-2 text-right font-medium">{tr({ uk: "Усього", ru: "Всего" }, lang)}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -134,7 +134,7 @@ export default function ItLab3Page() {
                           {s.name}
                         </span>
                         <span className="mt-0.5 block text-xs leading-snug text-ink-faint">
-                          {s.role}
+                          {tr(s.role, lang)}
                         </span>
                       </td>
                       <td className="px-3 py-2 text-right font-mono text-ink-dim">
@@ -173,16 +173,16 @@ export default function ItLab3Page() {
               >
                 {GUIDES.map((g) => (
                   <option key={g.id} value={g.id}>
-                    {g.title}
+                    {tr(g.title, lang)}
                   </option>
                 ))}
               </SelectField>
             </div>
 
-            <p className="text-sm leading-relaxed text-ink-dim">{guide.summary}</p>
+            <p className="text-sm leading-relaxed text-ink-dim">{tr(guide.summary, lang)}</p>
 
             <Steps steps={guide.steps} accent={accent} />
-            <Pitfalls items={guide.pitfalls} accent={accent} />
+            <Pitfalls items={guide.pitfalls.map((p) => tr(p, lang))} accent={accent} />
           </CardBody>
         </Card>
 
