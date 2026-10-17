@@ -97,7 +97,7 @@ export default function AiLab1Page() {
             </div>
 
             <pre className="overflow-x-auto rounded-[4px] border border-border bg-black/40 px-4 py-3 font-mono text-xs leading-relaxed text-ink">
-              {FLS_FORMAT}
+              {tr(FLS_FORMAT, lang)}
             </pre>
 
             <div className="space-y-2 text-sm leading-relaxed text-ink-dim">
