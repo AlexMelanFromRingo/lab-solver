@@ -6,6 +6,7 @@ import { Card, CardBody } from "@/components/ui/card";
 import { FileSet, type LabFile } from "@/components/ui/file-set";
 import { Pitfalls, Steps } from "@/components/lab-steps";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
 import { PISMI_BASE, setStudent, useStudent, useTemplates } from "@/lib/pismi-files";
 import {
   archiveName,
@@ -60,6 +61,8 @@ function StudentFields({
   archive: string;
 }) {
   const student = useStudent();
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [touched, setTouched] = useState({ pib: false, group: false });
   const show = (key: "pib" | "group") => (touched[key] || student[key] !== "" ? errors[key] : undefined);
 
@@ -70,7 +73,7 @@ function StudentFields({
     <div className="space-y-5">
       <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_12rem]">
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink-dim">ПІБ полностью</span>
+          <span className="mb-1.5 block text-sm font-medium text-ink-dim">{tx("ПІБ повністю","ПІБ полностью")}</span>
           <input
             type="text"
             value={student.pib}
@@ -85,7 +88,7 @@ function StudentFields({
           {show("pib") && <span className="mt-1.5 block text-xs text-[#fb7185]">{show("pib")}</span>}
         </label>
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink-dim">Группа</span>
+          <span className="mb-1.5 block text-sm font-medium text-ink-dim">{tx("Група","Группа")}</span>
           <input
             type="text"
             value={student.group}
@@ -104,11 +107,11 @@ function StudentFields({
           из ПІБ, у одного студента он всегда один и тот же. */}
       <dl className="grid grid-cols-2 border-l border-t border-border text-sm sm:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1fr)]">
         {[
-          { label: "в коде полностью", value: values?.PIB, wide: true },
-          { label: "сокращённо", value: values?.PIB_SHORT },
-          { label: "группа", value: values?.GROUP },
+          { label: tx("у коді повністю","в коде полностью"), value: values?.PIB, wide: true },
+          { label: tx("скорочено","сокращённо"), value: values?.PIB_SHORT },
+          { label: tx("група","группа"), value: values?.GROUP },
           {
-            label: "цвет оформления",
+            label: tx("колір оформлення","цвет оформления"),
             wide: true,
             value: values && (
               <span className="inline-flex items-center gap-2">
@@ -133,7 +136,7 @@ function StudentFields({
           </div>
         ))}
         <div className="col-span-2 min-w-0 border-b border-r border-border px-3 py-2.5 sm:col-span-4">
-          <dt className="text-[0.6875rem] leading-none text-ink-faint">архив</dt>
+          <dt className="text-[0.6875rem] leading-none text-ink-faint">{tx("архів","архив")}</dt>
           <dd className="mt-1.5 break-all font-mono text-[0.8125rem]" style={{ color: values ? accent : undefined }}>
             {archive}
           </dd>
@@ -141,9 +144,8 @@ function StudentFields({
       </dl>
 
       <p className="text-xs leading-relaxed text-ink-faint">
-        Хранится только в этом браузере. Нельзя использовать символы{" "}
-        <span className="font-mono text-ink-dim">{index.forbidden.join(" ")}</span>: имя стоит в
-        тексте страниц и в строках PHP.
+        {tx("Зберігається лише в цьому браузері. Не можна використовувати символи","Хранится только в этом браузере. Нельзя использовать символы")}{" "}
+        <span className="font-mono text-ink-dim">{index.forbidden.join(" ")}</span>: {tx("ім’я стоїть у тексті сторінок і в рядках PHP.","имя стоит в тексте страниц и в строках PHP.")}
       </p>
     </div>
   );
@@ -164,10 +166,12 @@ function TierPicker({
   onChange: (tier: string) => void;
   accent: string;
 }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const base = lab.features?.[lab.tiers[0]] ?? [];
 
   return (
-    <div role="radiogroup" aria-label="Оформление" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div role="radiogroup" aria-label={tx("Оформлення","Оформление")} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {lab.tiers.map((code) => {
         const info = index.tiers.find((t) => t.code === code);
         const note = lab.tier_notes?.[code] ?? info?.note ?? "";
@@ -196,7 +200,7 @@ function TierPicker({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={`${PISMI_BASE}/${preview}`}
-                  alt={`Как выглядит уровень «${info?.title ?? code}» с примерными данными`}
+                  alt={tx(`Як виглядає рівень «${info?.title ?? code}» з приблизними даними`,`Как выглядит уровень «${info?.title ?? code}» с примерными данными`)}
                   width={640}
                   height={400}
                   loading="lazy"
@@ -204,7 +208,7 @@ function TierPicker({
                 />
               ) : (
                 <div className="flex h-full items-center justify-center px-4 text-center text-xs text-ink-faint">
-                  снимка нет
+                  {tx("знімка немає","снимка нет")}
                 </div>
               )}
               {selected && (
@@ -222,7 +226,7 @@ function TierPicker({
               </div>
               <p className="text-xs leading-snug text-ink-dim">{note}</p>
               {extra.length > 0 && (
-                <p className="text-xs leading-snug text-ink-faint">Сверх обязательного: {extra.join(", ")}</p>
+                <p className="text-xs leading-snug text-ink-faint">{tx("Понад обов’язкове","Сверх обязательного")}: {extra.join(", ")}</p>
               )}
             </div>
           </button>
@@ -266,6 +270,8 @@ export function PismiWork({
   /** Нужны ли данные студента (в ЛР4 заполнителей нет). */
   student?: boolean;
 }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [tier, setTier] = useState(lab.tiers[0]);
   const input = useStudent();
   const check = useMemo(() => studentValues(input, index.palette, index.forbidden), [input, index]);
@@ -319,14 +325,14 @@ export function PismiWork({
     <Card>
       <CardBody className="space-y-6 pt-6">
         <div>
-          <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Готовая работа</h2>
+          <h2 className="font-display text-xl font-semibold tracking-tight text-ink">{tx("Готова робота","Готовая работа")}</h2>
           <div className="mt-1.5 max-w-3xl text-sm leading-relaxed text-ink-dim">{intro}</div>
         </div>
 
         {student && (
           <Section
-            title="Данные студента"
-            hint="Вписываются прямо в код страниц — так требует методичка. Общие для всех пяти работ."
+            title={tx("Дані студента","Данные студента")}
+            hint={tx("Вписуються прямо в код сторінок — так вимагає методичка. Спільні для всіх п’яти робіт.","Вписываются прямо в код страниц — так требует методичка. Общие для всех пяти работ.")}
           >
             <StudentFields index={index} values={values} errors={errors} accent={accent} archive={name} />
           </Section>
@@ -340,29 +346,29 @@ export function PismiWork({
 
         {lab.tiers.length > 1 && (
           <Section
-            title="Оформление"
-            hint="Обязательное по методичке есть в каждом варианте; отличаются вид и то, что сделано сверх него. Внутри варианта работы разных студентов отличаются ещё и цветом."
+            title={tx("Оформлення","Оформление")}
+            hint={tx("Обов’язкове за методичкою є в кожному варіанті; відрізняються вигляд і те, що зроблено понад нього. Усередині варіанта роботи різних студентів відрізняються ще й кольором.","Обязательное по методичке есть в каждом варианте; отличаются вид и то, что сделано сверх него. Внутри варианта работы разных студентов отличаются ещё и цветом.")}
           >
             <TierPicker index={index} lab={lab} value={tier} onChange={setTier} accent={accent} />
           </Section>
         )}
 
         <Section
-          title="Файлы"
+          title={tx("Файли","Файлы")}
           hint={
             student && !values
-              ? "Пока данные не введены, в тексте видны заполнители вида %%PIB%% — на их место встанут ПІБ и группа."
+              ? tx("Поки дані не введені, в тексті видно заповнювачі виду %%PIB%% — на їх місце стануть ПІБ і група.","Пока данные не введены, в тексте видны заполнители вида %%PIB%% — на их место встанут ПІБ и группа.")
               : undefined
           }
         >
           {failed ? (
             <p className="rounded-[4px] border border-border bg-black/30 px-4 py-3 text-sm text-ink-dim">
-              Файлы не загрузились. Обновите страницу.
+              {tx("Файли не завантажилися. Оновіть сторінку.","Файлы не загрузились. Обновите страницу.")}
             </p>
           ) : shown ? (
             <FileSet base={PISMI_BASE} files={listed} accent={accent} contents={shown} />
           ) : (
-            <p className="text-sm text-ink-faint">Загрузка…</p>
+            <p className="text-sm text-ink-faint">{tx("Завантаження…","Загрузка…")}</p>
           )}
 
           <div className="flex flex-col gap-3 rounded-[4px] border border-border bg-black/20 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
@@ -370,10 +376,10 @@ export function PismiWork({
               <div className="break-all font-mono text-[0.8125rem] text-ink">{name}</div>
               <div className="mt-0.5 text-xs text-ink-faint">
                 {ready
-                  ? `${files.length} ${plural(files.length, "файл", "файла", "файлов")}, ${kb(total)}; внутри — каталог ${lab.root}/, как в методичке`
+                  ? tx(`${files.length} ${plural(files.length, "файл", "файли", "файлів")}, ${kb(total)}; усередині — каталог ${lab.root}/, як у методичці`,`${files.length} ${plural(files.length, "файл", "файла", "файлов")}, ${kb(total)}; внутри — каталог ${lab.root}/, как в методичке`)
                   : student && !values
-                    ? "Сначала ПІБ и группа: без них архив не собирается"
-                    : "Файлы ещё загружаются"}
+                    ? tx("Спочатку ПІБ і група: без них архів не збирається","Сначала ПІБ и группа: без них архив не собирается")
+                    : tx("Файли ще завантажуються","Файлы ещё загружаются")}
               </div>
             </div>
             <button
@@ -384,7 +390,7 @@ export function PismiWork({
               style={{ color: accent, background: tint(accent, 8), borderColor: tint(accent, 30) }}
             >
               <Download size={15} />
-              Скачать архив
+              {tx("Завантажити архів","Скачать архив")}
             </button>
           </div>
         </Section>
@@ -395,13 +401,15 @@ export function PismiWork({
 
 /** Запуск готовой работы, что из неё в отчёт и чем она отступает от методички. */
 export function PismiRun({ lab, accent, before }: { lab: PismiLab; accent: string; before?: ReactNode }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   return (
     <Card>
       <CardBody className="space-y-6 pt-6">
         <div>
-          <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Как запустить</h2>
+          <h2 className="font-display text-xl font-semibold tracking-tight text-ink">{tx("Як запустити","Как запустить")}</h2>
           <p className="mt-1.5 text-sm leading-relaxed text-ink-dim">
-            Порты и имена контейнеров — как в методичке:{" "}
+            {tx("Порти та імена контейнерів — як у методичці:","Порты и имена контейнеров — как в методичке:")}{" "}
             {lab.ports.map((p, i) => (
               <span key={p.host}>
                 {i > 0 && ", "}
@@ -418,7 +426,7 @@ export function PismiRun({ lab, accent, before }: { lab: PismiLab; accent: strin
 
         <div className="border-t border-border pt-5">
           <h3 className="mb-2.5 font-display text-base font-semibold tracking-tight text-ink">
-            Что из этой работы идёт в отчёт
+            {tx("Що з цієї роботи йде у звіт","Что из этой работы идёт в отчёт")}
           </h3>
           <ul className="space-y-1.5">
             {lab.report.map((item) => (
@@ -434,7 +442,7 @@ export function PismiRun({ lab, accent, before }: { lab: PismiLab; accent: strin
 
         {lab.deviations.length > 0 && (
           <Pitfalls
-            title="Где работа отступает от методички и почему"
+            title={{ uk: "Де робота відступає від методички і чому", ru: "Где работа отступает от методички и почему" }}
             accent={accent}
             items={lab.deviations.map((d, i) => (
               <Fragment key={i}>

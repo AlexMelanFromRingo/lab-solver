@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang } from "@/components/lang";
 import { useEffect, useState } from "react";
 import { CodeBlock } from "./code-block";
 import { cn } from "@/lib/cn";
@@ -37,7 +38,7 @@ export function FileSet({
   accent,
   archive,
   contents,
-  supportingNote = "Это оформление и общая основа: к заданию они не относятся, но без них работа не запустится.",
+  supportingNote,
 }: {
   base: string;
   files: LabFile[];
@@ -52,6 +53,9 @@ export function FileSet({
   /** Что за вспомогательные файлы: у каждой работы они свои. */
   supportingNote?: string;
 }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
+  const supNote = supportingNote ?? tx("Це оформлення і спільна основа: до завдання вони не стосуються, але без них робота не запуститься.","Это оформление и общая основа: к заданию они не относятся, но без них работа не запустится.");
   const [active, setActive] = useState(files[0]?.path ?? "");
   const [withSupporting, setWithSupporting] = useState(false);
 
@@ -103,7 +107,7 @@ export function FileSet({
       {archive && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-[4px] border border-border bg-black/20 px-4 py-3">
           <p className="text-sm text-ink-dim">
-            Весь каталог работы одним архивом: распаковать и запустить, ничего не доустанавливая.
+            {tx("Весь каталог роботи одним архівом: розпакувати і запустити, нічого не доустановлюючи.","Весь каталог работы одним архивом: распаковать и запустить, ничего не доустанавливая.")}
           </p>
           <a
             href={`${base}/${archive.path}`}
@@ -111,7 +115,7 @@ export function FileSet({
             className="shrink-0 rounded-[3px] px-4 py-2 text-sm font-medium transition-colors"
             style={{ color: accent, background: `${accent}14`, border: `1px solid ${accent}44` }}
           >
-            Скачать архивом · {kb(archive.size)}
+            {tx("Завантажити архівом","Скачать архивом")} · {kb(archive.size)}
           </a>
         </div>
       )}
@@ -166,7 +170,7 @@ export function FileSet({
               style={{ accentColor: accent }}
             />
             <span>
-              Показать вспомогательные файлы — {supportingCount}. {supportingNote}
+              {tx("Показати допоміжні файли","Показать вспомогательные файлы")} — {supportingCount}. {supNote}
             </span>
           </label>
         )}
@@ -174,7 +178,7 @@ export function FileSet({
 
       {state === "failed" ? (
         <p className="rounded-[4px] border border-border bg-black/30 px-4 py-3 text-sm text-ink-dim">
-          Не вдалося завантажити {current}.
+          {tx("Не вдалося завантажити","Не удалось загрузить")} {current}.
         </p>
       ) : (
         <CodeBlock

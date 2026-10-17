@@ -3,6 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useId } from "react";
+import { useLang } from "@/components/lang";
+import { tr, type Loc } from "@/lib/i18n";
 
 export function VariantDial({
   value,
@@ -10,23 +12,26 @@ export function VariantDial({
   max,
   onChange,
   accent,
-  label = "Вариант",
+  label,
 }: {
   value: number;
   min: number;
   max: number;
   onChange: (v: number) => void;
   accent: string;
-  label?: string;
+  label?: Loc;
 }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const id = useId();
+  const labelText = tr(label ?? { uk: "Варіант", ru: "Вариант" }, lang);
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
 
   return (
     <div className="inline-flex items-stretch overflow-hidden border border-border-strong bg-surface-2" style={{ borderRadius: 4 }}>
       <button
         type="button"
-        aria-label="Предыдущий вариант"
+        aria-label={tx("Попередній варіант","Предыдущий вариант")}
         disabled={value <= min}
         onClick={() => onChange(clamp(value - 1))}
         className="px-3 flex items-center justify-center text-ink-dim hover:text-ink hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent transition-colors"
@@ -36,7 +41,7 @@ export function VariantDial({
 
       <div className="flex flex-col items-center justify-center px-5 py-2 min-w-[7.5rem] border-x border-border">
         <label htmlFor={id} className="text-[0.6875rem] text-ink-faint">
-          {label.toLowerCase()}
+          {labelText.toLowerCase()}
         </label>
         <div className="relative h-9 w-full flex items-center justify-center overflow-hidden">
           <AnimatePresence mode="popLayout" initial={false}>
@@ -66,7 +71,7 @@ export function VariantDial({
 
       <button
         type="button"
-        aria-label="Следующий вариант"
+        aria-label={tx("Наступний варіант","Следующий вариант")}
         disabled={value >= max}
         onClick={() => onChange(clamp(value + 1))}
         className="px-3 flex items-center justify-center text-ink-dim hover:text-ink hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent transition-colors"

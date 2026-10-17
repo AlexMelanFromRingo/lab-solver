@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useLang } from "@/components/lang";
 
 /**
  * Рамка рисунка с выгрузкой для отчёта: SVG и PNG чёрным по белому.
@@ -84,6 +85,7 @@ function save(blob: Blob, name: string) {
 const safeName = (s: string) => s.replace(/[\\/:*?"<>|]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 80) || "рисунок";
 
 export function FigureFrame({ title, pxPerCm, children }: { title: string; pxPerCm?: number; children: React.ReactNode }) {
+  const { lang } = useLang();
   const box = useRef<HTMLDivElement>(null);
   const svg = () => box.current?.querySelector("svg") ?? null;
 
@@ -127,10 +129,10 @@ export function FigureFrame({ title, pxPerCm, children }: { title: string; pxPer
       <figcaption className="flex items-start justify-between gap-3 text-xs text-ink-faint">
         <span>{title}</span>
         <span className="flex shrink-0 gap-1.5">
-          <button type="button" onClick={saveSvg} className={btn} title="Чёрным по белому, для отчёта">
+          <button type="button" onClick={saveSvg} className={btn} title={lang === "uk" ? "Чорним по білому, для звіту" : "Чёрным по белому, для отчёта"}>
             SVG
           </button>
-          <button type="button" onClick={savePng} className={btn} title="Чёрным по белому, для отчёта">
+          <button type="button" onClick={savePng} className={btn} title={lang === "uk" ? "Чорним по білому, для звіту" : "Чёрным по белому, для отчёта"}>
             PNG
           </button>
         </span>
