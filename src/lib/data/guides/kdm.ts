@@ -112,10 +112,10 @@ export const KDM_GUIDES: GuideModule[] = [
             {
               title: { uk: "Хід розв'язання", ru: "Ход решения" },
               code: [
-                `Σa = ${sa}, Σb = ${sb}: ${sa === sb ? "задача закрытая" : `задача открытая — добавлен фиктивный ${r.fictitious === "supplier" ? `поставщик A${a.length + 1} с запасом ${sb - sa}` : `потребитель B${b.length + 1} с потребностью ${sa - sb}`} и нулевыми стоимостями`}`,
-                r.initial[0].title,
-                ...r.potentials.map((s) => s.title),
-                `Минимальные затраты: ${r.cost}`,
+                `Σa = ${sa}, Σb = ${sb}: ${sa === sb ? "задача закрита" : `задача відкрита — додано фіктивний ${r.fictitious === "supplier" ? `постачальник A${a.length + 1} із запасом ${sb - sa}` : `споживач B${b.length + 1} з потребою ${sa - sb}`} і нульовими вартостями`}`,
+                tr(r.initial[0].title, "uk"),
+                ...r.potentials.map((s) => tr(s.title, "uk")),
+                `Мінімальні витрати: ${r.cost}`,
               ].join("\n"),
             },
           ],

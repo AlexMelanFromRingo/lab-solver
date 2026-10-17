@@ -126,7 +126,7 @@ export const KM_GUIDES: GuideModule[] = [
             columns: [{ uk: "Крок", ru: "Шаг" }, "Кадр Ethernet", { uk: "Повідомлення ARP", ru: "Сообщение ARP" }],
             rows: [
               [{ uk: "ARP-запит", ru: "ARP-запрос" }, { uk: "від MAC сервера на FFFF.FFFF.FFFF (всім)", ru: "от MAC сервера на FFFF.FFFF.FFFF (всем)" }, `кто ${`192.168.${x}.1`}? сообщите ${`192.168.${x}.10`}`],
-              [{ uk: "ARP-відповідь", ru: "ARP-ответ" }, { uk: "від MAC PC1 на MAC сервера (адресно)", ru: "от MAC PC1 на MAC сервера (адресно)" }, `${`192.168.${x}.1`} — это MAC PC1`],
+              [{ uk: "ARP-відповідь", ru: "ARP-ответ" }, { uk: "від MAC PC1 на MAC сервера (адресно)", ru: "от MAC PC1 на MAC сервера (адресно)" }, { uk: `${`192.168.${x}.1`} — це MAC PC1`, ru: `${`192.168.${x}.1`} — это MAC PC1` }],
               [{ uk: "arp -a на сервері", ru: "arp -a на сервере" }, "—", `192.168.${x}.1 → MAC PC1, тип dynamic`],
             ],
             note: { uk: "MAC-адреси в Packet Tracer у кожного свої: їх видно при наведенні на пристрій або в Config → FastEthernet0.", ru: "MAC-адреса в Packet Tracer у каждого свои: их видно при наведении на устройство или в Config → FastEthernet0." },

@@ -16,7 +16,10 @@ function variantData(n: number): GuideComputed {
   return {
     tables: [
       {
-        title: `Вариант ${n}: тип инфраструктуры ${i.type}, тип трафика ${t.type} (таблица 1.1)`,
+        title: {
+          uk: `Варіант ${n}: тип інфраструктури ${i.type}, тип трафіку ${t.type} (таблиця 1.1)`,
+          ru: `Вариант ${n}: тип инфраструктуры ${i.type}, тип трафика ${t.type} (таблица 1.1)`,
+        },
         columns: ["Параметр", "Значение"],
         rows: [
           [{ uk: "Будівель", ru: "Зданий" }, i.buildings],
