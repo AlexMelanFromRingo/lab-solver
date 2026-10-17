@@ -8,11 +8,14 @@ import { InfoNote } from "@/components/ui/info-note";
 import { OutputBlock } from "@/components/ui/output-block";
 import { modules } from "@/lib/modules";
 import { bbsWorkedExample, generateBBS, generateLFSR } from "@/lib/algorithms/bbs-lfsr";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "bbs-lfsr")!;
 const example = bbsWorkedExample();
 
 export default function BbsLfsrPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [pStr, setPStr] = useState(example.p.toString());
   const [qStr, setQStr] = useState(example.q.toString());
   const [seedStr, setSeedStr] = useState(example.seed.toString());
@@ -46,10 +49,7 @@ export default function BbsLfsrPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          BBS: выбираются p, q ≡ 3 (mod 4), n=p·q, seed взаимно прост с n; X₀=seed² mod n, далее{" "}
-          <code>Xᵢ=X²ᵢ₋₁ mod n</code>, выходной бит — младший бит Xᵢ. Поля по умолчанию заполнены
-          проверочным примером из отчёта (LR5!BBS_LFSR.docx, таблица 2.1) — все 19 доступных
-          в документе бит совпали с этим расчётом при сверке.
+          {lang === "uk" ? (<>BBS: вибираються p, q ≡ 3 (mod 4), n=p·q, seed взаємно простий з n; X₀=seed² mod n, далі{" "}<code>Xᵢ=X²ᵢ₋₁ mod n</code>, вихідний біт — молодший біт Xᵢ. Поля за замовчуванням заповнені перевірочним прикладом зі звіту (LR5!BBS_LFSR.docx, таблиця 2.1) — усі 19 доступних у документі біт збіглися з цим розрахунком при звірці.</>) : (<>BBS: выбираются p, q ≡ 3 (mod 4), n=p·q, seed взаимно прост с n; X₀=seed² mod n, далее{" "}<code>Xᵢ=X²ᵢ₋₁ mod n</code>, выходной бит — младший бит Xᵢ. Поля по умолчанию заполнены проверочным примером из отчёта (LR5!BBS_LFSR.docx, таблица 2.1) — все 19 доступных в документе бит совпали с этим расчётом при сверке.</>)}
         </InfoNote>
 
         <Card>
@@ -84,7 +84,7 @@ export default function BbsLfsrPage() {
                     </tbody>
                   </table>
                 </div>
-                <OutputBlock label="Гамма (биты подряд)" value={bbs.data.keystream.join("")} />
+                <OutputBlock label={tx("Гама (біти підряд)","Гамма (биты подряд)")} value={bbs.data.keystream.join("")} />
               </>
             ) : (
               <p className="text-sm text-codes">{bbs.error}</p>
@@ -94,15 +94,14 @@ export default function BbsLfsrPage() {
 
         <Card>
           <CardBody className="pt-6 space-y-5">
-            <h2 className="font-display text-lg font-semibold text-ink">LFSR (регистр сдвига с линейной обратной связью)</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("LFSR (регістр зсуву з лінійним зворотним зв’язком)","LFSR (регистр сдвига с линейной обратной связью)")}</h2>
             <p className="text-xs text-ink-faint">
-              Отводы (taps) — индексы битов состояния, XOR которых становится новым левым битом;
-              выход на каждом шаге — крайний правый (вытесняемый) бит.
+              {tx("Відводи (taps) — індекси бітів стану, XOR яких стає новим лівим бітом; вихід на кожному кроці — крайній правий (витісняється) біт.","Отводы (taps) — индексы битов состояния, XOR которых становится новым левым битом; выход на каждом шаге — крайний правый (вытесняемый) бит.")}
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
-              <TextField label="Начальное состояние (через запятую)" value={lfsrState} onChange={(e) => setLfsrState(e.target.value)} />
-              <TextField label="Отводы (индексы через запятую)" value={lfsrTaps} onChange={(e) => setLfsrTaps(e.target.value)} />
-              <NumberField label="Число шагов" value={lfsrSteps} onChange={(e) => setLfsrSteps(Number(e.target.value))} min={1} max={64} />
+              <TextField label={tx("Початковий стан (через кому)","Начальное состояние (через запятую)")} value={lfsrState} onChange={(e) => setLfsrState(e.target.value)} />
+              <TextField label={tx("Відводи (індекси через кому)","Отводы (индексы через запятую)")} value={lfsrTaps} onChange={(e) => setLfsrTaps(e.target.value)} />
+              <NumberField label={tx("Число кроків","Число шагов")} value={lfsrSteps} onChange={(e) => setLfsrSteps(Number(e.target.value))} min={1} max={64} />
             </div>
             {lfsr.ok ? (
               <OutputBlock label="Гамма" value={lfsr.data.keystream.join("")} />

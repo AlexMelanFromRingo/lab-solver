@@ -9,17 +9,21 @@ import { modules } from "@/lib/modules";
 import { type PrimalityMethod, runPrimalityTest } from "@/lib/algorithms/primality";
 import { cn } from "@/lib/cn";
 import { useMounted } from "@/lib/use-mounted";
+import { useLang } from "@/components/lang";
+import { tr, type Loc } from "@/lib/i18n";
 
 const mod = modules.find((m) => m.slug === "primality")!;
 
-const METHOD_LABELS: Record<PrimalityMethod, string> = {
-  trial: "Пробное деление (детерминированный)",
-  fermat: "Тест Ферма (вероятностный)",
-  "miller-rabin": "Миллер–Рабин (вероятностный)",
-  "solovay-strassen": "Соловей–Штрассен (вероятностный)",
+const METHOD_LABELS: Record<PrimalityMethod, Loc> = {
+  trial: { uk: "Пробне ділення (детермінований)", ru: "Пробное деление (детерминированный)" },
+  fermat: { uk: "Тест Ферма (ймовірнісний)", ru: "Тест Ферма (вероятностный)" },
+  "miller-rabin": { uk: "Міллер–Рабін (ймовірнісний)", ru: "Миллер–Рабин (вероятностный)" },
+  "solovay-strassen": { uk: "Соловей–Штрассен (ймовірнісний)", ru: "Соловей–Штрассен (вероятностный)" },
 };
 
 export default function PrimalityPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [nStr, setNStr] = useState("104729");
   const [method, setMethod] = useState<PrimalityMethod>("miller-rabin");
   const [rounds, setRounds] = useState(20);
@@ -39,10 +43,7 @@ export default function PrimalityPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Курсовая по прикладной криптологии требовала реализовать тест простоты самостоятельно —
-          он используется при генерации простых p, q для RSA (модуль «RSA» использует Миллера-Рабина
-          внутри своего поиска простых). Пробное деление даёт точный ответ, но медленно растёт с n;
-          три вероятностных теста ошибаются с экспоненциально малой вероятностью, зависящей от числа раундов.
+          {lang === "uk" ? (<>Курсова з прикладної криптології вимагала реалізувати тест простоти самостійно — він використовується при генерації простих p, q для RSA (модуль «RSA» використовує Міллера-Рабіна всередині свого пошуку простих). Пробне ділення дає точну відповідь, але повільно зростає з n; три ймовірнісні тести помиляються з експоненційно малою ймовірністю, що залежить від числа раундів.</>) : (<>Курсовая по прикладной криптологии требовала реализовать тест простоты самостоятельно — он используется при генерации простых p, q для RSA (модуль «RSA» использует Миллера-Рабина внутри своего поиска простых). Пробное деление даёт точный ответ, но медленно растёт с n; три вероятностных теста ошибаются с экспоненциально малой вероятностью, зависящей от числа раундов.</>)}
         </InfoNote>
 
         <Card>
@@ -52,7 +53,7 @@ export default function PrimalityPage() {
               <SelectField label="Метод" value={method} onChange={(e) => setMethod(e.target.value as PrimalityMethod)}>
                 {Object.entries(METHOD_LABELS).map(([id, label]) => (
                   <option key={id} value={id}>
-                    {label}
+                    {tr(label as Loc, lang)}
                   </option>
                 ))}
               </SelectField>
@@ -71,8 +72,8 @@ export default function PrimalityPage() {
                     result.data.isPrime ? "border-theory/30 bg-theory-soft text-theory" : "border-codes/30 bg-codes-soft text-codes"
                   )}
                 >
-                  {result.data.isPrime ? "Вероятно простое" : "Составное"}
-                  {result.data.isPrime && !result.data.certain && " (вероятностный тест)"}
+                  {result.data.isPrime ? tx("Імовірно просте","Вероятно простое") : tx("Складене","Составное")}
+                  {result.data.isPrime && !result.data.certain && tx(" (ймовірнісний тест)"," (вероятностный тест)")}
                 </div>
                 <div className="rounded-[4px] border border-border bg-black/30 divide-y divide-border">
                   {result.data.steps.map((s, i) => (

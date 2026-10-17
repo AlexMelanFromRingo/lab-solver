@@ -8,6 +8,7 @@ import { InfoNote } from "@/components/ui/info-note";
 import { modules } from "@/lib/modules";
 import { bitsToString, encryptByte, decryptByte, type RoundTrace, type SdesFullTrace } from "@/lib/algorithms/sdes";
 import { cp1251Char, cp1251Code } from "@/lib/algorithms/cp1251";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "sdes")!;
 
@@ -62,6 +63,8 @@ function Column({ t, from, to, byteIn }: { t: SdesFullTrace; from: string; to: s
 const parseBits = (s: string, width: number) => (new RegExp(`^[01]{${width}}$`).test(s.trim()) ? parseInt(s.trim(), 2) : null);
 
 export default function SdesPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   // Режим «Тестирование» из демонстрации программы: ключ 1100110111, символ «v».
   const [symStr, setSymStr] = useState("v");
   const [keyStr, setKeyStr] = useState("1100110111");
@@ -81,25 +84,21 @@ export default function SdesPage() {
     <div>
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
-        <InfoNote title="Как в программе S-DES">
-          Программа шифрует один символ (код CP1251, 8 бит) 10-битовым ключом и в режиме «Тестирование» просит ввести каждый
-          промежуточный результат, а сервер считает ошибки. Порядок вывода здесь тот же: ключи (P10 → Shift&nbsp;&lt;&nbsp;1 → P8
-          = K[1] → Shift&nbsp;&lt;&nbsp;2 → P8 = K[2]), затем To → IP → F[1] → SW → F[2] → IP^ → Tз, а для каждого F — вкладка
-          «Раунд». Таблицы перестановок — стандартные, а S-блоки — как в окне программы: S0[3][3] = 1 и S1[0][0] = 1 (в учебнике
-          Столлингса 2 и 0).
+        <InfoNote title={tx("Як у програмі S-DES","Как в программе S-DES")}>
+          {lang === "uk" ? (<>Програма шифрує один символ (код CP1251, 8 біт) 10-бітовим ключем і в режимі «Тестування» просить ввести кожен проміжний результат, а сервер рахує помилки. Порядок виводу тут той самий: ключі (P10 → Shift&nbsp;&lt;&nbsp;1 → P8 = K[1] → Shift&nbsp;&lt;&nbsp;2 → P8 = K[2]), потім To → IP → F[1] → SW → F[2] → IP^ → Tз, а для кожного F — вкладка «Раунд». Таблиці перестановок — стандартні, а S-блоки — як у вікні програми: S0[3][3] = 1 і S1[0][0] = 1 (у підручнику Столлінгса 2 і 0).</>) : (<>Программа шифрует один символ (код CP1251, 8 бит) 10-битовым ключом и в режиме «Тестирование» просит ввести каждый промежуточный результат, а сервер считает ошибки. Порядок вывода здесь тот же: ключи (P10 → Shift&nbsp;&lt;&nbsp;1 → P8 = K[1] → Shift&nbsp;&lt;&nbsp;2 → P8 = K[2]), затем To → IP → F[1] → SW → F[2] → IP^ → Tз, а для каждого F — вкладка «Раунд». Таблицы перестановок — стандартные, а S-блоки — как в окне программы: S0[3][3] = 1 и S1[0][0] = 1 (в учебнике Столлингса 2 и 0).</>)}
         </InfoNote>
 
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div className="grid gap-4 sm:grid-cols-2">
-              <TextField label="Исходный символ" hint="один символ или 8 бит" value={symStr} onChange={(e) => setSymStr(e.target.value)} />
-              <TextField label="10-битовый ключ" value={keyStr} onChange={(e) => setKeyStr(e.target.value)} />
+              <TextField label={tx("Вихідний символ","Исходный символ")} hint={tx("один символ або 8 біт","один символ или 8 бит")} value={symStr} onChange={(e) => setSymStr(e.target.value)} />
+              <TextField label={tx("10-бітовий ключ","10-битовый ключ")} value={keyStr} onChange={(e) => setKeyStr(e.target.value)} />
             </div>
 
             {enc && dec && byte !== null ? (
               <div className="space-y-4">
                 <Panel title="Генерация ключей">
-                  <Line label="10-битовый ключ" value={keyStr.trim()} />
+                  <Line label={tx("10-бітовий ключ","10-битовый ключ")} value={keyStr.trim()} />
                   <Line label="P10" value={bitsToString(enc.keys.p10)} />
                   <Line label="Shift < 1" value={bitsToString(enc.keys.shifted1)} />
                   <Line label="P8 → K[1]" value={bitsToString(enc.keys.k1)} strong />
@@ -107,16 +106,16 @@ export default function SdesPage() {
                   <Line label="P8 → K[2]" value={bitsToString(enc.keys.k2)} strong />
                 </Panel>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <Column t={enc} from="To" to="Tз · зашифрованный символ" byteIn={Array.from({ length: 8 }, (_, i) => (byte >> (7 - i)) & 1)} />
-                  <Column t={dec} from="Tз" to="To · расшифрованный символ" byteIn={enc.output} />
+                  <Column t={enc} from="To" to={tx("Tз · зашифрований символ","Tз · зашифрованный символ")} byteIn={Array.from({ length: 8 }, (_, i) => (byte >> (7 - i)) & 1)} />
+                  <Column t={dec} from="Tз" to={tx("To · розшифрований символ","To · расшифрованный символ")} byteIn={enc.output} />
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <RoundPanel r={enc.round1} input={enc.ip} k={enc.keys.k1} n={1} />
                   <RoundPanel r={enc.round2} input={enc.swapped} k={enc.keys.k2} n={2} />
                 </div>
                 <p className="text-xs text-ink-faint">
-                  Расшифрование — те же шаги с обратным порядком ключей (K[2], затем K[1]); результат{" "}
-                  {dec.output.reduce((a, b) => (a << 1) | b, 0) === byte ? "совпадает с исходным символом ✓" : "не совпал"}.
+                  {tx("Розшифрування — ті самі кроки зі зворотним порядком ключів (K[2], потім K[1]); результат","Расшифрование — те же шаги с обратным порядком ключей (K[2], затем K[1]); результат")}{" "}
+                  {dec.output.reduce((a, b) => (a << 1) | b, 0) === byte ? tx("збігається з вихідним символом ✓","совпадает с исходным символом ✓") : tx("не збігся","не совпал")}.
                 </p>
               </div>
             ) : (
