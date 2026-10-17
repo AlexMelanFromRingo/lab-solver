@@ -11,6 +11,7 @@ import { Segmented } from "@/components/ui/segmented";
 import { useVhdlIndex } from "@/lib/vhdl-files";
 import { categories, modules } from "@/lib/modules";
 import { GOST_ROUND_KEYS, gostDecryptBlock, gostEncryptBlock, gostStdBlock, rc4Encrypt, type GostParamSet } from "@/lib/algorithms/gost-rc4";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "gost-rc4")!;
 const accent = categories.plis.accent;
@@ -23,6 +24,8 @@ function bytesToHex(bytes: number[]): string {
 }
 
 export default function GostRc4Page() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const vhdl = useVhdlIndex();
   // «std» — стандарт, как в показанном ниже gost_cipher.vhd; «lab» — учебный GOST.vhd из ЛР
   const [mode, setMode] = useState<"std" | "lab">("std");
@@ -60,11 +63,7 @@ export default function GostRc4Page() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Два режима ГОСТ. «Стандарт» — то же, что VHDL ниже (gost_cipher.vhd): восемь разных узлов
-          замены выбранного набора параметров, 256-битный ключ X0…X7, 24 раунда X0…X7 и 8 раундов
-          X7…X0; по умолчанию — контрольный вектор RFC 8891 из gost_tb.vhd (результат 4ee901e5c2d8ca3d).
-          «Учебный GOST.vhd» — схема из проекта ЛР: один 16-значный S-box на все 8 ниблов (к тому же не
-          биективный) и восемь зашитых констант вместо ключа; обратимость держится на самой сети Фейстеля.
+          {lang === "uk" ? (<>Два режими ГОСТ. «Стандарт» — те саме, що VHDL нижче (gost_cipher.vhd): вісім різних вузлів заміни вибраного набору параметрів, 256-бітний ключ X0…X7, 24 раунди X0…X7 і 8 раундів X7…X0; за замовчуванням — контрольний вектор RFC 8891 з gost_tb.vhd (результат 4ee901e5c2d8ca3d). «Навчальний GOST.vhd» — схема з проєкту ЛР: один 16-значний S-box на всі 8 ніблів (до того ж не бієктивний) і вісім зашитих констант замість ключа; оборотність тримається на самій мережі Фейстеля.</>) : (<>Два режима ГОСТ. «Стандарт» — то же, что VHDL ниже (gost_cipher.vhd): восемь разных узлов замены выбранного набора параметров, 256-битный ключ X0…X7, 24 раунда X0…X7 и 8 раундов X7…X0; по умолчанию — контрольный вектор RFC 8891 из gost_tb.vhd (результат 4ee901e5c2d8ca3d). «Учебный GOST.vhd» — схема из проекта ЛР: один 16-значный S-box на все 8 ниблов (к тому же не биективный) и восемь зашитых констант вместо ключа; обратимость держится на самой сети Фейстеля.</>)}
         </InfoNote>
 
         <Card>
@@ -77,15 +76,15 @@ export default function GostRc4Page() {
                 accent={accent}
                 onChange={setMode}
                 options={[
-                  { value: "std", label: "Стандарт (gost_cipher.vhd)" },
-                  { value: "lab", label: "Учебный GOST.vhd" },
+                  { value: "std", label: tx("Стандарт (gost_cipher.vhd)","Стандарт (gost_cipher.vhd)") },
+                  { value: "lab", label: tx("Навчальний GOST.vhd","Учебный GOST.vhd") },
                 ]}
               />
             </div>
             {mode === "std" && (
               <>
                 <Segmented
-                  label="Набор узлов замены"
+                  label={tx("Набір вузлів заміни","Набор узлов замены")}
                   value={paramSet}
                   accent={accent}
                   onChange={setParamSet}
@@ -108,7 +107,7 @@ export default function GostRc4Page() {
             </div>
             {mode === "lab" && (
               <p className="text-xs text-ink-faint">
-                Раундовые ключи: {GOST_ROUND_KEYS.map((k) => k.toString(16)).join(", ")}
+                {tx("Раундові ключі","Раундовые ключи")}: {GOST_ROUND_KEYS.map((k) => k.toString(16)).join(", ")}
               </p>
             )}
           </CardBody>
@@ -132,17 +131,14 @@ export default function GostRc4Page() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <h2 className="font-display text-lg font-semibold text-ink">Схема на VHDL</h2>
+              <h2 className="font-display text-lg font-semibold text-ink">{tx("Схема на VHDL","Схема на VHDL")}</h2>
               <p className="mt-1.5 text-sm leading-relaxed text-ink-dim">
-                Сами схемы, а не пересказ: оба шифра с самопроверяющимися испытательными
-                стендами по опубликованным контрольным векторам. Собираются и проверяются
-                через GHDL одной командой{" "}
+                {tx("Самі схеми, а не переказ: обидва шифри з самоперевірними випробувальними стендами за опублікованими контрольними векторами. Збираються і перевіряються через GHDL однією командою","Сами схемы, а не пересказ: оба шифра с самопроверяющимися испытательными стендами по опубликованным контрольным векторам. Собираются и проверяются через GHDL одной командой")}{" "}
                 <code className="text-ink">./sim/run_all.sh</code>. Общий пакет{" "}
-                <code className="text-ink">crypto_util</code> нужен обоим — без него не
-                соберётся.
+                <code className="text-ink">crypto_util</code> {tx("потрібен обом — без нього не збереться.","нужен обоим — без него не соберётся.")}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-ink-dim">
-                Здесь только те два шифра, о которых этот модуль. В{" "}
+                {tx("Тут лише ті два шифри, про які цей модуль. У","Здесь только те два шифра, о которых этот модуль. В")}{" "}
                 <a
                   href="https://github.com/AlexMelanFromRingo/vhdl-rc4"
                   target="_blank"

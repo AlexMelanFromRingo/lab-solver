@@ -9,6 +9,7 @@ import { modules } from "@/lib/modules";
 import { run, type VarSnapshot } from "@/lib/algorithms/jolsm";
 import { JolsmEditor } from "@/components/jolsm-editor";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "jolsm")!;
 
@@ -45,7 +46,8 @@ end "сумма посчитана"`,
 };
 
 function VarTable({ vars }: { vars: VarSnapshot[] }) {
-  if (vars.length === 0) return <p className="text-sm text-ink-faint">Переменные ещё не объявлены.</p>;
+  const { lang } = useLang();
+  if (vars.length === 0) return <p className="text-sm text-ink-faint">{lang === "uk" ? "Змінні ще не оголошені." : "Переменные ещё не объявлены."}</p>;
   return (
     <div className="overflow-x-auto rounded-[4px] border border-border">
       <table className="w-full text-sm font-mono">
@@ -72,7 +74,19 @@ function VarTable({ vars }: { vars: VarSnapshot[] }) {
   );
 }
 
+const JOLSM_EXAMPLE_UK: Record<string, string> = {
+  "Сложение двух регистров": "Додавання двох регістрів",
+  "Переполнение при сложении (15 бит, оригинальный пример лабы 1)": "Переповнення при додаванні (15 біт, оригінальний приклад лаби 1)",
+  "Умножение (сдвиг и сложение)": "Множення (зсув і додавання)",
+  "Обратный и дополнительный код": "Обернений і додатковий код",
+  "Цикл по счётчику": "Цикл за лічильником",
+  "Косвенная адресация памяти": "Непряма адресація пам’яті",
+};
+
 export default function JolsmPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
+  const exLabel = (nm: string) => (lang === "uk" ? (JOLSM_EXAMPLE_UK[nm] ?? nm) : nm);
   const [code, setCode] = useState(EXAMPLES["Сложение двух регистров"]);
   const [inputsStr, setInputsStr] = useState("100, 27");
   const [stepIdx, setStepIdx] = useState(-1);
@@ -95,14 +109,7 @@ export default function JolsmPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-6xl px-6 py-10 space-y-8">
         <InfoNote>
-          JOLS-M (ЯОЛС-М) — учебный язык микропрограмм: регистры и память заданной разрядности,
-          одна микрокоманда на строку (READ/ОПЕРАЦИЯ/PRINT/GOTO/IF/END), поддерживаются битовые поля{" "}
-          <code>рег(старший:младший)</code>, косвенная адресация и инверсия регистра отдельной командой{" "}
-          <code>рег~</code>. Интерпретатор сверен с IDE yal.cc построчно: тот же вывод{" "}
-          <code>a(00000101 05 5)</code> и те же ошибки сборки (инверсии операнда внутри операции и
-          отрицательных литералов в IDE нет). Он выполняет программу целиком и запоминает состояние
-          всех переменных после каждой команды — двигайте ползунок, чтобы увидеть их значения на
-          любом шаге.
+          {lang === "uk" ? (<>JOLS-M (ЯОЛС-М) — навчальна мова мікропрограм: регістри і пам’ять заданої розрядності, одна мікрокоманда на рядок (READ/ОПЕРАЦІЯ/PRINT/GOTO/IF/END), підтримуються бітові поля{" "}<code>рег(старший:молодший)</code>, непряма адресація та інверсія регістра окремою командою{" "}<code>рег~</code>. Інтерпретатор звірено з IDE yal.cc порядково: той самий вивід{" "}<code>a(00000101 05 5)</code> і ті самі помилки збірки (інверсії операнда всередині операції і від’ємних літералів в IDE немає). Він виконує програму цілком і запам’ятовує стан усіх змінних після кожної команди — рухайте повзунок, щоб побачити їх значення на будь-якому кроці.</>) : (<>JOLS-M (ЯОЛС-М) — учебный язык микропрограмм: регистры и память заданной разрядности, одна микрокоманда на строку (READ/ОПЕРАЦИЯ/PRINT/GOTO/IF/END), поддерживаются битовые поля{" "}<code>рег(старший:младший)</code>, косвенная адресация и инверсия регистра отдельной командой{" "}<code>рег~</code>. Интерпретатор сверен с IDE yal.cc построчно: тот же вывод{" "}<code>a(00000101 05 5)</code> и те же ошибки сборки (инверсии операнда внутри операции и отрицательных литералов в IDE нет). Он выполняет программу целиком и запоминает состояние всех переменных после каждой команды — двигайте ползунок, чтобы увидеть их значения на любом шаге.</>)}
         </InfoNote>
 
         <div className="flex flex-wrap gap-2">
@@ -112,7 +119,7 @@ export default function JolsmPage() {
               onClick={() => setCode(EXAMPLES[name])}
               className="rounded-[3px] border border-border px-3 py-1.5 text-xs text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
             >
-              {name}
+              {exLabel(name)}
             </button>
           ))}
         </div>
@@ -123,9 +130,7 @@ export default function JolsmPage() {
               <h2 className="font-display text-lg font-semibold text-ink">Микропрограмма</h2>
               <JolsmEditor value={code} onChange={setCode} />
               <p className="text-xs text-ink-faint">
-                Ctrl+Пробел — подсказки: команды, объявленные регистры и метки, поля бит после «имя(», шаблоны
-                (цикл по счётчику, обратный и дополнительный код, проверка переполнения…). Наведите на команду,
-                регистр или знак операции — справка. Ошибки подчёркиваются так, как их выдаст IDE.
+                {tx("Ctrl+Пробіл — підказки: команди, оголошені регістри і мітки, поля біт після «ім’я(», шаблони (цикл за лічильником, обернений і додатковий код, перевірка переповнення…). Наведіть на команду, регістр або знак операції — довідка. Помилки підкреслюються так, як їх видасть IDE.","Ctrl+Пробел — подсказки: команды, объявленные регистры и метки, поля бит после «имя(», шаблоны (цикл по счётчику, обратный и дополнительный код, проверка переполнения…). Наведите на команду, регистр или знак операции — справка. Ошибки подчёркиваются так, как их выдаст IDE.")}
               </p>
               <TextField
                 label="Значения для read/ввести (по порядку, через запятую)"
@@ -164,9 +169,9 @@ export default function JolsmPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-ink-faint">
                     <span>
-                      Шаг {stepIdx + 1} / {result.trace.length}: строка {result.trace[stepIdx]?.line}
+                      {tx("Крок","Шаг")} {stepIdx + 1} / {result.trace.length}: {tx("рядок","строка")} {result.trace[stepIdx]?.line}
                     </span>
-                    <span className="font-mono">{result.steps} шагов выполнено всего</span>
+                    <span className="font-mono">{result.steps} {tx("кроків виконано всього","шагов выполнено всего")}</span>
                   </div>
                   <input
                     type="range"

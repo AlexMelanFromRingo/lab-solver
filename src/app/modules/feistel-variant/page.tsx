@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useLang } from "@/components/lang";
 import { ModuleHeader } from "@/components/module-header";
 import { Card, CardBody } from "@/components/ui/card";
 import { NumberField, TextField } from "@/components/ui/field";
@@ -35,6 +36,8 @@ function toBig(v: string): bigint {
 }
 
 export default function FeistelVariantPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [variantNum, setVariantNum] = useState(1);
   const spec = getVariant(variantNum);
   const halfWidth = spec.n / 2;
@@ -90,13 +93,7 @@ export default function FeistelVariantPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Каждый вариант из методички задаёт три вещи: размер блока <code>n</code>, размер ключа{" "}
-          <code>K</code> и тройку функций раунда F1 → F2 → F3. Раунд устроен так:{" "}
-          <code>t = F3(F2(F1(R, roundKey)))</code>, затем <code>R&apos; = L ⊕ t</code>, <code>L&apos; = R</code>.
-          При n=16 полу-блоки занимают 8 бит, а не 4 — поэтому S-box (F-функция №6), рассчитанный на
-          4-битный вход в методичке, здесь применяется <strong>по ниблам</strong>: полу-блок режется на
-          4-битные куски, каждый подставляется отдельно. Раундовые ключи — куски ключа по{" "}
-          {halfWidth} бит, используются циклически.
+          {lang === "uk" ? (<>Кожен варіант з методички задає три речі: розмір блока <code>n</code>, розмір ключа{" "}<code>K</code> і трійку функцій раунда F1 → F2 → F3. Раунд влаштований так:{" "}<code>t = F3(F2(F1(R, roundKey)))</code>, потім <code>R&apos; = L ⊕ t</code>, <code>L&apos; = R</code>. При n=16 напівблоки займають 8 біт, а не 4 — тому S-box (F-функція №6), розрахований на 4-бітний вхід у методичці, тут застосовується <strong>по ніблах</strong>: напівблок ріжеться на 4-бітні куски, кожен підставляється окремо. Раундові ключі — куски ключа по{" "}{halfWidth} біт, використовуються циклічно.</>) : (<>Каждый вариант из методички задаёт три вещи: размер блока <code>n</code>, размер ключа{" "}<code>K</code> и тройку функций раунда F1 → F2 → F3. Раунд устроен так:{" "}<code>t = F3(F2(F1(R, roundKey)))</code>, затем <code>R&apos; = L ⊕ t</code>, <code>L&apos; = R</code>. При n=16 полу-блоки занимают 8 бит, а не 4 — поэтому S-box (F-функция №6), рассчитанный на 4-битный вход в методичке, здесь применяется <strong>по ниблам</strong>: полу-блок режется на 4-битные куски, каждый подставляется отдельно. Раундовые ключи — куски ключа по{" "}{halfWidth} бит, используются циклически.</>)}
         </InfoNote>
 
         <div className="flex flex-wrap items-center gap-4">
@@ -125,8 +122,7 @@ export default function FeistelVariantPage() {
               <NumberField label="Раундов" hint={`по умолчанию K/(n/2)=${defaultRounds(spec)}`} value={roundsStr} onChange={(e) => setRoundsStr(e.target.value)} min={1} max={32} />
             </div>
             <p className="text-xs text-ink-faint">
-              Число раундов не зафиксировано методичкой одинаково для всех реализаций — в разных
-              отчётах встречаются и K/(n/2), и константа 4. Меняйте под свой отчёт.
+              {tx("Число раундів не зафіксовано методичкою однаково для всіх реалізацій — у різних звітах трапляються і K/(n/2), і константа 4. Міняйте під свій звіт.","Число раундов не зафиксировано методичкой одинаково для всех реализаций — в разных отчётах встречаются и K/(n/2), и константа 4. Меняйте под свой отчёт.")}
             </p>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -134,8 +130,8 @@ export default function FeistelVariantPage() {
               <OutputBlock label="Блок (hex)" value={bitsToHex(block, spec.n)} />
               <OutputBlock label="Шифротекст блока (hex)" value={bitsToHex(enc.output, spec.n)} />
               <OutputBlock
-                label="Проверка расшифрования"
-                value={bitsToHex(dec.output, spec.n) === bitsToHex(block, spec.n) ? "совпадает с исходным блоком ✓" : bitsToHex(dec.output, spec.n)}
+                label={tx("Перевірка розшифрування","Проверка расшифрования")}
+                value={bitsToHex(dec.output, spec.n) === bitsToHex(block, spec.n) ? tx("збігається з вихідним блоком ✓","совпадает с исходным блоком ✓") : bitsToHex(dec.output, spec.n)}
               />
             </div>
 
@@ -172,10 +168,9 @@ export default function FeistelVariantPage() {
 
         <Card>
           <CardBody className="pt-6 space-y-5">
-            <h2 className="font-display text-lg font-semibold text-ink">Произвольный текст</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Довільний текст","Произвольный текст")}</h2>
             <p className="text-xs text-ink-faint">
-              UTF-8 байты режутся на блоки по {spec.n / 8} байт, последний блок дополняется нулями
-              (учтено при расшифровании).
+              {tx("UTF-8 байти ріжуться на блоки по","UTF-8 байты режутся на блоки по")} {spec.n / 8} {tx("байт, останній блок доповнюється нулями (враховано при розшифруванні).","байт, последний блок дополняется нулями (учтено при расшифровании).")}
             </p>
             <TextField label="Текст" value={text} onChange={(e) => setText(e.target.value)} />
             <OutputBlock label="Шифротекст (hex)" value={textEnc.hex} />
@@ -187,17 +182,14 @@ export default function FeistelVariantPage() {
           <CardBody className="pt-6 space-y-4">
             <h2 className="font-display text-lg font-semibold text-ink">Готовая программа (C++)</h2>
             <p className="text-xs text-ink-faint">
-              Не просто ответ, а компилируемая программа под этот вариант: шифрует/дешифрует
-              блок и целый файл (положите <code>input.txt</code> рядом с бинарником). Использует
-              текущий ключ сверху. Сгенерированный код скомпилирован и сверен с расчётами этой
-              страницы на нескольких вариантах — совпадает побитово.
+              {tx("Не просто відповідь, а компільована програма під цей варіант: шифрує/дешифрує блок і цілий файл (покладіть","Не просто ответ, а компилируемая программа под этот вариант: шифрует/дешифрует блок и целый файл (положите")} <code>input.txt</code> {tx("поряд із бінарником). Використовує поточний ключ зверху. Згенерований код скомпільовано і звірено з розрахунками цієї сторінки на кількох варіантах — збігається побітово.","рядом с бинарником). Использует текущий ключ сверху. Сгенерированный код скомпилирован и сверен с расчётами этой страницы на нескольких вариантах — совпадает побитово.")}
             </p>
             <CodeBlock code={cppCode} filename={`feistel_variant_${variantNum}.cpp`} />
           </CardBody>
         </Card>
 
         <details className="text-sm text-ink-faint">
-          <summary className="cursor-pointer text-ink-dim hover:text-ink">Все 24 варианта таблицы</summary>
+          <summary className="cursor-pointer text-ink-dim hover:text-ink">{tx("Усі 24 варіанти таблиці","Все 24 варианта таблицы")}</summary>
           <div className="mt-3 overflow-x-auto rounded-[4px] border border-border">
             <table className="w-full text-xs font-mono">
               <thead>

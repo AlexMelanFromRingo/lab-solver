@@ -9,6 +9,7 @@ import { OutputBlock } from "@/components/ui/output-block";
 import { Segmented } from "@/components/ui/segmented";
 import { VariantDial } from "@/components/ui/variant-dial";
 import { categories, modules } from "@/lib/modules";
+import { useLang } from "@/components/lang";
 import {
   KM_LAB4_VARIANTS,
   addressClass,
@@ -84,6 +85,8 @@ function Bits({ label, value, prefix }: { label: string; value: number; prefix: 
 }
 
 export default function IpSubnetPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [variantNum, setVariantNum] = useState(1);
   const v = KM_LAB4_VARIANTS[variantNum];
   const prefix1 = parseMask(v.mask1);
@@ -126,20 +129,14 @@ export default function IpSubnetPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          По п. 4.2 методички: в таблице 4.1 найти префикс по маске (задание 1) и маску по префиксу
-          (задание 2), затем операцией «І» заполнить таблицу 4.2 для адресов обоих заданий. Сеть ={" "}
-          <code>IP AND маска</code>, адрес хоста = <code>IP AND NOT маска</code>, первый хост = сеть + 1,
-          последний = широкомовный − 1, широкомовный = <code>сеть OR NOT маска</code>, число узлов ={" "}
-          <code>2^(32−M) − 2</code>. Вариант 0 — пример заполнения из методички; по нему видно, что
-          расчёт сходится с её таблицей 4.2.
+          {lang === "uk" ? (<>За п. 4.2 методички: у таблиці 4.1 знайти префікс за маскою (завдання 1) і маску за префіксом (завдання 2), потім операцією «І» заповнити таблицю 4.2 для адрес обох завдань. Мережа ={" "}<code>IP AND маска</code>, адреса хоста = <code>IP AND NOT маска</code>, перший хост = мережа + 1, останній = широкомовний − 1, широкомовний = <code>мережа OR NOT маска</code>, число вузлів ={" "}<code>2^(32−M) − 2</code>. Варіант 0 — приклад заповнення з методички; за ним видно, що розрахунок сходиться з її таблицею 4.2.</>) : (<>По п. 4.2 методички: в таблице 4.1 найти префикс по маске (задание 1) и маску по префиксу (задание 2), затем операцией «І» заполнить таблицу 4.2 для адресов обоих заданий. Сеть ={" "}<code>IP AND маска</code>, адрес хоста = <code>IP AND NOT маска</code>, первый хост = сеть + 1, последний = широкомовный − 1, широкомовный = <code>сеть OR NOT маска</code>, число узлов ={" "}<code>2^(32−M) − 2</code>. Вариант 0 — пример заполнения из методички; по нему видно, что расчёт сходится с её таблицей 4.2.</>)}
         </InfoNote>
 
         <div className="flex flex-wrap items-center gap-4">
           <VariantDial value={variantNum} min={0} max={25} onChange={setVariantNum} accent={accent} />
           {variantNum === 0 && (
             <p className="max-w-md text-sm text-ink-faint">
-              Пример из методички. В её таблице 4.1 здесь напечатана маска 255.255.252.0, но префикс 18
-              и строка таблицы 4.2 посчитаны для 255.255.192.0 — взята она.
+              {tx("Приклад з методички. У її таблиці 4.1 тут надрукована маска 255.255.252.0, але префікс 18 і рядок таблиці 4.2 пораховані для 255.255.192.0 — взята вона.","Пример из методички. В её таблице 4.1 здесь напечатана маска 255.255.252.0, но префикс 18 и строка таблицы 4.2 посчитаны для 255.255.192.0 — взята она.")}
             </p>
           )}
         </div>
@@ -198,7 +195,7 @@ export default function IpSubnetPage() {
                 </table>
               </div>
               <p className="mt-2 text-xs text-ink-faint">
-                Адрес хоста методичка разрешает записывать и короче, без ведущих нулей: 0.0.46.21 или 46.21.
+                {tx("Адресу хоста методичка дозволяє записувати і коротше, без провідних нулів: 0.0.46.21 або 46.21.","Адрес хоста методичка разрешает записывать и короче, без ведущих нулей: 0.0.46.21 или 46.21.")}
               </p>
             </div>
           </CardBody>
@@ -206,10 +203,9 @@ export default function IpSubnetPage() {
 
         <Card>
           <CardBody className="pt-6 space-y-3">
-            <h2 className="font-display text-lg font-semibold text-ink">Операция «І» для задания 1</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Операція «І» для завдання 1","Операция «І» для задания 1")}</h2>
             <p className="text-sm text-ink-dim">
-              Как в додатку 1 методички: единицы маски отмечают сетевые биты адреса (слева от черты),
-              нули — биты хоста.
+              {tx("Як у додатку 1 методички: одиниці маски відмічають мережеві біти адреси (ліворуч від риски), нулі — біти хоста.","Как в додатку 1 методички: единицы маски отмечают сетевые биты адреса (слева от черты), нули — биты хоста.")}
             </p>
             <div className="space-y-1.5 overflow-x-auto rounded-[4px] border border-border bg-black/30 px-4 py-3">
               <Bits label={`${v.ip1}`} value={ipToInt(v.ip1)} prefix={prefix1} />
@@ -225,28 +221,24 @@ export default function IpSubnetPage() {
           <CardBody className="pt-6 space-y-4">
             <h2 className="font-display text-lg font-semibold text-ink">Сеть в Cisco Packet Tracer</h2>
             <p className="text-sm text-ink-dim">
-              Рис. 4.2: коммутатор 2950T-24 и три ПК, адреса — по наименьшему номеру варианта своего
-              задания (задание 1). Маска у всех трёх — {net1.mask}. В отчёт идут IP- и MAC-адреса
-              каждого ПК на схеме.
+              {tx("Рис. 4.2: комутатор 2950T-24 і три ПК, адреси — за найменшим номером варіанта свого завдання (завдання 1). Маска у всіх трьох —","Рис. 4.2: коммутатор 2950T-24 и три ПК, адреса — по наименьшему номеру варианта своего задания (задание 1). Маска у всех трёх —")} {net1.mask}. {tx("У звіт ідуть IP- і MAC-адреси кожного ПК на схемі.","В отчёт идут IP- и MAC-адреса каждого ПК на схеме.")}
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
-              <OutputBlock label="PC0 — полный адрес из табл. 4.1" value={`${v.ip1}/${prefix1}`} />
-              <OutputBlock label="PC1 — последний хост сети" value={`${net1.lastHost}/${prefix1}`} />
-              <OutputBlock label="PC2 — первый хост сети" value={`${net1.firstHost}/${prefix1}`} />
+              <OutputBlock label={tx("PC0 — повна адреса з табл. 4.1","PC0 — полный адрес из табл. 4.1")} value={`${v.ip1}/${prefix1}`} />
+              <OutputBlock label={tx("PC1 — останній хост мережі","PC1 — последний хост сети")} value={`${net1.lastHost}/${prefix1}`} />
+              <OutputBlock label={tx("PC2 — перший хост мережі","PC2 — первый хост сети")} value={`${net1.firstHost}/${prefix1}`} />
             </div>
             <OutputBlock
-              label="Командная строка PC0: пинг двух других ПК (п. 5) и широкомовный пинг (п. 6)"
+              label={tx("Командний рядок PC0: пінг двох інших ПК (п. 5) і широкомовний пінг (п. 6)","Командная строка PC0: пинг двух других ПК (п. 5) и широкомовный пинг (п. 6)")}
               value={`ping ${net1.lastHost}\nping ${net1.firstHost}\nping ${net1.broadcast}`}
             />
             <p className="text-sm text-ink-dim">
-              П. 7 — тот же широкомовный пинг в режиме Simulation: в списке событий один ICMP-запрос и
-              ответы от обоих ПК; в отчёт — подробности запроса на первом шаге и ответа на двух последних.
+              {tx("П. 7 — той самий широкомовний пінг у режимі Simulation: у списку подій один ICMP-запит і відповіді від обох ПК; у звіт — подробиці запиту на першому кроці і відповіді на двох останніх.","П. 7 — тот же широкомовный пинг в режиме Simulation: в списке событий один ICMP-запрос и ответы от обоих ПК; в отчёт — подробности запроса на первом шаге и ответа на двух последних.")}
             </p>
             {(cls1 === "D" || cls1 === "E") && (
               <p className="text-sm text-codes">
-                {v.ip1} — адрес класса {cls1} ({cls1 === "D" ? "групповые адреса 224–239" : "резерв 240–255"}).
-                Узлу такой адрес по стандарту не назначается; если Packet Tracer его не примет, дело не в
-                расчёте — стоит уточнить у преподавателя, каким адресом его заменить.
+                {v.ip1} — {tx("адреса класу","адрес класса")} {cls1} ({cls1 === "D" ? tx("групові адреси 224–239","групповые адреса 224–239") : tx("резерв 240–255","резерв 240–255")}).
+                {tx(" Вузлу така адреса за стандартом не призначається; якщо Packet Tracer її не прийме, справа не в розрахунку — варто уточнити у викладача, якою адресою її замінити."," Узлу такой адрес по стандарту не назначается; если Packet Tracer его не примет, дело не в расчёте — стоит уточнить у преподавателя, каким адресом его заменить.")}
               </p>
             )}
           </CardBody>
@@ -255,31 +247,31 @@ export default function IpSubnetPage() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="font-display text-lg font-semibold text-ink">Свой адрес</h2>
+              <h2 className="font-display text-lg font-semibold text-ink">{tx("Своя адреса","Свой адрес")}</h2>
               <Segmented
-                label="Как задана маска"
+                label={tx("Як задана маска","Как задана маска")}
                 value={mode}
                 onChange={setMode}
                 accent={accent}
                 options={[
                   { value: "mask", label: "Маска 255.255.x.x" },
-                  { value: "prefix", label: "Префикс /M" },
+                  { value: "prefix", label: tx("Префікс /M","Префикс /M") },
                 ]}
               />
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
-              <TextField label="Полный IP-адрес" value={ip} onChange={(e) => setIp(e.target.value)} />
+              <TextField label={tx("Повна IP-адреса","Полный IP-адрес")} value={ip} onChange={(e) => setIp(e.target.value)} />
               {mode === "mask" ? (
                 <TextField
-                  label="Маска подсети"
-                  hint="как в задании 1"
+                  label={tx("Маска підмережі","Маска подсети")}
+                  hint={tx("як у завданні 1","как в задании 1")}
                   value={maskText}
                   onChange={(e) => setMaskText(e.target.value)}
                 />
               ) : (
                 <NumberField
-                  label="Префикс"
-                  hint="как в задании 2"
+                  label={tx("Префікс","Префикс")}
+                  hint={tx("як у завданні 2","как в задании 2")}
                   value={prefixText}
                   min={0}
                   max={32}
@@ -291,17 +283,17 @@ export default function IpSubnetPage() {
             {free.ok ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <OutputBlock
-                  label={mode === "mask" ? "Префикс по маске" : "Маска по префиксу"}
+                  label={mode === "mask" ? tx("Префікс за маскою","Префикс по маске") : tx("Маска за префіксом","Маска по префиксу")}
                   value={mode === "mask" ? `/${free.info.prefix}` : free.info.mask}
                 />
-                <OutputBlock label="Адрес сети" value={`${free.info.network}/${free.info.prefix}`} />
-                <OutputBlock label="Адрес хоста (хостовая часть)" value={free.info.hostPart} />
-                <OutputBlock label="Число узлов" value={String(free.info.hostCount)} />
-                <OutputBlock label="Первый хост" value={`${free.info.firstHost}/${free.info.prefix}`} />
-                <OutputBlock label="Последний хост" value={`${free.info.lastHost}/${free.info.prefix}`} />
-                <OutputBlock label="Широковещательный адрес" value={`${free.info.broadcast}/${free.info.prefix}`} />
+                <OutputBlock label={tx("Адреса мережі","Адрес сети")} value={`${free.info.network}/${free.info.prefix}`} />
+                <OutputBlock label={tx("Адреса хоста (хостова частина)","Адрес хоста (хостовая часть)")} value={free.info.hostPart} />
+                <OutputBlock label={tx("Число вузлів","Число узлов")} value={String(free.info.hostCount)} />
+                <OutputBlock label={tx("Перший хост","Первый хост")} value={`${free.info.firstHost}/${free.info.prefix}`} />
+                <OutputBlock label={tx("Останній хост","Последний хост")} value={`${free.info.lastHost}/${free.info.prefix}`} />
+                <OutputBlock label={tx("Широкомовна адреса","Широковещательный адрес")} value={`${free.info.broadcast}/${free.info.prefix}`} />
                 <OutputBlock
-                  label="Тип адреса (контрольные вопросы 2 и 3)"
+                  label={tx("Тип адреси (контрольні питання 2 і 3)","Тип адреса (контрольные вопросы 2 и 3)")}
                   value={`${KIND_LABEL[free.kind]}, ${free.priv ? "приватна" : "загальна"}, клас ${free.cls}`}
                 />
               </div>
@@ -309,8 +301,7 @@ export default function IpSubnetPage() {
               <p className="text-sm text-codes">{free.error}</p>
             )}
             <p className="text-xs text-ink-faint">
-              Приватные диапазоны — 10.0.0.0/8, 172.16.0.0/12 и 192.168.0.0/16. В методичке третий
-              напечатан как 192.168.0.0/24; это опечатка, по RFC 1918 диапазон /16.
+              {tx("Приватні діапазони — 10.0.0.0/8, 172.16.0.0/12 і 192.168.0.0/16. У методичці третій надрукований як 192.168.0.0/24; це помилка, за RFC 1918 діапазон /16.","Приватные диапазоны — 10.0.0.0/8, 172.16.0.0/12 и 192.168.0.0/16. В методичке третий напечатан как 192.168.0.0/24; это опечатка, по RFC 1918 диапазон /16.")}
             </p>
           </CardBody>
         </Card>
