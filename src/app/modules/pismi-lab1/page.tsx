@@ -11,12 +11,15 @@ import { categories, modules } from "@/lib/modules";
 import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { INSTALL_GUIDES } from "@/lib/data/pismi-install";
 import { usePismiIndex } from "@/lib/pismi-files";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "pismi-lab1")!;
 const accent = categories.pismi.accent;
 const procedure = LAB_GUIDES["pismi-lab1"];
 
 export default function PismiLab1Page() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [guideId, setGuideId] = useState(INSTALL_GUIDES[0].id);
   const guide = INSTALL_GUIDES.find((g) => g.id === guideId)!;
   const { index, failed } = usePismiIndex();
@@ -27,12 +30,7 @@ export default function PismiLab1Page() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Задание лабораторной — поднять контейнер с PHP и Apache и показать в браузере
-          страницу со своими ПІБ и группой. Методичка описывает один путь, через VirtualBox
-          с Ubuntu внутри. На деле годится любая из четырёх конфигураций ниже: Docker
-          работает с ядром Linux, а откуда это ядро взялось — на файл окружения и команды
-          не влияет. Готовая работа внизу страницы: ПІБ и группа вписываются прямо в
-          index.php, как того требует задание.
+          {lang === "uk" ? "Завдання лабораторної — підняти контейнер із PHP і Apache і показати в браузері сторінку зі своїми ПІБ і групою. Методичка описує один шлях, через VirtualBox з Ubuntu всередині. Насправді годиться будь-яка з чотирьох конфігурацій нижче: Docker працює з ядром Linux, а звідки це ядро взялося — на файл оточення і команди не впливає. Готова робота внизу сторінки: ПІБ і група вписуються прямо в index.php, як того вимагає завдання." : "Задание лабораторной — поднять контейнер с PHP и Apache и показать в браузере страницу со своими ПІБ и группой. Методичка описывает один путь, через VirtualBox с Ubuntu внутри. На деле годится любая из четырёх конфигураций ниже: Docker работает с ядром Linux, а откуда это ядро взялось — на файл окружения и команды не влияет. Готовая работа внизу страницы: ПІБ и группа вписываются прямо в index.php, как того требует задание."}
         </InfoNote>
 
         <LabProcedure guide={procedure} accent={accent} />
@@ -92,7 +90,7 @@ export default function PismiLab1Page() {
             </ol>
 
             <div>
-              <h3 className="mb-2 text-sm font-medium text-ink-dim">Где спотыкаются</h3>
+              <h3 className="mb-2 text-sm font-medium text-ink-dim">{tx("Де спотикаються","Где спотыкаются")}</h3>
               <ul className="space-y-2 text-sm text-ink-dim">
                 {guide.pitfalls.map((p) => (
                   <li key={p} className="flex gap-2 leading-relaxed">
@@ -113,10 +111,9 @@ export default function PismiLab1Page() {
               accent={accent}
               intro={
                 <>
-                  Окружение — дословно пример методички, index.php выводит ПІБ и группу.
-                  Разложить как в методичке (архив так и устроен), выполнить{" "}
-                  <code className="whitespace-nowrap font-mono text-ink">docker compose up -d</code> и открыть
-                  http://localhost:8080.
+                  {lang === "uk" ? "Оточення — дослівно приклад методички, index.php виводить ПІБ і групу. Розкласти як у методичці (архів так і влаштований), виконати " : "Окружение — дословно пример методички, index.php выводит ПІБ и группу. Разложить как в методичке (архив так и устроен), выполнить "}{" "}
+                  <code className="whitespace-nowrap font-mono text-ink">docker compose up -d</code> {lang === "uk" ? "і відкрити" : "и открыть"}
+                  {" "}http://localhost:8080.
                 </>
               }
             />
@@ -124,7 +121,7 @@ export default function PismiLab1Page() {
           </>
         ) : (
           <p className="text-sm text-ink-faint">
-            {failed ? "Готовая работа не загрузилась. Обновите страницу." : "Загрузка готовой работы…"}
+            {failed ? tx("Готова робота не завантажилася. Оновіть сторінку.","Готовая работа не загрузилась. Обновите страницу.") : tx("Завантаження готової роботи…","Загрузка готовой работы…")}
           </p>
         )}
       </div>

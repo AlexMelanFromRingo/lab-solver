@@ -310,7 +310,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "ai-lab1",
-    title: "ЛР 1 прежней программы · Нечітке логічне виведення в середовищі Fuzzy Logic Systems",
+    title: { uk: "ЛР 1 колишньої програми · Нечітке логічне виведення в середовищі Fuzzy Logic Systems", ru: "ЛР 1 прежней программы · Нечіткий логічний висновок у середовищі Fuzzy Logic Systems" },
     category: "ai",
     tagline: { uk: "Колишня програма курсу · розбір прикладу", ru: "Прежняя программа курса · разбор примера" },
     description:
@@ -321,7 +321,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "ai-lab2",
-    title: "ЛР 2 прежней программы · Логіко-лінгвістична система",
+    title: { uk: "ЛР 2 колишньої програми · Логіко-лінгвістична система", ru: "ЛР 2 прежней программы · Логико-лингвистическая система" },
     category: "ai",
     tagline: { uk: "Колишня програма курсу · 10 завдань", ru: "Прежняя программа курса · 10 заданий" },
     description:
@@ -2050,7 +2050,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "hamming",
-    title: "Код Хэмминга",
+    title: { uk: "Код Геммінга", ru: "Код Хэмминга" },
     category: "extra",
     tagline: { uk: "Кодування · синдром · виправлення", ru: "Кодирование · синдром · исправление" },
     description:
@@ -2178,7 +2178,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "polar",
-    title: "Полярные коды",
+    title: { uk: "Полярні коди", ru: "Полярные коды" },
     category: "extra",
     tagline: { uk: "Батачарія · SC / ML декодер", ru: "Батачария · SC / ML декодер" },
     description:
@@ -2189,7 +2189,7 @@ export const modules: LabModule[] = [
   },
   {
     slug: "ldpc",
-    title: "LDPC-коды",
+    title: { uk: "LDPC-коди", ru: "LDPC-коды" },
     category: "extra",
     tagline: "Граф Таннера · belief propagation",
     description:

@@ -19,6 +19,7 @@ import {
 } from "@/lib/algorithms/pismi-lab2-formulas";
 import { TaskOutputView } from "@/components/task-output";
 import { defaultValues, taskByVariant } from "@/lib/algorithms/pismi-lab2-objects";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "pismi-lab2")!;
 const accent = categories.pismi.accent;
@@ -37,6 +38,8 @@ const P2_COUNT = 13;
 const wrap = (n: number, m: number) => ((n - 1) % m) + 1;
 
 export default function PismiLab2Page() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   // Методичка выдаёт варианты «за узгодженням з викладачем» — у каждой
   // программы свой, поэтому выбираются они независимо.
   const [variantNum, setVariantNum] = useState(1);
@@ -69,10 +72,7 @@ export default function PismiLab2Page() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Работа состоит из двух программ: первая считает функции варианта и проверяет их
-          равенство, вторая выполняет задание созданным объектом. Ниже — расчёт по любым
-          вариантам и готовая работа: окружение и обе программы с вашими ПІБ и группой в
-          коде, в выбранном оформлении.
+          {lang === "uk" ? "Робота складається з двох програм: перша рахує функції варіанта і перевіряє їх рівність, друга виконує завдання створеним об’єктом. Нижче — розрахунок за будь-якими варіантами і готова робота: оточення й обидві програми з вашими ПІБ і групою в коді, у вибраному оформленні." : "Работа состоит из двух программ: первая считает функции варианта и проверяет их равенство, вторая выполняет задание созданным объектом. Ниже — расчёт по любым вариантам и готовая работа: окружение и обе программы с вашими ПІБ и группой в коде, в выбранном оформлении."}
         </InfoNote>
 
         <LabProcedure guide={procedure} accent={accent} />
@@ -80,11 +80,9 @@ export default function PismiLab2Page() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Варианты</h2>
+              <h2 className="font-display text-xl font-semibold tracking-tight text-ink">{tx("Варіанти","Варианты")}</h2>
               <p className="mt-1.5 max-w-3xl text-sm leading-relaxed text-ink-dim">
-                Варианты выдаются по согласованию с преподавателем, у каждой программы свой: у
-                первой их {P1_COUNT}, у второй {P2_COUNT}. Если вариант — номер в списке группы,
-                впишите его справа: номер за пределами набора уходит на второй круг.
+                {tx("Варіанти видаються за погодженням з викладачем, у кожної програми свій: у першої їх","Варианты выдаются по согласованию с преподавателем, у каждой программы свой: у первой их")} {P1_COUNT}, {tx("у другої","у второй")} {P2_COUNT}. {tx("Якщо варіант — номер у списку групи, впишіть його праворуч: номер за межами набору йде на друге коло.","Если вариант — номер в списке группы, впишите его справа: номер за пределами набора уходит на второй круг.")}
               </p>
             </div>
             <div className="flex flex-wrap items-end gap-4">
@@ -137,7 +135,7 @@ export default function PismiLab2Page() {
                 <TextField
                   key={key}
                   label={SYMBOLS[key] ?? key}
-                  hint={`из таблицы: ${variant.given[key]}`}
+                  hint={tx(`з таблиці: ${variant.given[key]}`,`из таблицы: ${variant.given[key]}`)}
                   value={String(given[key] ?? "")}
                   onChange={(e) =>
                     setArgEdits((prev) => ({
@@ -163,13 +161,13 @@ export default function PismiLab2Page() {
               }}
             >
               {result.matched
-                ? `Значения совпали; расхождение ${result.difference.toExponential(2)} не превышает погрешности двойной точности.`
-                : `Значения разошлись на ${result.difference.toExponential(2)}.`}
+                ? tx(`Значення збіглися; розбіжність ${result.difference.toExponential(2)} не перевищує похибки подвійної точності.`,`Значения совпали; расхождение ${result.difference.toExponential(2)} не превышает погрешности двойной точности.`)
+                : tx(`Значення розійшлися на ${result.difference.toExponential(2)}.`,`Значения разошлись на ${result.difference.toExponential(2)}.`)}
             </div>
 
             <details className="rounded-[4px] border border-border bg-black/20">
               <summary className="cursor-pointer px-4 py-2.5 text-sm text-ink-dim">
-                Журнал вычисления и разбор тождества
+                {tx("Журнал обчислення і розбір тотожності","Журнал вычисления и разбор тождества")}
               </summary>
               <div className="space-y-4 border-t border-border px-4 py-4">
                 <table className="w-full text-sm">
@@ -256,9 +254,7 @@ export default function PismiLab2Page() {
               choice={{ v1: variantNum, v2: taskNum }}
               intro={
                 <>
-                  Программа № 1 — вариант {variantNum}, программа № 2 — вариант {taskNum} (выбраны
-                  выше). Окружение — тот же docker-compose.yml, что в первой работе: порт 8080,
-                  контейнер php_web.
+                  {tx("Програма № 1 — варіант","Программа № 1 — вариант")} {variantNum}, {tx("програма № 2 — варіант","программа № 2 — вариант")} {taskNum} {tx("(вибрані вище). Оточення — той самий docker-compose.yml, що в першій роботі: порт 8080, контейнер php_web.","(выбраны выше). Окружение — тот же docker-compose.yml, что в первой работе: порт 8080, контейнер php_web.")}
                 </>
               }
             />
@@ -266,7 +262,7 @@ export default function PismiLab2Page() {
           </>
         ) : (
           <p className="text-sm text-ink-faint">
-            {failed ? "Готовая работа не загрузилась. Обновите страницу." : "Загрузка готовой работы…"}
+            {failed ? tx("Готова робота не завантажилася. Оновіть сторінку.","Готовая работа не загрузилась. Обновите страницу.") : tx("Завантаження готової роботи…","Загрузка готовой работы…")}
           </p>
         )}
       </div>

@@ -10,12 +10,15 @@ import { PismiRun, PismiWork } from "@/components/pismi-work";
 import { categories, modules } from "@/lib/modules";
 import { LAB_GUIDES } from "@/lib/data/pismi-labs";
 import { usePismiIndex } from "@/lib/pismi-files";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "pismi-lab3")!;
 const accent = categories.pismi.accent;
 const procedure = LAB_GUIDES["pismi-lab3"];
 
 export default function PismiLab3Page() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const { index, failed } = usePismiIndex();
   const lab = index?.labs["3"];
   const [themeCode, setThemeCode] = useState("books");
@@ -26,11 +29,7 @@ export default function PismiLab3Page() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Задание — справочник на MySQL с операциями над записями, весь в одном файле
-          src/index.php, и окружение из трёх контейнеров: приложение, база и phpMyAdmin.
-          Файлы окружения — дословно из методички. Тему студент выбирает сам: ниже все
-          десять примеров методички и несколько своих. Для каждой темы готовы запрос создания
-          таблицы с примерами записей (его выполняют в phpMyAdmin) и сама страница.
+          {lang === "uk" ? "Завдання — довідник на MySQL з операціями над записами, весь в одному файлі src/index.php, і оточення з трьох контейнерів: застосунок, база і phpMyAdmin. Файли оточення — дослівно з методички. Тему студент вибирає сам: нижче всі десять прикладів методички і кілька своїх. Для кожної теми готові запит створення таблиці з прикладами записів (його виконують у phpMyAdmin) і сама сторінка." : "Задание — справочник на MySQL с операциями над записями, весь в одном файле src/index.php, и окружение из трёх контейнеров: приложение, база и phpMyAdmin. Файлы окружения — дословно из методички. Тему студент выбирает сам: ниже все десять примеров методички и несколько своих. Для каждой темы готовы запрос создания таблицы с примерами записей (его выполняют в phpMyAdmin) и сама страница."}
         </InfoNote>
 
         <LabProcedure guide={procedure} accent={accent} />
@@ -44,9 +43,7 @@ export default function PismiLab3Page() {
               choice={{ theme: theme.code }}
               intro={
                 <>
-                  Добавление, вывод всех записей, удаление и проверка данных есть в любом
-                  оформлении; редактирование и поиск («Додатково» в методичке) — в двух старших.
-                  Запросы с данными из формы — подготовленные.
+                  {lang === "uk" ? "Додавання, вивід усіх записів, видалення і перевірка даних є в будь-якому оформленні; редагування і пошук («Додатково» в методичці) — у двох старших. Запити з даними з форми — підготовлені." : "Добавление, вывод всех записей, удаление и проверка данных есть в любом оформлении; редактирование и поиск («Додатково» в методичке) — в двух старших. Запросы с данными из формы — подготовленные."}
                 </>
               }
               selectors={{
@@ -80,7 +77,7 @@ export default function PismiLab3Page() {
           </>
         ) : (
           <p className="text-sm text-ink-faint">
-            {failed ? "Готовая работа не загрузилась. Обновите страницу." : "Загрузка готовой работы…"}
+            {failed ? tx("Готова робота не завантажилася. Оновіть сторінку.","Готовая работа не загрузилась. Обновите страницу.") : tx("Завантаження готової роботи…","Загрузка готовой работы…")}
           </p>
         )}
       </div>
