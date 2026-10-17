@@ -18,7 +18,7 @@ export interface LuhnResult {
 
 function digitsOf(input: string): number[] {
   const clean = input.replace(/\s+/g, "");
-  if (!/^\d+$/.test(clean)) throw new Error("Номер должен содержать только цифры");
+  if (!/^\d+$/.test(clean)) throw new Error("Номер має містити лише цифри");
   return clean.split("").map(Number);
 }
 

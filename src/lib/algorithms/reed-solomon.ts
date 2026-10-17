@@ -179,7 +179,7 @@ export function rsDecodeAndCorrect(received: number[], nsym: number): RsCorrecti
     const errLoc = rsFindErrorLocator(synd, nsym);
     steps.push({
       title: "Поліном-локатор помилок (Берлекемпа-Мессі)",
-      description: `Коэффициенты: [${errLoc.map((c) => c.toString(16).toUpperCase()).join(", ")}]`,
+      description: `Коефіцієнти: [${errLoc.map((c) => c.toString(16).toUpperCase()).join(", ")}]`,
       data: `Степень: ${errLoc.length - 1} → ${errLoc.length - 1} ошибок`,
     });
 

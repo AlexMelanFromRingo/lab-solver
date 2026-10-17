@@ -11,7 +11,7 @@
 export function ipToInt(ip: string): number {
   const raw = ip.trim().split(".");
   if (raw.length !== 4 || raw.some((p) => !/^\d{1,3}$/.test(p) || Number(p) > 255)) {
-    throw new Error("Некорректный IPv4-адрес");
+    throw new Error("Некоректна IPv4-адреса");
   }
   const parts = raw.map(Number);
   return ((parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]) >>> 0;
@@ -22,7 +22,7 @@ export function intToIp(n: number): string {
 }
 
 export function maskFromPrefix(prefix: number): number {
-  if (prefix < 0 || prefix > 32) throw new Error("Префикс должен быть в диапазоне 0..32");
+  if (prefix < 0 || prefix > 32) throw new Error("Префікс має бути в діапазоні 0..32");
   return prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
 }
 
@@ -42,11 +42,11 @@ export function parseMask(mask: string): number {
   try {
     value = ipToInt(mask.replace(/\s+/g, ""));
   } catch {
-    throw new Error("Маска записывается как IPv4-адрес: четыре числа 0..255 через точку");
+    throw new Error("Маска записується як IPv4-адреса: чотири числа 0..255 через крапку");
   }
   const prefix = prefixFromMask(value);
   if (maskFromPrefix(prefix) !== value) {
-    throw new Error("В маске единицы должны идти подряд слева, а нули — справа");
+    throw new Error("У масці одиниці мають іти поспіль зліва, а нулі — справа");
   }
   return prefix;
 }

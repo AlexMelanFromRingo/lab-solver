@@ -46,7 +46,7 @@ const LINE_CODE_NAMES: Record<string, LineCode> = {
 
 export function lineCodeFromName(name: string): LineCode {
   const code = LINE_CODE_NAMES[name.trim().toLowerCase()];
-  if (!code) throw new Error(`Неизвестный линейный код: «${name}»`);
+  if (!code) throw new Error(`Невідомий лінійний код: «${name}»`);
   return code;
 }
 
@@ -121,7 +121,7 @@ export function encodeLine(bits: number[], code: LineCode): LineSample[] {
     }
 
     default:
-      throw new Error(`Неизвестный линейный код: «${code satisfies never}»`);
+      throw new Error(`Невідомий лінійний код: «${code satisfies never}»`);
   }
 }
 

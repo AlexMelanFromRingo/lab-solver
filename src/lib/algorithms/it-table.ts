@@ -109,18 +109,18 @@ export function parseTable(text: string): Table {
   for (const [i, raw] of lines.slice(1).entries()) {
     const cells = split(raw).map((c) => Number(c.replace(",", ".")));
     if (cells.length < 3) {
-      problems.push(`Строка ${i + 1}: меньше трёх столбцов.`);
+      problems.push(`Рядок ${i + 1}: менше трьох стовпців.`);
       continue;
     }
     if (cells.slice(0, 3).some((v) => !Number.isFinite(v))) {
-      problems.push(`Строка ${i + 1}: не все значения числовые.`);
+      problems.push(`Рядок ${i + 1}: не всі значення числові.`);
       continue;
     }
     rows.push(cells.slice(0, 3));
   }
 
   if (rows.length && rows.length !== 10) {
-    problems.push(`Строк с данными ${rows.length}, а задание требует десять.`);
+    problems.push(`Рядків з даними ${rows.length}, а завдання вимагає десять.`);
   }
 
   return { headers, rows, problems };

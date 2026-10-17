@@ -57,5 +57,5 @@ export function aclCommand(r: AclRule): string {
 export function placement(kind: AclKind): { where: string; direction: "in" | "out" } {
   return kind === "standard"
     ? { where: "интерфейс маршрутизатора, ближайший к получателю", direction: "out" }
-    : { where: "интерфейс маршрутизатора, ближайший к источнику", direction: "in" };
+    : { where: "інтерфейс маршрутизатора, найближчий до джерела", direction: "in" };
 }

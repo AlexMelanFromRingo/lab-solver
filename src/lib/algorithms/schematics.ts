@@ -20,7 +20,7 @@ export interface Formula {
 export function parseFormula(src: string): Formula {
   const s = src.replace(/\s+/g, "");
   const eq = s.indexOf("=");
-  if (eq < 1) throw new Error("Нет «=»: формула записывается как Y=…");
+  if (eq < 1) throw new Error("Немає «=»: формула записується як Y=…");
   const out = s.slice(0, eq);
   const body = s.slice(eq + 1);
   let i = 0;
@@ -34,12 +34,12 @@ export function parseFormula(src: string): Formula {
     if (peek() === "(") {
       i++;
       const e = orExpr();
-      if (peek() !== ")") throw new Error(`Не закрыта скобка (позиция ${i + 1})`);
+      if (peek() !== ")") throw new Error(`Не закрита дужка (позиція ${i + 1})`);
       i++;
       return e;
     }
     const m = /^[A-Za-z]\w*/.exec(body.slice(i));
-    if (!m) throw new Error(`Непонятный символ «${peek() ?? "конец"}» (позиция ${i + 1})`);
+    if (!m) throw new Error(`Незрозумілий символ «${peek() ?? "кінець"}» (позиція ${i + 1})`);
     i += m[0].length;
     const name = m[0].toUpperCase();
     if (!vars.includes(name)) vars.push(name);
@@ -62,7 +62,7 @@ export function parseFormula(src: string): Formula {
     return args.length === 1 ? args[0] : { t: "or", args };
   }
   const expr = orExpr();
-  if (i < body.length) throw new Error(`Лишний символ «${body[i]}» (позиция ${i + 1}) — вероятно, лишняя скобка`);
+  if (i < body.length) throw new Error(`Зайвий символ «${body[i]}» (позиція ${i + 1}) — ймовірно, зайва дужка`);
   return { out: out.toUpperCase(), expr, vars };
 }
 

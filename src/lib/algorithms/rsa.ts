@@ -31,7 +31,7 @@ export function findPrime(bits: number, seed: bigint, rounds = 20): PrimeSearchR
     attempts.push({ candidate, isPrime: result.isPrime, attempt: i + 1 });
     if (result.isPrime) return { prime: candidate, attempts };
   }
-  throw new Error("Не удалось найти простое число за 5000 попыток — увеличьте битность");
+  throw new Error("Не вдалося знайти просте число за 5000 спроб — збільште бітність");
 }
 
 export interface RsaKeys {
@@ -60,7 +60,7 @@ export function generateKeys(bitsPerPrime: number, seedP: bigint, seedQ: bigint)
   const phi = (p - 1n) * (q - 1n);
   const e = chooseE(phi);
   const d = modInverse(e, phi);
-  if (d === null) throw new Error("Не удалось вычислить d — попробуйте другие p, q");
+  if (d === null) throw new Error("Не вдалося обчислити d — спробуйте інші p, q");
   return { p, q, n, phi, e, d };
 }
 
@@ -68,7 +68,7 @@ export function keysFromPQE(p: bigint, q: bigint, e: bigint): RsaKeys {
   const n = p * q;
   const phi = (p - 1n) * (q - 1n);
   const d = modInverse(e, phi);
-  if (d === null) throw new Error("e не взаимно просто с φ(n) — обратного элемента не существует");
+  if (d === null) throw new Error("e не взаємно просте з φ(n) — оберненого елемента не існує");
   return { p, q, n, phi, e, d };
 }
 
@@ -184,7 +184,7 @@ const FILE_BLOCK_BITS = 20;
 
 export function encryptFileScheme(text: string, e: bigint, n: bigint): string {
   if (n >= 1n << 32n) {
-    throw new Error("Эта схема — как в оригинальном файловом шифраторе — рассчитана на n < 2^32 (простые ≤ 15 бит). Уменьшите битность ключа.");
+    throw new Error("Ця схема — як в оригінальному файловому шифраторі — розрахована на n < 2^32 (прості ≤ 15 біт). Зменште бітність ключа.");
   }
   const dataBits = bytesToBits(Array.from(new TextEncoder().encode(text)));
   const totalWithoutPad = 5 + dataBits.length;
@@ -214,7 +214,7 @@ export function encryptFileScheme(text: string, e: bigint, n: bigint): string {
 
 export function decryptFileScheme(base64: string, d: bigint, n: bigint): string {
   const cipherBytes = base64Decode(base64);
-  if (cipherBytes.length % 4 !== 0) throw new Error("После Base64-декодирования размер не кратен 4 байтам — повреждённые данные");
+  if (cipherBytes.length % 4 !== 0) throw new Error("Після Base64-декодування розмір не кратний 4 байтам — пошкоджені дані");
 
   const blockCount = cipherBytes.length / 4;
   const allBits: number[] = [];
@@ -228,12 +228,12 @@ export function decryptFileScheme(base64: string, d: bigint, n: bigint): string 
     for (let bit = FILE_BLOCK_BITS - 1; bit >= 0; bit--) allBits.push(Number((m >> BigInt(bit)) & 1n));
   }
 
-  if (allBits.length < 5) throw new Error("Слишком мало данных для заголовка паддинга");
+  if (allBits.length < 5) throw new Error("Замало даних для заголовка паддінгу");
   let pad = 0;
   for (let i = 0; i < 5; i++) pad = (pad << 1) | allBits[i];
 
   const dataBitsLen = allBits.length - 5 - pad;
-  if (dataBitsLen < 0 || dataBitsLen % 8 !== 0) throw new Error("Некорректный заголовок паддинга — длина данных не кратна 8 битам");
+  if (dataBitsLen < 0 || dataBitsLen % 8 !== 0) throw new Error("Некоректний заголовок паддінгу — довжина даних не кратна 8 бітам");
 
   const dataBits = allBits.slice(5, 5 + dataBitsLen);
   const bytes = bitsToBytes(dataBits);

@@ -89,7 +89,7 @@ function pdvOneWay(path: Segment10[]): { terms: PathTerm[]; total: number } {
     const t = SEG10[s.type];
     const role = i === 0 ? "лівий" : i === path.length - 1 ? "правий" : "проміжний";
     const base = role === "лівий" ? t.left : role === "правий" ? t.right : t.mid;
-    if (base === null) throw new Error(`${s.type} может быть только промежуточным сегментом`);
+    if (base === null) throw new Error(`${s.type} може бути лише проміжним сегментом`);
     const value = r3(base + s.length * t.perM);
     return { segment: i + 1, role, expr: `${base} + ${s.length}·${t.perM}`, value };
   });
@@ -102,7 +102,7 @@ function pvvOneWay(path: Segment10[]): { terms: PathTerm[]; total: number } {
     const t = SEG10[s.type];
     const role = i === 0 ? "передавальний" : "проміжний";
     const value = role === "передавальний" ? t.pvvTx : t.pvvMid;
-    if (value === null) throw new Error(`${s.type} не может быть передающим сегментом`);
+    if (value === null) throw new Error(`${s.type} не може бути передавальним сегментом`);
     return { segment: i + 1, role, expr: String(value), value };
   });
   return { terms, total: r3(terms.reduce((a, t) => a + t.value, 0)) };
@@ -123,7 +123,7 @@ export function checkEthernet10(path: Segment10[]): Ethernet10Check {
   if (path.length < 2) throw new Error("У шляху хоча б два сегменти: лівий і правий");
   const lengthProblems = path
     .filter((s) => s.length > SEG10[s.type].max)
-    .map((s) => `${s.type}: ${s.length} м больше предельных ${SEG10[s.type].max} м`);
+    .map((s) => `${s.type}: ${s.length} м більше за граничні ${SEG10[s.type].max} м`);
   const f = pdvOneWay(path);
   const pv = pvvOneWay(path);
   const symmetric = path[0].type === path[path.length - 1].type;

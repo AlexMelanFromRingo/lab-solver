@@ -41,7 +41,7 @@ export function inverse(a: Matrix): Matrix {
   for (let c = 0; c < n; c++) {
     let p = c;
     for (let r = c + 1; r < n; r++) if (Math.abs(m[r][c]) > Math.abs(m[p][c])) p = r;
-    if (Math.abs(m[p][c]) < 1e-14) throw new Error("Матрица вырожденная — обратной нет");
+    if (Math.abs(m[p][c]) < 1e-14) throw new Error("Матриця вироджена — оберненої немає");
     [m[p], m[c]] = [m[c], m[p]];
     const pv = m[c][c];
     for (let k = 0; k < 2 * n; k++) m[c][k] /= pv;
@@ -65,7 +65,7 @@ export function gauss(a: Matrix, b: number[]): { steps: Matrix[]; x: number[] } 
   for (let c = 0; c < n; c++) {
     if (Math.abs(m[c][c]) < 1e-14) {
       const p = m.findIndex((r, i) => i > c && Math.abs(r[c]) > 1e-14);
-      if (p < 0) throw new Error("Система вырожденная");
+      if (p < 0) throw new Error("Система вироджена");
       [m[p], m[c]] = [m[c], m[p]];
     }
     for (let r = c + 1; r < n; r++) {
@@ -246,7 +246,7 @@ export function combined(f: (x: number) => number, fp: (x: number) => number, fp
 /** Коэффициенты многочлена Лагранжа (от свободного члена) и значение в x0. */
 export function lagrange(xs: number[], ys: number[]): { coef: number[]; at: (x: number) => number } {
   const n = xs.length;
-  if (new Set(xs).size !== n) throw new Error("Узлы интерполяции должны быть различными");
+  if (new Set(xs).size !== n) throw new Error("Вузли інтерполяції мають бути різними");
   const coef = Array(n).fill(0);
   for (let i = 0; i < n; i++) {
     let basis = [1];

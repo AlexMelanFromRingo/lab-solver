@@ -18,7 +18,7 @@ export function parseEdges(text: string): { n: number; edges: Edge[] } {
     if (!line || line.startsWith("#")) continue;
     const p = line.replace(/[,;→>]/g, " ").split(/\s+/).filter(Boolean).map(Number);
     if (p.length !== 3 || p.some((v) => !Number.isFinite(v)) || p[0] < 1 || p[1] < 1) {
-      throw new Error(`Строка ${i + 1}: нужно «откуда куда вес», например «1 2 7»`);
+      throw new Error(`Рядок ${i + 1}: потрібно «звідки куди вага», наприклад «1 2 7»`);
     }
     edges.push({ from: p[0], to: p[1], w: p[2] });
   }

@@ -27,10 +27,10 @@ export interface BbsResult {
 /** X0=s² mod n; Xi=X(i-1)² mod n; Bi=Xi mod 2 — классический генератор BBS. */
 export function generateBBS(p: bigint, q: bigint, seed: bigint, bitsCount: number): BbsResult {
   if (p % 4n !== 3n || q % 4n !== 3n) {
-    throw new Error("p и q должны быть ≡ 3 (mod 4) — иначе BBS не гарантирует свои криптографические свойства");
+    throw new Error("p і q мають бути ≡ 3 (mod 4) — інакше BBS не гарантує своїх криптографічних властивостей");
   }
   const n = p * q;
-  if (gcdBig(seed, n) !== 1n) throw new Error("seed должен быть взаимно прост с n");
+  if (gcdBig(seed, n) !== 1n) throw new Error("seed має бути взаємно простим з n");
 
   let x = (seed * seed) % n;
   const x0 = x;

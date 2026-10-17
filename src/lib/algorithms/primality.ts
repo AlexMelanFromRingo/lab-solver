@@ -34,7 +34,7 @@ export function trialDivision(n: bigint): TestResult {
     }
     d += 2n;
   }
-  steps.push({ label: "Дільників не знайдено", detail: `перебраны все нечётные до √n` });
+  steps.push({ label: "Дільників не знайдено", detail: `перебрані всі непарні до √n` });
   return { isPrime: true, certain: true, steps };
 }
 
@@ -62,7 +62,7 @@ export function fermatTest(n: bigint, rounds: number): TestResult {
       return { isPrime: false, certain: true, steps };
     }
   }
-  steps.push({ label: "Усі раунди пройдено", detail: `n, вероятно, простое (p ошибки ≤ (1/2)^${rounds}, ловится числами Кармайкла)` });
+  steps.push({ label: "Усі раунди пройдено", detail: `n, ймовірно, просте (p похибки ≤ (1/2)^${rounds}, ловиться числами Кармайкла)` });
   return { isPrime: true, certain: false, steps };
 }
 
@@ -101,7 +101,7 @@ export function millerRabinTest(n: bigint, rounds: number): TestResult {
     }
     steps.push({ label: `Свидетель a=${a}`, detail: "раунд пройдено" });
   }
-  steps.push({ label: "Усі раунди пройдено", detail: `n — вероятно простое (p ошибки ≤ 4^-${rounds})` });
+  steps.push({ label: "Усі раунди пройдено", detail: `n — ймовірно просте (p похибки ≤ 4^-${rounds})` });
   return { isPrime: true, certain: false, steps };
 }
 
@@ -125,7 +125,7 @@ export function solovayStrassenTest(n: bigint, rounds: number): TestResult {
       return { isPrime: false, certain: true, steps };
     }
   }
-  steps.push({ label: "Усі раунди пройдено", detail: `n — вероятно простое (p ошибки ≤ (1/2)^${rounds})` });
+  steps.push({ label: "Усі раунди пройдено", detail: `n — ймовірно просте (p похибки ≤ (1/2)^${rounds})` });
   return { isPrime: true, certain: false, steps };
 }
 
