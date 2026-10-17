@@ -12,22 +12,22 @@ import type { VariantSpec } from "@/lib/algorithms/feistel-variant";
 function f1Body(spec: VariantSpec): string {
   switch (spec.f1) {
     case 1:
-      return "return (r + round_key) & mask(HALF_WIDTH); // [+] сложение по модулю 2^(n/2)";
+      return "return (r + round_key) & mask(HALF_WIDTH); // [+] додавання за модулем 2^(n/2)";
     case 2:
       return "return r ^ round_key; // (+) XOR";
     case 3:
-      return "return (r * round_key) & mask(HALF_WIDTH); // [×] умножение по модулю 2^(n/2)";
+      return "return (r * round_key) & mask(HALF_WIDTH); // [×] множення за модулем 2^(n/2)";
   }
 }
 
 function f23Body(f: VariantSpec["f2"]): string {
   switch (f.id) {
     case 4:
-      return `return rotate_left(v, ${f.param}, HALF_WIDTH); // <<< циклический сдвиг влево на ${f.param}`;
+      return `return rotate_left(v, ${f.param}, HALF_WIDTH); // <<< циклічний зсув ліворуч на ${f.param}`;
     case 5:
-      return `return rotate_right(v, ${f.param}, HALF_WIDTH); // >>> циклический сдвиг вправо на ${f.param}`;
+      return `return rotate_right(v, ${f.param}, HALF_WIDTH); // >>> циклічний зсув праворуч на ${f.param}`;
     case 6:
-      return "return sbox_nibbles(v, HALF_WIDTH); // S(n) — табличная замена по ниблам";
+      return "return sbox_nibbles(v, HALF_WIDTH); // S(n) — таблична заміна за нібблами";
   }
 }
 
@@ -35,8 +35,8 @@ export function generateFeistelCpp(spec: VariantSpec, keyHex: string): string {
   const halfWidth = spec.n / 2;
   const rounds = Math.max(4, Math.ceil(spec.k / halfWidth));
 
-  return `// Сеть Фейстеля — вариант ${spec.variant} (n=${spec.n}, K=${spec.k}, F1=${spec.f1}, F2=${spec.f2.id}(${spec.f2.param}), F3=${spec.f3.id}(${spec.f3.param}))
-// Сгенерировано на "Вариант." — сверено с расчётами калькулятора на этом же варианте.
+  return `// Мережа Фейстеля — варіант ${spec.variant} (n=${spec.n}, K=${spec.k}, F1=${spec.f1}, F2=${spec.f2.id}(${spec.f2.param}), F3=${spec.f3.id}(${spec.f3.param}))
+// Згенеровано на «Варіант.» — звірено з розрахунками калькулятора на цьому ж варіанті.
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
@@ -55,7 +55,7 @@ const int KEY_WIDTH = ${spec.k};
 const int ROUNDS = ${rounds};
 const u64 KEY = 0x${BigInt("0b" + (keyHex || "0")).toString(16)}ULL;
 
-// Тот же S-box, что и во всех референсных реализациях этой лабы.
+// Той самий S-box, що й в усіх референсних реалізаціях цієї лаби.
 const uint8_t SBOX[16] = {0xC, 0x5, 0x6, 0xB, 0x9, 0x0, 0xA, 0xD, 0x3, 0xE, 0xF, 0x8, 0x4, 0x7, 0x1, 0x2};
 
 u32 mask(int w) { return w >= 32 ? 0xFFFFFFFFu : ((1u << w) - 1u); }
@@ -81,17 +81,17 @@ u32 rotate_right(u32 v, int p, int w) {
     return ((v >> p) | (v << (w - p))) & mask(w);
 }
 
-// F1 — комбинирует правую половину блока с раундовым ключом.
+// F1 — комбінує праву половину блока з раундовим ключем.
 u32 f1(u32 r, u32 round_key) {
     ${f1Body(spec)}
 }
 
-// F2 — первое побитовое преобразование результата F1.
+// F2 — перше побітове перетворення результату F1.
 u32 f2(u32 v) {
     ${f23Body(spec.f2)}
 }
 
-// F3 — второе побитовое преобразование, его результат идёт в XOR с левой половиной.
+// F3 — друге побітове перетворення, його результат іде в XOR з лівою половиною.
 u32 f3(u32 v) {
     ${f23Body(spec.f3)}
 }
@@ -120,9 +120,9 @@ u32 encrypt_block(u32 block, u64 key) {
     return (L << HALF_WIDTH) | R;
 }
 
-// Обращение сети Фейстеля: меняем местами половины блока, прогоняем тот же раундовый
-// механизм с ключами в обратном порядке, меняем половины обратно. Раундовая функция не
-// обязана быть обратимой сама по себе — обратимость даёт именно эта конструкция.
+// Обернення мережі Фейстеля: міняємо місцями половини блока, проганяємо той самий раундовий
+// механізм з ключами у зворотному порядку, міняємо половини назад. Раундова функція не
+// зобов’язана бути оборотною сама по собі — оборотність дає саме ця конструкція.
 u32 decrypt_block(u32 block, u64 key) {
     std::vector<u32> keys = generate_round_keys(key);
     u32 L = block & mask(HALF_WIDTH);
@@ -136,7 +136,7 @@ u32 decrypt_block(u32 block, u64 key) {
     return (R << HALF_WIDTH) | L;
 }
 
-// ── Работа с файлом: блоки по BLOCK_WIDTH/8 байт, последний дополняется нулями ──
+// ── Робота з файлом: блоки по BLOCK_WIDTH/8 байт, останній доповнюється нулями ──
 std::vector<uint8_t> read_file(const std::string& path) {
     std::ifstream in(path, std::ios::binary);
     return std::vector<uint8_t>((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
@@ -174,23 +174,23 @@ void decrypt_file(const std::string& in_path, const std::string& out_path, u64 k
 }
 
 int main() {
-    // Проверка на одном блоке — совпадает с калькулятором на сайте для этого же варианта.
+    // Перевірка на одному блоці — збігається з калькулятором на сайті для цього ж варіанта.
     u32 sample_block = 0x${(spec.n === 8 ? "cc" : "cccc")};
     u32 enc = encrypt_block(sample_block, KEY);
     u32 dec = decrypt_block(enc, KEY);
     printf("Блок:        %0${spec.n / 4}X\\n", sample_block);
     printf("Шифротекст:  %0${spec.n / 4}X\\n", enc);
-    printf("Расшифр.:    %0${spec.n / 4}X  (%s)\\n\\n", dec, dec == sample_block ? "совпадает" : "ОШИБКА");
+    printf("Розшифр.:    %0${spec.n / 4}X  (%s)\\n\\n", dec, dec == sample_block ? "збігається" : "ПОМИЛКА");
 
-    // Пример шифрования файла целиком: положите input.txt рядом с программой.
+    // Приклад шифрування файлу цілком: покладіть input.txt поруч з програмою.
     std::ifstream check("input.txt");
     if (check.good()) {
         check.close();
         encrypt_file("input.txt", "encrypted.bin", KEY);
         decrypt_file("encrypted.bin", "decrypted.txt", KEY);
-        std::cout << "Файл input.txt зашифрован в encrypted.bin и расшифрован обратно в decrypted.txt" << std::endl;
+        std::cout << "Файл input.txt зашифровано в encrypted.bin і розшифровано назад у decrypted.txt" << std::endl;
     } else {
-        std::cout << "(добавьте input.txt рядом с программой, чтобы проверить шифрование файла)" << std::endl;
+        std::cout << "(додайте input.txt поруч з програмою, щоб перевірити шифрування файлу)" << std::endl;
     }
     return 0;
 }

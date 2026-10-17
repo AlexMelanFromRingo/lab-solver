@@ -198,9 +198,19 @@ export default function ItLab2Page() {
             <FunctionPlot id={funcId} from={from} to={to} />
 
             <p className="text-sm leading-relaxed text-ink-dim">
-              В примере задания построен <span className="font-mono text-xs text-ink">sin x</span> на
-              отрезке [−10; 10]. Аргумент задаётся диапазоном с шагом, а не одним числом: именно
-              шаг определяет, насколько гладкой выйдет кривая.
+              {lang === "uk" ? (
+                <>
+                  У прикладі завдання побудовано <span className="font-mono text-xs text-ink">sin x</span> на
+                  відрізку [−10; 10]. Аргумент задається діапазоном з кроком, а не одним числом: саме
+                  крок визначає, наскільки гладкою вийде крива.
+                </>
+              ) : (
+                <>
+                  В примере задания построен <span className="font-mono text-xs text-ink">sin x</span> на
+                  отрезке [−10; 10]. Аргумент задаётся диапазоном с шагом, а не одним числом: именно
+                  шаг определяет, насколько гладкой выйдет кривая.
+                </>
+              )}
             </p>
           </CardBody>
         </Card>

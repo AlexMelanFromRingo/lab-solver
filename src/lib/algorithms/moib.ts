@@ -359,20 +359,20 @@ export function jacobi(aIn: number, nIn: number): { value: number; steps: string
   let n = nIn;
   let s = 1;
   const steps: string[] = [`J(${aIn}; ${nIn})`];
-  if (a !== aIn) steps.push(`= J(${a}; ${n})  — a по модулю n`);
+  if (a !== aIn) steps.push(`= J(${a}; ${n})  — a за модулем n`);
   while (a !== 0) {
     while (a % 2 === 0) {
       a /= 2;
       const r = n % 8;
       if (r === 3 || r === 5) s = -s;
-      steps.push(`= ${s < 0 ? "−" : ""}J(${a}; ${n})  — вынесли J(2; ${n}) = ${r === 3 || r === 5 ? "−1" : "+1"} (n mod 8 = ${r})`);
+      steps.push(`= ${s < 0 ? "−" : ""}J(${a}; ${n})  — винесли J(2; ${n}) = ${r === 3 || r === 5 ? "−1" : "+1"} (n mod 8 = ${r})`);
     }
     if (a === 1) break;
     [a, n] = [n, a];
     const flip = a % 4 === 3 && n % 4 === 3;
     if (flip) s = -s;
     a = a % n;
-    steps.push(`= ${s < 0 ? "−" : ""}J(${a}; ${n})  — взаимность${flip ? ", оба ≡ 3 (mod 4): знак меняется" : ""}, затем по модулю`);
+    steps.push(`= ${s < 0 ? "−" : ""}J(${a}; ${n})  — взаємність${flip ? ", обидва ≡ 3 (mod 4): знак змінюється" : ""}, потім за модулем`);
   }
   const value = n === 1 || a === 1 ? s : 0;
   steps.push(`= ${value > 0 ? "+1" : value}`);
@@ -481,7 +481,7 @@ export function solveSystem(items: SystemItem[]): SystemResult {
   for (const it of items) {
     const sol = solveCongruence(it.a, it.b, it.m);
     if (sol.none) {
-      return { reduced, inconsistent: `${it.a}x ≡ ${it.b} (mod ${it.m}) не имеет решений: НСД(${it.a}, ${it.m}) = ${sol.d} не делит ${it.b}`, substitution: [], x: NaN, M: NaN, crt: null, pairwiseCoprime: false };
+      return { reduced, inconsistent: `${it.a}x ≡ ${it.b} (mod ${it.m}) не має розв'язків: НСД(${it.a}, ${it.m}) = ${sol.d} не ділить ${it.b}`, substitution: [], x: NaN, M: NaN, crt: null, pairwiseCoprime: false };
     }
     reduced.push({ c: sol.x0, m: sol.reduced.m, from: it, sol });
   }
@@ -496,7 +496,7 @@ export function solveSystem(items: SystemItem[]): SystemResult {
     if (t.none) {
       return {
         reduced,
-        inconsistent: `x ≡ ${b1.c} (mod ${b1.m}) и x ≡ ${b2.c} (mod ${b2.m}) несовместны: ${b2.c} ≢ ${b1.c} (mod ${gcd(b1.m, b2.m)})`,
+        inconsistent: `x ≡ ${b1.c} (mod ${b1.m}) і x ≡ ${b2.c} (mod ${b2.m}) несумісні: ${b2.c} ≢ ${b1.c} (mod ${gcd(b1.m, b2.m)})`,
         substitution,
         x: NaN,
         M: NaN,

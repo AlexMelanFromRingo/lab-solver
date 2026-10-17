@@ -19,7 +19,7 @@ export interface RsaCodegenOptions {
 function prngStruct(prng: PrngType): string {
   switch (prng) {
     case "middle-square":
-      return `// Метод середины квадратов — тот же принцип, что и в rust-rsa-from-scratch.
+      return `// Метод середини квадратів — той самий принцип, що й у rust-rsa-from-scratch.
 struct Rng {
     uint32_t seed;
     Rng() { seed = (uint32_t)time(nullptr) | 1u; }
@@ -32,7 +32,7 @@ struct Rng {
     }
 };`;
     case "lcg":
-      return `// Линейный конгруэнтный генератор (те же константы, что использует glibc/PCG-подобные ГПСЧ).
+      return `// Лінійний конгруентний генератор (ті самі константи, що використовує glibc/PCG-подібні ГПВЧ).
 struct Rng {
     uint64_t state;
     Rng() { state = (uint64_t)time(nullptr); }
@@ -43,7 +43,7 @@ struct Rng {
     }
 };`;
     case "rand":
-      return `// Стандартный rand() из <cstdlib>, засеянный текущим временем.
+      return `// Стандартний rand() з <cstdlib>, засіяний поточним часом.
 struct Rng {
     Rng() { srand((unsigned)time(nullptr)); }
     uint32_t next(uint32_t max_value) {
@@ -58,7 +58,7 @@ struct Rng {
 function primalityFunction(test: PrimalityTestType): string {
   switch (test) {
     case "trial":
-      return `// Пробное деление — детерминированный тест, без ГПСЧ.
+      return `// Пробне ділення — детермінований тест, без ГПВЧ.
 bool is_prime(uint32_t n, Rng& rng) {
     (void)rng;
     if (n < 2) return false;
@@ -68,7 +68,7 @@ bool is_prime(uint32_t n, Rng& rng) {
     return true;
 }`;
     case "fermat":
-      return `// Тест Ферма: a^(n-1) mod n == 1 для случайных свидетелей a.
+      return `// Тест Ферма: a^(n-1) mod n == 1 для випадкових свідків a.
 bool is_prime(uint32_t n, Rng& rng) {
     if (n < 4) return n == 2 || n == 3;
     if (n % 2 == 0) return false;
@@ -80,7 +80,7 @@ bool is_prime(uint32_t n, Rng& rng) {
     return true;
 }`;
     case "miller-rabin":
-      return `// Тест Миллера-Рабина: n-1 = 2^r * d, ищем свидетеля составности.
+      return `// Тест Міллера-Рабіна: n-1 = 2^r * d, шукаємо свідка складеності.
 bool is_prime(uint32_t n, Rng& rng) {
     if (n < 4) return n == 2 || n == 3;
     if (n % 2 == 0) return false;
@@ -102,7 +102,7 @@ bool is_prime(uint32_t n, Rng& rng) {
     return true;
 }`;
     case "solovay-strassen":
-      return `// Тест Соловея-Штрассена: сравнивает символ Якоби с a^((n-1)/2) mod n.
+      return `// Тест Соловея-Штрассена: порівнює символ Якобі з a^((n-1)/2) mod n.
 int jacobi_symbol(int64_t a, int64_t n) {
     a %= n;
     if (a < 0) a += n;
@@ -151,7 +151,7 @@ uint32_t gcd_u32(uint32_t a, uint32_t b) {
     return a;
 }
 
-// Расширенный Евклид: возвращает НОД(a,b), заодно коэффициенты x,y такие что a*x+b*y=НОД.
+// Розширений Евклід: повертає НСД(a,b), заодно коефіцієнти x,y такі що a*x+b*y=НСД.
 int64_t ext_gcd(int64_t a, int64_t b, int64_t& x, int64_t& y) {
     if (b == 0) { x = 1; y = 0; return a; }
     int64_t x1, y1;
@@ -221,8 +221,8 @@ std::vector<uint8_t> base64_decode(const std::string& input) {
     return output;
 }`;
 
-const FILE_SCHEME_CPP = `// Схема из реального файлового шифратора курсовой: 20-битные блоки, 5-битный заголовок
-// длины паддинга последнего блока, каждый шифроблок — 4 байта (big-endian), всё — в Base64.
+const FILE_SCHEME_CPP = `// Схема з реального файлового шифратора курсової: 20-бітні блоки, 5-бітний заголовок
+// довжини паддінгу останнього блока, кожен шифроблок — 4 байти (big-endian), усе — в Base64.
 const int FILE_BLOCK_BITS = 20;
 
 std::vector<bool> bytes_to_bits(const std::vector<uint8_t>& bytes) {
@@ -315,14 +315,14 @@ export function generateRsaCpp(options: RsaCodegenOptions): string {
     std::cout << "e = " << e << ", d = " << d << std::endl;
 
     uint32_t m;
-    std::cout << "Введите сообщение (число < n): ";
+    std::cout << "Введіть повідомлення (число < n): ";
     std::cin >> m;
-    if (m >= n) { std::cerr << "Сообщение должно быть меньше n" << std::endl; return 1; }
+    if (m >= n) { std::cerr << "Повідомлення має бути меншим за n" << std::endl; return 1; }
 
     uint32_t c = mod_exp(m, e, n);
     uint32_t back = mod_exp(c, d, n);
     std::cout << "Зашифровано: " << c << std::endl;
-    std::cout << "Расшифровано: " << back << (back == m ? "  (совпадает)" : "  (ОШИБКА)") << std::endl;
+    std::cout << "Розшифровано: " << back << (back == m ? "  (збігається)" : "  (ПОМИЛКА)") << std::endl;
     return 0;
 }`
       : `int main() {
@@ -345,15 +345,15 @@ export function generateRsaCpp(options: RsaCodegenOptions): string {
         check.close();
         encrypt_file("input.txt", "encrypted.b64", e, n);
         decrypt_file("encrypted.b64", "decrypted.txt", d, n);
-        std::cout << "Файл input.txt зашифрован в encrypted.b64 (Base64) и расшифрован обратно в decrypted.txt" << std::endl;
+        std::cout << "Файл input.txt зашифровано в encrypted.b64 (Base64) і розшифровано назад у decrypted.txt" << std::endl;
     } else {
-        std::cout << "(добавьте input.txt рядом с программой, чтобы проверить шифрование файла)" << std::endl;
+        std::cout << "(додайте input.txt поруч з програмою, щоб перевірити шифрування файлу)" << std::endl;
     }
     return 0;
 }`;
 
-  return `// RSA "с нуля" — ГПСЧ: ${options.prng}, тест простоты: ${options.primalityTest}, режим: ${options.mode}.
-// Сгенерировано на "Вариант." — сверено с расчётами калькулятора RSA на этом же наборе опций.
+  return `// RSA «з нуля» — ГПВЧ: ${options.prng}, тест простоти: ${options.primalityTest}, режим: ${options.mode}.
+// Згенеровано на «Варіант.» — звірено з розрахунками калькулятора RSA на цьому ж наборі опцій.
 #include <cstdint>
 #include <cstdlib>
 #include <ctime>

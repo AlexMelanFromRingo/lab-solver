@@ -1,6 +1,7 @@
 "use client";
 
 import { ru, type Table } from "@/lib/algorithms/it-table";
+import { useLang } from "@/components/lang";
 
 /**
  * Три типа диаграмм, которые требует первая лабораторная.
@@ -175,6 +176,7 @@ export function ComboChart({ table, accent }: { table: Table; accent: string }) 
 
 /** Круговая: доли третьего столбца от общей суммы. */
 export function PieChart({ table, total }: { table: Table; total: number }) {
+  const { lang } = useLang();
   const rows = table.rows;
   if (rows.length === 0 || total <= 0) return null;
 
@@ -231,8 +233,9 @@ export function PieChart({ table, total }: { table: Table; total: number }) {
 
       {spread < 0.04 && (
         <p className="text-xs leading-relaxed text-ink-faint">
-          Доли различаются меньше чем на четыре процента — круговая диаграмма на таких данных
-          выглядит ровным кругом. Без подписей данных по ней ничего не прочитать.
+          {lang === "uk"
+            ? "Частки різняться менш ніж на чотири відсотки — кругова діаграма на таких даних виглядає рівним колом. Без підписів даних по ній нічого не прочитати."
+            : "Доли различаются меньше чем на четыре процента — круговая диаграмма на таких данных выглядит ровным кругом. Без подписей данных по ней ничего не прочитать."}
         </p>
       )}
     </div>

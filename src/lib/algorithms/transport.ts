@@ -158,11 +158,11 @@ function findCycle(x: (number | null)[][], r: number, s: number): [number, numbe
 }
 
 export function solveTransport(inp: TransportInput, method: "least" | "northwest" = "least"): TransportResult {
-  if (inp.c.length !== inp.a.length || inp.c.some((r) => r.length !== inp.b.length)) throw new Error("Размер матрицы стоимостей не совпадает с числом пунктов");
+  if (inp.c.length !== inp.a.length || inp.c.some((r) => r.length !== inp.b.length)) throw new Error("Розмір матриці вартостей не збігається з числом пунктів");
   const { a, b, c, fictitious } = balance(inp);
   const plan = initialPlan(a, b, c, method, fictitious);
   let x = plan.x;
-  const initial: Step[] = [{ title: `Опорный план (${method === "least" ? "метод наименьшей стоимости" : "метод северо-западного угла"}): ${plan.log.join("; ")}`, x: clone(x), cost: total(x, c) }];
+  const initial: Step[] = [{ title: `Опорний план (${method === "least" ? "метод найменшої вартості" : "метод північно-західного кута"}): ${plan.log.join("; ")}`, x: clone(x), cost: total(x, c) }];
   const potentials: Step[] = [];
   for (let it = 1; it <= 50; it++) {
     const { u, v } = potentialsOf(x, c);
@@ -172,15 +172,15 @@ export function solveTransport(inp: TransportInput, method: "least" | "northwest
       if (d !== null && d > 0 && (!best || d > delta[best[0]][best[1]]!)) best = [i, j];
     }));
     if (!best) {
-      potentials.push({ title: `Итерация ${it}: все Δij ≤ 0 — план оптимален`, x: clone(x), cost: total(x, c), u, v, delta });
+      potentials.push({ title: `Ітерація ${it}: усі Δij ≤ 0 — план оптимальний`, x: clone(x), cost: total(x, c), u, v, delta });
       break;
     }
     const [r, s] = best as [number, number];
     const cycle = findCycle(x, r, s);
-    if (!cycle) throw new Error("Не удалось построить цикл пересчёта (вырожденный план)");
+    if (!cycle) throw new Error("Не вдалося побудувати цикл перерахунку (вироджений план)");
     const minus = cycle.filter((_, k) => k % 2 === 1);
     const theta = Math.min(...minus.map(([i, j]) => x[i][j] ?? 0));
-    potentials.push({ title: `Итерация ${it}: max Δ = Δ${r + 1}${s + 1} = ${delta[r][s]} > 0, цикл ${cycle.map(([i, j], k) => `${k % 2 ? "−" : "+"}(${i + 1},${j + 1})`).join(" ")}, θ = ${theta}`, x: clone(x), cost: total(x, c), u, v, delta, cycle, theta });
+    potentials.push({ title: `Ітерація ${it}: max Δ = Δ${r + 1}${s + 1} = ${delta[r][s]} > 0, цикл ${cycle.map(([i, j], k) => `${k % 2 ? "−" : "+"}(${i + 1},${j + 1})`).join(" ")}, θ = ${theta}`, x: clone(x), cost: total(x, c), u, v, delta, cycle, theta });
     const nx = clone(x);
     cycle.forEach(([i, j], k) => {
       nx[i][j] = (nx[i][j] ?? 0) + (k % 2 ? -theta : theta);
