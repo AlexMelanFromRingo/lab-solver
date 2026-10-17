@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLang } from "@/components/lang";
 import { Card, CardBody } from "@/components/ui/card";
 import { NumberField, TextAreaField } from "@/components/ui/field";
 import { OutputBlock } from "@/components/ui/output-block";
@@ -62,6 +63,8 @@ function run<T>(fn: () => T): { ok: true; v: T } | { ok: false; error: string } 
 
 /** Кратчайшие пути (Флойд, Форд, Дейкстра) и остовное дерево (Краскал, Прим). */
 export function GraphCalc({ accent }: { accent: string }) {
+  const { lang } = useLang();
+  const t = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [mode, setMode] = useState<"paths" | "tree">("paths");
   const [paths, setPaths] = useState(FIG15);
   const [tree, setTree] = useState(FIG15A);
@@ -80,7 +83,7 @@ export function GraphCalc({ accent }: { accent: string }) {
   });
 
   // правило методички: к весам +n для нечётного номера, +n/2 для чётного
-  const t = run(() => {
+  const tv = run(() => {
     const g = parseEdges(tree);
     const add = n <= 0 ? 0 : n % 2 ? n : n / 2;
     const edges = g.edges.map((e) => ({ ...e, w: e.w + add }));
@@ -91,15 +94,15 @@ export function GraphCalc({ accent }: { accent: string }) {
     <Card>
       <CardBody className="space-y-5 pt-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-display text-lg font-semibold text-ink">Графы</h2>
+          <h2 className="font-display text-lg font-semibold text-ink">{t("Графи","Графы")}</h2>
           <Segmented
-            label="Задача"
+            label={t("Задача","Задача")}
             value={mode}
             accent={accent}
             onChange={setMode}
             options={[
-              { value: "paths", label: "Кратчайшие пути" },
-              { value: "tree", label: "Остовное дерево" },
+              { value: "paths", label: t("Найкоротші шляхи","Кратчайшие пути") },
+              { value: "tree", label: t("Кістякове дерево","Остовное дерево") },
             ]}
           />
         </div>
@@ -107,46 +110,46 @@ export function GraphCalc({ accent }: { accent: string }) {
         {mode === "paths" ? (
           <>
             <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_14rem]">
-              <TextAreaField label="Дуги «откуда куда вес» — по умолчанию рис. 15" value={paths} onChange={(e) => setPaths(e.target.value)} className="min-h-[14rem]" />
+              <TextAreaField label={t("Дуги «звідки куди вага» — за замовчуванням рис. 15","Дуги «откуда куда вес» — по умолчанию рис. 15")} value={paths} onChange={(e) => setPaths(e.target.value)} className="min-h-[14rem]" />
               <div className="space-y-4">
-                <NumberField label="Из вершины" min={1} value={from} onChange={(e) => setFrom(Number(e.target.value))} />
-                <NumberField label="В вершину (путь Флойда)" min={1} value={to} onChange={(e) => setTo(Number(e.target.value))} />
+                <NumberField label={t("З вершини","Из вершины")} min={1} value={from} onChange={(e) => setFrom(Number(e.target.value))} />
+                <NumberField label={t("У вершину (шлях Флойда)","В вершину (путь Флойда)")} min={1} value={to} onChange={(e) => setTo(Number(e.target.value))} />
               </div>
             </div>
             {p.ok ? (
               <div className="space-y-4">
-                <OutputBlock label="Матрица весов D⁽⁰⁾" value={fmtMat(p.v.w)} wrap={false} />
+                <OutputBlock label={t("Матриця ваг D⁽⁰⁾","Матрица весов D⁽⁰⁾")} value={fmtMat(p.v.w)} wrap={false} />
                 <OutputBlock
-                  label="Флойд: матрицы после каждого k"
+                  label={t("Флойд: матриці після кожного k","Флойд: матрицы после каждого k")}
                   value={p.v.f.d.slice(1).map((d, k) => `k = ${k + 1}\n${fmtMat(d)}`).join("\n\n")}
                   wrap={false}
                 />
                 <OutputBlock
-                  label={`Путь x${from} → x${to} по матрице маршрутов`}
+                  label={t(`Шлях x${from} → x${to} за матрицею маршрутів`,`Путь x${from} → x${to} по матрице маршрутов`)}
                   value={
                     p.v.f.negativeCycle
-                      ? "В графе есть цикл отрицательного веса — кратчайших путей нет"
+                      ? t("У графі є цикл від’ємної ваги — найкоротших шляхів немає","В графе есть цикл отрицательного веса — кратчайших путей нет")
                       : p.v.path
-                        ? `${p.v.path.map((v) => `x${v}`).join(" → ")}, длина ${p.v.f.d[p.v.last][from - 1][to - 1]}\nМатрица маршрутов (следующая вершина пути):\n${fmtMat(p.v.f.via[p.v.last].map((r) => r.map((v) => (v < 0 ? Infinity : v + 1))))}`
-                        : `x${to} недостижима из x${from}`
+                        ? t(`${p.v.path.map((v) => `x${v}`).join(" → ")}, довжина ${p.v.f.d[p.v.last][from - 1][to - 1]}\nМатриця маршрутів (наступна вершина шляху):\n${fmtMat(p.v.f.via[p.v.last].map((r) => r.map((v) => (v < 0 ? Infinity : v + 1))))}`,`${p.v.path.map((v) => `x${v}`).join(" → ")}, длина ${p.v.f.d[p.v.last][from - 1][to - 1]}\nМатрица маршрутов (следующая вершина пути):\n${fmtMat(p.v.f.via[p.v.last].map((r) => r.map((v) => (v < 0 ? Infinity : v + 1))))}`)
+                        : t(`x${to} недосяжна з x${from}`,`x${to} недостижима из x${from}`)
                   }
                   wrap={false}
                 />
                 <OutputBlock
-                  label={`Форд: метки l(x) от x${from} после каждого прохода по дугам`}
+                  label={t(`Форд: мітки l(x) від x${from} після кожного проходу по дугах`,`Форд: метки l(x) от x${from} после каждого прохода по дугам`)}
                   value={[
-                    ...p.v.fo.passes.map((pass, i) => `проход ${i}: ${pass.map(fmt).join("  ")}`),
+                    ...p.v.fo.passes.map((pass, i) => t(`прохід ${i}: ${pass.map(fmt).join("  ")}`,`проход ${i}: ${pass.map(fmt).join("  ")}`)),
                     p.v.fo.negativeCycle
-                      ? "метки меняются и на n-м проходе — цикл отрицательного веса"
-                      : p.v.fo.dist.map((d, i) => `x${i + 1}: ${fmt(d)}${d < Infinity && i !== from - 1 ? `, путь ${predPath(p.v.fo.pred, i + 1).map((v) => `x${v}`).join("→")}` : ""}`).join("\n"),
+                      ? t("мітки змінюються і на n-му проході — цикл від’ємної ваги","метки меняются и на n-м проходе — цикл отрицательного веса")
+                      : p.v.fo.dist.map((d, i) => t(`x${i + 1}: ${fmt(d)}${d < Infinity && i !== from - 1 ? `, шлях ${predPath(p.v.fo.pred, i + 1).map((v) => `x${v}`).join("→")}` : ""}`,`x${i + 1}: ${fmt(d)}${d < Infinity && i !== from - 1 ? `, путь ${predPath(p.v.fo.pred, i + 1).map((v) => `x${v}`).join("→")}` : ""}`)).join("\n"),
                   ].join("\n")}
                   wrap={false}
                 />
                 <OutputBlock
-                  label="Дейкстра"
+                  label={t("Дейкстра","Дейкстра")}
                   value={
                     p.v.dj.ok
-                      ? p.v.dj.v.steps.map((s) => `постоянная метка x${s.fixed}: ${s.labels.map(fmt).join("  ")}`).join("\n")
+                      ? p.v.dj.v.steps.map((s) => t(`постійна мітка x${s.fixed}: ${s.labels.map(fmt).join("  ")}`,`постоянная метка x${s.fixed}: ${s.labels.map(fmt).join("  ")}`)).join("\n")
                       : p.v.dj.error
                   }
                   wrap={false}
@@ -159,31 +162,31 @@ export function GraphCalc({ accent }: { accent: string }) {
         ) : (
           <>
             <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_14rem]">
-              <TextAreaField label="Рёбра «вершина вершина вес» — по умолчанию рис. 15а" value={tree} onChange={(e) => setTree(e.target.value)} className="min-h-[14rem]" />
+              <TextAreaField label={t("Ребра «вершина вершина вага» — за замовчуванням рис. 15а","Рёбра «вершина вершина вес» — по умолчанию рис. 15а")} value={tree} onChange={(e) => setTree(e.target.value)} className="min-h-[14rem]" />
               <NumberField
-                label="Номер по списку n"
-                hint="0 — без поправки"
+                label={t("Номер за списком n","Номер по списку n")}
+                hint={t("0 — без поправки","0 — без поправки")}
                 min={0}
                 value={n}
                 onChange={(e) => setN(Number(e.target.value))}
               />
             </div>
-            {t.ok ? (
+            {tv.ok ? (
               <div className="space-y-4">
-                {t.v.add > 0 && <p className="text-sm text-ink-dim">Ко всем весам добавлено {t.v.add} ({n % 2 ? "нечётный номер: +n" : "чётный номер: +n/2"}).</p>}
+                {tv.v.add > 0 && <p className="text-sm text-ink-dim">{t("До всіх ваг додано","Ко всем весам добавлено")} {tv.v.add} ({n % 2 ? t("непарний номер: +n","нечётный номер: +n") : t("парний номер: +n/2","чётный номер: +n/2")}).</p>}
                 <OutputBlock
-                  label={`Краскал: вес дерева ${t.v.k.weight}${t.v.k.connected ? "" : " — граф несвязный"}`}
-                  value={t.v.k.steps.map((s) => `(x${s.edge.from}, x${s.edge.to}) = ${s.edge.w}${s.taken ? "" : " — образует цикл"}`).join("\n")}
+                  label={t(`Краскал: вага дерева ${tv.v.k.weight}${tv.v.k.connected ? "" : " — граф незв’язний"}`,`Краскал: вес дерева ${tv.v.k.weight}${tv.v.k.connected ? "" : " — граф несвязный"}`)}
+                  value={tv.v.k.steps.map((s) => `(x${s.edge.from}, x${s.edge.to}) = ${s.edge.w}${s.taken ? "" : t(" — утворює цикл"," — образует цикл")}`).join("\n")}
                   wrap={false}
                 />
                 <OutputBlock
-                  label={`Прим от x1: вес дерева ${t.v.pr.weight}`}
-                  value={t.v.pr.steps.map((s) => `(x${s.edge.from}, x${s.edge.to}) = ${s.edge.w}; в дереве {${s.inTree.map((v) => `x${v}`).join(", ")}}`).join("\n")}
+                  label={t(`Прим від x1: вага дерева ${tv.v.pr.weight}`,`Прим от x1: вес дерева ${tv.v.pr.weight}`)}
+                  value={tv.v.pr.steps.map((s) => `(x${s.edge.from}, x${s.edge.to}) = ${s.edge.w}; ${t("у дереві","в дереве")} {${s.inTree.map((v) => `x${v}`).join(", ")}}`).join("\n")}
                   wrap={false}
                 />
               </div>
             ) : (
-              <p className="text-sm text-codes">{t.error}</p>
+              <p className="text-sm text-codes">{tv.error}</p>
             )}
           </>
         )}

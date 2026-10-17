@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useLang } from "@/components/lang";
 import { Card, CardBody } from "@/components/ui/card";
 import { SelectField } from "@/components/ui/field";
 import { OutputBlock } from "@/components/ui/output-block";
@@ -66,6 +67,8 @@ function SegmentRow<T extends string>({
 
 /** PDV и PVV сети Ethernet 10 Мбит/с (ЛР E1). */
 export function Ethernet10Calc({ accent }: { accent: string }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [path, setPath] = useState<Segment10[]>([
     { type: "10Base-T", length: 11 },
     { type: "10Base-FL", length: 200 },
@@ -84,10 +87,9 @@ export function Ethernet10Calc({ accent }: { accent: string }) {
   return (
     <Card>
       <CardBody className="space-y-4 pt-6">
-        <h2 className="font-display text-lg font-semibold text-ink">PDV и PVV: Ethernet 10 Мбит/с</h2>
+        <h2 className="font-display text-lg font-semibold text-ink">{tx("PDV і PVV: Ethernet 10 Мбіт/с","PDV и PVV: Ethernet 10 Мбит/с")}</h2>
         <p className="text-sm leading-relaxed text-ink-dim">
-          Сегменты пути между двумя самыми удалёнными станциями — слева направо, от станции до станции через
-          повторители и хабы. По умолчанию — пример варианта 43 из методички.
+          {tx("Сегменти шляху між двома найвіддаленішими станціями — зліва направо, від станції до станції через повторювачі і хаби. За замовчуванням — приклад варіанта 43 з методички.","Сегменты пути между двумя самыми удалёнными станциями — слева направо, от станции до станции через повторители и хабы. По умолчанию — пример варианта 43 из методички.")}
         </p>
         <div className="space-y-2">
           {path.map((s, i) => (
@@ -108,7 +110,7 @@ export function Ethernet10Calc({ accent }: { accent: string }) {
             className="rounded-[3px] border px-3 py-1.5 text-sm text-ink hover:bg-white/5"
             style={{ borderColor: accent }}
           >
-            Добавить промежуточный сегмент
+            {tx("Додати проміжний сегмент","Добавить промежуточный сегмент")}
           </button>
         </div>
         {res.ok ? (
@@ -117,24 +119,24 @@ export function Ethernet10Calc({ accent }: { accent: string }) {
               label={`PDV ${res.c.pdv.ok ? "≤" : ">"} 575 bt`}
               value={[
                 ...res.c.pdv.terms.map((t) => `${t.segment} (${t.role}): ${t.expr} = ${t.value}`),
-                `итого ${res.c.pdv.total} bt`,
-                ...(res.c.pdv.reverse !== undefined ? [`справа налево ${res.c.pdv.reverse} bt — берётся большее`] : []),
+                tx(`разом ${res.c.pdv.total} bt`,`итого ${res.c.pdv.total} bt`),
+                ...(res.c.pdv.reverse !== undefined ? [tx(`справа наліво ${res.c.pdv.reverse} bt — береться більше`,`справа налево ${res.c.pdv.reverse} bt — берётся большее`)] : []),
               ].join("\n")}
             />
             <OutputBlock
               label={`PVV ${res.c.pvv.ok ? "≤" : ">"} 49 bt`}
               value={[
                 ...res.c.pvv.terms.map((t) => `${t.segment} (${t.role}): ${t.value}`),
-                `итого ${res.c.pvv.total} bt`,
-                ...(res.c.pvv.reverse !== undefined ? [`справа налево ${res.c.pvv.reverse} bt — берётся большее`] : []),
+                tx(`разом ${res.c.pvv.total} bt`,`итого ${res.c.pvv.total} bt`),
+                ...(res.c.pvv.reverse !== undefined ? [tx(`справа наліво ${res.c.pvv.reverse} bt — береться більше`,`справа налево ${res.c.pvv.reverse} bt — берётся большее`)] : []),
               ].join("\n")}
             />
             <OutputBlock
-              label="Длины и повторители"
+              label={tx("Довжини і повторювачі","Длины и повторители")}
               className="sm:col-span-2"
               value={[
-                ...(res.c.lengthProblems.length ? res.c.lengthProblems : ["длины сегментов в пределах стандарта"]),
-                `повторителей на пути: ${res.c.repeaters} (не больше 4)`,
+                ...(res.c.lengthProblems.length ? res.c.lengthProblems : [tx("довжини сегментів у межах стандарту","длины сегментов в пределах стандарта")]),
+                tx(`повторювачів на шляху: ${res.c.repeaters} (не більше 4)`,`повторителей на пути: ${res.c.repeaters} (не больше 4)`),
               ].join("\n")}
             />
           </div>
@@ -148,6 +150,8 @@ export function Ethernet10Calc({ accent }: { accent: string }) {
 
 /** Зона конфликта и PDV Fast Ethernet (ЛР E3, E4). */
 export function FastEthernetCalc({ accent }: { accent: string }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [rule, setRule] = useState<FeRule>("class1");
   const [media, setMedia] = useState<FeMedia>("mixed");
   const [segs, setSegs] = useState<FeSegment[]>([{ cable: "UTP Cat 5", length: 22 }]);
@@ -175,7 +179,7 @@ export function FastEthernetCalc({ accent }: { accent: string }) {
           </SelectField>
         </div>
         <p className="text-sm text-ink-dim">
-          Путь между самыми удалёнными станциями зоны конфликта — кабели по порядку:
+          {tx("Шлях між найвіддаленішими станціями зони конфлікту — кабелі по порядку:","Путь между самыми удалёнными станциями зоны конфликта — кабели по порядку:")}
         </p>
         <div className="space-y-2">
           {segs.map((s, i) => (
@@ -196,23 +200,22 @@ export function FastEthernetCalc({ accent }: { accent: string }) {
             className="rounded-[3px] border px-3 py-1.5 text-sm text-ink hover:bg-white/5"
             style={{ borderColor: accent }}
           >
-            Добавить кабель
+            {tx("Додати кабель","Добавить кабель")}
           </button>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <OutputBlock
-            label="Диаметр зоны конфликта"
+            label={tx("Діаметр зони конфлікту","Диаметр зоны конфликта")}
             value={
               diameter === null
-                ? "для этого правила смешанной среды нет"
-                : `${span} м ${span <= diameter ? "≤" : ">"} ${diameter} м — ${span <= diameter ? "допустимо" : "сеть так не построить"}`
+                ? tx("для цього правила змішаного середовища немає","для этого правила смешанной среды нет")
+                : tx(`${span} м ${span <= diameter ? "≤" : ">"} ${diameter} м — ${span <= diameter ? "допустимо" : "мережу так не побудувати"}`,`${span} м ${span <= diameter ? "≤" : ">"} ${diameter} м — ${span <= diameter ? "допустимо" : "сеть так не построить"}`)
             }
           />
           <OutputBlock label={`PDV ${pdv.ok ? "≤" : ">"} 512 bt`} value={`${pdv.expr} = ${pdv.total} bt`} />
         </div>
         <p className="text-xs leading-relaxed text-ink-faint">
-          Задержки на метр (туда и обратно): Cat 3 и 4 — 1,14 bt, Cat 5 и STP — 1,112 bt, оптика — 1 bt; пара станций
-          TX/FX — 100 bt; повторитель I класса — 140 bt, II класса — 92 bt.
+          {tx("Затримки на метр (туди і назад): Cat 3 і 4 — 1,14 bt, Cat 5 і STP — 1,112 bt, оптика — 1 bt; пара станцій TX/FX — 100 bt; повторювач I класу — 140 bt, II класу — 92 bt.","Задержки на метр (туда и обратно): Cat 3 и 4 — 1,14 bt, Cat 5 и STP — 1,112 bt, оптика — 1 bt; пара станций TX/FX — 100 bt; повторитель I класса — 140 bt, II класса — 92 bt.")}
         </p>
       </CardBody>
     </Card>
