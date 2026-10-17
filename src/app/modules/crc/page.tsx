@@ -88,11 +88,11 @@ export default function CrcPage() {
               )}
             >
               Синдром = {bitsToString(check.syndrome)} —{" "}
-              {check.status === "ok" && "ошибок нет"}
-              {check.status === "corrected" && `ошибка в позиции ${check.errorPos} — исправлена`}
-              {check.status === "uncorrectable" && "обнаружена ошибка, но однозначно исправить нельзя (коллизия синдромов)"}
+              {check.status === "ok" && tx("помилок немає", "ошибок нет")}
+              {check.status === "corrected" && tx(`помилка в позиції ${check.errorPos} — виправлена`, `ошибка в позиции ${check.errorPos} — исправлена`)}
+              {check.status === "uncorrectable" && tx("виявлено помилку, але однозначно виправити не можна (колізія синдромів)", "обнаружена ошибка, но однозначно исправить нельзя (коллизия синдромов)")}
             </div>
-            {check.corrected && <OutputBlock label="Исправленное слово" value={bitsToString(check.corrected)} />}
+            {check.corrected && <OutputBlock label={tx("Виправлене слово", "Исправленное слово")} value={bitsToString(check.corrected)} />}
           </CardBody>
         </Card>
       </div>

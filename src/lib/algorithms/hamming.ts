@@ -57,18 +57,18 @@ export function correct(received: number[], extended: boolean): CorrectionResult
     if (extended) {
       const overallParity = r.reduce((a, b) => a ^ b, 0);
       if (overallParity !== 0) {
-        return { word: r, errorAt: 0, message: "Ошибка в самом бите общей чётности (p0) — исправлена" };
+        return { word: r, errorAt: 0, message: "Помилка в самому біті загальної парності (p0) — виправлена" };
       }
     }
-    return { word: r, errorAt: -1, message: "Ошибок не обнаружено" };
+    return { word: r, errorAt: -1, message: "Помилок не виявлено" };
   }
 
   const errorIdx = extended ? syn.value : syn.value - 1;
   if (errorIdx >= 0 && errorIdx < r.length) {
     r[errorIdx] ^= 1;
-    return { word: r, errorAt: errorIdx, message: `Ошибка в позиции ${syn.value} — исправлена` };
+    return { word: r, errorAt: errorIdx, message: `Помилка в позиції ${syn.value} — виправлена` };
   }
-  return { word: r, errorAt: -1, message: "Синдром указывает за пределы слова" };
+  return { word: r, errorAt: -1, message: "Синдром вказує за межі слова" };
 }
 
 export function isPowerOfTwo(n: number): boolean {

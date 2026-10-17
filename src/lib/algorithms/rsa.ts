@@ -73,7 +73,7 @@ export function keysFromPQE(p: bigint, q: bigint, e: bigint): RsaKeys {
 }
 
 export function encryptNumber(m: bigint, e: bigint, n: bigint): bigint {
-  if (m >= n) throw new Error("Сообщение должно быть меньше n — увеличьте p, q или разбейте на блоки");
+  if (m >= n) throw new Error("Повідомлення має бути меншим за n — збільште p, q або розбийте на блоки");
   return modExp(m, e, n);
 }
 

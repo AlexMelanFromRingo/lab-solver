@@ -159,7 +159,7 @@ export default function GostRc4Page() {
                 accent={accent}
               />
             ) : (
-              <p className="text-sm text-ink-faint">Загрузка…</p>
+              <p className="text-sm text-ink-faint">{tx("Завантаження…","Загрузка…")}</p>
             )}
           </CardBody>
         </Card>

@@ -16,6 +16,7 @@ const accent = categories.tik.accent;
 const SYMS = ["z1", "z2", "z3", "z4", "z5"];
 
 function CodeTableView({ title, codes, items }: { title: string; codes: Record<string, string>; items: SymbolProb[] }) {
+  const { lang } = useLang();
   return (
     <div>
       <h3 className="text-sm font-medium text-ink-dim mb-2">{title}</h3>
@@ -26,7 +27,7 @@ function CodeTableView({ title, codes, items }: { title: string; codes: Record<s
               <th className="text-left px-3 py-2">Символ</th>
               <th className="text-left px-3 py-2">p</th>
               <th className="text-left px-3 py-2">Код</th>
-              <th className="text-left px-3 py-2">Длина</th>
+              <th className="text-left px-3 py-2">{lang === "uk" ? "Довжина" : "Длина"}</th>
             </tr>
           </thead>
           <tbody>

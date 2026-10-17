@@ -114,7 +114,7 @@ export default function ParityChannelPage() {
             <h2 className="font-display text-lg font-semibold text-ink">{tx("Код парності","Код чётности")}</h2>
             <SelectField label={tx("Повідомлення варіанта","Сообщение варианта")} value={messageChoice} onChange={(e) => setMessageChoice(e.target.value as "1" | "2")}>
               <option value="1">{tx("Повідомлення 1","Сообщение 1")}: {variant.message1}</option>
-              <option value="2">Сообщение 2: {variant.message2}</option>
+              <option value="2">{tx("Повідомлення 2","Сообщение 2")}: {variant.message2}</option>
             </SelectField>
 
             <div className="inline-block rounded-[4px] border border-border overflow-hidden">
@@ -162,11 +162,19 @@ export default function ParityChannelPage() {
                   : "border-codes/30 bg-codes-soft text-codes"
               )}
             >
-              {check.errorCount === "0" && "Ошибок нет"}
-              {check.errorCount === "1" && `Ошибка в строке ${check.badRow! + 1}, столбце ${check.badCol! + 1} — исправлена`}
-              {check.errorCount === "≥2" && "Обнаружено ≥2 ошибок — исправить нельзя, только зафиксировать"}
+              {check.errorCount === "0" && tx("Помилок немає", "Ошибок нет")}
+              {check.errorCount === "1" &&
+                tx(
+                  `Помилка в рядку ${check.badRow! + 1}, стовпці ${check.badCol! + 1} — виправлена`,
+                  `Ошибка в строке ${check.badRow! + 1}, столбце ${check.badCol! + 1} — исправлена`,
+                )}
+              {check.errorCount === "≥2" &&
+                tx(
+                  "Виявлено ≥2 помилок — виправити не можна, лише зафіксувати",
+                  "Обнаружено ≥2 ошибок — исправить нельзя, только зафиксировать",
+                )}
             </div>
-            {check.corrected && <OutputBlock label="Исправленное сообщение" value={matrixToBitString(check.corrected)} />}
+            {check.corrected && <OutputBlock label={tx("Виправлене повідомлення", "Исправленное сообщение")} value={matrixToBitString(check.corrected)} />}
           </CardBody>
         </Card>
 

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, Copy, Download } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
 
 /** З якого боку текст продовжується за межі видимої області. */
 interface Edges {
@@ -15,6 +16,8 @@ interface Edges {
 const NONE: Edges = { top: false, bottom: false, left: false, right: false };
 
 export function CodeBlock({ code, filename, className }: { code: string; filename: string; className?: string }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [copied, setCopied] = useState(false);
 
   // Текст у блоці прокручується в обидва боки, і без позначки край виглядає
@@ -71,14 +74,14 @@ export function CodeBlock({ code, filename, className }: { code: string; filenam
             className="inline-flex items-center gap-1.5 rounded-[3px] border border-border px-2.5 py-1.5 text-xs font-medium text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
           >
             {copied ? <Check size={13} /> : <Copy size={13} />}
-            {copied ? "Скопировано" : "Копировать"}
+            {copied ? tx("Скопійовано", "Скопировано") : tx("Копіювати", "Копировать")}
           </button>
           <button
             onClick={download}
             className="inline-flex items-center gap-1.5 rounded-[3px] border border-border px-2.5 py-1.5 text-xs font-medium text-ink-dim hover:text-ink hover:border-border-strong transition-colors"
           >
             <Download size={13} />
-            Скачать
+            {tx("Завантажити", "Скачать")}
           </button>
         </div>
       </div>
