@@ -88,38 +88,38 @@
   "results": {
    "lobe": [
     {
-     "stage": "Первое обучение",
-     "mode": "скорость (MobileNetV2)",
+     "stage": "Перше навчання",
+     "mode": "швидкість (MobileNetV2)",
      "train": "91 %",
      "validation": "34/40"
     },
     {
-     "stage": "Исправлена метка",
-     "mode": "скорость",
+     "stage": "Виправлена мітка",
+     "mode": "швидкість",
      "train": "34 %",
      "validation": "14/40"
     },
     {
-     "stage": "Обучение заново",
-     "mode": "точность (ResNet50V2)",
+     "stage": "Навчання заново",
+     "mode": "точність (ResNet50V2)",
      "train": "99 %",
      "validation": "38/40"
     },
     {
-     "stage": "Исправлена метка",
-     "mode": "точность",
+     "stage": "Виправлена мітка",
+     "mode": "точність",
      "train": "100 %",
      "validation": "40/40"
     },
     {
-     "stage": "Добавлена «доповнення»",
-     "mode": "точность",
+     "stage": "Додано «доповнення»",
+     "mode": "точність",
      "train": "89 %",
      "validation": "37/40"
     },
     {
      "stage": "Optimize Model",
-     "mode": "точность",
+     "mode": "точність",
      "train": "99 %",
      "validation": "40/40"
     }
