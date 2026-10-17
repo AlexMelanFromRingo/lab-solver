@@ -9,6 +9,7 @@ import { DrawingView } from "@/components/drawing-view";
 import { c, Grid, Section, type Tint } from "@/components/kfs-ui";
 import { Lab5View, Lab6View, Lab7View } from "@/components/kfs-calc-57";
 import { readXlsx } from "@/lib/algorithms/xlsx-read";
+import { useLang } from "@/components/lang";
 import {
   CMD,
   DEFAULT_TACTS,
@@ -106,6 +107,8 @@ function matrix(names: string[], xy: Record<string, [number, number]>, upper: Re
 // --- виджет --------------------------------------------------------------------
 
 export function KfsCalc({ lab, accent }: { lab: 1 | 2 | 3 | 4 | 5 | 6 | 7; accent: string }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const stored = useSyncExternalStore(subscribe, snapshot, () => null);
   // «auto»: есть сохранённый файл — показываем его; иначе пример
   const [choice, setMode] = useState<"auto" | "demo" | "file">("auto");
@@ -114,7 +117,7 @@ export function KfsCalc({ lab, accent }: { lab: 1 | 2 | 3 | 4 | 5 | 6 | 7; accen
   const full = lab >= 5;
   const [ex, setEx] = useState<KfsVariant | null>(null);
   useEffect(() => {
-    if (full && mode === "demo" && !ex) loadExample().then(setEx, (e: Error) => setError(`Пример не загрузился: ${e.message}`));
+    if (full && mode === "demo" && !ex) loadExample().then(setEx, (e: Error) => setError(tx(`Приклад не завантажився: ${e.message}`,`Пример не загрузился: ${e.message}`)));
   }, [full, mode, ex]);
   const v = mode === "file" && stored ? stored.variant : full ? ex : DEMO;
 
@@ -136,36 +139,35 @@ export function KfsCalc({ lab, accent }: { lab: 1 | 2 | 3 | 4 | 5 | 6 | 7; accen
         <CardBody className="space-y-4">
           <div className="flex flex-wrap items-center gap-4">
             <Segmented
-              label="Дані"
+              label={tx("Дані","Данные")}
               value={mode === "file" && stored ? "file" : "demo"}
               options={[
-                { value: "demo", label: full ? "Пример: вариант 1" : "Пример из методичек" },
-                { value: "file", label: stored ? `Свой вариант (${stored.fileName})` : "Свой вариант" },
+                { value: "demo", label: full ? tx("Приклад: варіант 1","Пример: вариант 1") : tx("Приклад з методичок","Пример из методичек") },
+                { value: "file", label: stored ? tx(`Свій варіант (${stored.fileName})`,`Свой вариант (${stored.fileName})`) : tx("Свій варіант","Свой вариант") },
               ]}
               onChange={(m) => (m === "file" && !stored ? document.getElementById("kfs-file")?.click() : setMode(m))}
               accent={accent}
             />
             <label className="cursor-pointer text-sm text-ink-dim underline decoration-dotted underline-offset-4 hover:text-ink">
-              {stored ? "Загрузить другой файл" : "Загрузить файл варианта .xlsx"}
+              {stored ? tx("Завантажити інший файл","Загрузить другой файл") : tx("Завантажити файл варіанта .xlsx","Загрузить файл варианта .xlsx")}
               <input id="kfs-file" type="file" accept=".xlsx" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
             </label>
             {stored && (
               <button type="button" className="text-sm text-ink-faint hover:text-ink-dim" onClick={() => (save(null), setMode("demo"))}>
-                Забыть файл
+                {tx("Забути файл","Забыть файл")}
               </button>
             )}
           </div>
           <p className="text-sm leading-relaxed text-ink-faint">
-            Файл варианта — тот, что выдаёт преподаватель (листы «Координати», «Ділянки», «ФПБ»). Он читается в браузере и
-            никуда не отправляется; сайт запоминает его для всех семи работ.{" "}
+            {tx("Файл варіанта — той, що видає викладач (аркуші «Координати», «Ділянки», «ФПБ»). Він читається в браузері і нікуди не надсилається; сайт запам’ятовує його для всіх семи робіт.","Файл варианта — тот, что выдаёт преподаватель (листы «Координати», «Ділянки», «ФПБ»). Он читается в браузере и никуда не отправляется; сайт запоминает его для всех семи работ.")}{" "}
             {full
-              ? "Без файла показан вариант 1 из файлов преподавателя: для ЛР5–ЛР7 в методичках нет полных данных примера."
-              : "Без файла показаны примеры из методичек — на них видно, что расчёт совпадает с таблицами методичек."}
+              ? tx("Без файла показано варіант 1 з файлів викладача: для ЛР5–ЛР7 у методичках немає повних даних прикладу.","Без файла показан вариант 1 из файлов преподавателя: для ЛР5–ЛР7 в методичках нет полных данных примера.")
+              : tx("Без файла показано приклади з методичок — на них видно, що розрахунок збігається з таблицями методичок.","Без файла показаны примеры из методичек — на них видно, что расчёт совпадает с таблицами методичек.")}
           </p>
-          {error && <InfoNote title="Файл не прочитан">{error}</InfoNote>}
+          {error && <InfoNote title={tx("Файл не прочитано","Файл не прочитан")}>{error}</InfoNote>}
         </CardBody>
       </Card>
-      {!v && <p className="text-sm text-ink-faint">Загружается пример…</p>}
+      {!v && <p className="text-sm text-ink-faint">{tx("Завантажується приклад…","Загружается пример…")}</p>}
       {v && lab === 1 && <Lab1View v={v} />}
       {v && lab === 2 && <Lab2View v={v} />}
       {v && lab === 3 && <Lab3View v={v} />}
@@ -182,6 +184,8 @@ export function KfsCalc({ lab, accent }: { lab: 1 | 2 | 3 | 4 | 5 | 6 | 7; accen
 const WHY = { lt: "кабель коротший за пряму", big: "кабель у рази довший за пряму", none: "немає даних" } as const; // в отчёт — по-украински
 
 function Lab1View({ v }: { v: KfsVariant }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [kText, setKText] = useState("");
   const kUser = kText.trim() ? Number(kText.replace(",", ".")) : undefined;
   const l1 = useMemo(() => lab1(v, kUser && kUser >= 1 ? kUser : undefined), [v, kUser]);
@@ -194,33 +198,30 @@ function Lab1View({ v }: { v: KfsVariant }) {
   const fig = topology(l1.names, l1.xy);
   return (
     <>
-      <Section title="Характеристика объекта автоматизации">
+      <Section title={{ uk: "Характеристика об’єкта автоматизації", ru: "Характеристика объекта автоматизации" }}>
         <p className="text-sm leading-relaxed text-ink-dim">
-          {v.names.length} ТО: {tps.length} технологических процесса ({tps.join(", ")}) и {dps.length} диспетчерских
-          пункта ({dps.join(", ")}).{" "}
+          {v.names.length} ТО: {tps.length} {tx("технологічних процеси","технологических процесса")} ({tps.join(", ")}) {tx("і","и")} {dps.length} {tx("диспетчерських пункти","диспетчерских пункта")} ({dps.join(", ")}).{" "}
           {Object.keys(v.struct).length > 0 &&
-            `Структура ТП: ${Object.entries(v.struct)
-              .map(([tp, s]) => `${tp} — ${Object.values(s).reduce((a, b) => a + b, 0)} участков`)
+            `${tx("Структура ТП","Структура ТП")}: ${Object.entries(v.struct)
+              .map(([tp, s]) => `${tp} — ${Object.values(s).reduce((a, b) => a + b, 0)} ${tx("ділянок","участков")}`)
               .join(", ")}.`}
         </p>
         <Grid title="Таблиця 1. Координати ТО та кабельні відстані (під діагоналлю), км" head={head} rows={matrix(v.names, v.xy, null, v.cable)} />
       </Section>
-      <Section title="Анализ координат и геометрические расстояния">
+      <Section title={{ uk: "Аналіз координат і геометричні відстані", ru: "Анализ координат и геометрические расстояния" }}>
         {l1.groups.some((g) => g.length > 1) ? (
           <p className="text-sm leading-relaxed text-ink-dim">
-            Координаты отличаются не больше чем на 1 м (0,001 км) — ТО в одном помещении, они объединяются в сложные:{" "}
-            {l1.groups.filter((g) => g.length > 1).map((g) => g.join(" и ")).join("; ")}. Сложный ТО берёт координаты и кабельные
-            расстояния своего ТП — так в методичке.
+            {tx("Координати відрізняються не більш як на 1 м (0,001 км) — ТО в одному приміщенні, вони об’єднуються у складні:","Координаты отличаются не больше чем на 1 м (0,001 км) — ТО в одном помещении, они объединяются в сложные:")}{" "}
+            {l1.groups.filter((g) => g.length > 1).map((g) => g.join(tx(" і "," и "))).join("; ")}. {tx("Складний ТО бере координати і кабельні відстані свого ТП — так у методичці.","Сложный ТО берёт координаты и кабельные расстояния своего ТП — так в методичке.")}
           </p>
         ) : (
           <p className="text-sm leading-relaxed text-ink-dim">
-            ТО с разницей координат до 1 м нет, сложные ТО не образуются. Ближайшие пары:{" "}
+            {tx("ТО з різницею координат до 1 м немає, складні ТО не утворюються. Найближчі пари:","ТО с разницей координат до 1 м нет, сложные ТО не образуются. Ближайшие пары:")}{" "}
             {l1.nearest.map((p) => `${p.a} і ${p.b} — ${Math.round(p.d * 1000)} м`).join(", ")}.
           </p>
         )}
         <p className="text-sm leading-relaxed text-ink-dim">
-          Геометрическое расстояние — по Пифагору: l<sub>г</sub> = √((x₂ − x₁)² + (y₂ − y₁)²). Над диагональю — геометрические,
-          под ней — кабельные расстояния; зелёные совпадают с точностью до метра (так сравнивают таблицы методички).
+          {lang === "uk" ? (<>Геометрична відстань — за Піфагором: l<sub>г</sub> = √((x₂ − x₁)² + (y₂ − y₁)²). Над діагоналлю — геометричні, під нею — кабельні відстані; зелені збігаються з точністю до метра (так порівнюють таблиці методички).</>) : (<>Геометрическое расстояние — по Пифагору: l<sub>г</sub> = √((x₂ − x₁)² + (y₂ − y₁)²). Над диагональю — геометрические, под ней — кабельные расстояния; зелёные совпадают с точностью до метра (так сравнивают таблицы методички).</>)}
         </p>
         <Grid
           title="Таблиця 2. Кабельні та геометричні відстані між ТО, км"
@@ -231,15 +232,12 @@ function Lab1View({ v }: { v: KfsVariant }) {
           })}
         />
       </Section>
-      <Section title="Уточнение кабельных расстояний">
+      <Section title={{ uk: "Уточнення кабельних відстаней", ru: "Уточнение кабельных расстояний" }}>
         <p className="text-sm leading-relaxed text-ink-dim">
-          Уточнять нужно, если l<sub>к</sub> &lt; l<sub>г</sub>, если кабель в разы длиннее прямой (п. 1.2.3 методички) и если
-          кабельного расстояния нет. По методичке уточнённые длины даёт заказчик; пока ответа нет, сайт берёт l<sub>к</sub>* =
-          ⌈k·l<sub>г</sub>⌉ до метра, где k — наибольшее отношение l<sub>к</sub>/l<sub>г</sub> среди прошедших проверку каналов
-          {auto.kPair ? ` (${auto.kPair.join("–")}: k = ${fmt(auto.k)})` : ""}. Коэффициент можно задать свой.
+          {lang === "uk" ? (<>Уточнювати треба, якщо l<sub>к</sub> &lt; l<sub>г</sub>, якщо кабель у рази довший за пряму (п. 1.2.3 методички) і якщо кабельної відстані немає. За методичкою уточнені довжини дає замовник; поки відповіді немає, сайт бере l<sub>к</sub>* = ⌈k·l<sub>г</sub>⌉ до метра, де k — найбільше відношення l<sub>к</sub>/l<sub>г</sub> серед каналів, що пройшли перевірку{auto.kPair ? ` (${auto.kPair.join("–")}: k = ${fmt(auto.k)})` : ""}. Коефіцієнт можна задати свій.</>) : (<>Уточнять нужно, если l<sub>к</sub> &lt; l<sub>г</sub>, если кабель в разы длиннее прямой (п. 1.2.3 методички) и если кабельного расстояния нет. По методичке уточнённые длины даёт заказчик; пока ответа нет, сайт берёт l<sub>к</sub>* = ⌈k·l<sub>г</sub>⌉ до метра, где k — наибольшее отношение l<sub>к</sub>/l<sub>г</sub> среди прошедших проверку каналов{auto.kPair ? ` (${auto.kPair.join("–")}: k = ${fmt(auto.k)})` : ""}. Коэффициент можно задать свой.</>)}
         </p>
         <div className="max-w-xs">
-          <NumberField label="Коэффициент k" hint={`пусто — ${fmt(auto.k)}`} step="0.001" min={1} value={kText} onChange={(e) => setKText(e.target.value)} />
+          <NumberField label={tx("Коефіцієнт k","Коэффициент k")} hint={tx(`порожньо — ${fmt(auto.k)}`,`пусто — ${fmt(auto.k)}`)} step="0.001" min={1} value={kText} onChange={(e) => setKText(e.target.value)} />
         </div>
         {l1.fixes.length ? (
           <Grid
@@ -248,7 +246,7 @@ function Lab1View({ v }: { v: KfsVariant }) {
             rows={l1.fixes.map((f) => [`${f.a} – ${f.b}`, f.lk == null ? "н/д" : fmt(f.lk), fmt(f.lg), c(fmt(f.fixed), "fix"), WHY[f.why]])}
           />
         ) : (
-          <InfoNote title="Уточнять нечего">Все кабельные расстояния не меньше геометрических и не длиннее прямой в разы.</InfoNote>
+          <InfoNote title={tx("Уточнювати нічого","Уточнять нечего")}>{tx("Усі кабельні відстані не менші за геометричні і не довші за пряму в рази.","Все кабельные расстояния не меньше геометрических и не длиннее прямой в разы.")}</InfoNote>
         )}
         <Grid
           title="Таблиця 4. Координати ТО, геометричні та уточнені кабельні відстані, км"
@@ -256,7 +254,7 @@ function Lab1View({ v }: { v: KfsVariant }) {
           rows={matrix(l1.names, l1.xy, l1.geom, l1.cableFixed, (a, b, up) => (!up && fixed.has(pairKey(a, b)) ? "fix" : undefined))}
         />
       </Section>
-      <Section title="Схема размещения ТО">
+      <Section title={{ uk: "Схема розміщення ТО", ru: "Схема размещения ТО" }}>
         <DrawingView drawing={fig.main} title="Схема (діаграма) топології розміщення ТО на підприємстві" />
         {fig.zooms.map((z) => (
           <DrawingView key={z.title} drawing={z.drawing} title={z.title} />
@@ -269,6 +267,8 @@ function Lab1View({ v }: { v: KfsVariant }) {
 // --- ЛР2 -----------------------------------------------------------------------------
 
 function Lab2View({ v }: { v: KfsVariant }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const l1 = useMemo(() => lab1(v), [v]);
   const trees = useMemo(() => lab2(l1), [l1]);
   const totals = Object.fromEntries(trees.map((t) => [t.key, t.total]));
@@ -279,11 +279,10 @@ function Lab2View({ v }: { v: KfsVariant }) {
   );
   return (
     <>
-      <Section title="Полный граф">
+      <Section title={{ uk: "Повний граф", ru: "Полный граф" }}>
         <p className="text-sm leading-relaxed text-ink-dim">
-          Вершины — {l1.names.length} ТО из ЛР1, рёбра — {(l1.names.length * (l1.names.length - 1)) / 2} связей с геометрическими
-          длинами. Элитная связь — наибольшее геометрическое расстояние из ЛР1: {l1.longest.join("–")},{" "}
-          {fmt(l1.geom[pairKey(...l1.longest)])} км. Кабельные расстояния — уточнённые в ЛР1 (k = {fmt(l1.k)}).
+          {tx("Вершини","Вершины")} — {l1.names.length} {tx("ТО з ЛР1, ребра","ТО из ЛР1, рёбра")} — {(l1.names.length * (l1.names.length - 1)) / 2} {tx("зв’язків з геометричними довжинами. Елітний зв’язок — найбільша геометрична відстань з ЛР1","связей с геометрическими длинами. Элитная связь — наибольшее геометрическое расстояние из ЛР1")}: {l1.longest.join("–")},{" "}
+          {fmt(l1.geom[pairKey(...l1.longest)])} {tx("км. Кабельні відстані — уточнені в ЛР1","км. Кабельные расстояния — уточнённые в ЛР1")} (k = {fmt(l1.k)}).
         </p>
         <DrawingView drawing={full.main} title="Повний граф" />
       </Section>
@@ -292,7 +291,7 @@ function Lab2View({ v }: { v: KfsVariant }) {
         const w = cable ? l1.cableFixed : l1.geom;
         const fig = topology(l1.names, l1.xy, treeEdges(t.edges, w, l1.geom, { elite: t.elite, cable }));
         return (
-          <Section key={t.key} title={`Построение ${t.key}`}>
+          <Section key={t.key} title={tx(`Побудова ${t.key}`,`Построение ${t.key}`)}>
             <Grid
               title={`Упорядковані ${cable ? "кабельні" : "геометричні"} відстані (${t.key})`}
               head={["Зв'язок", "Довжина, км", "Підграф"]}
@@ -304,7 +303,7 @@ function Lab2View({ v }: { v: KfsVariant }) {
                 ]),
                 [c("Разом", undefined, true), c(fmt(t.total), undefined, true), c(String(t.edges.length), undefined, true)],
               ]}
-              note={t.elite ? "Элитная связь включена первой (розовая), дальше — по возрастанию." : "Ребро, замыкающее цикл, помечено «-»; после n−1 рёбер дерево готово."}
+              note={t.elite ? tx("Елітний зв’язок включено першим (рожевий), далі — за зростанням.","Элитная связь включена первой (розовая), дальше — по возрастанию.") : tx("Ребро, що замикає цикл, позначене «-»; після n−1 ребер дерево готове.","Ребро, замыкающее цикл, помечено «-»; после n−1 рёбер дерево готово.")}
             />
             <DrawingView drawing={fig.main} title={`${t.key}${cable ? ": кабель, довший за пряму, — дугою" : ""}${t.elite ? "; елітний зв'язок — пунктиром" : ""}`} />
             {fig.zooms.map((z) => (
@@ -313,13 +312,13 @@ function Lab2View({ v }: { v: KfsVariant }) {
           </Section>
         );
       })}
-      <Section title="Квадрат расстояний">
+      <Section title={{ uk: "Квадрат відстаней", ru: "Квадрат расстояний" }}>
         <DrawingView drawing={square(totals)} title="Квадрат відстаней" />
         <p className="text-sm leading-relaxed text-ink-dim">
           МКДг {fmt(totals["МКДг"])} км, МКДк {fmt(totals["МКДк"])} км, МКДге {fmt(totals["МКДге"])} км, МКДке {fmt(totals["МКДке"])} км.
           {trees[0].edges.map((e) => pairKey(...e)).sort().join() === trees[1].edges.map((e) => pairKey(...e)).sort().join()
-            ? " У МКДг и МКДк одинаковые рёбра: сеть можно проложить по существующим кабельным каналам."
-            : " Рёбра МКДг и МКДк различаются: существующие кабельные каналы идут не кратчайшими путями."}
+            ? tx(" У МКДг і МКДк однакові ребра: мережу можна прокласти наявними кабельними каналами."," У МКДг и МКДк одинаковые рёбра: сеть можно проложить по существующим кабельным каналам.")
+            : tx(" Ребра МКДг і МКДк різняться: наявні кабельні канали йдуть не найкоротшими шляхами."," Рёбра МКДг и МКДк различаются: существующие кабельные каналы идут не кратчайшими путями.")}
         </p>
       </Section>
     </>
@@ -329,6 +328,8 @@ function Lab2View({ v }: { v: KfsVariant }) {
 // --- ЛР3 -----------------------------------------------------------------------------
 
 function Lab3View({ v }: { v: KfsVariant }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const l3 = useMemo(() => lab3(v), [v]);
   const [d, setD] = useState(v === DEMO ? 5 : 1);
   const [m, setM] = useState(v === DEMO ? 6 : 1);
@@ -337,7 +338,7 @@ function Lab3View({ v }: { v: KfsVariant }) {
   const code = `2П${l3.idxS}2А`;
   return (
     <>
-      <Section title="Условная информационная мощность и интенсивность">
+      <Section title={{ uk: "Умовна інформаційна потужність та інтенсивність", ru: "Условная информационная мощность и интенсивность" }}>
         <DrawingView drawing={structure(v.structCells)} title="Структури технологічних процесів" />
         <div className="space-y-1 font-mono text-sm text-ink-dim">
           {l3.tps.map((tp) => (
@@ -350,8 +351,7 @@ function Lab3View({ v }: { v: KfsVariant }) {
           ))}
         </div>
         <p className="text-sm leading-relaxed text-ink-dim">
-          УІП — число сигналов, поступающих в систему, то есть входных: в примере методички ТП1 = 3459 и ТП2 = 1816 сходятся
-          именно так. Интенсивность — по тем же формулам.
+          {tx("УІП — число сигналів, що надходять у систему, тобто вхідних: у прикладі методички ТП1 = 3459 і ТП2 = 1816 сходяться саме так. Інтенсивність — за тими самими формулами.","УІП — число сигналов, поступающих в систему, то есть входных: в примере методички ТП1 = 3459 и ТП2 = 1816 сходятся именно так. Интенсивность — по тем же формулам.")}
         </p>
         <Grid
           title="Сигнали за дільницями і за ТП"
@@ -377,27 +377,23 @@ function Lab3View({ v }: { v: KfsVariant }) {
           note={`По системі: УІП = ${l3.uipS}, сумарна інтенсивність ${fmt(l3.lamS, 2)}.`}
         />
       </Section>
-      <Section title="Индекс системы">
+      <Section title={{ uk: "Індекс системи", ru: "Индекс системы" }}>
         <Grid
           title="Індекс за УІП (ОРТМ: 1 — до 40, 2 — 41–160, 3 — 161–650, 4 — 651–2500, 5 — понад 2500)"
           head={["Об'єкт", "Сигналів", "Індекс"]}
           rows={[...l3.tps.map((t) => [t, String(l3.totCnt[t]), String(l3.idx[t])]), [c("Система", undefined, true), c(String(l3.uipS), undefined, true), c(String(l3.idxS), undefined, true)]]}
         />
         <p className="text-sm leading-relaxed text-ink-dim">
-          Код системы <span className="font-mono text-ink">{code}</span>: 2 — АСУТП верхнего уровня, П — непрерывно-дискретный
-          процесс, {l3.idxS} — информационная мощность, 2 — средняя надёжность, А — автоматический режим. Кроме мощности, эти признаки
-          в варианте не заданы — взяты как в примере методички.
+          {lang === "uk" ? (<>Код системи <span className="font-mono text-ink">{code}</span>: 2 — АСУТП верхнього рівня, П — безперервно-дискретний процес, {l3.idxS} — інформаційна потужність, 2 — середня надійність, А — автоматичний режим. Крім потужності, ці ознаки у варіанті не задані — взяті як у прикладі методички.</>) : (<>Код системы <span className="font-mono text-ink">{code}</span>: 2 — АСУТП верхнего уровня, П — непрерывно-дискретный процесс, {l3.idxS} — информационная мощность, 2 — средняя надёжность, А — автоматический режим. Кроме мощности, эти признаки в варианте не заданы — взяты как в примере методички.</>)}
         </p>
       </Section>
-      <Section title="Оборудование диспетчерских пунктов">
+      <Section title={{ uk: "Обладнання диспетчерських пунктів", ru: "Оборудование диспетчерских пунктов" }}>
         <div className="grid max-w-md grid-cols-2 gap-4">
-          <NumberField label="День рождения d" min={1} max={31} value={d} onChange={(e) => setD(Number(e.target.value))} />
-          <NumberField label="Месяц рождения m" min={1} max={12} value={m} onChange={(e) => setM(Number(e.target.value))} />
+          <NumberField label={tx("День народження d","День рождения d")} min={1} max={31} value={d} onChange={(e) => setD(Number(e.target.value))} />
+          <NumberField label={tx("Місяць народження m","Месяц рождения m")} min={1} max={12} value={m} onChange={(e) => setM(Number(e.target.value))} />
         </div>
         <p className="text-sm leading-relaxed text-ink-dim">
-          По методичке Кмон = ]d/m[ + i и Кприн = ]m/d[ + i, где ]x[ — её обозначение, названное «остатком от деления». Но
-          в её же примере (d = 5, m = 6) ]5/6[ = 2 и ]6/5[ = 1: так выходит, если дробь перевернуть и округлить вверх — ⌈6/5⌉ = 2,
-          ⌈5/6⌉ = 1. Так и считаем: ]{d}/{m}[ = ⌈{m}/{d}⌉ = {Math.ceil(m / Math.max(1, d))}, ]{m}/{d}[ = ⌈{d}/{m}⌉ ={" "}
+          {tx("За методичкою Кмон = ]d/m[ + i і Кприн = ]m/d[ + i, де ]x[ — її позначення, назване «остачею від ділення». Але в її ж прикладі (d = 5, m = 6) ]5/6[ = 2 і ]6/5[ = 1: так виходить, якщо дріб перевернути і округлити вгору — ⌈6/5⌉ = 2, ⌈5/6⌉ = 1. Так і рахуємо","По методичке Кмон = ]d/m[ + i и Кприн = ]m/d[ + i, где ]x[ — её обозначение, названное «остатком от деления». Но в её же примере (d = 5, m = 6) ]5/6[ = 2 и ]6/5[ = 1: так выходит, если дробь перевернуть и округлить вверх — ⌈6/5⌉ = 2, ⌈5/6⌉ = 1. Так и считаем")}: ]{d}/{m}[ = ⌈{m}/{d}⌉ = {Math.ceil(m / Math.max(1, d))}, ]{m}/{d}[ = ⌈{d}/{m}⌉ ={" "}
           {Math.ceil(d / Math.max(1, m))}.
         </p>
         <Grid title="Склад периферійного обладнання на ДП" head={["ДП", "Монітори", "Принтери", "Табло"]} rows={eq.map((e) => [`ДП${e.i}`, String(e.mon), String(e.prn), "–"])} />
@@ -409,6 +405,8 @@ function Lab3View({ v }: { v: KfsVariant }) {
 // --- ЛР4 -----------------------------------------------------------------------------
 
 function Lab4View({ v, accent }: { v: KfsVariant; accent: string }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [tacts, setTacts] = useState<number[][]>(DEFAULT_TACTS.map((r) => [...r]));
   const l4 = useMemo(() => lab4(v, tacts), [v, tacts]);
   const nf = v.fpbK[0].length;
@@ -422,10 +420,9 @@ function Lab4View({ v, accent }: { v: KfsVariant; accent: string }) {
   const mi = Number(mk);
   return (
     <>
-      <Section title="Микропроцессоры и время команд">
+      <Section title={{ uk: "Мікропроцесори і час команд", ru: "Микропроцессоры и время команд" }}>
         <p className="text-sm leading-relaxed text-ink-dim">
-          Такты на команду для процессоров варианта не заданы — по умолчанию табл. 2 методички по номеру МКП. Если преподаватель
-          дал другие такты, впишите их.
+          {tx("Такти на команду для процесорів варіанта не задані — за замовчуванням табл. 2 методички за номером МКП. Якщо викладач дав інші такти, впишіть їх.","Такты на команду для процессоров варианта не заданы — по умолчанию табл. 2 методички по номеру МКП. Если преподаватель дал другие такты, впишите их.")}
         </p>
         <div className="overflow-x-auto">
           <table className="font-mono text-sm text-ink-dim">
@@ -467,7 +464,7 @@ function Lab4View({ v, accent }: { v: KfsVariant; accent: string }) {
           rows={CMD.map((cm, ci) => [cm, ...v.mkp.map((_, i) => fmt(l4.t[i][ci], 6))])}
         />
       </Section>
-      <Section title="ФПБ: время и объём">
+      <Section title={{ uk: "ФПБ: час і обсяг", ru: "ФПБ: время и объём" }}>
         <Grid
           title="Кількість команд у ФПБ"
           head={["Команда", ...Array.from({ length: nf }, (_, b) => `Ф${b + 1}`)]}
@@ -480,13 +477,13 @@ function Lab4View({ v, accent }: { v: KfsVariant; accent: string }) {
             ...Array.from({ length: nf }, (_, b) => [`Ф${b + 1}`, ...v.mkp.map((_, i) => fmt(l4.T[i][b], 1)), fmt(l4.Q[b])]),
             [c("Qсист", undefined, true), ...v.mkp.map(() => ""), c(fmt(l4.Qs), undefined, true)],
           ]}
-          note="1 Мбайт = 2²⁰ байт — так посчитана табл. 6 методички."
+          note={tx("1 Мбайт = 2²⁰ байт — так пораховано табл. 6 методички.","1 Мбайт = 2²⁰ байт — так посчитана табл. 6 методички.")}
         />
       </Section>
-      <Section title="Время выполнения заявки">
+      <Section title={{ uk: "Час виконання заявки", ru: "Время выполнения заявки" }}>
         <div className="flex flex-wrap items-end gap-4">
           <label className="block text-sm text-ink-dim">
-            <span className="mb-1 block text-xs text-ink-faint">Заявка</span>
+            <span className="mb-1 block text-xs text-ink-faint">{tx("Заявка","Заявка")}</span>
             <select className="rounded-[3px] border border-border bg-transparent px-2 py-1.5 text-ink" value={qi} onChange={(e) => setSel(Number(e.target.value))}>
               {l4.reqs.map((r, i) => (
                 <option key={i} value={i} className="bg-background">
@@ -510,7 +507,7 @@ function Lab4View({ v, accent }: { v: KfsVariant; accent: string }) {
           title="Час виконання всіх заявок, мкс"
           head={["Об'єкт", "Заявка", ...v.mkp.map((p) => `МКП ${p.n}`)]}
           rows={l4.reqs.map((r) => [r.obj, r.name, ...r.time.map((t) => fmt(t, 1))])}
-          note="Правила цепочки: Г — один ФПБ; Г1, Г2… с процентами — альтернативы (сумма p·T); Г1, Г2… с «--» — ветви, которые выполняются все (на одном МКП последовательно, сумма T); Г21, Г22… — альтернативы внутри ветви."
+          note={tx("Правила ланцюжка: Г — один ФПБ; Г1, Г2… з відсотками — альтернативи (сума p·T); Г1, Г2… з «--» — гілки, що виконуються всі (на одному МКП послідовно, сума T); Г21, Г22… — альтернативи всередині гілки.","Правила цепочки: Г — один ФПБ; Г1, Г2… с процентами — альтернативы (сумма p·T); Г1, Г2… с «--» — ветви, которые выполняются все (на одном МКП последовательно, сумма T); Г21, Г22… — альтернативы внутри ветви.")}
         />
       </Section>
     </>

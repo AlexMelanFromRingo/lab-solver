@@ -2,6 +2,8 @@
 
 import type { ReactNode } from "react";
 import { Card, CardBody } from "@/components/ui/card";
+import { useLang } from "@/components/lang";
+import { tr, type Loc } from "@/lib/i18n";
 
 // --- таблица с подсветкой ячеек ---------------------------------------------------
 
@@ -21,17 +23,18 @@ export interface Cell {
 }
 export const c = (v: ReactNode, tint?: Tint, bold?: boolean): Cell => ({ v, tint, bold });
 
-export function Grid({ title, head, rows, note }: { title: string; head: string[]; rows: (Cell | ReactNode)[][]; note?: ReactNode }) {
+export function Grid({ title, head, rows, note }: { title: Loc; head: Loc[]; rows: (Cell | ReactNode)[][]; note?: ReactNode }) {
+  const { lang } = useLang();
   return (
     <div>
-      <h3 className="mb-2 text-sm font-medium text-ink-dim">{title}</h3>
+      <h3 className="mb-2 text-sm font-medium text-ink-dim">{tr(title, lang)}</h3>
       <div className="overflow-x-auto rounded-[4px] border border-border">
         <table className="w-full font-mono text-sm">
           <thead className="border-b border-border text-xs text-ink-faint">
             <tr>
               {head.map((h, i) => (
                 <th key={i} className="px-3 py-2 text-left align-bottom font-normal">
-                  {h}
+                  {tr(h, lang)}
                 </th>
               ))}
             </tr>
@@ -57,11 +60,12 @@ export function Grid({ title, head, rows, note }: { title: string; head: string[
   );
 }
 
-export function Section({ title, children }: { title: string; children: ReactNode }) {
+export function Section({ title, children }: { title: Loc; children: ReactNode }) {
+  const { lang } = useLang();
   return (
     <Card>
       <CardBody className="space-y-5">
-        <h2 className="text-base font-medium text-ink">{title}</h2>
+        <h2 className="text-base font-medium text-ink">{tr(title, lang)}</h2>
         {children}
       </CardBody>
     </Card>
