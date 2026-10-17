@@ -8,10 +8,13 @@ import { InfoNote } from "@/components/ui/info-note";
 import { OutputBlock } from "@/components/ui/output-block";
 import { modules } from "@/lib/modules";
 import { luhnCheck, luhnComputeCheckDigit } from "@/lib/algorithms/luhn";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "luhn")!;
 
 export default function LuhnPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [number, setNumber] = useState("4111 1111 1111 1111");
   const [partial, setPartial] = useState("4111 1111 1111 111");
 
@@ -36,16 +39,14 @@ export default function LuhnPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Каждая цифра, считая <strong>справа налево</strong>, стоящая на нечётной позиции, удваивается;
-          если результат больше 9 — из него вычитается 9. Сумма всех цифр должна делиться на 10 без остатка.
-          Формула используется для проверки номеров банковских карт, IMEI и других идентификаторов.
+          {lang === "uk" ? (<>Кожна цифра, рахуючи <strong>справа наліво</strong>, що стоїть на непарній позиції, подвоюється; якщо результат більший за 9 — з нього віднімається 9. Сума всіх цифр має ділитися на 10 без остачі. Формула використовується для перевірки номерів банківських карток, IMEI та інших ідентифікаторів.</>) : (<>Каждая цифра, считая <strong>справа налево</strong>, стоящая на нечётной позиции, удваивается; если результат больше 9 — из него вычитается 9. Сумма всех цифр должна делиться на 10 без остатка. Формула используется для проверки номеров банковских карт, IMEI и других идентификаторов.</>)}
         </InfoNote>
 
         <Card>
           <CardBody className="pt-6 space-y-5">
             <TextField
-              label="Номер для проверки"
-              hint="цифры, пробелы разрешены"
+              label={tx("Номер для перевірки","Номер для проверки")}
+              hint={tx("цифри, пробіли дозволені","цифры, пробелы разрешены")}
               value={number}
               onChange={(e) => setNumber(e.target.value)}
             />
@@ -84,9 +85,9 @@ export default function LuhnPage() {
 
         <Card>
           <CardBody className="pt-6 space-y-5">
-            <h2 className="font-display text-lg font-semibold text-ink">Довычислить контрольную цифру</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Дорахувати контрольну цифру","Довычислить контрольную цифру")}</h2>
             <TextField
-              label="Номер без последней (контрольной) цифры"
+              label={tx("Номер без останньої (контрольної) цифри","Номер без последней (контрольной) цифры")}
               value={partial}
               onChange={(e) => setPartial(e.target.value)}
             />

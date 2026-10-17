@@ -7,6 +7,7 @@ import { InfoNote } from "@/components/ui/info-note";
 import { modules } from "@/lib/modules";
 import { computeSyndrome, correct, encode, injectError, isPowerOfTwo } from "@/lib/algorithms/hamming";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "hamming")!;
 
@@ -39,6 +40,8 @@ function BitCell({
 }
 
 export default function HammingPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [data, setData] = useState([1, 0, 1, 1]);
   const [extended, setExtended] = useState(false);
   const [errorPos, setErrorPos] = useState<number | null>(2);
@@ -53,17 +56,13 @@ export default function HammingPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Биты в степенях двойки (1,2,4,…) — контрольные, остальные — информационные. Каждый
-          контрольный бит проверяет чётность своей группы позиций (двоичное представление номера
-          позиции содержит его разряд). Синдром — это номер позиции ошибки: если он ненулевой,
-          там и произошла инверсия. Расширенный вариант (8,4) добавляет общий бит чётности —
-          он отличает одну ошибку (исправима) от двух (только детектируется).
+          {lang === "uk" ? (<>Біти в степенях двійки (1,2,4,…) — контрольні, решта — інформаційні. Кожен контрольний біт перевіряє парність своєї групи позицій (двійкове подання номера позиції містить його розряд). Синдром — це номер позиції помилки: якщо він ненульовий, там і сталася інверсія. Розширений варіант (8,4) додає загальний біт парності — він відрізняє одну помилку (виправна) від двох (лише детектується).</>) : (<>Биты в степенях двойки (1,2,4,…) — контрольные, остальные — информационные. Каждый контрольный бит проверяет чётность своей группы позиций (двоичное представление номера позиции содержит его разряд). Синдром — это номер позиции ошибки: если он ненулевой, там и произошла инверсия. Расширенный вариант (8,4) добавляет общий бит чётности — он отличает одну ошибку (исправима) от двух (только детектируется).</>)}
         </InfoNote>
 
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div className="flex items-center justify-between flex-wrap gap-4">
-              <h2 className="font-display text-lg font-semibold text-ink">Информационные биты</h2>
+              <h2 className="font-display text-lg font-semibold text-ink">{tx("Інформаційні біти","Информационные биты")}</h2>
               <label className="flex items-center gap-2 text-sm text-ink-dim">
                 <input
                   type="checkbox"
@@ -71,7 +70,7 @@ export default function HammingPage() {
                   onChange={(e) => setExtended(e.target.checked)}
                   className="accent-codes"
                 />
-                Расширенный код (8,4) SEC-DED
+                {tx("Розширений код (8,4) SEC-DED","Расширенный код (8,4) SEC-DED")}
               </label>
             </div>
             <div className="flex gap-2 flex-wrap">
@@ -107,7 +106,7 @@ export default function HammingPage() {
                 );
               })}
             </div>
-            <p className="text-xs text-ink-faint">Кликните по биту принятого слова ниже, чтобы внести ошибку — синдром пересчитается автоматически.</p>
+            <p className="text-xs text-ink-faint">{tx("Клацніть по біту прийнятого слова нижче, щоб внести помилку — синдром перерахується автоматично.","Кликните по биту принятого слова ниже, чтобы внести ошибку — синдром пересчитается автоматически.")}</p>
           </CardBody>
         </Card>
 

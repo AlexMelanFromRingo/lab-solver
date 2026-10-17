@@ -11,11 +11,14 @@ import { categories, modules } from "@/lib/modules";
 import { LAB5_VARIANTS } from "@/lib/data/variant-tables";
 import { bitsToString, checkAndCorrect, encode, flipBits, generatorBits, hexToBits } from "@/lib/algorithms/crc";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "crc")!;
 const accent = categories.tik.accent;
 
 export default function CrcPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [variantNum, setVariantNum] = useState(1);
   const variant = LAB5_VARIANTS.find((v) => v.variant === variantNum)!;
 
@@ -40,12 +43,7 @@ export default function CrcPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Кодирование: к данным дописываются r=3 нулевых бита, результат делится на образующий
-          многочлен g(x) по модулю 2 — остаток и есть проверочные биты (CRC). Приём: делится всё
-          кодовое слово; нулевой остаток — ошибок нет; ненулевой — по таблице «синдром → позиция»
-          ищется однократная ошибка (метод надёжен, пока длина слова не превышает 2ʳ−1=7; для
-          8-битного варианта при некоторых синдромах возможна лишь детекция без коррекции — это
-          отмечено ниже).
+          {lang === "uk" ? (<>Кодування: до даних дописуються r=3 нульових біти, результат ділиться на твірний многочлен g(x) за модулем 2 — остача і є перевірочними бітами (CRC). Прийом: ділиться все кодове слово; нульова остача — помилок немає; ненульова — за таблицею «синдром → позиція» шукається однократна помилка (метод надійний, поки довжина слова не перевищує 2ʳ−1=7; для 8-бітного варіанта за деяких синдромів можлива лише детекція без корекції — це позначено нижче).</>) : (<>Кодирование: к данным дописываются r=3 нулевых бита, результат делится на образующий многочлен g(x) по модулю 2 — остаток и есть проверочные биты (CRC). Приём: делится всё кодовое слово; нулевой остаток — ошибок нет; ненулевой — по таблице «синдром → позиция» ищется однократная ошибка (метод надёжен, пока длина слова не превышает 2ʳ−1=7; для 8-битного варианта при некоторых синдромах возможна лишь детекция без коррекции — это отмечено ниже).</>)}
         </InfoNote>
 
         <VariantDial value={variantNum} min={1} max={12} onChange={setVariantNum} accent={accent} />
@@ -53,14 +51,14 @@ export default function CrcPage() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div className="flex flex-wrap items-center gap-4">
-              <SelectField label="Данные варианта" value={inputChoice} onChange={(e) => setInputChoice(e.target.value as "nibble" | "byte")}>
-                <option value="nibble">Ниббл: {variant.nibbleHex}</option>
-                <option value="byte">Байт: {variant.byteHex}</option>
+              <SelectField label={tx("Дані варіанта","Данные варианта")} value={inputChoice} onChange={(e) => setInputChoice(e.target.value as "nibble" | "byte")}>
+                <option value="nibble">{tx("Нібл","Ниббл")}: {variant.nibbleHex}</option>
+                <option value="byte">{tx("Байт","Байт")}: {variant.byteHex}</option>
               </SelectField>
               <span className="text-sm text-ink-faint font-mono pt-5">g(x) = {variant.generatorPoly} = {bitsToString(gen)}</span>
             </div>
 
-            <OutputBlock label="Кодовое слово (данные + CRC)" value={bitsToString(encoded.codeword)} />
+            <OutputBlock label={tx("Кодове слово (дані + CRC)","Кодовое слово (данные + CRC)")} value={bitsToString(encoded.codeword)} />
 
             <div className="flex gap-1.5 flex-wrap">
               {received.map((b, i) => (
@@ -77,7 +75,7 @@ export default function CrcPage() {
                 </button>
               ))}
             </div>
-            <p className="text-xs text-ink-faint">Кликните по биту, чтобы внести ошибку (можно несколько сразу).</p>
+            <p className="text-xs text-ink-faint">{tx("Клацніть по біту, щоб внести помилку (можна кілька одразу).","Кликните по биту, чтобы внести ошибку (можно несколько сразу).")}</p>
 
             <div
               className={cn(
