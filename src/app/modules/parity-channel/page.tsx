@@ -11,6 +11,7 @@ import { categories, modules } from "@/lib/modules";
 import { LAB4_VARIANTS } from "@/lib/data/variant-tables";
 import { analyzeChannel, buildParityMatrix, checkAndCorrect, flipBit, matrixToBitString } from "@/lib/algorithms/parity-channel";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "parity-channel")!;
 const accent = categories.tik.accent;
@@ -76,6 +77,8 @@ function Verdan({ message }: { message: string }) {
 }
 
 export default function ParityChannelPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [variantNum, setVariantNum] = useState(1);
   const variant = LAB4_VARIANTS.find((v) => v.variant === variantNum)!;
 
@@ -101,23 +104,16 @@ export default function ParityChannelPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Двумерный (построчно-постолбцовый) код чётности: контрольный бит строки и столбца — XOR
-          соответствующих информационных бит. Одиночная ошибка нарушает ровно одну строчную и одну
-          столбцовую чётность — их пересечение и есть позиция ошибки, поэтому она исправима.
-          Пропускная способность двоичного симметричного канала считается по формуле Шеннона{" "}
-          <code>C = v·(1 − H(p))</code>, где <code>H(p)</code> — двоичная энтропия вероятности ошибки.
-          Важно: p1, p2, p3 из варианта — это три отдельных сценария (низкая/средняя/высокая
-          вероятность ошибки), которые считаются и сравниваются по отдельности, а не усредняются
-          (сверено по Noisy channel 1-3.xlsx).
+          {lang === "uk" ? (<>Двовимірний (по рядках і стовпцях) код парності: контрольний біт рядка і стовпця — XOR відповідних інформаційних біт. Одиночна помилка порушує рівно одну рядкову і одну стовпцеву парність — їх перетин і є позицією помилки, тому вона виправна. Пропускна здатність двійкового симетричного каналу рахується за формулою Шеннона{" "}<code>C = v·(1 − H(p))</code>, де <code>H(p)</code> — двійкова ентропія ймовірності помилки. Важливо: p1, p2, p3 з варіанта — це три окремі сценарії (низька/середня/висока ймовірність помилки), які рахуються і порівнюються окремо, а не усереднюються (звірено за Noisy channel 1-3.xlsx).</>) : (<>Двумерный (построчно-постолбцовый) код чётности: контрольный бит строки и столбца — XOR соответствующих информационных бит. Одиночная ошибка нарушает ровно одну строчную и одну столбцовую чётность — их пересечение и есть позиция ошибки, поэтому она исправима. Пропускная способность двоичного симметричного канала считается по формуле Шеннона{" "}<code>C = v·(1 − H(p))</code>, где <code>H(p)</code> — двоичная энтропия вероятности ошибки. Важно: p1, p2, p3 из варианта — это три отдельных сценария (низкая/средняя/высокая вероятность ошибки), которые считаются и сравниваются по отдельности, а не усредняются (сверено по Noisy channel 1-3.xlsx).</>)}
         </InfoNote>
 
         <VariantDial value={variantNum} min={1} max={12} onChange={setVariantNum} accent={accent} />
 
         <Card>
           <CardBody className="pt-6 space-y-5">
-            <h2 className="font-display text-lg font-semibold text-ink">Код чётности</h2>
-            <SelectField label="Сообщение варианта" value={messageChoice} onChange={(e) => setMessageChoice(e.target.value as "1" | "2")}>
-              <option value="1">Сообщение 1: {variant.message1}</option>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Код парності","Код чётности")}</h2>
+            <SelectField label={tx("Повідомлення варіанта","Сообщение варианта")} value={messageChoice} onChange={(e) => setMessageChoice(e.target.value as "1" | "2")}>
+              <option value="1">{tx("Повідомлення 1","Сообщение 1")}: {variant.message1}</option>
               <option value="2">Сообщение 2: {variant.message2}</option>
             </SelectField>
 
@@ -153,7 +149,7 @@ export default function ParityChannelPage() {
               </div>
             </div>
             <p className="text-xs text-ink-faint">
-              Кликните по любому биту данных, чтобы внести одиночную ошибку — строка/столбец справа/снизу — контрольные суммы.
+              {tx("Клацніть по будь-якому біту даних, щоб внести одиночну помилку — рядок/стовпець справа/знизу — контрольні суми.","Кликните по любому биту данных, чтобы внести одиночную ошибку — строка/столбец справа/снизу — контрольные суммы.")}
             </p>
 
             <div
@@ -180,8 +176,8 @@ export default function ParityChannelPage() {
           <CardBody className="pt-6 space-y-5">
             <h2 className="font-display text-lg font-semibold text-ink">Пропускная способность канала</h2>
             <p className="text-xs text-ink-faint">
-              Длина сообщения {variant.lengthMB} МБ, техническая скорость {variant.speedSymPerSec} симв/с.
-              p1/p2/p3 — три отдельных сценария (не усредняются), сравниваются с безошибочным каналом (p=0).
+              {tx("Довжина повідомлення","Длина сообщения")} {variant.lengthMB} {tx("МБ, технічна швидкість","МБ, техническая скорость")} {variant.speedSymPerSec} {tx("симв/с","симв/с")}.
+              {tx(" p1/p2/p3 — три окремі сценарії (не усереднюються), порівнюються з безпомилковим каналом (p=0)."," p1/p2/p3 — три отдельных сценария (не усредняются), сравниваются с безошибочным каналом (p=0).")}
             </p>
             <div className="overflow-x-auto rounded-[4px] border border-border">
               <table className="w-full text-sm font-mono">
@@ -197,7 +193,7 @@ export default function ParityChannelPage() {
                 </thead>
                 <tbody>
                   <tr className="border-b border-border/50 bg-white/[0.02]">
-                    <td className="px-3 py-2 text-ink">безошибочный (база)</td>
+                    <td className="px-3 py-2 text-ink">{tx("безпомилковий (база)","безошибочный (база)")}</td>
                     <td className="px-3 py-2 text-ink-dim">0</td>
                     <td className="px-3 py-2 text-ink-dim">{channel.baseline.Hp.toFixed(4)}</td>
                     <td className="px-3 py-2 text-ink-dim">{channel.baseline.capacityFraction.toFixed(4)}</td>

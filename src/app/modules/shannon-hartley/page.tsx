@@ -9,11 +9,14 @@ import { VariantDial } from "@/components/ui/variant-dial";
 import { categories, modules } from "@/lib/modules";
 import { LAB6_VARIANTS } from "@/lib/data/variant-tables";
 import { buildChannelReport } from "@/lib/algorithms/shannon-hartley";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "shannon-hartley")!;
 const accent = categories.tik.accent;
 
 export default function ShannonHartleyPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [variantNum, setVariantNum] = useState(1);
   const variant = LAB6_VARIANTS.find((v) => v.variant === variantNum)!;
 
@@ -31,13 +34,7 @@ export default function ShannonHartleyPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Формула подтверждена численно по реальному зачтённому отчёту (Лаба 6) и
-          инструменту расчёта из курса — совпадение с точностью до
-          3-4 значащих цифр на двух независимых строках примера): <code>S/N = Px/(pe·Δf)</code>{" "}
-          (числа берутся как есть — мВт, мкВт/Гц, МГц, без перевода в СИ, именно так считает
-          инструмент курса), далее <code>Iс = log2(1+S/N)</code> бит/сигнал и{" "}
-          <code>C = Δf·Iс</code> Мбит/с. pe1/pe2 — два уровня плотности шума из варианта,
-          считаются отдельно, как и в отчёте.
+          {lang === "uk" ? (<>Формула підтверджена чисельно за реальним зарахованим звітом (Лаба 6) та інструментом розрахунку з курсу — збіг з точністю до 3-4 значущих цифр на двох незалежних рядках прикладу): <code>S/N = Px/(pe·Δf)</code>{" "}(числа беруться як є — мВт, мкВт/Гц, МГц, без переведення в СІ, саме так рахує інструмент курсу), далі <code>Iс = log2(1+S/N)</code> біт/сигнал і{" "}<code>C = Δf·Iс</code> Мбіт/с. pe1/pe2 — два рівні щільності шуму з варіанта, рахуються окремо, як і у звіті.</>) : (<>Формула подтверждена численно по реальному зачтённому отчёту (Лаба 6) и инструменту расчёта из курса — совпадение с точностью до 3-4 значащих цифр на двух независимых строках примера): <code>S/N = Px/(pe·Δf)</code>{" "}(числа берутся как есть — мВт, мкВт/Гц, МГц, без перевода в СИ, именно так считает инструмент курса), далее <code>Iс = log2(1+S/N)</code> бит/сигнал и{" "}<code>C = Δf·Iс</code> Мбит/с. pe1/pe2 — два уровня плотности шума из варианта, считаются отдельно, как и в отчёте.</>)}
         </InfoNote>
 
         <VariantDial value={variantNum} min={1} max={12} onChange={setVariantNum} accent={accent} />
@@ -90,8 +87,8 @@ export default function ShannonHartleyPage() {
             ))}
 
             <OutputBlock
-              label="Сравнение с целевым Cmin"
-              value={`Cmin из варианта = ${variant.cmin} Мбіт/с — сравните с посчитанными C выше при интересующей вас полосе и pe`}
+              label={tx("Порівняння з цільовим Cmin","Сравнение с целевым Cmin")}
+              value={tx(`Cmin з варіанта = ${variant.cmin} Мбіт/с — порівняйте з порахованими C вище за цікавої вам смуги і pe`,`Cmin из варианта = ${variant.cmin} Мбіт/с — сравните с посчитанными C выше при интересующей вас полосе и pe`)}
             />
           </CardBody>
         </Card>

@@ -9,6 +9,7 @@ import { VariantDial } from "@/components/ui/variant-dial";
 import { categories, modules } from "@/lib/modules";
 import { LAB2_VARIANTS } from "@/lib/data/variant-tables";
 import { buildReport, encodeSequence, type SymbolProb } from "@/lib/algorithms/entropy-coding";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "entropy-coding")!;
 const accent = categories.tik.accent;
@@ -45,6 +46,8 @@ function CodeTableView({ title, codes, items }: { title: string; codes: Record<s
 }
 
 export default function EntropyCodingPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [variantNum, setVariantNum] = useState(1);
   const variant = LAB2_VARIANTS.find((v) => v.variant === variantNum)!;
 
@@ -61,11 +64,7 @@ export default function EntropyCodingPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Энтропия <code>H = −Σ pᵢ·log2(pᵢ)</code> — теоретический минимум среднего числа бит на
-          символ. Шеннон-Фано делит символы (отсортированные по убыванию вероятности) пополам по
-          накопленной вероятности рекурсивно; Хаффман строит дерево снизу вверх, каждый раз объединяя
-          два наименее вероятных символа. Оба кода префиксные (ни один код не является началом другого),
-          поэтому декодируются однозначно посимвольно.
+          {lang === "uk" ? (<>Ентропія <code>H = −Σ pᵢ·log2(pᵢ)</code> — теоретичний мінімум середнього числа біт на символ. Шеннон-Фано ділить символи (відсортовані за спаданням імовірності) навпіл за накопиченою імовірністю рекурсивно; Хаффман будує дерево знизу вгору, щоразу об’єднуючи два найменш імовірні символи. Обидва коди префіксні (жоден код не є початком іншого), тому декодуються однозначно посимвольно.</>) : (<>Энтропия <code>H = −Σ pᵢ·log2(pᵢ)</code> — теоретический минимум среднего числа бит на символ. Шеннон-Фано делит символы (отсортированные по убыванию вероятности) пополам по накопленной вероятности рекурсивно; Хаффман строит дерево снизу вверх, каждый раз объединяя два наименее вероятных символа. Оба кода префиксные (ни один код не является началом другого), поэтому декодируются однозначно посимвольно.</>)}
         </InfoNote>
 
         <VariantDial value={variantNum} min={1} max={12} onChange={setVariantNum} accent={accent} />
@@ -79,8 +78,8 @@ export default function EntropyCodingPage() {
                 </span>
               ))}
             </div>
-            <OutputBlock label="Тестовая последовательность" value={variant.sequence.join(" ")} />
-            <OutputBlock label="Энтропия источника H" value={report.H.toFixed(4) + " бит/символ"} />
+            <OutputBlock label={tx("Тестова послідовність","Тестовая последовательность")} value={variant.sequence.join(" ")} />
+            <OutputBlock label="Энтропия источника H" value={report.H.toFixed(4) + tx(" біт/символ"," бит/символ")} />
           </CardBody>
         </Card>
 
@@ -88,19 +87,19 @@ export default function EntropyCodingPage() {
           <Card>
             <CardBody className="pt-6 space-y-4">
               <h2 className="font-display text-lg font-semibold text-ink">Шеннон-Фано</h2>
-              <CodeTableView title="Коды" codes={report.shannonFanoCodes} items={items} />
-              <OutputBlock label="Средняя длина" value={report.shannonFanoAvgLength.toFixed(4) + " бит"} />
-              <OutputBlock label="Избыточность (L − H)" value={report.shannonFanoRedundancy.toFixed(4)} />
-              <OutputBlock label="Закодированная последовательность" value={sfEncoded} />
+              <CodeTableView title={tx("Коди","Коды")} codes={report.shannonFanoCodes} items={items} />
+              <OutputBlock label={tx("Середня довжина","Средняя длина")} value={report.shannonFanoAvgLength.toFixed(4) + tx(" біт"," бит")} />
+              <OutputBlock label={tx("Надмірність (L − H)","Избыточность (L − H)")} value={report.shannonFanoRedundancy.toFixed(4)} />
+              <OutputBlock label={tx("Закодована послідовність","Закодированная последовательность")} value={sfEncoded} />
             </CardBody>
           </Card>
           <Card>
             <CardBody className="pt-6 space-y-4">
               <h2 className="font-display text-lg font-semibold text-ink">Хаффман</h2>
-              <CodeTableView title="Коды" codes={report.huffmanCodes} items={items} />
-              <OutputBlock label="Средняя длина" value={report.huffmanAvgLength.toFixed(4) + " бит"} />
-              <OutputBlock label="Избыточность (L − H)" value={report.huffmanRedundancy.toFixed(4)} />
-              <OutputBlock label="Закодированная последовательность" value={hfEncoded} />
+              <CodeTableView title={tx("Коди","Коды")} codes={report.huffmanCodes} items={items} />
+              <OutputBlock label={tx("Середня довжина","Средняя длина")} value={report.huffmanAvgLength.toFixed(4) + tx(" біт"," бит")} />
+              <OutputBlock label={tx("Надмірність (L − H)","Избыточность (L − H)")} value={report.huffmanRedundancy.toFixed(4)} />
+              <OutputBlock label={tx("Закодована послідовність","Закодированная последовательность")} value={hfEncoded} />
             </CardBody>
           </Card>
         </div>

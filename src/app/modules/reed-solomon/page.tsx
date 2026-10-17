@@ -9,10 +9,13 @@ import { OutputBlock, StepList } from "@/components/ui/output-block";
 import { modules } from "@/lib/modules";
 import { rsDecodeAndCorrect, rsEncode } from "@/lib/algorithms/reed-solomon";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "reed-solomon")!;
 
 export default function ReedSolomonPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [text, setText] = useState("Hello!");
   const [nsym, setNsym] = useState(4);
   const [errorPositions, setErrorPositions] = useState<Set<number>>(new Set());
@@ -51,18 +54,14 @@ export default function ReedSolomonPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Работает над полем Галуа GF(2⁸) (примитивный многочлен x⁸+x⁴+x³+x²+1). Кодирование —
-          систематическое (данные не меняются, к ним дописываются nsym проверочных байт). При
-          ненулевых синдромах ищется полином-локатор ошибок (алгоритм Берлекэмпа-Мэсси), его корни
-          (поиск Ченя) дают позиции ошибок, а величины — алгоритм Форни. Код исправляет до nsym/2
-          ошибок.
+          {lang === "uk" ? (<>Працює над полем Галуа GF(2⁸) (примітивний многочлен x⁸+x⁴+x³+x²+1). Кодування — систематичне (дані не змінюються, до них дописуються nsym перевірочних байт). При ненульових синдромах шукається поліном-локатор помилок (алгоритм Берлекемпа-Мессі), його корені (пошук Ченя) дають позиції помилок, а величини — алгоритм Форні. Код виправляє до nsym/2 помилок.</>) : (<>Работает над полем Галуа GF(2⁸) (примитивный многочлен x⁸+x⁴+x³+x²+1). Кодирование — систематическое (данные не меняются, к ним дописываются nsym проверочных байт). При ненулевых синдромах ищется полином-локатор ошибок (алгоритм Берлекэмпа-Мэсси), его корни (поиск Ченя) дают позиции ошибок, а величины — алгоритм Форни. Код исправляет до nsym/2 ошибок.</>)}
         </InfoNote>
 
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div className="grid gap-4 sm:grid-cols-2">
               <TextField
-                label="Сообщение"
+                label={tx("Повідомлення","Сообщение")}
                 value={text}
                 onChange={(e) => {
                   setText(e.target.value);
@@ -70,7 +69,7 @@ export default function ReedSolomonPage() {
                 }}
               />
               <NumberField
-                label="nsym (проверочных байт)"
+                label={tx("nsym (перевірочних байт)","nsym (проверочных байт)")}
                 value={nsym}
                 onChange={(e) => {
                   setNsym(Number(e.target.value));
@@ -80,7 +79,7 @@ export default function ReedSolomonPage() {
                 max={16}
               />
             </div>
-            <p className="text-xs text-ink-faint">Максимум исправимых ошибок: {maxErrors}. Кликните по байту ниже, чтобы испортить его.</p>
+            <p className="text-xs text-ink-faint">{tx("Максимум виправних помилок","Максимум исправимых ошибок")}: {maxErrors}. {tx("Клацніть по байту нижче, щоб зіпсувати його.","Кликните по байту ниже, чтобы испортить его.")}</p>
 
             <div className="flex flex-wrap gap-1.5">
               {encoded.map((_, i) => (

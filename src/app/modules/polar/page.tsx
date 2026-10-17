@@ -17,12 +17,15 @@ import {
   scDecode,
 } from "@/lib/algorithms/polar";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "polar")!;
 const N = 8;
 const logN = 3;
 
 export default function PolarPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [K, setK] = useState(4);
   const [erasureProb, setErasureProb] = useState(0.5);
   const [infoBits, setInfoBits] = useState<number[]>([1, 0, 1, 1]);
@@ -68,18 +71,14 @@ export default function PolarPage() {
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
           Матрица кодирования G = F<sup>⊗log₂N</sup>, F=[[1,0],[1,1]] (произведение Кронекера).
-          Каждый из N каналов получает параметр Батачария (рекурсивно: плохой канал W⁻=2z−z²,
-          хороший W⁺=z²) — K самых надёжных становятся информационными, остальные замораживаются
-          (жёстко фиксируются в 0). Декодирование — либо последовательное вычёркивание (SC,
-          рекурсивно по «бабочке»), либо полный перебор по всем 2^K вариантам (ML, точнее, но
-          годится только для маленьких кодов).
+          {lang === "uk" ? (<>Кожен з N каналів отримує параметр Бхаттачар’ї (рекурсивно: поганий канал W⁻=2z−z², хороший W⁺=z²) — K найнадійніших стають інформаційними, решта заморожуються (жорстко фіксуються в 0). Декодування — або послідовне викреслювання (SC, рекурсивно по «метелику»), або повний перебір по всіх 2^K варіантах (ML, точніше, але годиться тільки для малих кодів).</>) : (<>Каждый из N каналов получает параметр Батачария (рекурсивно: плохой канал W⁻=2z−z², хороший W⁺=z²) — K самых надёжных становятся информационными, остальные замораживаются (жёстко фиксируются в 0). Декодирование — либо последовательное вычёркивание (SC, рекурсивно по «бабочке»), либо полный перебор по всем 2^K вариантам (ML, точнее, но годится только для маленьких кодов).</>)}
         </InfoNote>
 
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div className="grid gap-4 sm:grid-cols-2">
               <NumberField
-                label="K (информационных бит из N=8)"
+                label={tx("K (інформаційних біт з N=8)","K (информационных бит из N=8)")}
                 value={K}
                 onChange={(e) => {
                   const k = Number(e.target.value);
@@ -90,7 +89,7 @@ export default function PolarPage() {
                 max={7}
               />
               <NumberField
-                label="Вероятность стирания канала (BEC)"
+                label={tx("Імовірність стирання каналу (BEC)","Вероятность стирания канала (BEC)")}
                 value={erasureProb}
                 onChange={(e) => setErasureProb(Number(e.target.value))}
                 min={0.01}
@@ -103,9 +102,9 @@ export default function PolarPage() {
               <table className="w-full text-sm font-mono">
                 <thead>
                   <tr className="border-b border-border text-ink-faint text-xs">
-                    <th className="text-left px-3 py-2">Канал</th>
+                    <th className="text-left px-3 py-2">{tx("Канал","Канал")}</th>
                     <th className="text-left px-3 py-2">Z (Батачария)</th>
-                    <th className="text-left px-3 py-2">Тип</th>
+                    <th className="text-left px-3 py-2">{tx("Тип","Тип")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -114,7 +113,7 @@ export default function PolarPage() {
                       <td className="px-3 py-1.5 text-ink-faint">u{c.index}</td>
                       <td className="px-3 py-1.5 text-ink-dim">{c.bhattacharyya.toFixed(4)}</td>
                       <td className={cn("px-3 py-1.5", c.type === "info" ? "text-crypto" : "text-ink-faint")}>
-                        {c.type === "info" ? "информационный" : "заморожен"}
+                        {c.type === "info" ? tx("інформаційний","информационный") : tx("заморожений","заморожен")}
                       </td>
                     </tr>
                   ))}
@@ -122,7 +121,7 @@ export default function PolarPage() {
               </table>
             </div>
 
-            <p className="text-xs text-ink-faint">Информационные биты (кликните, чтобы переключить):</p>
+            <p className="text-xs text-ink-faint">{tx("Інформаційні біти (клацніть, щоб переключити):","Информационные биты (кликните, чтобы переключить):")}</p>
             <div className="flex gap-1.5">
               {infoBits.map((b, i) => (
                 <button
@@ -135,9 +134,9 @@ export default function PolarPage() {
               ))}
             </div>
 
-            <OutputBlock label="Кодовое слово x = u·G (mod 2)" value={encoded.join("")} />
+            <OutputBlock label={tx("Кодове слово x = u·G (mod 2)","Кодовое слово x = u·G (mod 2)")} value={encoded.join("")} />
 
-            <p className="text-xs text-ink-faint">Принятое слово (кликните по биту, чтобы внести ошибку):</p>
+            <p className="text-xs text-ink-faint">{tx("Прийняте слово (клацніть по біту, щоб внести помилку):","Принятое слово (кликните по биту, чтобы внести ошибку):")}</p>
             <div className="flex gap-1.5">
               {received.map((b, i) => (
                 <button

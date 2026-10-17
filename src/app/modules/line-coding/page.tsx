@@ -10,6 +10,7 @@ import { LAB7_VARIANTS } from "@/lib/data/variant-tables";
 import { BARKER11, FIVE_B_CONTROL, barkerAcf, cck, chipText, encode4b5b, encodeLine, lineCodeFromName, parseBitString, piText, scramble, LINE_CODE_VERIFIED, type LineSample } from "@/lib/algorithms/line-coding";
 import { OutputBlock } from "@/components/ui/output-block";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "line-coding")!;
 const accent = categories.tik.accent;
@@ -39,6 +40,8 @@ function Waveform({ samples, color }: { samples: LineSample[]; color: string }) 
 }
 
 export default function LineCodingPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [variantNum, setVariantNum] = useState(1);
   const variant = LAB7_VARIANTS.find((v) => v.variant === variantNum)!;
   const bits = useMemo(() => parseBitString(variant.dataBits), [variant]);
@@ -57,11 +60,7 @@ export default function LineCodingPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          NRZ/RZ/Манчестер/NRZI/MLT-3 — однозначные стандартные схемы кодирования, здесь
-          воспроизведены по общепринятому определению. Для B2Q1 и PAM5 (обе — многоуровневые,
-          пара бит на символ) для этой лабы не нашлось отчёта с проверочным числовым примером —
-          использовано стандартное учебное отображение, но <strong>сверьте с методичкой</strong>,
-          прежде чем сдавать: они помечены жёлтым.
+          {lang === "uk" ? (<>NRZ/RZ/Манчестер/NRZI/MLT-3 — однозначні стандартні схеми кодування, тут відтворені за загальноприйнятим визначенням. Для B2Q1 і PAM5 (обидві — багаторівневі, пара біт на символ) для цієї лаби не знайшлося звіту з перевірочним числовим прикладом — використано стандартне навчальне відображення, але <strong>звірте з методичкою</strong>, перш ніж здавати: вони позначені жовтим.</>) : (<>NRZ/RZ/Манчестер/NRZI/MLT-3 — однозначные стандартные схемы кодирования, здесь воспроизведены по общепринятому определению. Для B2Q1 и PAM5 (обе — многоуровневые, пара бит на символ) для этой лабы не нашлось отчёта с проверочным числовым примером — использовано стандартное учебное отображение, но <strong>сверьте с методичкой</strong>, прежде чем сдавать: они помечены жёлтым.</>)}
         </InfoNote>
 
         <VariantDial value={variantNum} min={1} max={12} onChange={setVariantNum} accent={accent} />
@@ -69,7 +68,7 @@ export default function LineCodingPage() {
         <Card>
           <CardBody className="pt-6 space-y-6">
             <div className="flex flex-wrap gap-2 text-sm">
-              <span className="rounded-full border border-border px-3 py-1.5 font-mono text-ink-dim">Данные: {variant.dataBits}</span>
+              <span className="rounded-full border border-border px-3 py-1.5 font-mono text-ink-dim">{tx("Дані","Данные")}: {variant.dataBits}</span>
               <span className="rounded-full border border-border px-3 py-1.5 text-ink-dim">Ethernet: {variant.ethernetStandard}</span>
               <span className="rounded-full border border-border px-3 py-1.5 text-ink-dim">Wi-Fi: {variant.wifiStandard}, переходов: {variant.hops}</span>
             </div>
@@ -86,7 +85,7 @@ export default function LineCodingPage() {
                         verified ? "border-theory/30 bg-theory-soft text-theory" : "border-number/30 bg-number-soft text-number"
                       )}
                     >
-                      {verified ? "стандартная схема" : "не сверено с отчётом"}
+                      {verified ? tx("стандартна схема","стандартная схема") : tx("не звірено зі звітом","не сверено с отчётом")}
                     </span>
                   </div>
                   <div className="overflow-x-auto rounded-[4px] border border-border bg-black/30 p-3 text-arch">

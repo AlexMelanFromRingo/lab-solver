@@ -9,10 +9,13 @@ import { OutputBlock } from "@/components/ui/output-block";
 import { modules } from "@/lib/modules";
 import { DEFAULT_H, beliefPropagation, channelLLR, computeGenerator, ldpcEncode, syndromeOf } from "@/lib/algorithms/ldpc";
 import { cn } from "@/lib/cn";
+import { useLang } from "@/components/lang";
 
 const mod = modules.find((m) => m.slug === "ldpc")!;
 
 export default function LdpcPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const h = DEFAULT_H;
   const n = h[0].length;
   const m = h.length;
@@ -58,16 +61,12 @@ export default function LdpcPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
         <InfoNote>
-          Демонстрационная разреженная проверочная матрица H (код [8,4,3]: 8 переменных узлов,
-          4 проверочных, вес столбцов 2-3, вес строк 5). Порождающая матрица G получена из H
-          исключением Гаусса над GF(2) (H·Gᵀ=0). Декодирование — итеративный belief propagation
-          (min-sum приближение): проверочные узлы обмениваются сообщениями с переменными, пока
-          синдром не станет нулевым или не кончится лимит итераций.
+          {lang === "uk" ? (<>Демонстраційна розріджена перевірочна матриця H (код [8,4,3]: 8 змінних вузлів, 4 перевірочні, вага стовпців 2-3, вага рядків 5). Твірна матриця G отримана з H виключенням Гаусса над GF(2) (H·Gᵀ=0). Декодування — ітеративний belief propagation (min-sum наближення): перевірочні вузли обмінюються повідомленнями зі змінними, поки синдром не стане нульовим або не скінчиться ліміт ітерацій.</>) : (<>Демонстрационная разреженная проверочная матрица H (код [8,4,3]: 8 переменных узлов, 4 проверочных, вес столбцов 2-3, вес строк 5). Порождающая матрица G получена из H исключением Гаусса над GF(2) (H·Gᵀ=0). Декодирование — итеративный belief propagation (min-sum приближение): проверочные узлы обмениваются сообщениями с переменными, пока синдром не станет нулевым или не кончится лимит итераций.</>)}
         </InfoNote>
 
         <Card>
           <CardBody className="pt-6 space-y-5">
-            <h2 className="font-display text-lg font-semibold text-ink">Проверочная матрица H ({m}×{n})</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Перевірочна матриця H","Проверочная матрица H")} ({m}×{n})</h2>
             <div className="inline-block rounded-[4px] border border-border overflow-hidden font-mono text-sm">
               {h.map((row, i) => (
                 <div key={i} className="flex">
@@ -80,7 +79,7 @@ export default function LdpcPage() {
               ))}
             </div>
 
-            <p className="text-xs text-ink-faint">Информационные биты ({k}), кликните, чтобы переключить:</p>
+            <p className="text-xs text-ink-faint">{tx("Інформаційні біти","Информационные биты")} ({k}), {tx("клацніть, щоб переключити:","кликните, чтобы переключить:")}</p>
             <div className="flex gap-1.5">
               {dataBits.map((b, i) => (
                 <button key={i} onClick={() => toggleData(i)} className="w-10 h-10 rounded-[3px] border border-border bg-surface-2 text-ink font-mono hover:border-border-strong transition-colors">
@@ -89,14 +88,14 @@ export default function LdpcPage() {
               ))}
             </div>
 
-            <OutputBlock label="Кодовое слово" value={codeword.join("")} />
-            <OutputBlock label="Синдром H·cᵀ (должен быть нулевым)" value={codewordSyndrome.join("")} />
+            <OutputBlock label={tx("Кодове слово","Кодовое слово")} value={codeword.join("")} />
+            <OutputBlock label={tx("Синдром H·cᵀ (має бути нульовим)","Синдром H·cᵀ (должен быть нулевым)")} value={codewordSyndrome.join("")} />
 
             <div className="grid gap-4 sm:grid-cols-2 items-end">
-              <NumberField label="Вероятность ошибки канала (для LLR)" value={flipProb} onChange={(e) => setFlipProb(Number(e.target.value))} min={0.01} max={0.49} step={0.01} />
+              <NumberField label={tx("Імовірність помилки каналу (для LLR)","Вероятность ошибки канала (для LLR)")} value={flipProb} onChange={(e) => setFlipProb(Number(e.target.value))} min={0.01} max={0.49} step={0.01} />
             </div>
 
-            <p className="text-xs text-ink-faint">Принятое слово (кликните по биту, чтобы внести ошибку):</p>
+            <p className="text-xs text-ink-faint">{tx("Прийняте слово (клацніть по біту, щоб внести помилку):","Принятое слово (кликните по биту, чтобы внести ошибку):")}</p>
             <div className="flex gap-1.5">
               {received.map((b, i) => (
                 <button
@@ -118,8 +117,8 @@ export default function LdpcPage() {
                 converged && correct ? "border-theory/30 bg-theory-soft text-theory" : "border-codes/30 bg-codes-soft text-codes"
               )}
             >
-              {iterations.length} итераций belief propagation — синдром {converged ? "нулевой" : "не сошёлся"},{" "}
-              {correct ? "исходное слово восстановлено ✓" : "результат отличается от исходного слова"}
+              {iterations.length} {tx("ітерацій belief propagation — синдром","итераций belief propagation — синдром")} {converged ? tx("нульовий","нулевой") : tx("не зійшовся","не сошёлся")},{" "}
+              {correct ? tx("вихідне слово відновлено ✓","исходное слово восстановлено ✓") : tx("результат відрізняється від вихідного слова","результат отличается от исходного слова")}
             </div>
             <OutputBlock label="Декодированное слово" value={decoded.join("")} />
           </CardBody>
