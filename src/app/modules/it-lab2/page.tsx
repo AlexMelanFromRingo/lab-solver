@@ -139,6 +139,7 @@ function ArrayPlot({ data }: { data: number[] }) {
 
 export default function ItLab2Page() {
   const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [funcId, setFuncId] = useState(FUNCTIONS[0].id);
   const [from, setFrom] = useState(-10);
   const [to, setTo] = useState(10);
@@ -170,24 +171,24 @@ export default function ItLab2Page() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <p className="text-xs text-ink-faint">Задание 1</p>
+              <p className="text-xs text-ink-faint">{tx("Завдання 1","Задание 1")}</p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
-                График аналитически заданной функции
+                {tx("Графік аналітично заданої функції","График аналитически заданной функции")}
               </h2>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-4">
-              <SelectField label="Функция" value={funcId} onChange={(e) => setFuncId(e.target.value)}>
+              <SelectField label={tx("Функція","Функция")} value={funcId} onChange={(e) => setFuncId(e.target.value)}>
                 {FUNCTIONS.map((f) => (
                   <option key={f.id} value={f.id}>
                     {f.label}
                   </option>
                 ))}
               </SelectField>
-              <NumberField label="от" value={String(from)} onChange={(e) => setFrom(Number(e.target.value))} />
-              <NumberField label="до" value={String(to)} onChange={(e) => setTo(Number(e.target.value))} />
+              <NumberField label={tx("від","от")} value={String(from)} onChange={(e) => setFrom(Number(e.target.value))} />
+              <NumberField label={tx("до","до")} value={String(to)} onChange={(e) => setTo(Number(e.target.value))} />
               <NumberField
-                label="шаг"
+                label={tx("крок","шаг")}
                 step="0.1"
                 value={String(step)}
                 onChange={(e) => setStep(Number(e.target.value))}
@@ -208,15 +209,15 @@ export default function ItLab2Page() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div>
-              <p className="text-xs text-ink-faint">Задание 2</p>
+              <p className="text-xs text-ink-faint">{tx("Завдання 2","Задание 2")}</p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
-                График функции, заданной массивом данных
+                {tx("Графік функції, заданої масивом даних","График функции, заданной массивом данных")}
               </h2>
             </div>
 
             <TextField
-              label="Массив Data"
-              hint={`${data.length} значений`}
+              label={tx("Масив Data","Массив Data")}
+              hint={tx(`${data.length} значень`,`${data.length} значений`)}
               value={arrayText}
               onChange={(e) => setArrayText(e.target.value)}
             />
@@ -224,9 +225,7 @@ export default function ItLab2Page() {
             <ArrayPlot data={data} />
 
             <p className="text-sm leading-relaxed text-ink-dim">
-              Линия между точками не проводится: функция задана дискретно, и линия означала бы
-              интерполяцию, которой в данных нет. В Mathcad нумерация элементов вектора
-              начинается с нуля, поэтому для совпадения с номерами точек задают{" "}
+              {tx("Лінія між точками не проводиться: функція задана дискретно, і лінія означала б інтерполяцію, якої в даних немає. У Mathcad нумерація елементів вектора починається з нуля, тому для збігу з номерами точок задають","Линия между точками не проводится: функция задана дискретно, и линия означала бы интерполяцию, которой в данных нет. В Mathcad нумерация элементов вектора начинается с нуля, поэтому для совпадения с номерами точек задают")}{" "}
               <span className="font-mono text-xs text-ink">ORIGIN := 1</span> и диапазон{" "}
               <span className="font-mono text-xs text-ink">i := 1 .. last(Data)</span>.
             </p>
@@ -238,10 +237,10 @@ export default function ItLab2Page() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <p className="text-xs text-ink-faint">
-                Задание 3 · по желанию
+                {tx("Завдання 3 · за бажанням","Задание 3 · по желанию")}
               </p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
-                Импорт данных из Excel
+                {tx("Імпорт даних з Excel","Импорт данных из Excel")}
               </h2>
             </div>
 
@@ -268,8 +267,8 @@ export default function ItLab2Page() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border text-xs text-ink-faint">
-                    <th className="px-3 py-2 text-left font-medium">Аргумент</th>
-                    <th className="px-3 py-2 text-left font-medium">Что задаёт</th>
+                    <th className="px-3 py-2 text-left font-medium">{tx("Аргумент","Аргумент")}</th>
+                    <th className="px-3 py-2 text-left font-medium">{tx("Що задає","Что задаёт")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -286,7 +285,7 @@ export default function ItLab2Page() {
             </div>
 
             <div>
-              <h3 className="mb-2 text-sm font-medium text-ink">Чем способы импорта различаются</h3>
+              <h3 className="mb-2 text-sm font-medium text-ink">{tx("Чим способи імпорту різняться","Чем способы импорта различаются")}</h3>
               <ul className="space-y-1.5 text-sm text-ink-dim">
                 {IMPORT_WAYS.map((w, wi) => (
                   <li key={wi} className="flex gap-2 leading-relaxed">
@@ -306,10 +305,10 @@ export default function ItLab2Page() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Готовая запись
+                {tx("Готовий запис","Готовая запись")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Собрана под выбранные выше функцию, отрезок, массив и параметры импорта.
+                {tx("Зібрано під вибрані вище функцію, відрізок, масив і параметри імпорту.","Собрана под выбранные выше функцию, отрезок, массив и параметры импорта.")}
               </p>
             </div>
             <OutputBlock label="SMath / Mathcad" value={mathcadListing(config)} wrap={false} />
@@ -320,12 +319,10 @@ export default function ItLab2Page() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Та же работа на Python
+                {tx("Та сама робота на Python","Та же работа на Python")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Mathcad 15 снят с поддержки, Mathcad Prime коммерческий, а бесплатный
-                Mathcad Express ставит на документы водяной знак. Если среды нет, все три
-                задания выполняются этим файлом — нужны numpy, matplotlib и pandas.
+                {tx("Mathcad 15 знято з підтримки, Mathcad Prime комерційний, а безкоштовний Mathcad Express ставить на документи водяний знак. Якщо середовища немає, усі три завдання виконуються цим файлом — потрібні numpy, matplotlib і pandas.","Mathcad 15 снят с поддержки, Mathcad Prime коммерческий, а бесплатный Mathcad Express ставит на документы водяной знак. Если среды нет, все три задания выполняются этим файлом — нужны numpy, matplotlib и pandas.")}
               </p>
             </div>
 

@@ -20,6 +20,7 @@ const procedure = IT_GUIDES["it-lab1"];
 
 export default function ItLab1Page() {
   const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [presetId, setPresetId] = useState(PRESETS[0].id);
   const preset = PRESETS.find((p) => p.id === presetId)!;
   const [edited, setEdited] = useState<Record<string, string>>({});
@@ -43,17 +44,16 @@ export default function ItLab1Page() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Таблица данных
+                {tx("Таблиця даних","Таблица данных")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Десять строк, три столбца. Первая строка — заголовки. Разделитель — табуляция
-                или точка с запятой, так что таблицу можно вставить прямо из книги.
+                {tx("Десять рядків, три стовпці. Перший рядок — заголовки. Роздільник — табуляція або крапка з комою, так що таблицю можна вставити прямо з книги.","Десять строк, три столбца. Первая строка — заголовки. Разделитель — табуляция или точка с запятой, так что таблицу можно вставить прямо из книги.")}
               </p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
               <SelectField
-                label="Готовый набор"
+                label={tx("Готовий набір","Готовый набор")}
                 value={presetId}
                 onChange={(e) => setPresetId(e.target.value)}
               >
@@ -69,8 +69,8 @@ export default function ItLab1Page() {
             </div>
 
             <TextAreaField
-              label="Содержимое таблицы"
-              hint={`${table.rows.length} строк`}
+              label={tx("Вміст таблиці","Содержимое таблицы")}
+              hint={tx(`${table.rows.length} рядків`,`${table.rows.length} строк`)}
               value={text}
               rows={12}
               className="min-h-[18rem]"
@@ -112,7 +112,7 @@ export default function ItLab1Page() {
                     ))}
                     <tr style={{ background: `${accent}0d` }}>
                       <td className="px-3 py-2 text-ink-dim" colSpan={2}>
-                        Сумма третьего столбца — для круговой диаграммы
+                        {tx("Сума третього стовпця — для кругової діаграми","Сумма третьего столбца — для круговой диаграммы")}
                       </td>
                       <td className="px-3 py-2 font-mono" style={{ color: accent }}>
                         {ru(total, 3)}
@@ -131,35 +131,33 @@ export default function ItLab1Page() {
             <CardBody className="pt-6 space-y-8">
               <div>
                 <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                  Как лягут диаграммы
+                  {tx("Як ляжуть діаграми","Как лягут диаграммы")}
                 </h2>
                 <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                  Строить их всё равно в книге. Здесь видно заранее, что получится: легли ли
-                  точки на кривую и различимы ли доли на круговой.
+                  {tx("Будувати їх усе одно в книзі. Тут видно заздалегідь, що вийде: чи лягли точки на криву і чи розрізнити частки на круговій.","Строить их всё равно в книге. Здесь видно заранее, что получится: легли ли точки на кривую и различимы ли доли на круговой.")}
                 </p>
               </div>
 
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-ink">
-                  Точечная: {table.headers[1]} от {table.headers[0]}
+                  {tx("Точкова","Точечная")}: {table.headers[1]} {tx("від","от")} {table.headers[0]}
                 </h3>
                 <ScatterChart table={table} accent={accent} />
               </div>
 
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-ink">
-                  Вертикальная: {table.headers[1]} столбцами, {table.headers[2]} линией
+                  {tx("Вертикальна","Вертикальная")}: {table.headers[1]} {tx("стовпцями","столбцами")}, {table.headers[2]} {tx("лінією","линией")}
                 </h3>
                 <ComboChart table={table} accent={accent} />
                 <p className="text-xs leading-relaxed text-ink-faint">
-                  Второй ряд вынесен на вспомогательную ось справа: величины разного порядка
-                  на общей шкале не читаются.
+                  {tx("Другий ряд винесено на допоміжну вісь справа: величини різного порядку на спільній шкалі не читаються.","Второй ряд вынесен на вспомогательную ось справа: величины разного порядка на общей шкале не читаются.")}
                 </p>
               </div>
 
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-ink">
-                  Круговая: доли {table.headers[2].toLowerCase()}
+                  {tx("Кругова","Круговая")}: {tx("частки","доли")} {table.headers[2].toLowerCase()}
                 </h3>
                 <PieChart table={table} total={total} />
               </div>
@@ -175,8 +173,7 @@ export default function ItLab1Page() {
                 Общие требования к диаграммам
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Дословно из задания. Нумерация в источнике идёт 1, 2, 3, 4, 6, 7 — пятый пункт
-                пропущен, здесь сохранены исходные номера.
+                {tx("Дослівно із завдання. Нумерація в джерелі йде 1, 2, 3, 4, 6, 7 — п’ятий пункт пропущено, тут збережені вихідні номери.","Дословно из задания. Нумерация в источнике идёт 1, 2, 3, 4, 6, 7 — пятый пункт пропущен, здесь сохранены исходные номера.")}
               </p>
             </div>
 
@@ -193,11 +190,7 @@ export default function ItLab1Page() {
 
             <div className="rounded-[4px] border border-border bg-black/30 px-4 py-3">
               <p className="text-sm leading-relaxed text-ink-dim">
-                В самом задании есть расхождение: строить требуется точечный график,
-                вертикальную и круговую диаграммы, а в составе отчёта названы снимки
-                «комбінованої, точкової, поверхні». Три типа против трёх других. Надёжнее
-                сделать то, что названо в задании, а в отчёте подписать вертикальную
-                диаграмму комбинированной, если на ней два ряда — это она и есть.
+                {tx("У самому завданні є розходження: будувати треба точковий графік, вертикальну і кругову діаграми, а в складі звіту названі знімки «комбінованої, точкової, поверхні». Три типи проти трьох інших. Надійніше зробити те, що названо в завданні, а у звіті підписати вертикальну діаграму комбінованою, якщо на ній два ряди — це вона і є.","В самом задании есть расхождение: строить требуется точечный график, вертикальную и круговую диаграммы, а в составе отчёта названы снимки «комбінованої, точкової, поверхні». Три типа против трёх других. Надёжнее сделать то, что названо в задании, а в отчёте подписать вертикальную диаграмму комбинированной, если на ней два ряда — это она и есть.")}
               </p>
             </div>
           </CardBody>
@@ -209,14 +202,13 @@ export default function ItLab1Page() {
             <CardBody className="pt-6 space-y-4">
               <div>
                 <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                  Вставить в книгу
+                  {tx("Вставити в книгу","Вставить в книгу")}
                 </h2>
                 <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                  Разделитель — табуляция: при вставке в ячейку A1 таблица сама разойдётся по
-                  столбцам.
+                  {tx("Роздільник — табуляція: при вставці в комірку A1 таблиця сама розійдеться по стовпцях.","Разделитель — табуляция: при вставке в ячейку A1 таблица сама разойдётся по столбцам.")}
                 </p>
               </div>
-              <OutputBlock label="Таблица" value={text} wrap={false} />
+              <OutputBlock label={tx("Таблиця","Таблица")} value={text} wrap={false} />
             </CardBody>
           </Card>
         )}

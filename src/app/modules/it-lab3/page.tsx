@@ -65,6 +65,7 @@ function mb(bytes: number): string {
 export default function ItLab3Page() {
   const index = useItIndex();
   const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [guideId, setGuideId] = useState(GUIDES[0].id);
   const guide = GUIDES.find((g) => g.id === guideId)!;
 
@@ -152,12 +153,10 @@ export default function ItLab3Page() {
           <CardBody className="pt-6 space-y-6">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Как выполнить
+                {tx("Як виконати","Как выполнить")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Отчёт требует именно Lobe. PyTorch и TensorFlow — та же работа кодом: чтобы
-                понять, что Lobe делает внутри, или если он не запускается. Все пять путей
-                пройдены на деле, шаги и команды проверены.
+                {tx("Звіт вимагає саме Lobe. PyTorch і TensorFlow — та сама робота кодом: щоб зрозуміти, що Lobe робить усередині, або якщо він не запускається. Усі п’ять шляхів пройдені насправді, кроки і команди перевірені.","Отчёт требует именно Lobe. PyTorch и TensorFlow — та же работа кодом: чтобы понять, что Lobe делает внутри, или если он не запускается. Все пять путей пройдены на деле, шаги и команды проверены.")}
               </p>
             </div>
 
@@ -187,13 +186,10 @@ export default function ItLab3Page() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Результаты на одном наборе
+                {tx("Результати на одному наборі","Результаты на одном наборе")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Проверка — всегда на папке «перевірка», которую модель не видела при обучении
-                (в Lobe две её картинки попали в обучение при исправлении меток). В PyTorch и
-                TensorFlow основа заморожена и обучается только выходной слой, как в Lobe;
-                PyTorch вместо ResNet50V2 использует ResNet50.
+                {tx("Перевірка — завжди на папці «перевірка», яку модель не бачила при навчанні (у Lobe дві її картинки потрапили в навчання при виправленні міток). У PyTorch і TensorFlow основа заморожена і навчається лише вихідний шар, як у Lobe; PyTorch замість ResNet50V2 використовує ResNet50.","Проверка — всегда на папке «перевірка», которую модель не видела при обучении (в Lobe две её картинки попали в обучение при исправлении меток). В PyTorch и TensorFlow основа заморожена и обучается только выходной слой, как в Lobe; PyTorch вместо ResNet50V2 использует ResNet50.")}
               </p>
             </div>
 
@@ -205,10 +201,10 @@ export default function ItLab3Page() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-border text-xs text-ink-faint">
-                        <th className="px-3 py-2 text-left font-medium">Этап</th>
-                        <th className="px-3 py-2 text-right font-medium">Проверка</th>
-                        <th className="px-3 py-2 text-right font-medium">Обучающие</th>
-                        <th className="px-3 py-2 text-right font-medium">Обучение, с</th>
+                        <th className="px-3 py-2 text-left font-medium">{tx("Етап","Этап")}</th>
+                        <th className="px-3 py-2 text-right font-medium">{tx("Перевірка","Проверка")}</th>
+                        <th className="px-3 py-2 text-right font-medium">{tx("Навчальні","Обучающие")}</th>
+                        <th className="px-3 py-2 text-right font-medium">{tx("Навчання, с","Обучение, с")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -247,22 +243,21 @@ export default function ItLab3Page() {
                 </div>
 
                 <p className="text-sm leading-relaxed text-ink-dim">
-                  Папка «доповнення» до того, как её добавили в обучение, — ещё{" "}
-                  {lab.results.lobe_extra_before_adding.total} новых картинок для модели режима
-                  точности:{" "}
+                  {tx("Папка «доповнення» до того, як її додали в навчання, — ще","Папка «доповнення» до того, как её добавили в обучение, — ещё")}{" "}
+                  {lab.results.lobe_extra_before_adding.total} {tx("нових картинок для моделі режиму точності:","новых картинок для модели режима точности:")}{" "}
                   {unseen
-                    .map((u) => `${u.way} — ${u.correct} из ${u.total}`)
+                    .map((u) => `${u.way} — ${u.correct} ${tx("з","из")} ${u.total}`)
                     .join(", ")}
                   .
                 </p>
                 <p className="text-xs leading-relaxed text-ink-faint">
                   PyTorch: {lab.results.pytorch.framework}. TensorFlow:{" "}
                   {lab.results.tensorflow.framework}. Видеокарта {lab.results.pytorch.device}, по{" "}
-                  {lab.results.pytorch.epochs} эпох на этап, seed {lab.results.pytorch.seed}.
+                  {lab.results.pytorch.epochs} эпох на этап
                 </p>
               </>
             ) : (
-              <p className="text-sm text-ink-faint">Загрузка…</p>
+              <p className="text-sm text-ink-faint">{tx("Завантаження…","Загрузка…")}</p>
             )}
           </CardBody>
         </Card>
@@ -272,11 +267,10 @@ export default function ItLab3Page() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Готовая работа
+                {tx("Готова робота","Готовая работа")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Отчёт и скрипты всех способов выше. Фамилия студента, группа и преподаватель
-                в них заменены.
+                {tx("Звіт і скрипти всіх способів вище. Прізвище студента, група і викладач у них замінені.","Отчёт и скрипты всех способов выше. Фамилия студента, группа и преподаватель в них заменены.")}
               </p>
             </div>
 
@@ -284,8 +278,7 @@ export default function ItLab3Page() {
               <>
                 <div className="flex flex-wrap items-center justify-between gap-3 rounded-[4px] border border-border bg-black/20 px-4 py-3">
                   <p className="text-sm text-ink-dim">
-                    Отчёт на {lab.report.pages} страниц: снимки всех шагов в Lobe, таблица
-                    проверки по этапам и выводы.
+                    {tx("Звіт на","Отчёт на")} {lab.report.pages} {tx("сторінок: знімки всіх кроків у Lobe, таблиця перевірки за етапами і висновки.","страниц: снимки всех шагов в Lobe, таблица проверки по этапам и выводы.")}
                   </p>
                   <a
                     href={`${BASE}/${lab.report.path}`}
@@ -297,14 +290,14 @@ export default function ItLab3Page() {
                       border: `1px solid ${accent}44`,
                     }}
                   >
-                    Скачать PDF · {mb(lab.report.size)}
+                    {tx("Завантажити PDF","Скачать PDF")} · {mb(lab.report.size)}
                   </a>
                 </div>
                 <FileSet
                   base={BASE}
                   files={lab.files}
                   accent={accent}
-                  supportingNote="Это перечень файлов набора, по которому его собирает make_dataset.py, и агент, через который песочницей управляли из WSL: для самой работы они не нужны."
+                  supportingNote={tx("Це перелік файлів набору, за яким його збирає make_dataset.py, і агент, через який пісочницею керували з WSL: для самої роботи вони не потрібні.","Это перечень файлов набора, по которому его собирает make_dataset.py, и агент, через который песочницей управляли из WSL: для самой работы они не нужны.")}
                 />
               </>
             ) : (
