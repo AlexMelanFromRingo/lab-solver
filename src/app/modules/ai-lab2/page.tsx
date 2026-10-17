@@ -11,6 +11,8 @@ import { FuzzyInference } from "@/components/fuzzy-inference";
 import { FlsDownload } from "@/components/fls-download";
 import { TermChart } from "@/components/fuzzy-chart";
 import { categories, modules } from "@/lib/modules";
+import { useLang } from "@/components/lang";
+import { tr, type Loc } from "@/lib/i18n";
 import { AI_GUIDES } from "@/lib/data/ai-labs";
 import { FUZZY_VARIANTS } from "@/lib/data/ai-fuzzy-systems";
 import {
@@ -33,26 +35,27 @@ const NORMS: Norm[] = ["minimum", "maximum"];
 const DEFUZZ: Defuzz[] = ["cog", "fimax", "mom"];
 
 /** Пять выпадающих списков программы — в том же порядке, что в её окне. */
-const METHOD_FIELDS: { key: keyof Methods; label: string; options: readonly string[] }[] = [
-  { key: "conj", label: "Конъюнкция посылок", options: NORMS },
-  { key: "disj", label: "Дизъюнкция посылок", options: NORMS },
-  { key: "impl", label: "Импликация", options: NORMS },
-  { key: "accum", label: "Аккумуляция", options: NORMS },
-  { key: "defuzz", label: "Дефазификация", options: DEFUZZ },
+const METHOD_FIELDS: { key: keyof Methods; label: Loc; options: readonly string[] }[] = [
+  { key: "conj", label: { uk: "Кон’юнкція посилок", ru: "Конъюнкция посылок" }, options: NORMS },
+  { key: "disj", label: { uk: "Диз’юнкція посилок", ru: "Дизъюнкция посылок" }, options: NORMS },
+  { key: "impl", label: { uk: "Імплікація", ru: "Импликация" }, options: NORMS },
+  { key: "accum", label: { uk: "Акумуляція", ru: "Аккумуляция" }, options: NORMS },
+  { key: "defuzz", label: { uk: "Дефазифікація", ru: "Дефазификация" }, options: DEFUZZ },
 ];
 
 function VariableCard({ variable, output }: { variable: Variable; output?: boolean }) {
+  const { lang } = useLang();
   return (
     <div className="rounded-[4px] border border-border bg-black/20 px-4 py-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <span className="text-sm text-ink">
-          {output && <span className="text-ink-faint">выход · </span>}
-          {variable.label}
+          {output && <span className="text-ink-faint">{tr({ uk: "вихід · ", ru: "выход · " }, lang)}</span>}
+          {tr(variable.label, lang)}
         </span>
         <span className="font-mono text-xs text-ink-faint">
           [{String(variable.universe[0]).replace(".", ",")};{" "}
           {String(variable.universe[1]).replace(".", ",")}]
-          {variable.unit ? `, ${variable.unit}` : ""}
+          {variable.unit ? `, ${tr(variable.unit, lang)}` : ""}
         </span>
       </div>
 
@@ -86,6 +89,7 @@ function VariableCard({ variable, output }: { variable: Variable; output?: boole
 }
 
 export default function AiLab2Page() {
+  const { lang } = useLang();
   const [variantNum, setVariantNum] = useState(1);
   const task = FUZZY_VARIANTS.find((t) => t.variant === variantNum)!;
 
@@ -122,12 +126,12 @@ export default function AiLab2Page() {
           <CardBody className="pt-6 space-y-5">
             <div>
               <p className="text-xs text-ink-faint">
-                Задание {task.variant}
+                {tr({ uk: "Завдання", ru: "Задание" }, lang)} {task.variant}
               </p>
               <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
-                {task.title}
+                {tr(task.title, lang)}
               </h2>
-              <p className="mt-2 text-sm leading-relaxed text-ink-dim">{task.summary}</p>
+              <p className="mt-2 text-sm leading-relaxed text-ink-dim">{tr(task.summary, lang)}</p>
             </div>
 
             <div className="space-y-4">
@@ -138,14 +142,14 @@ export default function AiLab2Page() {
             </div>
 
             <p className="text-sm text-ink-dim">
-              База правил: {task.system.rules.length}{" "}
+              {tr({ uk: "База правил", ru: "База правил" }, lang)}: {task.system.rules.length}{" "}
               {task.system.rules.length % 10 === 1 && task.system.rules.length !== 11
-                ? "правило"
+                ? tr({ uk: "правило", ru: "правило" }, lang)
                 : [2, 3, 4].includes(task.system.rules.length % 10) &&
                     ![12, 13, 14].includes(task.system.rules.length)
-                  ? "правила"
-                  : "правил"}
-              . Ниже, на этапе агрегирования, видна каждая посылка и сила каждого правила.
+                  ? tr({ uk: "правила", ru: "правила" }, lang)
+                  : tr({ uk: "правил", ru: "правил" }, lang)}
+              . {tr({ uk: "Нижче, на етапі агрегування, видно кожну посилку і силу кожного правила.", ru: "Ниже, на этапе агрегирования, видна каждая посылка и сила каждого правила." }, lang)}
             </p>
           </CardBody>
         </Card>
@@ -155,10 +159,10 @@ export default function AiLab2Page() {
           <CardBody className="pt-6 space-y-6">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                Входные значения
+                {tr({ uk: "Вхідні значення", ru: "Входные значения" }, lang)}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-ink-dim">
-                Кнопками подставляются наборы, которые методичка предлагает исследовать.
+                {tr({ uk: "Кнопками підставляються набори, які методичка пропонує дослідити.", ru: "Кнопками подставляются наборы, которые методичка предлагает исследовать." }, lang)}
               </p>
             </div>
 
@@ -166,8 +170,8 @@ export default function AiLab2Page() {
               {task.system.inputs.map((variable) => (
                 <NumberField
                   key={variable.name}
-                  label={variable.label}
-                  hint={variable.unit}
+                  label={tr(variable.label, lang)}
+                  hint={variable.unit ? tr(variable.unit, lang) : undefined}
                   value={String(values[variable.name] ?? "")}
                   onChange={(e) => setValue(variable.name, Number(e.target.value))}
                 />
@@ -175,14 +179,14 @@ export default function AiLab2Page() {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {task.cases.map((c) => (
+              {task.cases.map((c, ci) => (
                 <button
-                  key={c.label}
+                  key={ci}
                   type="button"
                   onClick={() => setEdits((prev) => ({ ...prev, [variantNum]: c.values }))}
                   className="rounded-[3px] border border-border px-3 py-1.5 text-xs text-ink-dim transition-colors hover:border-border-strong hover:text-ink"
                 >
-                  {c.label}
+                  {tr(c.label, lang)}
                 </button>
               ))}
             </div>
@@ -211,7 +215,7 @@ export default function AiLab2Page() {
                 {METHOD_FIELDS.map((field) => (
                   <SelectField
                     key={field.key}
-                    label={field.label}
+                    label={tr(field.label, lang)}
                     value={methods[field.key]}
                     onChange={(e) =>
                       setMethods((prev) => ({ ...prev, [field.key]: e.target.value }) as Methods)
@@ -219,7 +223,7 @@ export default function AiLab2Page() {
                   >
                     {field.options.map((option) => (
                       <option key={option} value={option}>
-                        {METHOD_LABELS[option as Norm | Defuzz]}
+                        {tr(METHOD_LABELS[option as Norm | Defuzz], lang)}
                       </option>
                     ))}
                   </SelectField>
@@ -278,10 +282,10 @@ export default function AiLab2Page() {
                 </p>
               </div>
               <ul className="space-y-2.5 text-sm text-ink-dim">
-                {task.notes.map((note) => (
-                  <li key={note} className="flex gap-2 leading-relaxed">
+                {task.notes.map((note, ni) => (
+                  <li key={ni} className="flex gap-2 leading-relaxed">
                     <span style={{ color: accent }}>·</span>
-                    {note}
+                    {tr(note, lang)}
                   </li>
                 ))}
               </ul>

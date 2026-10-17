@@ -24,12 +24,14 @@
  * совпадают и с программой FLS, и с ручным расчётом в отчёте.
  */
 
+import type { Loc } from "@/lib/i18n";
+
 export interface Term {
   name: string;
   /** Точки функции принадлежности: [x, μ], по возрастанию x. */
   points: [number, number][];
   /** Расшифровка, когда методичка называет терм символом: NB, PS и т. п. */
-  label?: string;
+  label?: Loc;
   /** Исходная запись, когда методичка задаёт терм формулой, а не точками. */
   formula?: string;
   /** Точная функция — точки тогда её кусочно-линейное приближение. */
@@ -39,8 +41,8 @@ export interface Term {
 export interface Variable {
   name: string;
   /** Подпись для страницы: имя терма без подчёркиваний, с единицами. */
-  label: string;
-  unit?: string;
+  label: Loc;
+  unit?: Loc;
   /** Универс: [левая граница, правая]. */
   universe: [number, number];
   terms: Term[];
@@ -86,12 +88,12 @@ export const INITIAL_METHODS: Methods = {
   defuzz: "cog",
 };
 
-export const METHOD_LABELS: Record<Norm | Defuzz, string> = {
-  minimum: "минимум",
-  maximum: "максимум",
-  cog: "центр тяжести",
-  fimax: "первый максимум",
-  mom: "средний из максимумов",
+export const METHOD_LABELS: Record<Norm | Defuzz, Loc> = {
+  minimum: { uk: "мінімум", ru: "минимум" },
+  maximum: { uk: "максимум", ru: "максимум" },
+  cog: { uk: "центр ваги", ru: "центр тяжести" },
+  fimax: { uk: "перший максимум", ru: "первый максимум" },
+  mom: { uk: "середній з максимумів", ru: "средний из максимумов" },
 };
 
 /** Значение функции принадлежности терма в точке. */

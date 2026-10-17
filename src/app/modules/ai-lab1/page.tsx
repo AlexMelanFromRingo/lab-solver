@@ -141,20 +141,20 @@ export default function AiLab1Page() {
           <CardBody className="pt-6 space-y-6">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
-                {task.title}
+                {tr(task.title, lang)}
               </h2>
-              <p className="mt-1 text-sm leading-relaxed text-ink-dim">{task.summary}</p>
+              <p className="mt-1 text-sm leading-relaxed text-ink-dim">{tr(task.summary, lang)}</p>
             </div>
 
             <div className="space-y-4">
               {[...task.system.inputs, task.system.output].map((variable) => (
                 <div key={variable.name} className="rounded-[4px] border border-border bg-black/20 px-4 py-3">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <span className="text-sm text-ink">{variable.label}</span>
+                    <span className="text-sm text-ink">{tr(variable.label, lang)}</span>
                     <span className="font-mono text-xs text-ink-faint">
-                      универс [{String(variable.universe[0]).replace(".", ",")};{" "}
+                      {tr({ uk: "універс", ru: "универс" }, lang)} [{String(variable.universe[0]).replace(".", ",")};{" "}
                       {String(variable.universe[1]).replace(".", ",")}]
-                      {variable.unit ? `, ${variable.unit}` : ""}
+                      {variable.unit ? `, ${tr(variable.unit, lang)}` : ""}
                     </span>
                   </div>
                   <ul className="mt-2 space-y-1">
@@ -172,7 +172,7 @@ export default function AiLab1Page() {
               {task.system.inputs.map((variable) => (
                 <NumberField
                   key={variable.name}
-                  label={variable.label}
+                  label={tr(variable.label, lang)}
                   hint={`[${variable.universe[0]}; ${variable.universe[1]}]`}
                   value={String(values[variable.name] ?? "")}
                   onChange={(e) =>
@@ -183,14 +183,14 @@ export default function AiLab1Page() {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {task.cases.map((c) => (
+              {task.cases.map((c, ci) => (
                 <button
-                  key={c.label}
+                  key={ci}
                   type="button"
                   onClick={() => setValues(c.values)}
                   className="rounded-[3px] border border-border px-3 py-1.5 text-xs text-ink-dim transition-colors hover:border-border-strong hover:text-ink"
                 >
-                  {c.label}
+                  {tr(c.label, lang)}
                 </button>
               ))}
             </div>
@@ -204,12 +204,12 @@ export default function AiLab1Page() {
 
             {task.notes.length > 0 && (
               <div>
-                <h3 className="mb-2 text-sm font-medium text-ink-dim">Что стоит заметить</h3>
+                <h3 className="mb-2 text-sm font-medium text-ink-dim">{tr({ uk: "Що варто помітити", ru: "Что стоит заметить" }, lang)}</h3>
                 <ul className="space-y-2 text-sm text-ink-dim">
-                  {task.notes.map((note) => (
-                    <li key={note} className="flex gap-2 leading-relaxed">
+                  {task.notes.map((note, ni) => (
+                    <li key={ni} className="flex gap-2 leading-relaxed">
                       <span style={{ color: accent }}>·</span>
-                      {note}
+                      {tr(note, lang)}
                     </li>
                   ))}
                 </ul>

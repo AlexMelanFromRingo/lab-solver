@@ -2,6 +2,8 @@
 
 import { useMemo } from "react";
 import { ResultChart, TermChart } from "@/components/fuzzy-chart";
+import { useLang } from "@/components/lang";
+import { tr, type Loc } from "@/lib/i18n";
 import {
   METHOD_LABELS,
   humanName,
@@ -20,7 +22,7 @@ import {
  */
 
 /** Запятая как разделитель дробной части и настоящий минус, а не дефис. */
-const ru = (v: string) => v.replace(".", ",").replace("-", "\u2212");
+const ru = (v: string) => v.replace(".", ",").replace("-", "−");
 
 const fmt3 = (v: number) => ru(v.toFixed(3));
 
@@ -67,6 +69,8 @@ export function FuzzyInference({
   methods: Methods;
   accent: string;
 }) {
+  const { lang } = useLang();
+  const t = (v: Loc) => tr(v, lang);
   const result = useMemo(() => infer(system, values, methods), [system, values, methods]);
 
   const degreesOf = (variable: string) =>
@@ -75,24 +79,27 @@ export function FuzzyInference({
     );
 
   const firedCount = result.fired.filter((r) => r.strength > 1e-6).length;
-  const unit = system.output.unit ? ` ${system.output.unit}` : "";
+  const unit = system.output.unit ? ` ${t(system.output.unit)}` : "";
 
   return (
     <div className="space-y-8">
       <Stage
         number={1}
-        title="Фазификация"
-        note="Для каждой входной переменной берётся значение функции принадлежности каждого её терма в заданной точке."
+        title={t({ uk: "Фазифікація", ru: "Фазификация" })}
+        note={t({
+          uk: "Для кожної вхідної змінної береться значення функції приналежності кожного її терма в заданій точці.",
+          ru: "Для каждой входной переменной берётся значение функции принадлежности каждого её терма в заданной точке.",
+        })}
         accent={accent}
       >
         <div className="space-y-6">
           {system.inputs.map((variable) => (
             <div key={variable.name}>
               <div className="mb-1 flex items-baseline justify-between gap-3">
-                <span className="text-sm text-ink">{variable.label}</span>
+                <span className="text-sm text-ink">{t(variable.label)}</span>
                 <span className="font-mono text-xs text-ink-faint">
                   {variable.name} = {ru(String(values[variable.name] ?? "—"))}
-                  {variable.unit ? ` ${variable.unit}` : ""}
+                  {variable.unit ? ` ${t(variable.unit)}` : ""}
                 </span>
               </div>
               <TermChart
@@ -107,18 +114,21 @@ export function FuzzyInference({
 
       <Stage
         number={2}
-        title="Агрегирование посылок"
-        note={`Сила правила — свёртка степеней его посылок. Связка конъюнктивная, способ построения — ${METHOD_LABELS[methods.conj]}.`}
+        title={t({ uk: "Агрегування посилок", ru: "Агрегирование посылок" })}
+        note={t({
+          uk: `Сила правила — згортка ступенів його посилок. Зв'язка кон'юнктивна, спосіб побудови — ${tr(METHOD_LABELS[methods.conj], "uk")}.`,
+          ru: `Сила правила — свёртка степеней его посылок. Связка конъюнктивная, способ построения — ${tr(METHOD_LABELS[methods.conj], "ru")}.`,
+        })}
         accent={accent}
       >
         <div className="overflow-x-auto rounded-[4px] border border-border">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-xs text-ink-faint">
-                <th className="px-3 py-2 text-left font-medium">Правило</th>
-                <th className="px-3 py-2 text-left font-medium">Посылки</th>
-                <th className="px-3 py-2 text-right font-medium">Сила</th>
-                <th className="px-3 py-2 text-left font-medium">Заключение</th>
+                <th className="px-3 py-2 text-left font-medium">{t({ uk: "Правило", ru: "Правило" })}</th>
+                <th className="px-3 py-2 text-left font-medium">{t({ uk: "Посилки", ru: "Посылки" })}</th>
+                <th className="px-3 py-2 text-right font-medium">{t({ uk: "Сила", ru: "Сила" })}</th>
+                <th className="px-3 py-2 text-left font-medium">{t({ uk: "Висновок", ru: "Заключение" })}</th>
               </tr>
             </thead>
             <tbody>
@@ -137,7 +147,9 @@ export function FuzzyInference({
                           <span key={a.variable}>
                             {i > 0 && (
                               <span className="text-ink-faint">
-                                {rule.op === "or" ? " или " : " и "}
+                                {rule.op === "or"
+                                  ? t({ uk: " або ", ru: " или " })
+                                  : t({ uk: " і ", ru: " и " })}
                               </span>
                             )}
                             {humanName(a.variable)} — {humanName(a.term)}
@@ -163,15 +175,24 @@ export function FuzzyInference({
         </div>
         <p className="text-sm text-ink-dim">
           {firedCount === 0
-            ? "Ни одно правило не сработало: база не покрывает это сочетание входных значений."
-            : `Сработало правил: ${firedCount} из ${result.fired.length}.`}
+            ? t({
+                uk: "Жодне правило не спрацювало: база не покриває це поєднання вхідних значень.",
+                ru: "Ни одно правило не сработало: база не покрывает это сочетание входных значений.",
+              })
+            : t({
+                uk: `Спрацювало правил: ${firedCount} з ${result.fired.length}.`,
+                ru: `Сработало правил: ${firedCount} из ${result.fired.length}.`,
+              })}
         </p>
       </Stage>
 
       <Stage
         number={3}
-        title="Активизация и аккумуляция"
-        note={`Каждое заключение ограничивается силой своего правила (${METHOD_LABELS[methods.impl]}), затем заключения всех правил сводятся в одну фигуру (${METHOD_LABELS[methods.accum]}).`}
+        title={t({ uk: "Активізація і акумуляція", ru: "Активизация и аккумуляция" })}
+        note={t({
+          uk: `Кожен висновок обмежується силою свого правила (${tr(METHOD_LABELS[methods.impl], "uk")}), потім висновки всіх правил зводяться в одну фігуру (${tr(METHOD_LABELS[methods.accum], "uk")}).`,
+          ru: `Каждое заключение ограничивается силой своего правила (${tr(METHOD_LABELS[methods.impl], "ru")}), затем заключения всех правил сводятся в одну фигуру (${tr(METHOD_LABELS[methods.accum], "ru")}).`,
+        })}
         accent={accent}
       >
         <ResultChart
@@ -181,31 +202,38 @@ export function FuzzyInference({
           accent={accent}
         />
         <p className="text-sm text-ink-dim">
-          Наибольшее значение аккумулированной функции — {fmt3(result.peak)}.
+          {t({
+            uk: `Найбільше значення акумульованої функції — ${fmt3(result.peak)}.`,
+            ru: `Наибольшее значение аккумулированной функции — ${fmt3(result.peak)}.`,
+          })}
         </p>
       </Stage>
 
       <Stage
         number={4}
-        title="Дефазификация"
-        note={`Переход к чёткому числу способом «${METHOD_LABELS[methods.defuzz]}».`}
+        title={t({ uk: "Дефазифікація", ru: "Дефазификация" })}
+        note={t({
+          uk: `Перехід до чіткого числа способом «${tr(METHOD_LABELS[methods.defuzz], "uk")}».`,
+          ru: `Переход к чёткому числу способом «${tr(METHOD_LABELS[methods.defuzz], "ru")}».`,
+        })}
         accent={accent}
       >
         <div
           className="rounded-[4px] border px-5 py-4"
           style={{ borderColor: `${accent}44`, background: `${accent}0d` }}
         >
-          <div className="text-xs text-ink-faint">
-            {system.output.label}
-          </div>
+          <div className="text-xs text-ink-faint">{t(system.output.label)}</div>
           <div className="mt-1 font-mono text-2xl" style={{ color: accent }}>
             {result.crisp === null
-              ? "нет вывода"
+              ? t({ uk: "немає виводу", ru: "нет вывода" })
               : `${ru(result.crisp.toFixed(2))}${unit}`}
           </div>
           {result.crisp === null && (
             <p className="mt-2 text-sm text-ink-dim">
-              Аккумулированное множество пусто. Сама FLS в этом случае показывает −1.
+              {t({
+                uk: "Акумульована множина порожня. Сама FLS у цьому разі показує −1.",
+                ru: "Аккумулированное множество пусто. Сама FLS в этом случае показывает −1.",
+              })}
             </p>
           )}
         </div>

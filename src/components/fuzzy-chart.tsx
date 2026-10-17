@@ -1,6 +1,8 @@
 "use client";
 
 import { humanName, membership, type Term, type Variable } from "@/lib/algorithms/fuzzy-mamdani";
+import { useLang } from "@/components/lang";
+import { tr } from "@/lib/i18n";
 
 /**
  * Графики функций принадлежности.
@@ -125,6 +127,7 @@ export function TermChart({
   value?: number;
   degrees?: Record<string, number>;
 }) {
+  const { lang } = useLang();
   const [lo, hi] = variable.universe;
   const inside = value !== undefined && Number.isFinite(value) && value >= lo && value <= hi;
 
@@ -181,7 +184,7 @@ export function TermChart({
                 style={{ background: TERM_COLORS[i % TERM_COLORS.length] }}
               />
               <span className="text-ink-dim">
-                {term.label ? `${term.name} · ${term.label}` : humanName(term.name)}
+                {term.label ? `${term.name} · ${tr(term.label, lang)}` : humanName(term.name)}
               </span>
               {mu !== undefined && (
                 <span className="font-mono text-ink-faint">{mu.toFixed(3).replace(".", ",")}</span>
