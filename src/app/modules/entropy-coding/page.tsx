@@ -80,7 +80,7 @@ export default function EntropyCodingPage() {
               ))}
             </div>
             <OutputBlock label={tx("Тестова послідовність","Тестовая последовательность")} value={variant.sequence.join(" ")} />
-            <OutputBlock label="Энтропия источника H" value={report.H.toFixed(4) + tx(" біт/символ"," бит/символ")} />
+            <OutputBlock label={tx("Ентропія джерела H","Энтропия источника H")} value={report.H.toFixed(4) + tx(" біт/символ"," бит/символ")} />
           </CardBody>
         </Card>
 

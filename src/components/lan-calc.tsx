@@ -172,10 +172,10 @@ export function FastEthernetCalc({ accent }: { accent: string }) {
               </option>
             ))}
           </SelectField>
-          <SelectField label="Среда в зоне" value={media} onChange={(e) => setMedia(e.target.value as FeMedia)}>
-            <option value="copper">только витая пара (TX)</option>
-            <option value="fiber">только оптика (FX)</option>
-            <option value="mixed">витая пара и оптика (TX и FX)</option>
+          <SelectField label={tx("Середовище в зоні","Среда в зоне")} value={media} onChange={(e) => setMedia(e.target.value as FeMedia)}>
+            <option value="copper">{tx("лише звита пара (TX)","только витая пара (TX)")}</option>
+            <option value="fiber">{tx("лише оптика (FX)","только оптика (FX)")}</option>
+            <option value="mixed">{tx("звита пара й оптика (TX і FX)","витая пара и оптика (TX и FX)")}</option>
           </SelectField>
         </div>
         <p className="text-sm text-ink-dim">

@@ -108,7 +108,7 @@ export default function IpSubnetPage() {
       } else {
         prefix = Number(prefixText.replace("/", ""));
         if (!Number.isInteger(prefix) || prefix < 0 || prefix > 32) {
-          throw new Error("Префикс — целое число от 0 до 32");
+          throw new Error("Префікс — ціле число від 0 до 32");
         }
       }
       const info = subnetInfo(ip, prefix);

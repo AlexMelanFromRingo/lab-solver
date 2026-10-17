@@ -94,15 +94,15 @@ export default function GostRc4Page() {
                     { value: "Test", label: "Test" },
                   ]}
                 />
-                <TextField label="Ключ (64 hex-символа = 256 бит, X0 — старшие 32 бита)" value={keyHex} onChange={(e) => setKeyHex(e.target.value)} />
+                <TextField label={tx("Ключ (64 hex-символи = 256 біт, X0 — старші 32 біти)", "Ключ (64 hex-символа = 256 бит, X0 — старшие 32 бита)")} value={keyHex} onChange={(e) => setKeyHex(e.target.value)} />
               </>
             )}
-            <TextField label="Блок (16 hex-символов = 64 бита)" value={blockHex} onChange={(e) => setBlockHex(e.target.value)} />
+            <TextField label={tx("Блок (16 hex-символів = 64 біти)", "Блок (16 hex-символов = 64 бита)")} value={blockHex} onChange={(e) => setBlockHex(e.target.value)} />
             <div className="grid gap-4 sm:grid-cols-2">
               <OutputBlock label="Шифротекст" value={enc.toString(16).padStart(16, "0")} />
               <OutputBlock
-                label="Проверка расшифрования"
-                value={dec.toString(16).padStart(16, "0") + (dec === block ? " — совпадает ✓" : "")}
+                label={tx("Перевірка розшифрування", "Проверка расшифрования")}
+                value={dec.toString(16).padStart(16, "0") + (dec === block ? tx(" — збігається ✓", " — совпадает ✓") : "")}
               />
             </div>
             {mode === "lab" && (
@@ -124,7 +124,7 @@ export default function GostRc4Page() {
             <p className="text-xs text-ink-faint">
               Контрольний вектор з rc4_tb.vhd: ключ «Key», текст «Plaintext» → bbf316e8d940af0ad3.
             </p>
-            <OutputBlock label="Проверка расшифрования" value={rc4Back} />
+            <OutputBlock label={tx("Перевірка розшифрування", "Проверка расшифрования")} value={rc4Back} />
           </CardBody>
         </Card>
 
@@ -134,7 +134,7 @@ export default function GostRc4Page() {
               <h2 className="font-display text-lg font-semibold text-ink">{tx("Схема на VHDL","Схема на VHDL")}</h2>
               <p className="mt-1.5 text-sm leading-relaxed text-ink-dim">
                 {tx("Самі схеми, а не переказ: обидва шифри з самоперевірними випробувальними стендами за опублікованими контрольними векторами. Збираються і перевіряються через GHDL однією командою","Сами схемы, а не пересказ: оба шифра с самопроверяющимися испытательными стендами по опубликованным контрольным векторам. Собираются и проверяются через GHDL одной командой")}{" "}
-                <code className="text-ink">./sim/run_all.sh</code>. Общий пакет{" "}
+                <code className="text-ink">./sim/run_all.sh</code>. {tx("Загальний пакет","Общий пакет")}{" "}
                 <code className="text-ink">crypto_util</code> {tx("потрібен обом — без нього не збереться.","нужен обоим — без него не соберётся.")}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-ink-dim">

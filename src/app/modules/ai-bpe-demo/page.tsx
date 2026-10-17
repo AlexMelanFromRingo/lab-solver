@@ -58,13 +58,13 @@ function placement(token: string, vocab: VocabEntry[]): string[] {
     e.tokens.forEach((t, i) => {
       if (t !== token) return;
       const last = e.tokens.length - 1;
-      if (last === 0) where.add("целое слово");
-      else if (i === 0) where.add("начало");
-      else if (i === last) where.add("конец");
+      if (last === 0) where.add("ціле слово");
+      else if (i === 0) where.add("початок");
+      else if (i === last) where.add("кінець");
       else where.add("середина");
     });
   }
-  const order = ["целое слово", "начало", "середина", "конец"];
+  const order = ["ціле слово", "початок", "середина", "кінець"];
   return order.filter((w) => where.has(w));
 }
 

@@ -163,7 +163,7 @@ export default function AiTokenizerPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border text-xs text-ink-faint">
-                    <th className="px-3 py-2 text-left font-medium">Строка</th>
+                    <th className="px-3 py-2 text-left font-medium">{tx("Рядок","Строка")}</th>
                     <th className="px-3 py-2 text-right font-medium">GPT-2</th>
                     <th className="px-3 py-2 text-right font-medium">вариант</th>
                     <th className="px-3 py-2 text-right font-medium">GPT-2 с/т</th>

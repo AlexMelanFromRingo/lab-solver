@@ -37,7 +37,7 @@ export default function BbsLfsrPage() {
     try {
       const state = lfsrState.split(",").map((s) => Number(s.trim()) & 1);
       const taps = lfsrTaps.split(",").map((s) => Number(s.trim()));
-      if (taps.some((t) => t < 0 || t >= state.length)) throw new Error("Отвод вне диапазона регистра");
+      if (taps.some((t) => t < 0 || t >= state.length)) throw new Error("Відвід поза діапазоном регістра");
       return { ok: true as const, data: generateLFSR(state, taps, lfsrSteps) };
     } catch (e) {
       return { ok: false as const, error: (e as Error).message };
@@ -59,7 +59,7 @@ export default function BbsLfsrPage() {
               <TextField label="p (≡3 mod 4)" value={pStr} onChange={(e) => setPStr(e.target.value)} />
               <TextField label="q (≡3 mod 4)" value={qStr} onChange={(e) => setQStr(e.target.value)} />
               <TextField label="seed" value={seedStr} onChange={(e) => setSeedStr(e.target.value)} />
-              <NumberField label="Число бит" value={bitsCount} onChange={(e) => setBitsCount(Number(e.target.value))} min={1} max={64} />
+              <NumberField label={tx("Число біт","Число бит")} value={bitsCount} onChange={(e) => setBitsCount(Number(e.target.value))} min={1} max={64} />
             </div>
             {bbs.ok ? (
               <>

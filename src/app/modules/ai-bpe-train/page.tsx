@@ -273,7 +273,7 @@ function VocabCost() {
           <div>
             <div className="mb-1.5 text-sm font-medium text-ink-dim">{tx("Матриці","Матрицы")}</div>
             <Segmented
-              label="Матрицы"
+              label={tx("Матриці","Матрицы")}
               value={tied}
               options={[
                 { value: "untied", label: tx("окремі","раздельные") },

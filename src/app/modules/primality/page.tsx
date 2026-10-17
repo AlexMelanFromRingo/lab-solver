@@ -58,7 +58,7 @@ export default function PrimalityPage() {
                 ))}
               </SelectField>
               {method !== "trial" && (
-                <NumberField label="Раундов" value={rounds} onChange={(e) => setRounds(Number(e.target.value))} min={1} max={100} />
+                <NumberField label={tx("Раундів","Раундов")} value={rounds} onChange={(e) => setRounds(Number(e.target.value))} min={1} max={100} />
               )}
             </div>
 

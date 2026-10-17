@@ -117,9 +117,9 @@ export default function FeistelVariantPage() {
         <Card>
           <CardBody className="pt-6 space-y-5">
             <div className="grid gap-4 sm:grid-cols-3">
-              <TextField label="Ключ" hint={`до ${spec.k} бит, dec/0x.../бинарно`} value={keyStr} onChange={(e) => setKeyStr(e.target.value)} />
-              <TextField label="Блок" hint={`${spec.n} бит`} value={blockStr} onChange={(e) => setBlockStr(e.target.value)} />
-              <NumberField label="Раундов" hint={`по умолчанию K/(n/2)=${defaultRounds(spec)}`} value={roundsStr} onChange={(e) => setRoundsStr(e.target.value)} min={1} max={32} />
+              <TextField label={tx("Ключ","Ключ")} hint={tx(`до ${spec.k} біт, dec/0x.../двійково`, `до ${spec.k} бит, dec/0x.../бинарно`)} value={keyStr} onChange={(e) => setKeyStr(e.target.value)} />
+              <TextField label={tx("Блок","Блок")} hint={tx(`${spec.n} біт`, `${spec.n} бит`)} value={blockStr} onChange={(e) => setBlockStr(e.target.value)} />
+              <NumberField label={tx("Раундів","Раундов")} hint={tx(`за замовчуванням K/(n/2)=${defaultRounds(spec)}`, `по умолчанию K/(n/2)=${defaultRounds(spec)}`)} value={roundsStr} onChange={(e) => setRoundsStr(e.target.value)} min={1} max={32} />
             </div>
             <p className="text-xs text-ink-faint">
               {tx("Число раундів не зафіксовано методичкою однаково для всіх реалізацій — у різних звітах трапляються і K/(n/2), і константа 4. Міняйте під свій звіт.","Число раундов не зафиксировано методичкой одинаково для всех реализаций — в разных отчётах встречаются и K/(n/2), и константа 4. Меняйте под свой отчёт.")}
@@ -143,9 +143,9 @@ export default function FeistelVariantPage() {
                     <th className="text-left px-3 py-2">Ключ</th>
                     <th className="text-left px-3 py-2">L</th>
                     <th className="text-left px-3 py-2">R</th>
-                    <th className="text-left px-3 py-2">после F1</th>
-                    <th className="text-left px-3 py-2">после F2</th>
-                    <th className="text-left px-3 py-2">после F3</th>
+                    <th className="text-left px-3 py-2">{tx("після F1","после F1")}</th>
+                    <th className="text-left px-3 py-2">{tx("після F2","после F2")}</th>
+                    <th className="text-left px-3 py-2">{tx("після F3","после F3")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -174,7 +174,7 @@ export default function FeistelVariantPage() {
             </p>
             <TextField label="Текст" value={text} onChange={(e) => setText(e.target.value)} />
             <OutputBlock label="Шифротекст (hex)" value={textEnc.hex} />
-            <OutputBlock label="Проверка расшифрования" value={textDec} />
+            <OutputBlock label={tx("Перевірка розшифрування","Проверка расшифрования")} value={textDec} />
           </CardBody>
         </Card>
 

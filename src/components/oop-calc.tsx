@@ -56,8 +56,8 @@ export function LightCalc() {
             ))}
           </SelectField>
           <SelectField label={tx("Освітлення","Освещение")} value={kind} onChange={(ev) => setKind(ev.target.value as "side" | "top")}>
-            <option value="side">боковое</option>
-            <option value="top">верхнее или комбинированное</option>
+            <option value="side">{tx("бічне","боковое")}</option>
+            <option value="top">{tx("верхнє або комбіноване","верхнее или комбинированное")}</option>
           </SelectField>
           <SelectField label={tx("Пояс світлового клімату (табл. 3)","Пояс светового климата (табл. 3)")} value={zone} onChange={(ev) => setZone(ev.target.value as keyof typeof M)}>
             {Object.keys(M).map((z) => (

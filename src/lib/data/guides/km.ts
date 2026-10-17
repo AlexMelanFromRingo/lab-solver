@@ -464,7 +464,7 @@ export const KM_GUIDES: GuideModule[] = [
               `Router${x}(config)#enable secret sec${x}`,
               `Router${x}(config)#end`,
               `Router${x}#disable`,
-              `Router${x}>enable            ! теперь подходит только sec${x}`,
+              `Router${x}>enable            ! тепер підходить лише sec${x}`,
             ].join("\n"),
           },
           {

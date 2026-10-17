@@ -47,8 +47,8 @@ export default function ShannonHartleyPage() {
               <span className="rounded-full border border-border px-3 py-1.5 font-mono text-ink-dim">pe2 = {variant.noisePe2} мкВт/Гц</span>
               <span className="rounded-full border border-border px-3 py-1.5 font-mono text-ink-dim">Δfmin = {variant.bandwidthMin} МГц</span>
               <span className="rounded-full border border-border px-3 py-1.5 font-mono text-ink-dim">dfk = {variant.bandwidthMax} МГц</span>
-              <span className="rounded-full border border-border px-3 py-1.5 text-ink-dim">Imin = {variant.imin} бит/сигн, Cmin = {variant.cmin} Мбіт/с</span>
-              <span className="rounded-full border border-border px-3 py-1.5 text-ink-dim">{variant.modulation1} / {variant.modulation2}, доп. ошибка {variant.targetErrorProb}</span>
+              <span className="rounded-full border border-border px-3 py-1.5 text-ink-dim">Imin = {variant.imin} {tx("біт/сигн","бит/сигн")}, Cmin = {variant.cmin} {tx("Мбіт/с","Мбит/с")}</span>
+              <span className="rounded-full border border-border px-3 py-1.5 text-ink-dim">{variant.modulation1} / {variant.modulation2}, {tx("дод. похибка","доп. ошибка")} {variant.targetErrorProb}</span>
             </div>
 
             {[
@@ -63,7 +63,7 @@ export default function ShannonHartleyPage() {
                       <tr className="border-b border-border text-ink-faint text-xs">
                         <th className="text-left px-3 py-2">pe</th>
                         <th className="text-left px-3 py-2">X = 1+S/N</th>
-                        <th className="text-left px-3 py-2">Iс, бит/сигн</th>
+                        <th className="text-left px-3 py-2">{tx("Iс, біт/сигн","Iс, бит/сигн")}</th>
                         <th className="text-left px-3 py-2">C, Мбит/с</th>
                       </tr>
                     </thead>
