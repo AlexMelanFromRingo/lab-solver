@@ -7,6 +7,8 @@ import { Card, CardBody } from "@/components/ui/card";
 import { InfoNote } from "@/components/ui/info-note";
 import { NumberField, SelectField } from "@/components/ui/field";
 import { Steps, Pitfalls } from "@/components/lab-steps";
+import { useLang } from "@/components/lang";
+import { tr } from "@/lib/i18n";
 import { FuzzyInference } from "@/components/fuzzy-inference";
 import { FlsDownload } from "@/components/fls-download";
 import { categories, modules } from "@/lib/modules";
@@ -22,6 +24,7 @@ const procedure = AI_GUIDES["ai-lab1"];
 const task = EXAMPLE_TASK;
 
 export default function AiLab1Page() {
+  const { lang } = useLang();
   const [guideId, setGuideId] = useState(RUN_GUIDES[1].id);
   const guide = RUN_GUIDES.find((g) => g.id === guideId)!;
 
@@ -58,13 +61,13 @@ export default function AiLab1Page() {
               <SelectField label="Система" value={guideId} onChange={(e) => setGuideId(e.target.value)}>
                 {RUN_GUIDES.map((g) => (
                   <option key={g.id} value={g.id}>
-                    {g.system}
+                    {tr(g.system, lang)}
                   </option>
                 ))}
               </SelectField>
             </div>
 
-            <p className="text-sm leading-relaxed text-ink-dim">{guide.summary}</p>
+            <p className="text-sm leading-relaxed text-ink-dim">{tr(guide.summary, lang)}</p>
 
             {guide.verified ? (
               <p className="text-xs" style={{ color: accent }}>
@@ -123,7 +126,7 @@ export default function AiLab1Page() {
                   {FLS_METHOD_LINE.map((row) => (
                     <tr key={row.position} className="border-b border-border/50 last:border-b-0">
                       <td className="px-3 py-2 font-mono text-xs text-ink-faint">{row.position}</td>
-                      <td className="px-3 py-2 text-ink">{row.role}</td>
+                      <td className="px-3 py-2 text-ink">{tr(row.role, lang)}</td>
                       <td className="px-3 py-2 font-mono text-xs text-ink-dim">{row.values}</td>
                     </tr>
                   ))}
@@ -249,7 +252,7 @@ export default function AiLab1Page() {
                 каждую уходит по часу, если не знать заранее.
               </p>
             </div>
-            <Pitfalls items={FLS_PITFALLS} accent={accent} />
+            <Pitfalls items={FLS_PITFALLS.map((p) => tr(p, lang))} accent={accent} />
           </CardBody>
         </Card>
       </div>
