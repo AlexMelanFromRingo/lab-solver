@@ -165,10 +165,10 @@ export default function AiTokenizerPage() {
                   <tr className="border-b border-border text-xs text-ink-faint">
                     <th className="px-3 py-2 text-left font-medium">{tx("Рядок","Строка")}</th>
                     <th className="px-3 py-2 text-right font-medium">GPT-2</th>
-                    <th className="px-3 py-2 text-right font-medium">вариант</th>
+                    <th className="px-3 py-2 text-right font-medium">{tx("варіант", "вариант")}</th>
                     <th className="px-3 py-2 text-right font-medium">GPT-2 с/т</th>
-                    <th className="px-3 py-2 text-right font-medium">вариант с/т</th>
-                    <th className="px-3 py-2 text-center font-medium">потери</th>
+                    <th className="px-3 py-2 text-right font-medium">{tx("варіант с/т", "вариант с/т")}</th>
+                    <th className="px-3 py-2 text-center font-medium">{tx("втрати", "потери")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -268,12 +268,12 @@ export default function AiTokenizerPage() {
                 <thead>
                   <tr className="border-b border-border text-xs text-ink-faint">
                     <th className="px-3 py-2 text-left font-medium">№</th>
-                    <th className="px-3 py-2 text-left font-medium">Токенизатор</th>
-                    <th className="px-3 py-2 text-right font-medium">Словарь</th>
+                    <th className="px-3 py-2 text-left font-medium">{tx("Токенізатор", "Токенизатор")}</th>
+                    <th className="px-3 py-2 text-right font-medium">{tx("Словник", "Словарь")}</th>
                     <th className="px-3 py-2 text-right font-medium">укр</th>
                     <th className="px-3 py-2 text-right font-medium">англ</th>
                     <th className="px-3 py-2 text-center font-medium">emoji</th>
-                    <th className="px-3 py-2 text-center font-medium">сборка назад</th>
+                    <th className="px-3 py-2 text-center font-medium">{tx("збірка назад", "сборка назад")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -300,14 +300,14 @@ export default function AiTokenizerPage() {
                         </td>
                         <td className="px-3 py-2 text-center text-xs">
                           {lostEmoji ? (
-                            <span style={{ color: "#fb7185" }}>теряет</span>
+                            <span style={{ color: "#fb7185" }}>{tx("втрачає", "теряет")}</span>
                           ) : (
-                            <span className="text-ink-faint">цел</span>
+                            <span className="text-ink-faint">{tx("цілий", "цел")}</span>
                           )}
                         </td>
                         <td className="px-3 py-2 text-center text-xs">
                           {broken === 0 ? (
-                            <span className="text-ink-faint">везде</span>
+                            <span className="text-ink-faint">{tx("всюди", "везде")}</span>
                           ) : (
                             <span style={{ color: "#fb7185" }}>{broken} из 6</span>
                           )}

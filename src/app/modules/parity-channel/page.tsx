@@ -19,17 +19,19 @@ const accent = categories.tik.accent;
 
 /** Система Вердана: повідомлення тричі, декодер — мажоритарний вибір по кожному елементу (табл. 4.1 методички). */
 function Verdan({ message }: { message: string }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const bits = message.split("").map(Number);
   const cases = [
-    { title: "Однократна помилка", flip: [0] },
-    { title: "Двократна помилка", flip: [0, 1] },
-    { title: "Багатократна помилка", flip: bits.map((_, i) => i) },
+    { title: tx("Однократна помилка", "Однократная ошибка"), flip: [0] },
+    { title: tx("Двократна помилка", "Двукратная ошибка"), flip: [0, 1] },
+    { title: tx("Багатократна помилка", "Многократная ошибка"), flip: bits.map((_, i) => i) },
   ];
   const n = bits.length * 3;
   return (
     <Card>
       <CardBody className="pt-6 space-y-5">
-        <h2 className="font-display text-lg font-semibold text-ink">Система Вердана (мажоритарне декодування)</h2>
+        <h2 className="font-display text-lg font-semibold text-ink">{tx("Система Вердана (мажоритарне декодування)", "Система Вердана (мажоритарное декодирование)")}</h2>
         <div className="grid gap-4 sm:grid-cols-3">
           {cases.map((c) => {
             const row2 = bits.map((b, i) => (c.flip.includes(i) ? 1 - b : b));
@@ -52,7 +54,7 @@ function Verdan({ message }: { message: string }) {
                       </tr>
                     ))}
                     <tr>
-                      <td className="px-2 py-1 text-ink-faint">вихід</td>
+                      <td className="px-2 py-1 text-ink-faint">{tx("вихід", "выход")}</td>
                       {out.map((b, i) => (
                         <td key={i} className="px-2 py-1 text-center font-semibold text-ink">
                           {b}
@@ -191,12 +193,12 @@ export default function ParityChannelPage() {
               <table className="w-full text-sm font-mono">
                 <thead>
                   <tr className="border-b border-border text-ink-faint text-xs">
-                    <th className="text-left px-3 py-2">Сценарий</th>
+                    <th className="text-left px-3 py-2">{tx("Сценарій", "Сценарий")}</th>
                     <th className="text-left px-3 py-2">p</th>
                     <th className="text-left px-3 py-2">H(p)</th>
                     <th className="text-left px-3 py-2">C=1−H(p)</th>
                     <th className="text-left px-3 py-2">{tx("Тривалість","Длительность")}</th>
-                    <th className="text-left px-3 py-2">Во сколько раз дольше</th>
+                    <th className="text-left px-3 py-2">{tx("У скільки разів довше", "Во сколько раз дольше")}</th>
                   </tr>
                 </thead>
                 <tbody>

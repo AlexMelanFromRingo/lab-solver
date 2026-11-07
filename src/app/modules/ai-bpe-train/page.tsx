@@ -258,7 +258,7 @@ function VocabCost() {
         </SectionTitle>
         <div className="flex flex-wrap items-end gap-4">
           <div className="w-40">
-            <NumberField label="Свой V" min={1} value={v} onChange={(e) => setV(parseInt(e.target.value, 10))} />
+            <NumberField label={tx("Свій V", "Свой V")} min={1} value={v} onChange={(e) => setV(parseInt(e.target.value, 10))} />
           </div>
           <div>
             <div className="mb-1.5 text-sm font-medium text-ink-dim">d</div>

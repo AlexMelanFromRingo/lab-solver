@@ -180,14 +180,14 @@ export function rsDecodeAndCorrect(received: number[], nsym: number): RsCorrecti
     steps.push({
       title: "Поліном-локатор помилок (Берлекемпа-Мессі)",
       description: `Коефіцієнти: [${errLoc.map((c) => c.toString(16).toUpperCase()).join(", ")}]`,
-      data: `Степень: ${errLoc.length - 1} → ${errLoc.length - 1} ошибок`,
+      data: `Степінь: ${errLoc.length - 1} → ${errLoc.length - 1} помилок`,
     });
 
     const errPos = rsFindErrors(errLoc, received.length);
     steps.push({
       title: "Позиції помилок (пошук Ченя)",
       description: "Знайдено корені полінома-локатора",
-      data: `Позиции: [${errPos.join(", ")}]`,
+      data: `Позиції: [${errPos.join(", ")}]`,
     });
 
     const errMag = rsFindErrorMagnitudes(synd, errLoc, errPos, received.length);
@@ -196,10 +196,10 @@ export function rsDecodeAndCorrect(received: number[], nsym: number): RsCorrecti
 
     steps.push({
       title: "Величини помилок (алгоритм Форні)",
-      description: errPos.map((p) => `Позиция ${p}: величина 0x${errMag[p].toString(16).toUpperCase().padStart(2, "0")}`).join("; "),
+      description: errPos.map((p) => `Позиція ${p}: величина 0x${errMag[p].toString(16).toUpperCase().padStart(2, "0")}`).join("; "),
     });
 
-    return { success: true, corrected, errorPositions: errPos, errorMagnitudes: errMag, message: `Исправлено ${errPos.length} ошибок`, steps };
+    return { success: true, corrected, errorPositions: errPos, errorMagnitudes: errMag, message: `Виправлено ${errPos.length} помилок`, steps };
   } catch (e) {
     const msg = (e as Error).message || "Не вдалося виправити";
     steps.push({ title: "Помилка декодування", description: msg });

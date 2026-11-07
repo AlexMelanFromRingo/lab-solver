@@ -121,8 +121,8 @@ export default function RsaPage() {
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-3">
-                <TextField label="p (простое)" value={pStr} onChange={(e) => setPStr(e.target.value)} />
-                <TextField label="q (простое)" value={qStr} onChange={(e) => setQStr(e.target.value)} />
+                <TextField label={tx("p (просте)", "p (простое)")} value={pStr} onChange={(e) => setPStr(e.target.value)} />
+                <TextField label={tx("q (просте)", "q (простое)")} value={qStr} onChange={(e) => setQStr(e.target.value)} />
                 <TextField label="e" value={eStr} onChange={(e) => setEStr(e.target.value)} />
               </div>
             )}
@@ -156,8 +156,8 @@ export default function RsaPage() {
                 <p className="text-sm text-codes">{enc.error}</p>
               ) : (
                 <>
-                  <OutputBlock label="Base64 (как содержимое .enc файла)" value={enc && enc.ok ? enc.b64 : ""} />
-                  <OutputBlock label="Проверка расшифрования" value={dec} />
+                  <OutputBlock label={tx("Base64 (як вміст .enc файлу)", "Base64 (как содержимое .enc файла)")} value={enc && enc.ok ? enc.b64 : ""} />
+                  <OutputBlock label={tx("Перевірка розшифрування", "Проверка расшифрования")} value={dec} />
                 </>
               )}
             </CardBody>
@@ -171,13 +171,13 @@ export default function RsaPage() {
               <p className="text-xs text-ink-faint">
                 {tx("sign(m) = mᵈ mod n; перевірка: sigᵉ mod n має збігтися з m. У реальних схемах підписують хеш повідомлення, а не саме повідомлення — тут для наочності використовується пряме число. Це загальна демонстрація принципу RSA-підпису, а не портування конкретного розв’язувача.","sign(m) = mᵈ mod n; проверка: sigᵉ mod n должно совпасть с m. В реальных схемах подписывают хеш сообщения, а не само сообщение — здесь для наглядности используется прямое число. Это общая демонстрация принципа RSA-подписи, а не портирование конкретного решателя.")}
               </p>
-              <TextField label="Сообщение (число)" value={signMsg} onChange={(e) => setSignMsg(e.target.value)} />
+              <TextField label={tx("Повідомлення (число)", "Сообщение (число)")} value={signMsg} onChange={(e) => setSignMsg(e.target.value)} />
               {signature && "error" in signature ? (
                 <p className="text-sm text-codes">{signature.error}</p>
               ) : signature ? (
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <OutputBlock label="Подпись" value={signature.sig.toString()} />
-                  <OutputBlock label="Проверка" value={signature.valid ? "подпись верна ✓" : "подпись НЕ верна"} />
+                  <OutputBlock label={tx("Підпис", "Подпись")} value={signature.sig.toString()} />
+                  <OutputBlock label="Проверка" value={signature.valid ? tx("підпис вірний ✓", "подпись верна ✓") : tx("підпис НЕ вірний", "подпись НЕ верна")} />
                 </div>
               ) : null}
             </CardBody>

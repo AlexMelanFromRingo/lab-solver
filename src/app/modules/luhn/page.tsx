@@ -64,7 +64,7 @@ export default function LuhnPage() {
                   ))}
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
-                  <OutputBlock label="Сумма" value={String(result.data.total)} className="flex-1 min-w-[10rem]" />
+                  <OutputBlock label={tx("Сума", "Сумма")} value={String(result.data.total)} className="flex-1 min-w-[10rem]" />
                   <div
                     className={
                       "rounded-[4px] border px-5 py-3 text-sm font-medium " +
@@ -92,7 +92,7 @@ export default function LuhnPage() {
               onChange={(e) => setPartial(e.target.value)}
             />
             {computed.ok ? (
-              <OutputBlock label="Недостающая цифра" value={String(computed.digit)} />
+              <OutputBlock label={tx("Відсутня цифра", "Недостающая цифра")} value={String(computed.digit)} />
             ) : (
               <p className="text-sm text-codes">{computed.error}</p>
             )}

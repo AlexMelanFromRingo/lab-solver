@@ -102,7 +102,7 @@ export default function PolarPage() {
                 <thead>
                   <tr className="border-b border-border text-ink-faint text-xs">
                     <th className="text-left px-3 py-2">{tx("Канал","Канал")}</th>
-                    <th className="text-left px-3 py-2">Z (Батачария)</th>
+                    <th className="text-left px-3 py-2">{tx("Z (Батачарія)", "Z (Батачария)")}</th>
                     <th className="text-left px-3 py-2">{tx("Тип","Тип")}</th>
                   </tr>
                 </thead>

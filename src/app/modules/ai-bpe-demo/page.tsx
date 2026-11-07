@@ -93,7 +93,7 @@ function TraceTable({ run }: { run: BpeRun }) {
                 {s.token}
               </td>
               <td className="px-3 py-2 font-mono text-xs text-ink-dim">
-                {s.ties.length > 0 ? s.ties.map(pairLabel).join(", ") : <span className="text-ink-faint">нет</span>}
+                {s.ties.length > 0 ? s.ties.map(pairLabel).join(", ") : <span className="text-ink-faint">{tx("немає", "нет")}</span>}
               </td>
             </tr>
           ))}

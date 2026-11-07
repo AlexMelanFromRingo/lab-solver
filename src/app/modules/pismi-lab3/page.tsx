@@ -64,9 +64,9 @@ export default function PismiLab3Page() {
                     <dl className="grid gap-x-6 gap-y-1 pb-1 text-sm sm:grid-cols-[auto_minmax(0,1fr)]">
                       <dt className="text-ink-faint">поля</dt>
                       <dd className="text-ink-dim">{theme.fields.join(", ")}</dd>
-                      <dt className="text-ink-faint">таблица</dt>
+                      <dt className="text-ink-faint">{tx("таблиця", "таблица")}</dt>
                       <dd className="font-mono text-[0.8125rem] text-ink-dim">{theme.table}</dd>
-                      <dt className="text-ink-faint">откуда</dt>
+                      <dt className="text-ink-faint">{tx("звідки", "откуда")}</dt>
                       <dd className="text-ink-dim">{theme.source}</dd>
                     </dl>
                   </div>

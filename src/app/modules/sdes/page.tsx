@@ -97,7 +97,7 @@ export default function SdesPage() {
 
             {enc && dec && byte !== null ? (
               <div className="space-y-4">
-                <Panel title="Генерация ключей">
+                <Panel title={tx("Генерація ключів", "Генерация ключей")}>
                   <Line label={tx("10-бітовий ключ","10-битовый ключ")} value={keyStr.trim()} />
                   <Line label="P10" value={bitsToString(enc.keys.p10)} />
                   <Line label="Shift < 1" value={bitsToString(enc.keys.shifted1)} />
@@ -119,7 +119,7 @@ export default function SdesPage() {
                 </p>
               </div>
             ) : (
-              <p className="text-sm text-codes">Символ — один знак из CP1251 или 8 бит (0/1), ключ — ровно 10 бит.</p>
+              <p className="text-sm text-codes">{tx("Символ — один знак з CP1251 або 8 біт (0/1), ключ — рівно 10 біт.", "Символ — один знак из CP1251 или 8 бит (0/1), ключ — ровно 10 бит.")}</p>
             )}
           </CardBody>
         </Card>

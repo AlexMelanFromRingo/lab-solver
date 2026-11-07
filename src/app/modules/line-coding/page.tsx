@@ -99,7 +99,7 @@ export default function LineCodingPage() {
 
         <Card>
           <CardBody className="pt-6 space-y-4">
-            <h2 className="font-display text-lg font-semibold text-ink">4B/5B, скремблювання, код Баркера</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("4B/5B, скремблювання, код Баркера", "4B/5B, скремблирование, код Баркера")}</h2>
             <OutputBlock
               label="П. 2.3 — логічне кодування 4B/5B і кадр"
               value={[

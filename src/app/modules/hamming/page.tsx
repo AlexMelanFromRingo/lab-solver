@@ -89,7 +89,7 @@ export default function HammingPage() {
               ))}
             </div>
 
-            <h2 className="font-display text-lg font-semibold text-ink pt-2">Закодированное слово</h2>
+            <h2 className="font-display text-lg font-semibold text-ink pt-2">{tx("Закодоване слово", "Закодированное слово")}</h2>
             <div className="flex gap-2 flex-wrap">
               {encoded.codeword.map((b, i) => {
                 const pos = extended ? i : i + 1;
@@ -112,7 +112,7 @@ export default function HammingPage() {
 
         <Card>
           <CardBody className="pt-6 space-y-5">
-            <h2 className="font-display text-lg font-semibold text-ink">Принятое слово (с ошибкой)</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Прийняте слово (з помилкою)", "Принятое слово (с ошибкой)")}</h2>
             <div className="flex gap-2 flex-wrap">
               {received.map((b, i) => (
                 <BitCell key={i} value={b} label={`r${i}`} error={errorPos === i} />

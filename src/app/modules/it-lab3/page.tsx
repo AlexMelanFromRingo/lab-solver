@@ -162,7 +162,7 @@ export default function ItLab3Page() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <SelectField
-                label="Способ"
+                label={tx("Спосіб", "Способ")}
                 value={guideId}
                 onChange={(e) => setGuideId(e.target.value)}
               >

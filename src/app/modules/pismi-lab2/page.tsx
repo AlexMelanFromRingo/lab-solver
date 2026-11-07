@@ -92,7 +92,7 @@ export default function PismiLab2Page() {
                 max={P1_COUNT}
                 onChange={setVariantNum}
                 accent={accent}
-                label="Программа № 1"
+                label={tx("Програма № 1", "Программа № 1")}
               />
               <VariantDial
                 value={taskNum}
@@ -100,11 +100,11 @@ export default function PismiLab2Page() {
                 max={P2_COUNT}
                 onChange={setTaskNum}
                 accent={accent}
-                label="Программа № 2"
+                label={tx("Програма № 2", "Программа № 2")}
               />
               <div className="w-full sm:w-44">
                 <NumberField
-                  label="Номер в списке"
+                  label={tx("Номер у списку", "Номер в списке")}
                   min={1}
                   value={listNum}
                   onChange={(e) => byListNumber(e.target.value)}

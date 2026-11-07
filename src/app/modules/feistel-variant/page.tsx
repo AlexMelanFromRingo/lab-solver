@@ -128,7 +128,7 @@ export default function FeistelVariantPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <OutputBlock label="Ключ (hex)" value={bitsToHex(key, spec.k)} />
               <OutputBlock label="Блок (hex)" value={bitsToHex(block, spec.n)} />
-              <OutputBlock label="Шифротекст блока (hex)" value={bitsToHex(enc.output, spec.n)} />
+              <OutputBlock label={tx("Шифротекст блоку (hex)", "Шифротекст блока (hex)")} value={bitsToHex(enc.output, spec.n)} />
               <OutputBlock
                 label={tx("Перевірка розшифрування","Проверка расшифрования")}
                 value={bitsToHex(dec.output, spec.n) === bitsToHex(block, spec.n) ? tx("збігається з вихідним блоком ✓","совпадает с исходным блоком ✓") : bitsToHex(dec.output, spec.n)}
@@ -180,7 +180,7 @@ export default function FeistelVariantPage() {
 
         <Card>
           <CardBody className="pt-6 space-y-4">
-            <h2 className="font-display text-lg font-semibold text-ink">Готовая программа (C++)</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Готова програма (C++)", "Готовая программа (C++)")}</h2>
             <p className="text-xs text-ink-faint">
               {tx("Не просто відповідь, а компільована програма під цей варіант: шифрує/дешифрує блок і цілий файл (покладіть","Не просто ответ, а компилируемая программа под этот вариант: шифрует/дешифрует блок и целый файл (положите")} <code>input.txt</code> {tx("поряд із бінарником). Використовує поточний ключ зверху. Згенерований код скомпільовано і звірено з розрахунками цієї сторінки на кількох варіантах — збігається побітово.","рядом с бинарником). Использует текущий ключ сверху. Сгенерированный код скомпилирован и сверен с расчётами этой страницы на нескольких вариантах — совпадает побитово.")}
             </p>

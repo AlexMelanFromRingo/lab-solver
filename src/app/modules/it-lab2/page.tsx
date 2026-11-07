@@ -25,6 +25,8 @@ const procedure = IT_GUIDES["it-lab2"];
 
 /** График функции: рисуется прямо по выбранному выражению. */
 function FunctionPlot({ id, from, to }: { id: string; from: number; to: number }) {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const W = 700;
   const H = 230;
   const pad = { top: 16, right: 16, bottom: 28, left: 48 };
@@ -43,7 +45,7 @@ function FunctionPlot({ id, from, to }: { id: string; from: number; to: number }
   }, [id]);
 
   if (!(to > from)) {
-    return <p className="text-sm text-ink-dim">Правая граница должна быть больше левой.</p>;
+    return <p className="text-sm text-ink-dim">{tx("Права межа має бути більша за ліву.", "Правая граница должна быть больше левой.")}</p>;
   }
 
   const points = Array.from({ length: 601 }, (_, i) => {
@@ -256,18 +258,18 @@ export default function ItLab2Page() {
 
             <div className="grid gap-4 sm:grid-cols-3">
               <TextField
-                label="Путь к книге"
+                label={tx("Шлях до книги", "Путь к книге")}
                 value={workbook}
                 onChange={(e) => setWorkbook(e.target.value)}
               />
               <TextField
-                label="Диапазон строк"
-                hint="число — все с него"
+                label={tx("Діапазон рядків", "Диапазон строк")}
+                hint={tx("число — всі з нього", "число — все с него")}
                 value={rows}
                 onChange={(e) => setRows(e.target.value)}
               />
               <TextField
-                label="Диапазон столбцов"
+                label={tx("Діапазон стовпців", "Диапазон столбцов")}
                 value={columns}
                 onChange={(e) => setColumns(e.target.value)}
               />
@@ -340,7 +342,7 @@ export default function ItLab2Page() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border text-xs text-ink-faint">
-                    <th className="px-3 py-2 text-left font-medium">Действие</th>
+                    <th className="px-3 py-2 text-left font-medium">{tx("Дія", "Действие")}</th>
                     <th className="px-3 py-2 text-left font-medium">SMath / Mathcad</th>
                     <th className="px-3 py-2 text-left font-medium">Python</th>
                   </tr>

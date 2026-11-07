@@ -64,7 +64,7 @@ export default function ShannonHartleyPage() {
                         <th className="text-left px-3 py-2">pe</th>
                         <th className="text-left px-3 py-2">X = 1+S/N</th>
                         <th className="text-left px-3 py-2">{tx("Iс, біт/сигн","Iс, бит/сигн")}</th>
-                        <th className="text-left px-3 py-2">C, Мбит/с</th>
+                        <th className="text-left px-3 py-2">{tx("C, Мбіт/с", "C, Мбит/с")}</th>
                       </tr>
                     </thead>
                     <tbody>

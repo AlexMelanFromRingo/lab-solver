@@ -51,11 +51,7 @@ export default function Home() {
               <span className="text-ink-faint"><L v={UI.heroTitle2} /></span>
             </h1>
             <p className="mt-6 text-lg text-ink-dim leading-relaxed max-w-xl">
-              Каждая лаба состоит из двух частей: вариант, который вам назначили, и работа, которая из
-              него следует. Вариант вы не выбираете — а вот математику не нужно пересчитывать руками, а
-              ход работы — выискивать по методичке. Здесь {modules.length} модулей по дисциплинам
-              магистратуры и бакалавриата: расчёт по формулам методички там, где работа сводится к
-              формуле, и порядок выполнения с составом отчёта там, где она делается в программе.
+              {heroLead(modules.length, lang)}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a

@@ -120,7 +120,7 @@ export default function LdpcPage() {
               {iterations.length} {tx("ітерацій belief propagation — синдром","итераций belief propagation — синдром")} {converged ? tx("нульовий","нулевой") : tx("не зійшовся","не сошёлся")},{" "}
               {correct ? tx("вихідне слово відновлено ✓","исходное слово восстановлено ✓") : tx("результат відрізняється від вихідного слова","результат отличается от исходного слова")}
             </div>
-            <OutputBlock label="Декодированное слово" value={decoded.join("")} />
+            <OutputBlock label={tx("Декодоване слово", "Декодированное слово")} value={decoded.join("")} />
           </CardBody>
         </Card>
       </div>

@@ -144,17 +144,17 @@ export default function IpSubnetPage() {
         <Card>
           <CardBody className="pt-6 space-y-6">
             <div>
-              <h2 className="mb-2 text-sm font-medium text-ink-dim">Таблиця 4.1 — Варіанти завдань</h2>
+              <h2 className="mb-2 text-sm font-medium text-ink-dim">{tx("Таблиця 4.1 — Варіанти завдань", "Таблица 4.1 — Варианты заданий")}</h2>
               <div className="overflow-x-auto rounded-[4px] border border-border">
                 <table className="w-full font-mono text-sm">
                   <thead className="border-b border-border text-xs text-ink-faint">
                     <tr>
                       <Th>№ вар.</Th>
-                      <Th>Завдання 1: повна ІР-адреса</Th>
+                      <Th>{tx("Завдання 1: повна ІР-адреса", "Задание 1: полный IP-адрес")}</Th>
                       <Th>Маска</Th>
-                      <Th>Префікс</Th>
-                      <Th>Завдання 2: повна ІР-адреса</Th>
-                      <Th>Префікс</Th>
+                      <Th>{tx("Префікс", "Префикс")}</Th>
+                      <Th>{tx("Завдання 2: повна ІР-адреса", "Задание 2: полный IP-адрес")}</Th>
+                      <Th>{tx("Префікс", "Префикс")}</Th>
                       <Th>Маска</Th>
                     </tr>
                   </thead>
@@ -174,18 +174,18 @@ export default function IpSubnetPage() {
             </div>
 
             <div>
-              <h2 className="mb-2 text-sm font-medium text-ink-dim">Таблиця 4.2 — Відомості про мережі</h2>
+              <h2 className="mb-2 text-sm font-medium text-ink-dim">{tx("Таблиця 4.2 — Відомості про мережі", "Таблица 4.2 — Сведения о сетях")}</h2>
               <div className="overflow-x-auto rounded-[4px] border border-border">
                 <table className="w-full font-mono text-sm">
                   <thead className="border-b border-border text-xs text-ink-faint">
                     <tr>
                       <Th>№ вар.</Th>
-                      <Th>ІР-адреса мережі</Th>
-                      <Th>IP-адреса хоста</Th>
-                      <Th>Адреса першого хоста мережі</Th>
-                      <Th>Адреса останнього хоста мережі</Th>
-                      <Th>Широкомовна адреса мережі</Th>
-                      <Th>Кількість вузлів мережі</Th>
+                      <Th>{tx("ІР-адреса мережі", "IP-адрес сети")}</Th>
+                      <Th>{tx("IP-адреса хоста", "IP-адрес хоста")}</Th>
+                      <Th>{tx("Адреса першого хоста мережі", "Адрес первого хоста сети")}</Th>
+                      <Th>{tx("Адреса останнього хоста мережі", "Адрес последнего хоста сети")}</Th>
+                      <Th>{tx("Широкомовна адреса мережі", "Широковещательный адрес сети")}</Th>
+                      <Th>{tx("Кількість вузлів мережі", "Количество узлов сети")}</Th>
                     </tr>
                   </thead>
                   <tbody className="text-ink-dim">
@@ -219,7 +219,7 @@ export default function IpSubnetPage() {
 
         <Card>
           <CardBody className="pt-6 space-y-4">
-            <h2 className="font-display text-lg font-semibold text-ink">Сеть в Cisco Packet Tracer</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Мережа в Cisco Packet Tracer", "Сеть в Cisco Packet Tracer")}</h2>
             <p className="text-sm text-ink-dim">
               {tx("Рис. 4.2: комутатор 2950T-24 і три ПК, адреси — за найменшим номером варіанта свого завдання (завдання 1). Маска у всіх трьох —","Рис. 4.2: коммутатор 2950T-24 и три ПК, адреса — по наименьшему номеру варианта своего задания (задание 1). Маска у всех трёх —")} {net1.mask}. {tx("У звіт ідуть IP- і MAC-адреси кожного ПК на схемі.","В отчёт идут IP- и MAC-адреса каждого ПК на схеме.")}
             </p>
