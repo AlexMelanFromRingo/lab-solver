@@ -121,7 +121,7 @@ export default function CompressionPage() {
             <h2 className="font-display text-lg font-semibold text-ink">{tx("Таблиця 3 — словникове стиснення (LZSS)", "Таблица 3 — словарное сжатие (LZSS)")}</h2>
             <TextAreaField label={tx("Псевдовипадковий текст (Lorem Ipsum Generator)", "Псевдослучайный текст (Lorem Ipsum Generator)")} value={text} onChange={(e) => setText(e.target.value)} />
             <OutputBlock
-              label={`Повтори: перші два слова «${firstTwo}», вставлені 80 разів (п. 3.8)`}
+              label={tx(`Повтори: перші два слова «${firstTwo}», вставлені 80 разів (п. 3.8)`, `Повторы: первые два слова «${firstTwo}», вставленные 80 раз (п. 3.8)`)}
               value={[
                 `${"Тип тексту".padEnd(24)}${"до, байт".padStart(10)}${"після, байт".padStart(13)}${"частина, %".padStart(12)}   літерали / посилання`,
                 ...lz.map((x) => `${x.name.padEnd(24)}${String(x.before).padStart(10)}${String(x.size).padStart(13)}${f((x.size / x.before) * 100, 1).padStart(12)}   ${x.literals} / ${x.matches}`),
@@ -152,9 +152,9 @@ export default function CompressionPage() {
             ) : (
               <div className="grid gap-4 lg:grid-cols-2">
                 <OutputBlock label={tx("Пряме перетворення: коефіцієнти ДКП", "Прямое преобразование: коэффициенты ДКП")} value={grid(jpeg.dct)} wrap={false} />
-                <OutputBlock label={`Огрублення: квантовані (нулів ${jpeg.zeros} з 64)`} value={grid(jpeg.quant)} wrap={false} />
+                <OutputBlock label={tx(`Огрублення: квантовані (нулів ${jpeg.zeros} з 64)`, `Огрубление: квантованные (нулей ${jpeg.zeros} из 64)`)} value={grid(jpeg.quant)} wrap={false} />
                 <OutputBlock label={tx("Таблиця квантування для q", "Таблица квантования для q")} value={grid(jpeg.table)} wrap={false} />
-                <OutputBlock label={`Зворотне перетворення (найбільша похибка ${jpeg.err})`} value={grid(jpeg.back)} wrap={false} />
+                <OutputBlock label={tx(`Зворотне перетворення (найбільша похибка ${jpeg.err})`, `Обратное преобразование (наибольшая погрешность ${jpeg.err})`)} value={grid(jpeg.back)} wrap={false} />
               </div>
             )}
             <p className="text-xs leading-relaxed text-ink-faint">

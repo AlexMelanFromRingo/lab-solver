@@ -206,7 +206,7 @@ export default function CryptanalysisPage() {
             {typeof cipher === "string" ? (
               <p className="text-sm text-codes">{cipher}</p>
             ) : (
-              <OutputBlock label={`Шифртекст у CP1251 · L = ${a?.s.length ?? 0} байт, з них ${a ? symbolCount(a.s) : 0} символів N1`} value={cp1251Decode(cipher)} />
+              <OutputBlock label={tx(`Шифртекст у CP1251 · L = ${a?.s.length ?? 0} байт, з них ${a ? symbolCount(a.s) : 0} символів N1`, `Шифртекст в CP1251 · L = ${a?.s.length ?? 0} байт, из них ${a ? symbolCount(a.s) : 0} символов N1`)} value={cp1251Decode(cipher)} />
             )}
           </CardBody>
         </Card>
@@ -217,7 +217,7 @@ export default function CryptanalysisPage() {
               <CardBody className="space-y-5 pt-6">
                 <h2 className="font-display text-lg font-semibold text-ink">{tx("2.1 Частотний метод (шифр зсуву)", "2.1 Частотный метод (шифр сдвига)")}</h2>
                 <Table
-                  head={["№", "Символ", "Код", "X1", "Кількість", "Частота"]}
+                  head={["№", "Символ", "Код", "X1", tx("Кількість", "Количество"), "Частота"]}
                   rows={a.freq.slice(0, 5).map((f, i) => [i + 1, sym(f.x1), hex(f.x1 + 32), f.x1, f.count, f.share.toFixed(4)])}
                 />
                 <Table
