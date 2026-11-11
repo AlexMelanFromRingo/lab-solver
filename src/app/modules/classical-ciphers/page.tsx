@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useLang } from "@/components/lang";
 import { ModuleHeader } from "@/components/module-header";
 import { Card, CardBody } from "@/components/ui/card";
 import { NumberField, SelectField, TextAreaField, TextField } from "@/components/ui/field";
@@ -61,6 +62,8 @@ function download(bytes: number[], name: string) {
 }
 
 export default function ClassicalCiphersPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [src, setSrc] = useState<number[]>(SOURCE_TXT);
   const [srcName, setSrcName] = useState("source.txt");
   const [typed, setTyped] = useState("");
@@ -124,17 +127,29 @@ export default function ClassicalCiphersPage() {
     <div>
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
-        <InfoNote title="Що робиться">
-          Файл читається як байти (CP1251 — «розширений» ASCII: кирилиця в кодах C0h…FFh). Прийом методички — алфавіт N1:{" "}
-          <code>X1 = Ord(C) − 32</code>, <code>Y1 = (X1 + зсув) mod 224</code>, <code>Y = Y1 + 32</code>. Кожен символ рядка
-          обробляється однією формулою, без розгалужень, і результат завжди в 20h…FFh — керуючих кодів шифр не породжує. Керуючі
-          символи, що вже є у файлі (CR/LF між рядками і 05h 06h 07h, навмисне вставлені в тестовий <code>source.txt</code>),
-          обходяться. Ключ іде за позицією байта у файлі — CR/LF займають позицію ключа, як в еталоні викладача.
+        <InfoNote title={tx("Що робиться", "Что делается")}>
+          {lang === "uk" ? (
+            <>
+              Файл читається як байти (CP1251 — «розширений» ASCII: кирилиця в кодах C0h…FFh). Прийом методички — алфавіт N1:{" "}
+              <code>X1 = Ord(C) − 32</code>, <code>Y1 = (X1 + зсув) mod 224</code>, <code>Y = Y1 + 32</code>. Кожен символ рядка
+              обробляється однією формулою, без розгалужень, і результат завжди в 20h…FFh — керуючих кодів шифр не породжує. Керуючі
+              символи, що вже є у файлі (CR/LF між рядками і 05h 06h 07h, навмисне вставлені в тестовий <code>source.txt</code>),
+              обходяться. Ключ іде за позицією байта у файлі — CR/LF займають позицію ключа, як в еталоні викладача.
+            </>
+          ) : (
+            <>
+              Файл читается как байты (CP1251 — «расширенный» ASCII: кириллица в кодах C0h…FFh). Приём методички — алфавит N1:{" "}
+              <code>X1 = Ord(C) − 32</code>, <code>Y1 = (X1 + сдвиг) mod 224</code>, <code>Y = Y1 + 32</code>. Каждый символ строки
+              обрабатывается одной формулой, без ветвлений, и результат всегда в 20h…FFh — управляющих кодов шифр не порождает. Управляющие
+              символы, уже имеющиеся в файле (CR/LF между строками и 05h 06h 07h, намеренно вставленные в тестовый <code>source.txt</code>),
+              обходятся. Ключ идёт по позиции байта в файле — CR/LF занимают позицию ключа, как в эталоне преподавателя.
+            </>
+          )}
         </InfoNote>
 
         <Card>
           <CardBody className="space-y-5 pt-6">
-            <h2 className="font-display text-lg font-semibold text-ink">Вихідний файл</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Вихідний файл", "Исходный файл")}</h2>
             <div className="flex flex-wrap items-center gap-4 text-sm text-ink-dim">
               <button
                 type="button"
@@ -167,7 +182,7 @@ export default function ClassicalCiphersPage() {
               </span>
             </div>
             <TextAreaField
-              label="…або свій текст (буде закодований у CP1251, рядки — CRLF)"
+              label={tx("…або свій текст (буде закодований у CP1251, рядки — CRLF)", "…или свой текст (будет закодирован в CP1251, строки — CRLF)")}
               value={typed}
               onChange={(e) => {
                 setTyped(e.target.value);
@@ -178,8 +193,8 @@ export default function ClassicalCiphersPage() {
               }}
             />
             <div className="grid gap-4 sm:grid-cols-2">
-              <OutputBlock label="Вміст (керуючі — ␅ ␆ ␇)" value={show(src)} />
-              <OutputBlock label="Байти" value={hexDump(src)} wrap={false} />
+              <OutputBlock label={tx("Вміст (керуючі — ␅ ␆ ␇)", "Содержимое (управляющие — ␅ ␆ ␇)")} value={show(src)} />
+              <OutputBlock label={tx("Байти", "Байты")} value={hexDump(src)} wrap={false} />
             </div>
           </CardBody>
         </Card>
@@ -191,17 +206,17 @@ export default function ClassicalCiphersPage() {
                 <option value="perm">Перестановки</option>
                 <option value="caesar">Цезаря</option>
                 <option value="otp">Одноразового блокнота</option>
-                <option value="vig">Віженера з паролем</option>
-                <option value="vigrnd">Віженера з датчиком випадкових чисел</option>
-                <option value="gamma">Гамування</option>
+                <option value="vig">{tx("Віженера з паролем", "Виженера с паролем")}</option>
+                <option value="vigrnd">{tx("Віженера з датчиком випадкових чисел", "Виженера с датчиком случайных чисел")}</option>
+                <option value="gamma">{tx("Гамування", "Гаммирование")}</option>
               </SelectField>
-              {method === "perm" && <TextField label="CryptTab (місця символів у блоці)" hint="K = 5…10" value={tab} onChange={(e) => setTab(e.target.value)} />}
+              {method === "perm" && <TextField label={tx("CryptTab (місця символів у блоці)", "CryptTab (места символов в блоке)")} hint="K = 5…10" value={tab} onChange={(e) => setTab(e.target.value)} />}
               {method === "caesar" && <NumberField label="Shift" value={shift} onChange={(e) => setShift(Number(e.target.value))} />}
               {method === "vig" && <TextField label="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />}
               {(method === "vigrnd" || method === "gamma") && (
                 <NumberField label="RandSeed (ключ)" value={seed} onChange={(e) => setSeed(Number(e.target.value))} />
               )}
-              {method === "vigrnd" && <NumberField label="K — кількість таблиць" value={k} min={1} onChange={(e) => setK(Math.max(1, Number(e.target.value)))} />}
+              {method === "vigrnd" && <NumberField label={tx("K — кількість таблиць", "K — количество таблиц")} value={k} min={1} onChange={(e) => setK(Math.max(1, Number(e.target.value)))} />}
               {method === "otp" && (
                 <button
                   type="button"
@@ -217,8 +232,8 @@ export default function ClassicalCiphersPage() {
               <div className="space-y-4">
                 <OutputBlock label="Ключ" value={r.key} />
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <OutputBlock label="Зашифрований файл" value={show(r.enc)} />
-                  <OutputBlock label="Байти шифртексту" value={hexDump(r.enc)} wrap={false} />
+                  <OutputBlock label={tx("Зашифрований файл", "Зашифрованный файл")} value={show(r.enc)} />
+                  <OutputBlock label={tx("Байти шифртексту", "Байты шифртекста")} value={hexDump(r.enc)} wrap={false} />
                 </div>
                 <div className="flex flex-wrap items-center gap-4 text-sm">
                   <button
@@ -229,7 +244,9 @@ export default function ClassicalCiphersPage() {
                     Завантажити шифртекст
                   </button>
                   <span className="text-xs text-ink-faint">
-                    Нових керуючих символів: {r.extra}. Розшифрування {r.same ? "повертає вихідні байти ✓" : "не збіглося з вихідним"}.
+                    {tx("Нових керуючих символів:", "Новых управляющих символов:")} {r.extra}.{" "}
+                    {tx("Розшифрування", "Расшифрование")}{" "}
+                    {r.same ? tx("повертає вихідні байти ✓", "возвращает исходные байты ✓") : tx("не збіглося з вихідним", "не совпало с исходным")}.
                   </span>
                 </div>
               </div>
@@ -239,15 +256,29 @@ export default function ClassicalCiphersPage() {
           </CardBody>
         </Card>
 
-        <InfoNote title="Помилки методички">
+        <InfoNote title={tx("Помилки методички", "Ошибки методички")}>
           <ul className="list-disc space-y-1 pl-5">
-            <li>
-              Пряме перетворення Цезаря надруковано як «X = Y + N (mod N)» — має бути <code>Y = X + Shift (mod N)</code>, зворотне
-              — <code>X = Y + (N − Shift) (mod N)</code>.
-            </li>
-            <li>
-              Діапазон «20h…Fh» у переході до алфавіту N1 — це 20h…FFh (224 символи), інакше N1 не мав би кодів 0…223.
-            </li>
+            {lang === "uk" ? (
+              <>
+                <li>
+                  Пряме перетворення Цезаря надруковано як «X = Y + N (mod N)» — має бути <code>Y = X + Shift (mod N)</code>, зворотне
+                  — <code>X = Y + (N − Shift) (mod N)</code>.
+                </li>
+                <li>
+                  Діапазон «20h…Fh» у переході до алфавіту N1 — це 20h…FFh (224 символи), інакше N1 не мав би кодів 0…223.
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  Прямое преобразование Цезаря напечатано как «X = Y + N (mod N)» — должно быть <code>Y = X + Shift (mod N)</code>, обратное
+                  — <code>X = Y + (N − Shift) (mod N)</code>.
+                </li>
+                <li>
+                  Диапазон «20h…Fh» в переходе к алфавиту N1 — это 20h…FFh (224 символа), иначе N1 не имел бы кодов 0…223.
+                </li>
+              </>
+            )}
           </ul>
         </InfoNote>
       </div>

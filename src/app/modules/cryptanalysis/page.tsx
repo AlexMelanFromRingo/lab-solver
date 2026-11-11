@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useLang } from "@/components/lang";
 import { ModuleHeader } from "@/components/module-header";
 import { Card, CardBody } from "@/components/ui/card";
 import { NumberField, SelectField, TextAreaField, TextField } from "@/components/ui/field";
@@ -85,6 +86,8 @@ function Table({ head, rows }: { head: string[]; rows: (string | number)[][] }) 
 type Source = "sample" | "file" | "text";
 
 export default function CryptanalysisPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [source, setSource] = useState<Source>("sample");
   const [plain, setPlain] = useState(SAMPLE);
   const [method, setMethod] = useState<"vig" | "shift">("vig");
@@ -135,17 +138,27 @@ export default function CryptanalysisPage() {
     <div>
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
-        <InfoNote title="Що робиться">
-          Шифртекст — результат програм ЛР 1: алфавіт N1, позиція символу <code>X1 = Ord(C) − 32</code>, N = 224, керуючі
-          символи 00h…1Fh не шифруються, але займають свою позицію ключа (як в еталоні викладача). Шифр зсуву розкривається частотним методом (2.1), шифр Віженера — автокореляційним
-          методом або методом Казіскі (2.2, 2.3): спершу період ключа, потім частотний аналіз кожного стовпця.
+        <InfoNote title={tx("Що робиться", "Что делается")}>
+          {lang === "uk" ? (
+            <>
+              Шифртекст — результат програм ЛР 1: алфавіт N1, позиція символу <code>X1 = Ord(C) − 32</code>, N = 224, керуючі
+              символи 00h…1Fh не шифруються, але займають свою позицію ключа (як в еталоні викладача). Шифр зсуву розкривається частотним методом (2.1), шифр Віженера — автокореляційним
+              методом або методом Казіскі (2.2, 2.3): спершу період ключа, потім частотний аналіз кожного стовпця.
+            </>
+          ) : (
+            <>
+              Шифртекст — результат программ ЛР 1: алфавит N1, позиция символа <code>X1 = Ord(C) − 32</code>, N = 224, управляющие
+              символы 00h…1Fh не шифруются, но занимают свою позицию ключа (как в эталоне преподавателя). Шифр сдвига раскрывается частотным методом (2.1), шифр Виженера — автокорреляционным
+              методом или методом Касиски (2.2, 2.3): сначала период ключа, потом частотный анализ каждого столбца.
+            </>
+          )}
         </InfoNote>
 
         <Card>
           <CardBody className="space-y-5 pt-6">
             <h2 className="font-display text-lg font-semibold text-ink">Шифртекст</h2>
             <Segmented<Source>
-              label="Джерело"
+              label={tx("Джерело", "Источник")}
               value={source}
               onChange={setSource}
               accent={ACCENT}
@@ -157,14 +170,14 @@ export default function CryptanalysisPage() {
             />
             {source === "sample" && (
               <div className="space-y-4">
-                <TextAreaField label="Відкритий текст" value={plain} onChange={(e) => setPlain(e.target.value)} className="min-h-[8rem]" />
+                <TextAreaField label={tx("Відкритий текст", "Открытый текст")} value={plain} onChange={(e) => setPlain(e.target.value)} className="min-h-[8rem]" />
                 <div className="grid gap-4 sm:grid-cols-3">
                   <SelectField label="Шифр ЛР 1" value={method} onChange={(e) => setMethod(e.target.value as "vig" | "shift")}>
-                    <option value="vig">Віженера з паролем</option>
-                    <option value="shift">Цезаря (зсув)</option>
+                    <option value="vig">{tx("Віженера з паролем", "Виженера с паролем")}</option>
+                    <option value="shift">{tx("Цезаря (зсув)", "Цезаря (сдвиг)")}</option>
                   </SelectField>
                   {method === "shift" ? (
-                    <NumberField label="Зсув k" value={shift} onChange={(e) => setShift(Number(e.target.value))} />
+                    <NumberField label={tx("Зсув k", "Сдвиг k")} value={shift} onChange={(e) => setShift(Number(e.target.value))} />
                   ) : (
                     <TextField label="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
                   )}
@@ -173,7 +186,7 @@ export default function CryptanalysisPage() {
             )}
             {source === "file" && (
               <label className="block text-sm text-ink-dim">
-                <span className="mb-2 block text-xs text-ink-faint">Зашифрований текстовий файл (байти читаються як є)</span>
+                <span className="mb-2 block text-xs text-ink-faint">{tx("Зашифрований текстовий файл (байти читаються як є)", "Зашифрованный текстовый файл (байты читаются как есть)")}</span>
                 <input
                   type="file"
                   className="text-sm"
@@ -188,7 +201,7 @@ export default function CryptanalysisPage() {
               </label>
             )}
             {source === "text" && (
-              <TextAreaField label="Шифртекст (буде закодований у CP1251)" value={pasted} onChange={(e) => setPasted(e.target.value)} className="min-h-[8rem]" />
+              <TextAreaField label={tx("Шифртекст (буде закодований у CP1251)", "Шифртекст (будет закодирован в CP1251)")} value={pasted} onChange={(e) => setPasted(e.target.value)} className="min-h-[8rem]" />
             )}
             {typeof cipher === "string" ? (
               <p className="text-sm text-codes">{cipher}</p>
@@ -202,7 +215,7 @@ export default function CryptanalysisPage() {
           <>
             <Card>
               <CardBody className="space-y-5 pt-6">
-                <h2 className="font-display text-lg font-semibold text-ink">2.1 Частотний метод (шифр зсуву)</h2>
+                <h2 className="font-display text-lg font-semibold text-ink">{tx("2.1 Частотний метод (шифр зсуву)", "2.1 Частотный метод (шифр сдвига)")}</h2>
                 <Table
                   head={["№", "Символ", "Код", "X1", "Кількість", "Частота"]}
                   rows={a.freq.slice(0, 5).map((f, i) => [i + 1, sym(f.x1), hex(f.x1 + 32), f.x1, f.count, f.share.toFixed(4)])}
@@ -225,7 +238,7 @@ export default function CryptanalysisPage() {
             <Card>
               <CardBody className="space-y-5 pt-6">
                 <div className="flex flex-wrap items-end justify-between gap-4">
-                  <h2 className="font-display text-lg font-semibold text-ink">2.2 Автокореляційний метод</h2>
+                  <h2 className="font-display text-lg font-semibold text-ink">{tx("2.2 Автокореляційний метод", "2.2 Автокорреляционный метод")}</h2>
                   <NumberField label="t до" value={tMax} onChange={(e) => setTMax(Math.max(2, Number(e.target.value)))} className="w-24" />
                 </div>
                 <Table
@@ -246,7 +259,7 @@ export default function CryptanalysisPage() {
 
             <Card>
               <CardBody className="space-y-5 pt-6">
-                <h2 className="font-display text-lg font-semibold text-ink">2.3 Метод Казіскі</h2>
+                <h2 className="font-display text-lg font-semibold text-ink">{tx("2.3 Метод Казіскі", "2.3 Метод Касиски")}</h2>
                 <Table
                   head={["Три-грама", "Позиції", "Відстані", "НСД"]}
                   rows={a.tris.slice(0, 15).map((t) => [t.tri.map(sym).join(""), t.positions.join(", "), t.distances.join(", "), t.gcd])}
@@ -265,9 +278,9 @@ export default function CryptanalysisPage() {
             <Card>
               <CardBody className="space-y-5 pt-6">
                 <div className="flex flex-wrap items-end justify-between gap-4">
-                  <h2 className="font-display text-lg font-semibold text-ink">Ключ: частотний аналіз стовпців</h2>
+                  <h2 className="font-display text-lg font-semibold text-ink">{tx("Ключ: частотний аналіз стовпців", "Ключ: частотный анализ столбцов")}</h2>
                   <TextField
-                    label="Період"
+                    label={tx("Період", "Период")}
                     hint={`порожньо — ${a.kp.period ? "за Казіскі" : "автокореляційний"}`}
                     value={periodOverride}
                     onChange={(e) => {
@@ -318,7 +331,7 @@ export default function CryptanalysisPage() {
                   label={key.length < cols.length ? `Пароль (ключ з ${cols.length} символів — повтор коротшого, період ${key.length})` : "Пароль"}
                   value={`${cp1251Decode(keyBytes)}   [${keyBytes.map(hex).join(" ")}]`}
                 />
-                <OutputBlock label="Розшифрований текст" value={decrypted} />
+                <OutputBlock label={tx("Розшифрований текст", "Расшифрованный текст")} value={decrypted} />
                 <p className="text-xs text-ink-faint">
                   Якщо текст у якомусь стовпці безглуздий, для нього береться друга гіпотеза частотного методу — другий за частотою
                   символ ↔ «о» (або найчастіший — не пробіл).
@@ -326,17 +339,11 @@ export default function CryptanalysisPage() {
               </CardBody>
             </Card>
 
-            <InfoNote title="Помилки методички">
+            <InfoNote title={tx("Помилки методички", "Ошибки методички")}>
               <ul className="list-disc space-y-1 pl-5">
-                <li>
-                  Крок 4 автокореляційного методу: «відбираються t, для яких γₜ &gt; 0,5» — для природного тексту недосяжно: на
-                  періоді γ ≈ 0,05…0,07, поза ним — у кілька разів менше. Тут поріг відносний — половина найбільшого γₜ.
-                </li>
-                <li>
-                  Мінімальне з відібраних t може виявитися кратним періоду (коли в самому тексті мало збігів на відстані періоду):
-                  тоді пароль вийде повтором коротшого — сторінка скорочує його сама, а Казіскі дає точний період.
-                </li>
-                <li>«Мінімальний з отриманих НСД» (крок 4 Казіскі) ламається на випадкових повтореннях три-грам — тому період тут — найбільше d, якому кратна більшість відстаней.</li>
+                <li>{tx("Крок 4 автокореляційного методу: «відбираються t, для яких γₜ > 0,5» — для природного тексту недосяжно: на періоді γ ≈ 0,05…0,07, поза ним — у кілька разів менше. Тут поріг відносний — половина найбільшого γₜ.", "Шаг 4 автокорреляционного метода: «отбираются t, для которых γₜ > 0,5» — для естественного текста недостижимо: на периоде γ ≈ 0,05…0,07, вне него — в несколько раз меньше. Здесь порог относительный — половина наибольшего γₜ.")}</li>
+                <li>{tx("Мінімальне з відібраних t може виявитися кратним періоду (коли в самому тексті мало збігів на відстані періоду): тоді пароль вийде повтором коротшого — сторінка скорочує його сама, а Казіскі дає точний період.", "Минимальное из отобранных t может оказаться кратным периоду (когда в самом тексте мало совпадений на расстоянии периода): тогда пароль выйдет повтором более короткого — страница сокращает его сама, а Касиски даёт точный период.")}</li>
+                <li>{tx("«Мінімальний з отриманих НСД» (крок 4 Казіскі) ламається на випадкових повтореннях три-грам — тому період тут — найбільше d, якому кратна більшість відстаней.", "«Минимальный из полученных НОД» (шаг 4 Касиски) ломается на случайных повторениях три-грамм — поэтому период здесь — наибольшее d, которому кратно большинство расстояний.")}</li>
               </ul>
             </InfoNote>
           </>

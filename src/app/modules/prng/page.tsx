@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLang } from "@/components/lang";
 import { ModuleHeader } from "@/components/module-header";
 import { Card, CardBody } from "@/components/ui/card";
 import { SelectField, TextField } from "@/components/ui/field";
@@ -15,13 +16,24 @@ type Method = "square" | "product" | "shuffle" | "lcg" | "square32";
 
 const num = (s: string) => Number(s.replace(/\s/g, ""));
 
-function summary(r: PrngRun): string {
-  if (r.period !== undefined) return `Стан повторився: передперіод ${r.prePeriod} крок(ів), період ${r.period}.`;
-  if (r.degenerate) return `Генератор виродився: на кроці ${r.steps.length} стан став 0 — далі одні нулі.`;
-  return `За ${r.steps.length} кроків повтору немає — збільште кількість кроків.`;
+function summary(r: PrngRun, lang: "uk" | "ru"): string {
+  const uk = lang === "uk";
+  if (r.period !== undefined)
+    return uk
+      ? `Стан повторився: передперіод ${r.prePeriod} крок(ів), період ${r.period}.`
+      : `Состояние повторилось: предпериод ${r.prePeriod} шаг(ов), период ${r.period}.`;
+  if (r.degenerate)
+    return uk
+      ? `Генератор виродився: на кроці ${r.steps.length} стан став 0 — далі одні нулі.`
+      : `Генератор выродился: на шаге ${r.steps.length} состояние стало 0 — дальше одни нули.`;
+  return uk
+    ? `За ${r.steps.length} кроків повтору немає — збільште кількість кроків.`
+    : `За ${r.steps.length} шагов повтора нет — увеличьте количество шагов.`;
 }
 
 export default function PrngPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [method, setMethod] = useState<Method>("square");
   const [seed, setSeed] = useState("5772");
   const [seed2, setSeed2] = useState("1234");
@@ -52,25 +64,36 @@ export default function PrngPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl space-y-8 px-6 py-10">
         <InfoNote>
-          Методи — за лекцією 22 курсу: серединних квадратів (R0 — n-значне число, квадрат доповнюється нулями до 2n
-          цифр, середина — нове R0, на виході 0.ghij), серединних добутків, перемішування і лінійний конгруентний. Окремо —
-          двійковий варіант серединних квадратів на 32 бітах: середні 32 біти 64-бітного квадрата (так працює програма
-          на C++ з 32-бітним seed, 123456789 → 639801144, 1234248755…).
+          {lang === "uk" ? (
+            <>
+              Методи — за лекцією 22 курсу: серединних квадратів (R0 — n-значне число, квадрат доповнюється нулями до 2n
+              цифр, середина — нове R0, на виході 0.ghij), серединних добутків, перемішування і лінійний конгруентний. Окремо —
+              двійковий варіант серединних квадратів на 32 бітах: середні 32 біти 64-бітного квадрата (так працює програма
+              на C++ з 32-бітним seed, 123456789 → 639801144, 1234248755…).
+            </>
+          ) : (
+            <>
+              Методы — по лекции 22 курса: серединных квадратов (R0 — n-значное число, квадрат дополняется нулями до 2n
+              цифр, середина — новое R0, на выходе 0.ghij), серединных произведений, перемешивание и линейный конгруэнтный. Отдельно —
+              двоичный вариант серединных квадратов на 32 битах: средние 32 бита 64-битного квадрата (так работает программа
+              на C++ с 32-битным seed, 123456789 → 639801144, 1234248755…).
+            </>
+          )}
         </InfoNote>
         <Card>
           <CardBody className="space-y-5 pt-6">
             <div className="grid gap-4 sm:grid-cols-3">
               <SelectField label="Метод" value={method} onChange={(e) => setMethod(e.target.value as Method)}>
-                <option value="square">серединних квадратів (десятковий)</option>
-                <option value="product">серединних добутків</option>
-                <option value="shuffle">перемішування</option>
-                <option value="lcg">лінійний конгруентний</option>
-                <option value="square32">серединних квадратів, 32 біти</option>
+                <option value="square">{tx("серединних квадратів (десятковий)", "серединных квадратов (десятичный)")}</option>
+                <option value="product">{tx("серединних добутків", "серединных произведений")}</option>
+                <option value="shuffle">{tx("перемішування", "перемешивание")}</option>
+                <option value="lcg">{tx("лінійний конгруентний", "линейный конгруэнтный")}</option>
+                <option value="square32">{tx("серединних квадратів, 32 біти", "серединных квадратов, 32 бита")}</option>
               </SelectField>
               <TextField label={method === "product" ? "R0" : method === "lcg" ? "x0" : "R0 (seed)"} value={seed} onChange={(e) => setSeed(e.target.value)} />
               {method === "product" && <TextField label="R1" value={seed2} onChange={(e) => setSeed2(e.target.value)} />}
-              {(method === "square" || method === "product") && <TextField label="Розрядність n, цифр" value={digits} onChange={(e) => setDigits(e.target.value)} />}
-              {method === "shuffle" && <TextField label="Розрядів у комірці" value={bits} onChange={(e) => setBits(e.target.value)} />}
+              {(method === "square" || method === "product") && <TextField label={tx("Розрядність n, цифр", "Разрядность n, цифр")} value={digits} onChange={(e) => setDigits(e.target.value)} />}
+              {method === "shuffle" && <TextField label={tx("Розрядів у комірці", "Разрядов в ячейке")} value={bits} onChange={(e) => setBits(e.target.value)} />}
               {method === "lcg" && (
                 <>
                   <TextField label="a" value={a} onChange={(e) => setA(e.target.value)} />
@@ -78,14 +101,14 @@ export default function PrngPage() {
                   <TextField label="m" value={m} onChange={(e) => setM(e.target.value)} />
                 </>
               )}
-              <TextField label="Кроків" value={count} onChange={(e) => setCount(e.target.value)} />
+              <TextField label={tx("Кроків", "Шагов")} value={count} onChange={(e) => setCount(e.target.value)} />
             </div>
             {typeof run === "string" ? (
               <p className="text-sm text-codes">{run}</p>
             ) : (
               <>
                 <OutputBlock
-                  label={summary(run)}
+                  label={summary(run, lang)}
                   value={run.steps.map((s, i) => `${String(i + 1).padStart(4)}  ${s.from.padEnd(22)}${s.work.padEnd(40)}→ ${s.out}`).join("\n")}
                   wrap={false}
                 />

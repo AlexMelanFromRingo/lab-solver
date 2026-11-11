@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLang } from "@/components/lang";
 import { ModuleHeader } from "@/components/module-header";
 import { Card, CardBody } from "@/components/ui/card";
 import { NumberField, TextAreaField, TextField } from "@/components/ui/field";
@@ -34,6 +35,8 @@ const grid = (m: number[][], d = 0) => m.map((r) => r.map((v) => f(v, d).padStar
 const bytesOf = (s: string) => [...new TextEncoder().encode(s)];
 
 export default function CompressionPage() {
+  const { lang } = useLang();
+  const tx = (uk: string, ruText: string) => (lang === "uk" ? uk : ruText);
   const [rows, setRows] = useState("text.txt 120 38\nphoto.bmp 1440 1230\nchart.bmp 1440 22");
   const [text, setText] = useState(LOREM);
   const [rgb, setRgb] = useState("200 120 60");
@@ -90,23 +93,33 @@ export default function CompressionPage() {
       <ModuleHeader module={mod} />
       <div className="mx-auto max-w-5xl space-y-8 px-6 py-10">
         <InfoNote>
-          Розміри з 7-Zip і графічного редактора в кожного свої (файли дає викладач), тому таблиці 1, 2, 4 тут —
-          обчислення з ваших розмірів. Таблиця 3 — оцінка стандартним LZSS; демо «LZSS-demo» викладача може мати
-          інші параметри, але різниця між псевдовипадковим текстом і повторами буде та сама за характером.
+          {lang === "uk" ? (
+            <>
+              Розміри з 7-Zip і графічного редактора в кожного свої (файли дає викладач), тому таблиці 1, 2, 4 тут —
+              обчислення з ваших розмірів. Таблиця 3 — оцінка стандартним LZSS; демо «LZSS-demo» викладача може мати
+              інші параметри, але різниця між псевдовипадковим текстом і повторами буде та сама за характером.
+            </>
+          ) : (
+            <>
+              Размеры из 7-Zip и графического редактора у каждого свои (файлы даёт преподаватель), поэтому таблицы 1, 2, 4 здесь —
+              расчёт из ваших размеров. Таблица 3 — оценка стандартным LZSS; демо «LZSS-demo» преподавателя может иметь
+              другие параметры, но разница между псевдослучайным текстом и повторами будет та же по характеру.
+            </>
+          )}
         </InfoNote>
 
         <Card>
           <CardBody className="space-y-5 pt-6">
-            <h2 className="font-display text-lg font-semibold text-ink">Таблиці 1, 2, 4 — частина після стиснення і кратність</h2>
-            <TextAreaField label="Рядки: назва (файлу або методу) · розмір до · розмір після, кБ" value={rows} onChange={(e) => setRows(e.target.value)} />
-            <OutputBlock label="Частина = після / до · 100 %; кратність = до / після" value={table} wrap={false} />
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Таблиці 1, 2, 4 — частина після стиснення і кратність", "Таблицы 1, 2, 4 — часть после сжатия и кратность")}</h2>
+            <TextAreaField label={tx("Рядки: назва (файлу або методу) · розмір до · розмір після, кБ", "Строки: название (файла или метода) · размер до · размер после, кБ")} value={rows} onChange={(e) => setRows(e.target.value)} />
+            <OutputBlock label={tx("Частина = після / до · 100 %; кратність = до / після", "Часть = после / до · 100 %; кратность = до / после")} value={table} wrap={false} />
           </CardBody>
         </Card>
 
         <Card>
           <CardBody className="space-y-5 pt-6">
-            <h2 className="font-display text-lg font-semibold text-ink">Таблиця 3 — словникове стиснення (LZSS)</h2>
-            <TextAreaField label="Псевдовипадковий текст (Lorem Ipsum Generator)" value={text} onChange={(e) => setText(e.target.value)} />
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("Таблиця 3 — словникове стиснення (LZSS)", "Таблица 3 — словарное сжатие (LZSS)")}</h2>
+            <TextAreaField label={tx("Псевдовипадковий текст (Lorem Ipsum Generator)", "Псевдослучайный текст (Lorem Ipsum Generator)")} value={text} onChange={(e) => setText(e.target.value)} />
             <OutputBlock
               label={`Повтори: перші два слова «${firstTwo}», вставлені 80 разів (п. 3.8)`}
               value={[
@@ -125,22 +138,22 @@ export default function CompressionPage() {
 
         <Card>
           <CardBody className="space-y-5 pt-6">
-            <h2 className="font-display text-lg font-semibold text-ink">П. 5 — етапи JPEG</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{tx("П. 5 — етапи JPEG", "П. 5 — этапы JPEG")}</h2>
             <div className="grid gap-4 sm:grid-cols-2">
-              <TextField label="Піксель R G B" value={rgb} onChange={(e) => setRgb(e.target.value)} />
+              <TextField label={tx("Піксель R G B", "Пиксель R G B")} value={rgb} onChange={(e) => setRgb(e.target.value)} />
               <OutputBlock label="Y, U (Cb), V (Cr)" value={`Y = ${f(yuv.y)}   U = ${f(yuv.u)}   V = ${f(yuv.v)}`} />
             </div>
             <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_12rem]">
-              <TextAreaField label="Блок яскравості 8×8 (0…255)" value={block} onChange={(e) => setBlock(e.target.value)} className="min-h-[11rem] font-mono" />
-              <NumberField label="Якість q (1…100)" min={1} max={100} value={q} onChange={(e) => setQ(Math.min(100, Math.max(1, Number(e.target.value) || 1)))} />
+              <TextAreaField label={tx("Блок яскравості 8×8 (0…255)", "Блок яркости 8×8 (0…255)")} value={block} onChange={(e) => setBlock(e.target.value)} className="min-h-[11rem] font-mono" />
+              <NumberField label={tx("Якість q (1…100)", "Качество q (1…100)")} min={1} max={100} value={q} onChange={(e) => setQ(Math.min(100, Math.max(1, Number(e.target.value) || 1)))} />
             </div>
             {typeof jpeg === "string" ? (
               <p className="text-sm text-codes">{jpeg}</p>
             ) : (
               <div className="grid gap-4 lg:grid-cols-2">
-                <OutputBlock label="Пряме перетворення: коефіцієнти ДКП" value={grid(jpeg.dct)} wrap={false} />
+                <OutputBlock label={tx("Пряме перетворення: коефіцієнти ДКП", "Прямое преобразование: коэффициенты ДКП")} value={grid(jpeg.dct)} wrap={false} />
                 <OutputBlock label={`Огрублення: квантовані (нулів ${jpeg.zeros} з 64)`} value={grid(jpeg.quant)} wrap={false} />
-                <OutputBlock label="Таблиця квантування для q" value={grid(jpeg.table)} wrap={false} />
+                <OutputBlock label={tx("Таблиця квантування для q", "Таблица квантования для q")} value={grid(jpeg.table)} wrap={false} />
                 <OutputBlock label={`Зворотне перетворення (найбільша похибка ${jpeg.err})`} value={grid(jpeg.back)} wrap={false} />
               </div>
             )}
