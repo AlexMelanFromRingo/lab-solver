@@ -98,6 +98,11 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
   let lx = PAD.left;
   let ly = H + 6;
   fig.series.forEach((s) => {
+    // серія без підпису (друга і далі силові лінії тощо) — без пункту легенди
+    if (!s.label) {
+      legend.push({ x: lx, y: ly });
+      return;
+    }
     const wItem = 62 + s.label.length * 5.8;
     if (lx > PAD.left && lx + wItem > W - 4) {
       lx = PAD.left;
@@ -175,10 +180,10 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
         </text>
         {fig.series.map((s, i) => {
           const sp = s.points.filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y)).map(([x, y]) => [X(x), Y(y)] as [number, number]);
-          const sorted = [...sp].sort((a, b) => a[0] - b[0]);
+          const sorted = s.ordered ? sp : [...sp].sort((a, b) => a[0] - b[0]);
           return (
-            <g key={s.label}>
-              {sorted.length > 1 && s.line !== false && <path d={fig.smooth ? monotone(sorted) : `M${sorted.map((p) => p.join(" ")).join(" L")}`} fill="none" stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />}
+            <g key={i}>
+              {sorted.length > 1 && s.line !== false && <path d={fig.smooth && !s.ordered ? monotone(sorted) : `M${sorted.map((p) => p.join(" ")).join(" L")}`} fill="none" stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />}
               {s.markers !== false &&
                 sp.map(([x, y], j) => (
                   <Marker key={j} x={x} y={y} kind={i} />
@@ -196,9 +201,10 @@ export function XYPlot({ fig, title }: { fig: PlotFigure; title: string }) {
         })}
         {fig.series.length > 1 &&
           fig.series.map((s, i) => {
+            if (!s.label) return null;
             const { x, y: ry } = legend[i];
             return (
-              <g key={`lg${s.label}`} fontSize={11} fill={INK}>
+              <g key={`lg${i}`} fontSize={11} fill={INK}>
                 {s.line !== false && <line x1={x} x2={x + 30} y1={ry} y2={ry} stroke={INK} strokeWidth={1.3} strokeDasharray={s.dashed ? "6 3" : undefined} />}
                 {s.markers !== false && <Marker x={x + 15} y={ry} kind={i} />}
                 <text x={x + 38} y={ry + 4}>

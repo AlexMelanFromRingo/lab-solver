@@ -16,8 +16,10 @@ const CATEGORY_ORDER: Category[] = [
   "plis",
   "zikm",
   "oop",
+  "mzzi",
   "km",
   "spz",
+  "sp2",
   "mps",
   "db",
   "lm",
@@ -29,8 +31,11 @@ const CATEGORY_ORDER: Category[] = [
   "ks",
   "pzzk",
   "pp",
+  "fizsr",
   "kdm",
   "temk",
+  "op",
+  "fiz",
   "extra",
 ];
 

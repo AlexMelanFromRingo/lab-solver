@@ -67,6 +67,10 @@
   --cat-mps-soft: #a5b4fc1a;
   --cat-db: #f5d0fe;
   --cat-db-soft: #f5d0fe1a;
+  --cat-fiz: #e9d5ff;
+  --cat-fiz-soft: #e9d5ff1a;
+  --cat-fizsr: #d9f99d;
+  --cat-fizsr-soft: #d9f99d1a;
 }
 
 @theme inline {
@@ -133,6 +137,10 @@
   --color-mps-soft: var(--cat-mps-soft);
   --color-db: var(--cat-db);
   --color-db-soft: var(--cat-db-soft);
+  --color-fiz: var(--cat-fiz);
+  --color-fiz-soft: var(--cat-fiz-soft);
+  --color-fizsr: var(--cat-fizsr);
+  --color-fizsr-soft: var(--cat-fizsr-soft);
 
   --font-display: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--ff-body), ui-sans-serif, system-ui, sans-serif;

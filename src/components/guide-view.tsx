@@ -8,6 +8,7 @@ import { MpsStructureCalc, PpiCalc } from "@/components/ppi-calc";
 import { AccessSqlCalc, ErCalc, NormalizerCalc } from "@/components/db-calc";
 import { GraphCalc } from "@/components/graph-calc";
 import { KfsCalc } from "@/components/kfs-calc";
+import { PhysCalc } from "@/components/phys-calc";
 import { XYPlot } from "@/components/xy-plot";
 import { DrawingView } from "@/components/drawing-view";
 import { TimingDiagram } from "@/components/timing-diagram";
@@ -139,6 +140,7 @@ export function GuideView({ slug }: { slug: string }) {
       {g.widget === "kfs-l5" && <KfsCalc lab={5} accent={accent} />}
       {g.widget === "kfs-l6" && <KfsCalc lab={6} accent={accent} />}
       {g.widget === "kfs-l7" && <KfsCalc lab={7} accent={accent} />}
+      {g.widget === "phys" && <PhysCalc slug={slug} />}
       {g.widget === "db-l3" && <AccessSqlCalc key={topic} lab={3} topic={topic} />}
       {g.widget === "db-l4" && <AccessSqlCalc key={topic} lab={4} topic={topic} />}
       {g.widget === "db-l5" && <AccessSqlCalc key={topic} lab={5} topic={topic} />}
@@ -239,6 +241,22 @@ export function GuideView({ slug }: { slug: string }) {
         )}
 
         <LabProcedure guide={g.guide} accent={accent} />
+
+        {g.answers && g.answers.length > 0 && (
+          <Card>
+            <CardBody className="space-y-4 pt-6">
+              <h2 className="font-display text-xl font-semibold tracking-tight text-ink">{ui("answers", lang)}</h2>
+              {g.answers.map((f, fi) => (
+                <div key={fi}>
+                  <h3 className="text-sm font-medium text-ink">
+                    {fi + 1}. {tr(f.title, lang)}
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed text-ink-dim">{tr(f.body, lang)}</p>
+                </div>
+              ))}
+            </CardBody>
+          </Card>
+        )}
 
         {g.findings && g.findings.length > 0 && (
           <Card>

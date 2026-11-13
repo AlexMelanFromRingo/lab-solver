@@ -81,8 +81,10 @@ export interface GuideModule {
   /** Расчёт без варианта: задание одно на всех (как в ЛР 4_1 и 4_2 МОІБ). */
   computed?: () => GuideComputed;
   findings?: GuideFinding[];
+  /** Відповіді на контрольні запитання методички (питання — title). */
+  answers?: GuideFinding[];
   /** Опечатки и противоречия методички — с тем, как поступить. */
   errata?: Loc[];
   /** Интерактивный расчёт сверх таблиц варианта (см. components/guide-view). */
-  widget?: "acl" | "eth10" | "fast" | "slae" | "iter" | "roots" | "approx" | "cauchy" | "quad" | "graph" | "c-lab1" | "c-lab2" | "c-lab3" | "c-magnet" | "c-rgr" | "oop-light" | "ppi" | "biometrics" | "db-l3" | "db-l4" | "db-l5" | "db-l6" | "db-norm" | "mps-kr" | "kfs-l1" | "kfs-l2" | "kfs-l3" | "kfs-l4" | "kfs-l5" | "kfs-l6" | "kfs-l7";
+  widget?: "acl" | "eth10" | "fast" | "slae" | "iter" | "roots" | "approx" | "cauchy" | "quad" | "graph" | "c-lab1" | "c-lab2" | "c-lab3" | "c-magnet" | "c-rgr" | "oop-light" | "ppi" | "biometrics" | "db-l3" | "db-l4" | "db-l5" | "db-l6" | "db-norm" | "mps-kr" | "kfs-l1" | "kfs-l2" | "kfs-l3" | "kfs-l4" | "kfs-l5" | "kfs-l6" | "kfs-l7" | "phys";
 }

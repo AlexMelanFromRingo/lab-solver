@@ -64,6 +64,8 @@ export interface PlotSeries {
   markers?: boolean;
   /** false — только точки, без линии (узлы, опытные точки). */
   line?: boolean;
+  /** Параметрическая кривая (окружность, силовая линия): точки соединяются в заданном порядке, без сортировки по x. */
+  ordered?: boolean;
 }
 
 export interface PlotFigure {
