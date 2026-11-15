@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# робочі файли (аудити сторінок, вивантаження, проміжні дампи) - не комітяться
+.work/
