@@ -336,6 +336,17 @@ export const modules: LabModule[] = [
     size: "md",
   },
   {
+    slug: "ai-stentor",
+    title: "ЛР 4 · Pretraining Stentor-12M і донавчання в Unsloth Studio",
+    category: "ai",
+    tagline: { uk: "Llama 12M · TinyStories · Unsloth Studio", ru: "Llama 12M · TinyStories · Unsloth Studio" },
+    description:
+      { uk: "Модель Llama з конфігурації Stentor-12M з випадковими вагами, pretraining на TinyStories, чекпойнт Hugging Face і Full fine-tuning на рецептах в Unsloth Studio. Параметри, де Studio падає і як це обійти, і результати запуску: втрати, перплексія, генерація, катастрофічне забування за двох швидкостей навчання.", ru: "Модель Llama из конфигурации Stentor-12M со случайными весами, pretraining на TinyStories, чекпойнт Hugging Face и Full fine-tuning на рецептах в Unsloth Studio. Параметры, где Studio падает и как это обойти, и результаты запуска: потери, перплексия, генерация, катастрофическое забывание при двух скоростях обучения." },
+    hasVariants: false,
+    source: "Штучний інтелект в комп'ютерних системах та мережах, ЛР4",
+    size: "md",
+  },
+  {
     slug: "ai-lab1",
     title: { uk: "ЛР 1 колишньої програми · Нечітке логічне виведення в середовищі Fuzzy Logic Systems", ru: "ЛР 1 прежней программы · Нечіткий логічний висновок у середовищі Fuzzy Logic Systems" },
     category: "ai",
